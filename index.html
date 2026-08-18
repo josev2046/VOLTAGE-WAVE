@@ -128,6 +128,7 @@
     <nav class="fixed w-full z-40 top-0 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
+                <!-- Custom Oscillator Square Wave Logo -->
                 <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer glitch-hover">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-red-500 w-6 h-6">
                         <path d="M2 12h4v-7h6v14h6v-7h4"/>
@@ -150,10 +151,12 @@
         
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 reveal">
             <div class="max-w-3xl">
+                <!-- Status Badge -->
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 font-mono text-xs mb-6">
                     <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
                     STUDIO CALIBRATION IN PROGRESS // LAUNCHING SOON
                 </div>
+                
                 <h1 class="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white tracking-tight mb-6 uppercase">
                     Authentic Analogue <br>
                     <span class="text-red-500 glow-text">Hardware Processing</span>
@@ -193,6 +196,7 @@
                 
                 <div class="relative">
                     <div class="aspect-square md:aspect-[4/3] bg-zinc-950 border border-zinc-800 flex items-center justify-center relative overflow-hidden group">
+                        <!-- Custom Hardware Vector Art -->
                         <svg viewBox="0 0 800 600" class="w-full h-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-105" xmlns="http://www.w3.org/2000/svg">
                             <!-- Background Panel -->
                             <rect width="800" height="600" fill="#09090b"/>
@@ -235,7 +239,7 @@
                             <circle cx="630" cy="170" r="8" fill="#27272a"/>
 
                             <!-- Draped Patch Cables -->
-                            <!-- Primary Red CV Cable -->
+                            <!-- Primary Accent CV Cable -->
                             <path d="M 220,380 C 220,600 580,600 580,480" fill="none" stroke="#dc2626" stroke-width="12" stroke-linecap="round" style="filter: drop-shadow(0 15px 15px rgba(0,0,0,0.6));"/>
                             <!-- Secondary Grey Trig Cable -->
                             <path d="M 320,480 C 320,650 680,650 680,380" fill="none" stroke="#52525b" stroke-width="12" stroke-linecap="round" style="filter: drop-shadow(0 15px 15px rgba(0,0,0,0.6));"/>
@@ -256,6 +260,7 @@
         </div>
     </section>
 
+    <!-- NEW THE OPERATORS SECTION -->
     <section id="operators" class="py-24 bg-zinc-950 border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 reveal">
@@ -264,6 +269,7 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Jose -->
                 <div class="bg-zinc-900 border border-zinc-800 p-8 hover:border-red-500/50 transition-colors group reveal [transition-delay:100ms] hardware-card">
                     <h3 class="text-xl font-bold text-white mb-2 uppercase tracking-wide">Jose Velazquez</h3>
                     <p class="text-red-500 font-mono text-xs mb-4">CHIEF SYSTEMS ARCHITECT & SIGNAL ENGINEER</p>
@@ -272,6 +278,7 @@
                     </p>
                 </div>
 
+                <!-- Simon -->
                 <div class="bg-zinc-900 border border-zinc-800 p-8 hover:border-red-500/50 transition-colors group reveal [transition-delay:200ms] hardware-card">
                     <h3 class="text-xl font-bold text-white mb-2 uppercase tracking-wide">Simon Velazquez</h3>
                     <p class="text-red-500 font-mono text-xs mb-4">RESIDENT ARTIST & COMPOSER</p>
@@ -291,6 +298,7 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Service 1 -->
                 <div class="bg-zinc-900/50 border border-zinc-800 p-8 hover:border-red-500/50 transition-colors group reveal [transition-delay:100ms] hardware-card">
                     <div class="w-12 h-12 bg-zinc-800 flex items-center justify-center rounded mb-6 group-hover:bg-red-500/10 group-hover:text-red-500 transition-colors group-hover:scale-110 duration-300">
                         <i data-lucide="waves" class="w-6 h-6"></i>
@@ -302,6 +310,7 @@
                     </p>
                 </div>
 
+                <!-- Service 2 -->
                 <div class="bg-zinc-900/50 border border-zinc-800 p-8 hover:border-red-500/50 transition-colors group reveal [transition-delay:200ms] hardware-card">
                     <div class="w-12 h-12 bg-zinc-800 flex items-center justify-center rounded mb-6 group-hover:bg-red-500/10 group-hover:text-red-500 transition-colors group-hover:scale-110 duration-300">
                         <i data-lucide="list-ordered" class="w-6 h-6"></i>
@@ -313,17 +322,23 @@
                     </p>
                 </div>
 
-                <div class="bg-zinc-900/50 border border-zinc-800 p-8 hover:border-red-500/50 transition-colors group reveal [transition-delay:300ms] hardware-card">
-                    <div class="w-12 h-12 bg-zinc-800 flex items-center justify-center rounded mb-6 group-hover:bg-red-500/10 group-hover:text-red-500 transition-colors group-hover:scale-110 duration-300">
-                        <i data-lucide="mic-2" class="w-6 h-6"></i>
+                <!-- Service 3 (VC-10 - UNDER REPAIR) -->
+                <div class="bg-zinc-900/30 border border-zinc-800 p-8 transition-colors group reveal [transition-delay:300ms] relative overflow-hidden opacity-80">
+                    <div class="absolute top-6 right-6 flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
+                        <span class="text-[10px] font-mono text-red-500 uppercase tracking-widest border border-red-500/30 px-2 py-0.5 bg-red-500/10">ON REPAIR BENCH</span>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2">VC-10 Vocoder Processing</h3>
-                    <p class="text-red-500 font-mono text-xs mb-4">ROBOTIC, ANALOGUE VOCAL TEXTURES.</p>
-                    <p class="text-zinc-400 text-sm leading-relaxed">
-                        Transform standard vocal takes into iconic, retro-futuristic textures. We run your dry vocal stems through a genuine Korg VC-10 Vocoder, using our hardware synthesisers as the carrier signal. Perfect for industrial hooks, techno vocal chops, or darkwave atmospheres.
+                    <div class="w-12 h-12 bg-zinc-900/50 flex items-center justify-center rounded mb-6 text-zinc-600 border border-zinc-800">
+                        <i data-lucide="wrench" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-zinc-500 mb-2 line-through decoration-red-500/50">VC-10 Vocoder Processing</h3>
+                    <p class="text-red-600 font-mono text-xs mb-4">DIAGNOSTICS IN PROGRESS // CARRIER SIGNAL LOST.</p>
+                    <p class="text-zinc-500 text-sm leading-relaxed">
+                        The Korg VC-10 is currently dismantled on the repair bench awaiting fresh New Old Stock (NOS) components. Robotic, analogue vocal textures will return to the studio offering once circuitry calibration is complete.
                     </p>
                 </div>
 
+                <!-- Service 4 -->
                 <div class="bg-zinc-900/50 border border-zinc-800 p-8 hover:border-red-500/50 transition-colors group reveal [transition-delay:400ms] hardware-card">
                     <div class="w-12 h-12 bg-zinc-800 flex items-center justify-center rounded mb-6 group-hover:bg-red-500/10 group-hover:text-red-500 transition-colors group-hover:scale-110 duration-300">
                         <i data-lucide="settings-2" class="w-6 h-6"></i>
@@ -360,17 +375,22 @@
                     <p class="text-zinc-500 text-xs mt-2">Vintage analogue step sequencer (Hz/V). Pure unquantised voltage control.</p>
                 </div>
 
-                <div class="hardware-card bg-zinc-900 border border-zinc-800 p-4 rounded-sm reveal [transition-delay:300ms]">
-                    <img src="https://placehold.co/600x400/18181b/dc2626?text=Korg+VC-10" alt="Korg VC-10 Vocoder" class="w-full h-48 object-cover mb-4 filter grayscale contrast-125">
-                    <h4 class="text-white font-bold font-mono">Korg VC-10 (1978)</h4>
-                    <p class="text-zinc-500 text-xs mt-2">The legendary analogue vocoder for classic robotic and industrial textures.</p>
+                <!-- VC-10 UNDER REPAIR CARD -->
+                <div class="bg-zinc-900 border border-zinc-800/50 p-4 rounded-sm reveal [transition-delay:300ms] relative opacity-60">
+                    <div class="absolute top-8 right-8 z-20 shadow-lg">
+                        <span class="bg-zinc-950/90 border border-red-500 text-red-500 px-3 py-1 font-mono text-[10px] uppercase tracking-widest backdrop-blur-md shadow-[0_0_10px_rgba(220,38,38,0.3)]">MAINTENANCE</span>
+                    </div>
+                    <img src="https://placehold.co/600x400/18181b/dc2626?text=Korg+VC-10" alt="Korg VC-10 Vocoder" class="w-full h-48 object-cover mb-4 filter grayscale opacity-40 mix-blend-luminosity">
+                    <h4 class="text-zinc-500 font-bold font-mono line-through decoration-zinc-700">Korg VC-10 (1978)</h4>
+                    <p class="text-red-500 font-mono text-[10px] mt-1 mb-2">STATUS: AWAITING COMPONENTS</p>
+                    <p class="text-zinc-600 text-xs">The legendary analogue vocoder. Temporarily offline for circuitry repair.</p>
                 </div>
             </div>
 
-            <div class="border-t border-zinc-800 pt-8 reveal">
-                <h4 class="text-sm font-mono text-red-500 mb-4 uppercase">Supporting Infrastructure</h4>
-                <div class="flex items-center gap-3 text-zinc-500 font-mono text-sm">
-                    <span class="w-1.5 h-1.5 bg-zinc-700 animate-pulse"></span>
+            <!-- Coming Soon Spec -->
+            <div class="border-t border-zinc-800 pt-8 reveal text-center">
+                <div class="inline-flex items-center gap-3 text-zinc-500 font-mono text-sm border border-zinc-800 bg-zinc-900/50 px-4 py-2 rounded-sm">
+                    <span class="w-1.5 h-1.5 bg-red-500 animate-pulse rounded-full"></span>
                     FULL ARSENAL SPEC COMING SOON...
                 </div>
             </div>
@@ -425,8 +445,8 @@
                 </div>
 
                 <div class="relative">
-                    <!-- Form Lockdown Overlay -->
-                    <div class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-zinc-950/60 backdrop-blur-sm border border-zinc-800 rounded-sm">
+                    <!-- Form Lockdown Overlay (Active for "Coming Soon" status) -->
+                    <div class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-zinc-950/70 backdrop-blur-sm border border-zinc-800 rounded-sm">
                         <i data-lucide="lock" class="w-8 h-8 text-red-500 mb-3"></i>
                         <p class="text-white font-mono font-bold tracking-widest">PORTAL OFFLINE</p>
                         <p class="text-zinc-400 text-sm mt-2">Studio calibration in progress. Launching soon.</p>
@@ -453,7 +473,7 @@
                                         <option value="" disabled selected>Select a processing path...</option>
                                         <option value="pass">Analogue Pass-Through</option>
                                         <option value="sequence">Sequence Translation</option>
-                                        <option value="vocoder">VC-10 Vocoder Pass</option>
+                                        <option value="vocoder" disabled>VC-10 Vocoder Pass [ OFFLINE FOR REPAIR ]</option>
                                         <option value="custom">Full Hardware Package (Custom)</option>
                                     </select>
                                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-zinc-500">
