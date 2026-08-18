@@ -272,9 +272,9 @@
                 <!-- Jose -->
                 <div class="bg-zinc-900 border border-zinc-800 p-8 hover:border-red-500/50 transition-colors group reveal [transition-delay:100ms] hardware-card">
                     <h3 class="text-xl font-bold text-white mb-2 uppercase tracking-wide">Jose Velazquez</h3>
-                    <p class="text-red-500 font-mono text-xs mb-4">SYSTEMS ARCHITECT & SIGNAL ENGINEER</p>
+                    <p class="text-red-500 font-mono text-xs mb-4">CHIEF SYSTEMS ARCHITECT & SIGNAL ENGINEER</p>
                     <p class="text-zinc-400 text-sm leading-relaxed">
-                        With over two decades spent engineering complex media platforms and infrastructure for the BBC, IBM, and Google, Jose is the technical mastermind behind the studio's signal flow. He bridges the gap between physical circuitry and pristine digital capture. Applying his background in media preservation and hardware architecture, Jose ensures that every raw, unpredictable volt of analogue saturation is routed and recorded without ever losing its original, brutalist character.
+                        With two decades spent engineering complex media platforms and infrastructure for the BBC, IBM, and Google, Jose is the technical mastermind behind the studio's signal flow. He bridges the gap between physical circuitry and pristine digital capture. Applying his background in media preservation and hardware architecture, Jose ensures that every raw, unpredictable volt of analogue saturation is routed and recorded without ever losing its original, brutalist character.
                     </p>
                 </div>
 
@@ -306,7 +306,7 @@
                     <h3 class="text-xl font-bold text-white mb-2">Analogue Filter Processing & Re-amping</h3>
                     <p class="text-red-500 font-mono text-xs mb-4">YOUR DIGITAL AUDIO, DRIVEN THROUGH PHYSICAL CIRCUITS.</p>
                     <p class="text-zinc-400 text-sm leading-relaxed">
-                        Send us your flat basslines, drums, or soft-synth stems. We will route them through the legendary, aggressive resonant low-pass filters of our vintage Korg MS-10 or MS-20 circuits. Whether you want subtle harmonic warmth or brutal, overdriven EBM distortion, we tweak the VCAs and filters in real-time to breathe life into your tracks.
+                        Send us your flat basslines, drums, or soft-synth stems. We will route them through the legendary, aggressive resonant low-pass filters of our vintage Korg MS-10 or Behringer K-2. Whether you want subtle harmonic warmth or brutal, overdriven EBM distortion, we tweak the VCAs and filters in real-time to breathe life into your tracks.
                     </p>
                 </div>
 
@@ -393,6 +393,191 @@
                     <span class="w-1.5 h-1.5 bg-red-500 animate-pulse rounded-full"></span>
                     FULL ARSENAL SPEC COMING SOON...
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="signal-flow" class="py-24 bg-zinc-900 border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl font-bold text-white mb-4 uppercase tracking-wide">Hybrid Studio Signal Path</h2>
+                <p class="text-zinc-400 font-mono text-sm uppercase tracking-widest">Bridging the Physical and Digital Realms</p>
+            </div>
+            
+            <div class="bg-zinc-950 border border-zinc-800 p-8 rounded-sm reveal shadow-2xl relative overflow-hidden flex justify-center items-center hardware-card w-full overflow-x-auto">
+                 
+                <!-- Custom SVG Vector Diagram based on user UML -->
+                <svg viewBox="0 0 950 650" class="w-full max-w-5xl min-w-[800px] h-auto font-mono" xmlns="http://www.w3.org/2000/svg">
+                    
+                    <!-- Arrowhead Definitions -->
+                    <defs>
+                        <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
+                        </marker>
+                        <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#ef4444" />
+                        </marker>
+                        <marker id="arrow-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#f97316" />
+                        </marker>
+                        <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#22c55e" />
+                        </marker>
+                        <marker id="arrow-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#71717a" />
+                        </marker>
+                        <marker id="arrow-blue-rev" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                            <path d="M 10 0 L 0 5 L 10 10 z" fill="#3b82f6" />
+                        </marker>
+                    </defs>
+
+                    <!-- Background Grid -->
+                    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#18181b" stroke-width="1"/>
+                    </pattern>
+                    <rect width="950" height="650" fill="url(#grid)" />
+
+                    <!-- Section Labels -->
+                    <text x="125" y="40" fill="#52525b" font-size="14" font-weight="bold" text-anchor="middle" letter-spacing="2">DIGITAL REALM</text>
+                    <text x="425" y="40" fill="#52525b" font-size="14" font-weight="bold" text-anchor="middle" letter-spacing="2">BRIDGE</text>
+                    <text x="765" y="40" fill="#52525b" font-size="14" font-weight="bold" text-anchor="middle" letter-spacing="2">ANALOGUE ARSENAL</text>
+
+                    <!-- CONNECTIONS (CABLES) -->
+                    <g fill="none" stroke-width="2.5" stroke-linejoin="round">
+                        
+                        <!-- Power (Gray Dashed) -->
+                        <g stroke="#71717a" stroke-dasharray="6,6" stroke-width="1.5">
+                            <path d="M 330 95 L 125 95 L 125 125" marker-end="url(#arrow-gray)" /> <!-- Power to Monitors -->
+                            <path d="M 425 105 L 425 245" marker-end="url(#arrow-gray)" /> <!-- Power to Interface -->
+                            <path d="M 520 85 L 765 85 L 765 125" marker-end="url(#arrow-gray)" /> <!-- Power to SQ10 -->
+                            <path d="M 500 95 L 830 95 L 830 245" marker-end="url(#arrow-gray)" /> <!-- Power to MS10 -->
+                            <path d="M 470 105 L 850 105 L 850 395" marker-end="url(#arrow-gray)" /> <!-- Power to VC10 -->
+                        </g>
+
+                        <!-- Digital/USB (Blue) -->
+                        <g stroke="#3b82f6">
+                            <!-- DAW <-> Interface (Bidirectional) -->
+                            <path d="M 215 275 L 345 275" marker-start="url(#arrow-blue-rev)" marker-end="url(#arrow-blue)" />
+                            <!-- DAW -> Kenton -->
+                            <path d="M 125 245 L 125 165 L 345 165" marker-end="url(#arrow-blue)" />
+                        </g>
+
+                        <!-- Audio Out (Red) -->
+                        <g stroke="#ef4444">
+                            <!-- Interface -> Monitors -->
+                            <path d="M 345 290 L 235 290 L 235 150 L 215 150" marker-end="url(#arrow-red)" />
+                            <!-- Interface -> Reamp -->
+                            <path d="M 425 315 L 425 395" marker-end="url(#arrow-red)" />
+                            <!-- Reamp -> MS-10 -->
+                            <path d="M 505 410 L 590 410 L 590 290 L 675 290" marker-end="url(#arrow-red)" />
+                            <!-- Reamp -> VC-10 -->
+                            <path d="M 505 435 L 560 435 L 560 425 L 675 425" marker-end="url(#arrow-red)" />
+                        </g>
+
+                        <!-- CV/Gate (Orange) -->
+                        <g stroke="#f97316">
+                            <!-- Kenton -> SQ-10 -->
+                            <path d="M 505 155 L 675 155" marker-end="url(#arrow-orange)" />
+                            <!-- Kenton -> MS-10 -->
+                            <path d="M 505 175 L 630 175 L 630 260 L 675 260" marker-end="url(#arrow-orange)" />
+                            <!-- SQ-10 -> MS-10 -->
+                            <path d="M 765 195 L 765 245" marker-end="url(#arrow-orange)" />
+                        </g>
+
+                        <!-- Audio In (Green) -->
+                        <g stroke="#22c55e">
+                            <!-- MS-10 -> DI -->
+                            <path d="M 765 315 L 765 545 L 505 545" marker-end="url(#arrow-green)" />
+                            <!-- VC-10 -> DI -->
+                            <path d="M 735 465 L 735 525 L 505 525" marker-end="url(#arrow-green)" />
+                            <!-- DI -> Interface -->
+                            <path d="M 405 515 L 405 315" marker-end="url(#arrow-green)" />
+                        </g>
+                    </g>
+
+                    <!-- HARDWARE NODES (BOXES) -->
+                    <g font-size="13" font-weight="bold">
+                        
+                        <!-- ENVIRONMENT -->
+                        <g transform="translate(330, 65)">
+                            <rect width="190" height="40" rx="4" fill="#18181b" stroke="#71717a" stroke-width="2"/>
+                            <text x="95" y="25" fill="#d4d4d8" text-anchor="middle">Tacima CS929 Power</text>
+                        </g>
+
+                        <g transform="translate(35, 125)">
+                            <rect width="180" height="50" rx="4" fill="#18181b" stroke="#71717a" stroke-width="2"/>
+                            <text x="90" y="30" fill="#d4d4d8" text-anchor="middle">Kali LP-6 V2</text>
+                        </g>
+
+                        <!-- DIGITAL REALM -->
+                        <g transform="translate(35, 245)">
+                            <rect width="180" height="60" rx="4" fill="#18181b" stroke="#3b82f6" stroke-width="2"/>
+                            <text x="90" y="35" fill="#d4d4d8" text-anchor="middle">Computer / DAW</text>
+                        </g>
+
+                        <!-- BRIDGE -->
+                        <g transform="translate(345, 140)">
+                            <rect width="160" height="50" rx="4" fill="#202022" stroke="#52525b" stroke-width="2"/>
+                            <text x="80" y="30" fill="#d4d4d8" text-anchor="middle">Kenton Pro Solo</text>
+                        </g>
+
+                        <g transform="translate(345, 245)">
+                            <rect width="160" height="70" rx="4" fill="#202022" stroke="#52525b" stroke-width="2"/>
+                            <text x="80" y="32" fill="#d4d4d8" text-anchor="middle">Focusrite 4i4</text>
+                            <text x="80" y="50" fill="#71717a" font-size="10" text-anchor="middle">INTERFACE</text>
+                        </g>
+
+                        <g transform="translate(345, 395)">
+                            <rect width="160" height="50" rx="4" fill="#202022" stroke="#52525b" stroke-width="2"/>
+                            <text x="80" y="30" fill="#d4d4d8" text-anchor="middle">Palmer DACCAPO</text>
+                        </g>
+
+                        <g transform="translate(345, 515)">
+                            <rect width="160" height="50" rx="4" fill="#202022" stroke="#52525b" stroke-width="2"/>
+                            <text x="80" y="30" fill="#d4d4d8" text-anchor="middle">Palmer PAN 02</text>
+                        </g>
+
+                        <!-- ANALOGUE ARSENAL -->
+                        <g transform="translate(675, 125)">
+                            <rect width="180" height="70" rx="4" fill="#09090b" stroke="#ef4444" stroke-width="2"/>
+                            <text x="90" y="40" fill="#d4d4d8" text-anchor="middle">Korg SQ-10</text>
+                        </g>
+
+                        <g transform="translate(675, 245)">
+                            <rect width="180" height="70" rx="4" fill="#09090b" stroke="#ef4444" stroke-width="2"/>
+                            <text x="90" y="40" fill="#d4d4d8" text-anchor="middle">Korg MS-10</text>
+                        </g>
+
+                        <g transform="translate(675, 395)" opacity="0.6">
+                            <rect width="180" height="70" rx="4" fill="#09090b" stroke="#52525b" stroke-width="2"/>
+                            <line x1="10" y1="35" x2="170" y2="35" stroke="#ef4444" stroke-width="2" />
+                            <text x="90" y="30" fill="#71717a" text-anchor="middle">Korg VC-10</text>
+                            <text x="90" y="55" fill="#ef4444" font-size="10" text-anchor="middle">OFFLINE</text>
+                        </g>
+                    </g>
+
+                    <!-- LEGEND -->
+                    <g transform="translate(35, 500)" font-size="11" fill="#a1a1aa">
+                        <rect width="180" height="130" rx="4" fill="#18181b" stroke="#3f3f46" stroke-width="1"/>
+                        <text x="90" y="20" fill="#d4d4d8" font-weight="bold" text-anchor="middle">SIGNAL KEY</text>
+                        
+                        <line x1="15" y1="40" x2="45" y2="40" stroke="#71717a" stroke-dasharray="4,4" stroke-width="2"/>
+                        <text x="55" y="44">Power / Ground</text>
+                        
+                        <line x1="15" y1="60" x2="45" y2="60" stroke="#3b82f6" stroke-width="2"/>
+                        <text x="55" y="64">Digital / USB Sync</text>
+                        
+                        <line x1="15" y1="80" x2="45" y2="80" stroke="#ef4444" stroke-width="2"/>
+                        <text x="55" y="84">Hi-Z Audio Out</text>
+                        
+                        <line x1="15" y1="100" x2="45" y2="100" stroke="#f97316" stroke-width="2"/>
+                        <text x="55" y="104">Control Voltage (CV)</text>
+
+                        <line x1="15" y1="120" x2="45" y2="120" stroke="#22c55e" stroke-width="2"/>
+                        <text x="55" y="124">Balanced Audio In</text>
+                    </g>
+
+                </svg>
             </div>
         </div>
     </section>
