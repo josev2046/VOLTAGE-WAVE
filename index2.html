@@ -123,6 +123,7 @@
                     <a href="#about" class="text-zinc-400 hover:text-red-500 transition-colors">ABOUT</a>
                     <a href="#services" class="text-zinc-400 hover:text-red-500 transition-colors">SERVICES</a>
                     <a href="#arsenal" class="text-zinc-400 hover:text-red-500 transition-colors">ARSENAL</a>
+                    <a href="#protocol" class="text-zinc-400 hover:text-red-500 transition-colors">PROTOCOL</a>
                     <a href="#submit" class="text-zinc-950 bg-red-500 hover:bg-red-400 px-4 py-1.5 font-bold transition-colors hover:shadow-[0_0_15px_rgba(220,38,38,0.4)]">SUBMIT STEMS</a>
                 </div>
             </div>
@@ -524,6 +525,79 @@
         </div>
     </section>
 
+    <!-- NEW PROTOCOL SECTION -->
+    <section id="protocol" class="py-24 bg-zinc-950 border-t border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl font-bold text-white mb-4 uppercase tracking-wide">Stem Specifications</h2>
+                <p class="text-zinc-400 font-mono text-sm uppercase tracking-widest">Recommended Parameters for MS-10 Re-amping</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 1. Channel Format -->
+                <div class="hardware-card bg-zinc-900 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:100ms]">
+                    <i data-lucide="audio-lines" class="w-6 h-6 text-red-500 mb-4"></i>
+                    <h4 class="text-white font-bold font-mono text-sm mb-2">CHANNEL FORMAT</h4>
+                    <ul class="text-zinc-400 text-xs space-y-2 leading-relaxed">
+                        <li><span class="text-red-500 mr-1">■</span> Strictly mono (single-channel WAV or AIFF).</li>
+                        <li><span class="text-red-500 mr-1">■</span> For stereo sources: Export separate left and right mono stems for independent processing. Maintain identical interface buffer/latency settings during capture to ensure sample-accurate alignment when hard-panning the returns.</li>
+                    </ul>
+                </div>
+                
+                <!-- 2. Gain Staging -->
+                <div class="hardware-card bg-zinc-900 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:200ms]">
+                    <i data-lucide="activity" class="w-6 h-6 text-red-500 mb-4"></i>
+                    <h4 class="text-white font-bold font-mono text-sm mb-2">GAIN STAGING</h4>
+                    <ul class="text-zinc-400 text-xs space-y-2 leading-relaxed">
+                        <li><span class="text-red-500 mr-1">■</span> Peak levels between -6dBFS and -3dBFS. This ensures a robust output without digital clipping prior to conversion.</li>
+                        <li><span class="text-red-500 mr-1">■</span> <em class="text-zinc-300">Routing Note:</em> The patch bay `EXT SIGNAL IN` has a 3Vp-p limit and may clip prematurely. We route via the front-panel input for greater headroom, utilising the `EXTERNAL SIGNAL LEVEL` knob to set the precise analogue drive.</li>
+                    </ul>
+                </div>
+
+                <!-- 3. Dynamic Range -->
+                <div class="hardware-card bg-zinc-900 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:300ms]">
+                    <i data-lucide="maximize" class="w-6 h-6 text-red-500 mb-4"></i>
+                    <h4 class="text-white font-bold font-mono text-sm mb-2">DYNAMIC RANGE</h4>
+                    <ul class="text-zinc-400 text-xs space-y-2 leading-relaxed">
+                        <li><span class="text-red-500 mr-1">■</span> 100% uncompressed.</li>
+                        <li><span class="text-red-500 mr-1">■</span> Bypass all digital compression or limiting. The hardware voltage-controlled amplifier and filter rely on natural volume fluctuations to overdrive interactively.</li>
+                    </ul>
+                </div>
+
+                <!-- 4. Frequency Content -->
+                <div class="hardware-card bg-zinc-900 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:400ms]">
+                    <i data-lucide="bar-chart-2" class="w-6 h-6 text-red-500 mb-4"></i>
+                    <h4 class="text-white font-bold font-mono text-sm mb-2">FREQUENCY CONTENT</h4>
+                    <ul class="text-zinc-400 text-xs space-y-2 leading-relaxed">
+                        <li><span class="text-red-500 mr-1">■</span> Full spectrum and raw.</li>
+                        <li><span class="text-red-500 mr-1">■</span> Do not apply pre-equalisation. The resonant low-pass filter requires dense, high-frequency harmonic content to process effectively.</li>
+                    </ul>
+                </div>
+
+                <!-- 5. Effects -->
+                <div class="hardware-card bg-zinc-900 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:500ms]">
+                    <i data-lucide="droplet-off" class="w-6 h-6 text-red-500 mb-4"></i>
+                    <h4 class="text-white font-bold font-mono text-sm mb-2">EFFECTS</h4>
+                    <ul class="text-zinc-400 text-xs space-y-2 leading-relaxed">
+                        <li><span class="text-red-500 mr-1">■</span> Completely dry.</li>
+                        <li><span class="text-red-500 mr-1">■</span> Disable all reverbs, delays, and digital modulation before export. Apply spatial processing only after the dry signal has been re-amped and recorded back into the DAW.</li>
+                    </ul>
+                </div>
+
+                <!-- 6. File Format -->
+                <div class="hardware-card bg-zinc-900 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:600ms]">
+                    <i data-lucide="file-audio-2" class="w-6 h-6 text-red-500 mb-4"></i>
+                    <h4 class="text-white font-bold font-mono text-sm mb-2">FILE FORMAT</h4>
+                    <ul class="text-zinc-400 text-xs space-y-2 leading-relaxed">
+                        <li><span class="text-red-500 mr-1">■</span> 24-bit WAV or AIFF.</li>
+                        <li><span class="text-red-500 mr-1">■</span> Sample rate matched to the project session (e.g., 48kHz).</li>
+                        <li><span class="text-red-500 mr-1">■</span> Strictly lossless to prevent digital compression artefacts from being exaggerated by the hardware's colouration.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="submit" class="py-24 bg-zinc-900 border-t border-zinc-800">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-zinc-950 border border-zinc-800 p-8 sm:p-12 shadow-2xl relative overflow-hidden">
@@ -715,7 +789,7 @@
                 if (audio.paused) {
                     audio.play().catch(err => {
                         console.error("Audio playback failed:", err);
-                        alert("Audio file could not be played. Please ensure files are named dry_stem.wav and wet_stem.wav and are uploaded to the correct folder.");
+                        alert("Audio file could not be played. Please ensure files are named dry_bassline.wav and ms10_reamped.wav and are uploaded to the correct folder.");
                     });
                     playWrap.classList.add('hidden');
                     pauseWrap.classList.remove('hidden');
