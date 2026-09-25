@@ -364,7 +364,8 @@
                     <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
                         <audio id="audio-dry" src="dry_stem.wav" preload="metadata"></audio>
                         <button id="btn-dry" class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-sm transition-colors border border-zinc-700">
-                            <i data-lucide="play" id="icon-dry" class="w-4 h-4 ml-0.5"></i>
+                            <span id="play-wrap-dry" class="flex"><i data-lucide="play" class="w-4 h-4 ml-0.5"></i></span>
+                            <span id="pause-wrap-dry" class="hidden"><i data-lucide="pause" class="w-4 h-4"></i></span>
                         </button>
                         <div class="flex-1 flex flex-col gap-1.5">
                             <div class="flex justify-between items-center text-[10px] font-mono text-zinc-500 uppercase tracking-widest">
@@ -390,7 +391,8 @@
                     <div class="mt-auto border-t border-red-500/20 pt-4 flex items-center gap-4">
                         <audio id="audio-wet" src="wet_stem.wav" preload="metadata"></audio>
                         <button id="btn-wet" class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-sm transition-colors border border-red-500/30">
-                            <i data-lucide="play" id="icon-wet" class="w-4 h-4 ml-0.5"></i>
+                            <span id="play-wrap-wet" class="flex"><i data-lucide="play" class="w-4 h-4 ml-0.5"></i></span>
+                            <span id="pause-wrap-wet" class="hidden"><i data-lucide="pause" class="w-4 h-4"></i></span>
                         </button>
                         <div class="flex-1 flex flex-col gap-1.5">
                             <div class="flex justify-between items-center text-[10px] font-mono text-red-500/70 uppercase tracking-widest">
@@ -693,7 +695,8 @@
         players.forEach(id => {
             const audio = document.getElementById(`audio-${id}`);
             const btn = document.getElementById(`btn-${id}`);
-            const icon = document.getElementById(`icon-${id}`);
+            const playWrap = document.getElementById(`play-wrap-${id}`);
+            const pauseWrap = document.getElementById(`pause-wrap-${id}`);
             const progress = document.getElementById(`progress-${id}`);
             const track = document.getElementById(`track-${id}`);
             const timeDisplay = document.getElementById(`time-${id}`);
@@ -703,24 +706,24 @@
                 // Pause the other player for A/B comparison
                 players.forEach(otherId => {
                     if (otherId !== id) {
-                        const otherAudio = document.getElementById(`audio-${otherId}`);
-                        const otherIcon = document.getElementById(`icon-${otherId}`);
-                        otherAudio.pause();
-                        otherIcon.setAttribute('data-lucide', 'play');
+                        document.getElementById(`audio-${otherId}`).pause();
+                        document.getElementById(`play-wrap-${otherId}`).classList.remove('hidden');
+                        document.getElementById(`pause-wrap-${otherId}`).classList.add('hidden');
                     }
                 });
 
                 if (audio.paused) {
-                    audio.play();
-                    icon.setAttribute('data-lucide', 'pause'); // Change to pause icon
-                    // Minor padding fix for pause icon so it looks centered
-                    icon.classList.remove('ml-0.5'); 
+                    audio.play().catch(err => {
+                        console.error("Audio playback failed:", err);
+                        alert("Audio file could not be played. Please ensure files are named dry_stem.wav and wet_stem.wav and are uploaded to the correct folder.");
+                    });
+                    playWrap.classList.add('hidden');
+                    pauseWrap.classList.remove('hidden');
                 } else {
                     audio.pause();
-                    icon.setAttribute('data-lucide', 'play');
-                    icon.classList.add('ml-0.5');
+                    playWrap.classList.remove('hidden');
+                    pauseWrap.classList.add('hidden');
                 }
-                lucide.createIcons(); // Re-render icon
             });
 
             // Update Progress Bar & Time
@@ -732,9 +735,8 @@
 
             // Reset when finished
             audio.addEventListener('ended', () => {
-                icon.setAttribute('data-lucide', 'play');
-                icon.classList.add('ml-0.5');
-                lucide.createIcons();
+                playWrap.classList.remove('hidden');
+                pauseWrap.classList.add('hidden');
                 progress.style.width = `0%`;
                 timeDisplay.textContent = formatTime(0);
             });
