@@ -124,6 +124,7 @@
                     <a href="#services" class="text-zinc-400 hover:text-red-500 transition-colors">SERVICES</a>
                     <a href="#arsenal" class="text-zinc-400 hover:text-red-500 transition-colors">ARSENAL</a>
                     <a href="#protocol" class="text-zinc-400 hover:text-red-500 transition-colors">PROTOCOL</a>
+                    <a href="#lab" class="text-zinc-400 hover:text-red-500 transition-colors">THE LAB</a>
                     <a href="#submit" class="text-zinc-950 bg-red-500 hover:bg-red-400 px-4 py-1.5 font-bold transition-colors hover:shadow-[0_0_15px_rgba(220,38,38,0.4)]">SUBMIT STEMS</a>
                 </div>
             </div>
@@ -223,9 +224,12 @@
                 <div class="bg-zinc-900 border border-zinc-800 p-8 hover:border-red-500/50 transition-colors group reveal [transition-delay:100ms] hardware-card">
                     <h3 class="text-xl font-bold text-white mb-2 uppercase tracking-wide">Jose Velazquez</h3>
                     <p class="text-red-500 font-mono text-xs mb-4">CHIEF SYSTEMS ARCHITECT & SIGNAL ENGINEER</p>
-                    <p class="text-zinc-400 text-sm leading-relaxed">
+                    <p class="text-zinc-400 text-sm leading-relaxed mb-4">
                         With two decades spent engineering complex media platforms and infrastructure for the BBC, IBM, and Google, Jose is the technie behind the studio's signal flow. Jose bridges the gap between physical circuitry and pristine digital capture. Applying his background in media preservation and hardware architecture, he ensures that every raw, unpredictable volt of analogue saturation is routed and recorded without ever losing its original, brutalist character.
                     </p>
+                    <a href="https://github.com/josev2046/v-w-web-audio-tools" target="_blank" class="inline-flex items-center gap-2 text-xs font-mono text-zinc-500 hover:text-red-500 transition-colors border border-zinc-800 bg-zinc-950 px-3 py-1.5 rounded-sm">
+                        <i data-lucide="github" class="w-3.5 h-3.5"></i> VIEW JOSE'S OPEN-SOURCE AUDIO TOOLS
+                    </a>
                 </div>
                 <div class="bg-zinc-900 border border-zinc-800 p-8 hover:border-red-500/50 transition-colors group reveal [transition-delay:200ms] hardware-card">
                     <h3 class="text-xl font-bold text-white mb-2 uppercase tracking-wide">Simon Velazquez</h3>
@@ -336,7 +340,6 @@
         </div>
     </section>
 
-    <!-- THE EVIDENCE SECTION (WITH AUDIO PLAYERS) -->
     <section id="proof" class="py-24 bg-zinc-950 border-y border-zinc-800 relative">
         <div class="absolute inset-0 bg-synth-grid [mask-image:radial-gradient(ellipse_at_center,white,transparent_75%)] -z-10 opacity-40"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -351,7 +354,6 @@
                 </p>
             </div>
             
-            <!-- Waveform Comparison with Audio Players -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <!-- Dry Card -->
                 <div class="hardware-card bg-zinc-900 border border-zinc-800 p-4 rounded-sm reveal [transition-delay:100ms] flex flex-col justify-between">
@@ -361,7 +363,6 @@
                         <p class="text-zinc-500 text-xs mt-2 mb-4">Flat, quantised, soft-synth bassline. Clean dynamic range, no colouration — the kind of stem that arrives in most inboxes.</p>
                     </div>
                     
-                    <!-- Dry Audio Player UI -->
                     <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
                         <audio id="audio-dry" src="dry_bassline.wav" preload="metadata"></audio>
                         <button id="btn-dry" class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-sm transition-colors border border-zinc-700">
@@ -388,7 +389,6 @@
                         <p class="text-zinc-500 text-xs mt-2 mb-4">Same performance, driven through the filter and returned. Denser, saturated, and shaped by a manually ridden cutoff sweep.</p>
                     </div>
 
-                    <!-- Wet Audio Player UI -->
                     <div class="mt-auto border-t border-red-500/20 pt-4 flex items-center gap-4">
                         <audio id="audio-wet" src="ms10_reamped.wav" preload="metadata"></audio>
                         <button id="btn-wet" class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-sm transition-colors border border-red-500/30">
@@ -408,7 +408,6 @@
                 </div>
             </div>
             
-            <!-- Spectrogram Comparison -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="hardware-card bg-zinc-900 border border-zinc-800 p-4 rounded-sm reveal [transition-delay:300ms]">
                     <img src="l_dry_spec.png" alt="Dry stem spectrogram" class="w-full h-auto mb-4 border border-zinc-800 bg-zinc-950">
@@ -525,7 +524,6 @@
         </div>
     </section>
 
-    <!-- NEW PROTOCOL SECTION -->
     <section id="protocol" class="py-24 bg-zinc-950 border-t border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 reveal">
@@ -598,9 +596,32 @@
         </div>
     </section>
 
-    <section id="submit" class="py-24 bg-zinc-900 border-t border-zinc-800">
+    <!-- NEW LAB SECTION (UPDATED COPY) -->
+    <section id="lab" class="py-24 bg-zinc-900 border-t border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl font-bold text-white mb-4 uppercase tracking-wide">The Lab // Digital Prototyping</h2>
+                <p class="text-zinc-400 font-mono text-sm uppercase tracking-widest">Experimental Web Audio & Sequencing</p>
+            </div>
+            <div class="max-w-3xl mx-auto bg-zinc-950 border border-zinc-800 p-8 reveal hardware-card relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-50">
+                    <i data-lucide="github" class="w-8 h-8 text-zinc-600"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Generative Sound & Digital Synthesis</h3>
+                <p class="text-red-500 font-mono text-xs mb-4">ENGINEERED BY JOSE VELAZQUEZ</p>
+                <p class="text-zinc-400 text-sm leading-relaxed mb-8">
+                    While our final processing path is strictly analogue, our research into electronic composition extends into custom code. Chief Systems Architect Jose Velazquez develops experimental Web Audio sequencers, radial polyrhythm engines, and browser-based synthesisers. These open-source tools act as our digital R&D playground—exploring generative sound design, Euclidean algorithms, and classic Korg-style sequencing environments natively in the browser.
+                </p>
+                <a href="https://github.com/josev2046/v-w-web-audio-tools" target="_blank" class="inline-flex items-center gap-2 bg-zinc-900 border border-zinc-700 hover:border-red-500 text-white px-6 py-3 font-mono text-sm transition-colors hover:text-red-500">
+                    <i data-lucide="code" class="w-4 h-4"></i> ACCESS REPOSITORY ON GITHUB
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="submit" class="py-24 bg-zinc-950 border-t border-zinc-800">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-zinc-950 border border-zinc-800 p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+            <div class="bg-zinc-900 border border-zinc-800 p-8 sm:p-12 shadow-2xl relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-600 to-red-400"></div>
                 <div class="mb-10 text-center">
                     <h2 class="text-2xl font-mono font-bold text-white uppercase tracking-widest mb-2">Client Portal</h2>
@@ -616,18 +637,18 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div class="space-y-2">
                                 <label class="block font-mono text-xs text-zinc-500 uppercase">Full Name</label>
-                                <input type="text" disabled class="w-full bg-zinc-900 border border-zinc-800 p-3 text-white focus:outline-none focus:border-red-500 transition-colors placeholder-zinc-700" placeholder="e.g. Alex Turner">
+                                <input type="text" disabled class="w-full bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-red-500 transition-colors placeholder-zinc-700" placeholder="e.g. Alex Turner">
                             </div>
                             <div class="space-y-2">
                                 <label class="block font-mono text-xs text-zinc-500 uppercase">Email Address</label>
-                                <input type="email" disabled class="w-full bg-zinc-900 border border-zinc-800 p-3 text-white focus:outline-none focus:border-red-500 transition-colors placeholder-zinc-700" placeholder="producer@studio.com">
+                                <input type="email" disabled class="w-full bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-red-500 transition-colors placeholder-zinc-700" placeholder="producer@studio.com">
                             </div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div class="space-y-2">
                                 <label class="block font-mono text-xs text-zinc-500 uppercase">Select Service</label>
                                 <div class="relative">
-                                    <select disabled class="w-full appearance-none bg-zinc-900 border border-zinc-800 p-3 text-white focus:outline-none focus:border-red-500 transition-colors cursor-pointer">
+                                    <select disabled class="w-full appearance-none bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-red-500 transition-colors cursor-pointer">
                                         <option value="" disabled selected>Select a processing path...</option>
                                         <option value="pass">Analogue Pass-Through</option>
                                         <option value="sequence">Sequence Translation</option>
@@ -641,12 +662,12 @@
                             </div>
                             <div class="space-y-2">
                                 <label class="block font-mono text-xs text-zinc-500 uppercase">Track Tempo / Key</label>
-                                <input type="text" disabled class="w-full bg-zinc-900 border border-zinc-800 p-3 text-white focus:outline-none focus:border-red-500 transition-colors placeholder-zinc-700" placeholder="e.g. 155 BPM / B-minor">
+                                <input type="text" disabled class="w-full bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-red-500 transition-colors placeholder-zinc-700" placeholder="e.g. 155 BPM / B-minor">
                             </div>
                         </div>
                         <div class="space-y-2 pt-4">
                             <label class="block font-mono text-xs text-zinc-500 uppercase">Upload Files (WAV or MIDI)</label>
-                            <div id="dropzone" class="border-2 border-dashed border-zinc-800 bg-zinc-900/50 p-8 text-center hover:border-red-500/50 hover:bg-zinc-900 transition-all cursor-pointer group rounded-sm">
+                            <div id="dropzone" class="border-2 border-dashed border-zinc-800 bg-zinc-950/50 p-8 text-center hover:border-red-500/50 hover:bg-zinc-950 transition-all cursor-pointer group rounded-sm">
                                 <i data-lucide="upload-cloud" class="w-8 h-8 text-zinc-600 mx-auto mb-3 group-hover:text-red-500 transition-colors"></i>
                                 <p class="text-sm text-zinc-400 font-medium group-hover:text-zinc-300">Drag & drop your .wav or .mid files here</p>
                                 <p class="text-xs text-zinc-600 mt-1">Maximum file size: 250MB</p>
@@ -656,7 +677,7 @@
                         </div>
                         <div class="space-y-2 pt-4">
                             <label class="block font-mono text-xs text-zinc-500 uppercase">Notes / Routing Instructions</label>
-                            <textarea rows="4" disabled class="w-full bg-zinc-900 border border-zinc-800 p-3 text-white focus:outline-none focus:border-red-500 transition-colors placeholder-zinc-700 resize-none" placeholder="e.g. Please sweep the filter resonance hard on the final 4 bars..."></textarea>
+                            <textarea rows="4" disabled class="w-full bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-red-500 transition-colors placeholder-zinc-700 resize-none" placeholder="e.g. Please sweep the filter resonance hard on the final 4 bars..."></textarea>
                         </div>
                         <button type="submit" disabled id="submitBtn" class="w-full font-mono bg-red-500 hover:bg-red-400 text-zinc-950 font-bold p-4 flex justify-center items-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(220,38,38,0.3)]">
                             <span>INITIATE TRANSFER</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
