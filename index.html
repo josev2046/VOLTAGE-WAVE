@@ -19,10 +19,10 @@
                         mono: ['JetBrains Mono', 'monospace'],
                     },
                     colors: {
-                        red: {
-                            400: '#ef4444',
-                            500: '#dc2626',
-                            600: '#b91c1c',
+                        amber: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
                         },
                         zinc: {
                             850: '#202022',
@@ -46,7 +46,7 @@
             display: block;
             position: absolute;
             top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(255, 0, 0, 0.02), rgba(200, 0, 0, 0.04));
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(245, 158, 11, 0.04), rgba(245, 158, 11, 0.02), rgba(217, 119, 6, 0.04));
             z-index: 50;
             background-size: 100% 2px, 3px 100%;
             pointer-events: none;
@@ -54,7 +54,7 @@
         }
 
         .glow-text {
-            text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+            text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
         }
 
         .hardware-card {
@@ -62,14 +62,14 @@
         }
         .hardware-card:hover {
             transform: translateY(-5px);
-            border-color: #dc2626;
-            box-shadow: 0 10px 30px -10px rgba(220, 38, 38, 0.2);
+            border-color: #f59e0b;
+            box-shadow: 0 10px 30px -10px rgba(245, 158, 11, 0.2);
         }
 
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #09090b; }
         ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #dc2626; }
+        ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
 
         .reveal {
             opacity: 0;
@@ -82,8 +82,8 @@
         }
         
         .bg-synth-grid {
-            background-image: linear-gradient(to right, rgba(220, 38, 38, 0.07) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(220, 38, 38, 0.07) 1px, transparent 1px);
+            background-image: linear-gradient(to right, rgba(245, 158, 11, 0.07) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(245, 158, 11, 0.07) 1px, transparent 1px);
             background-size: 40px 40px;
         }
         @keyframes pan-grid {
@@ -96,9 +96,9 @@
 
         @keyframes analog-glitch {
             0% { transform: translate(0) }
-            20% { transform: translate(-2px, 1px); color: #ef4444; text-shadow: 2px 0 #dc2626; }
+            20% { transform: translate(-2px, 1px); color: #fbbf24; text-shadow: 2px 0 #f59e0b; }
             40% { transform: translate(-1px, -1px) }
-            60% { transform: translate(2px, 1px); text-shadow: -2px 0 #dc2626; }
+            60% { transform: translate(2px, 1px); text-shadow: -2px 0 #f59e0b; }
             80% { transform: translate(1px, -1px) }
             100% { transform: translate(0) }
         }
@@ -107,25 +107,25 @@
         }
     </style>
 </head>
-<body class="antialiased relative selection:bg-red-500 selection:text-zinc-950">
+<body class="antialiased relative selection:bg-amber-500 selection:text-zinc-950">
     <div class="scanlines fixed inset-0"></div>
 
     <nav class="fixed w-full z-40 top-0 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer glitch-hover">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-red-500 w-6 h-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-amber-500 w-6 h-6">
                         <path d="M2 12h4v-7h6v14h6v-7h4"/>
                     </svg>
                     <span class="font-mono font-bold text-white tracking-widest">VOLTAGE & WAVE</span>
                 </div>
                 <div class="hidden md:flex space-x-8 font-mono text-sm items-center">
-                    <a href="#about" class="text-zinc-400 hover:text-red-500 transition-colors">ABOUT</a>
-                    <a href="#services" class="text-zinc-400 hover:text-red-500 transition-colors">SERVICES</a>
-                    <a href="#arsenal" class="text-zinc-400 hover:text-red-500 transition-colors">ARSENAL</a>
-                    <a href="#protocol" class="text-zinc-400 hover:text-red-500 transition-colors">PROTOCOL</a>
-                    <a href="#lab" class="text-zinc-400 hover:text-red-500 transition-colors">THE LAB</a>
-                    <a href="#submit" class="text-zinc-950 bg-red-500 hover:bg-red-400 px-4 py-1.5 font-bold transition-colors hover:shadow-[0_0_15px_rgba(220,38,38,0.4)]">SUBMIT STEMS</a>
+                    <a href="#about" class="text-zinc-400 hover:text-amber-500 transition-colors">ABOUT</a>
+                    <a href="#services" class="text-zinc-400 hover:text-amber-500 transition-colors">SERVICES</a>
+                    <a href="#arsenal" class="text-zinc-400 hover:text-amber-500 transition-colors">ARSENAL</a>
+                    <a href="#protocol" class="text-zinc-400 hover:text-amber-500 transition-colors">PROTOCOL</a>
+                    <a href="#lab" class="text-zinc-400 hover:text-amber-500 transition-colors">THE LAB</a>
+                    <a href="#submit" class="text-zinc-950 bg-amber-500 hover:bg-amber-400 px-4 py-1.5 font-bold transition-colors hover:shadow-[0_0_15px_rgba(245,158,11,0.4)]">SUBMIT STEMS</a>
                 </div>
             </div>
         </div>
@@ -137,20 +137,20 @@
         
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 reveal">
             <div class="max-w-3xl">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 font-mono text-xs mb-6">
-                    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-500 font-mono text-xs mb-6">
+                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
                     STUDIO CALIBRATION IN PROGRESS // LAUNCHING SOON
                 </div>
                 
                 <h1 class="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white tracking-tight mb-6 uppercase">
                     Authentic Analogue <br>
-                    <span class="text-red-500 glow-text">Hardware Processing</span>
+                    <span class="text-amber-500 glow-text">Hardware Processing</span>
                 </h1>
                 <p class="text-lg sm:text-xl text-zinc-400 mb-10 max-w-2xl font-light">
                     Bring true 1978 analogue warmth, grit, and unquantised sequencing to your sterile digital tracks. No plugins. No presets. Just pure voltage.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 font-mono">
-                    <a href="#submit" class="inline-flex justify-center items-center gap-2 bg-red-500 hover:bg-red-400 text-zinc-950 px-8 py-4 font-bold transition-all hover:shadow-[0_0_20px_rgba(220,38,38,0.4)]">
+                    <a href="#submit" class="inline-flex justify-center items-center gap-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 px-8 py-4 font-bold transition-all hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]">
                         BOOK SESSION <i data-lucide="arrow-right" class="w-4 h-4"></i>
                     </a>
                     <a href="#about" class="inline-flex justify-center items-center gap-2 border border-zinc-700 hover:border-zinc-500 text-white px-8 py-4 transition-colors bg-zinc-900/50">
@@ -169,7 +169,7 @@
                     <div class="space-y-6 text-zinc-400 leading-relaxed text-lg font-light">
                         <p>Modern software synthesisers are incredibly precise, but they lack the unpredictable behaviour and colouration of physical electricity.</p>
                         <p>We offer an exclusive analogue bridge for producers who want the aggressive, squelching filters and natural swing of vintage 1970s Korg hardware, without the maintenance or the massive price tag.</p>
-                        <p class="border-l-2 border-red-500 pl-4 italic text-zinc-300">Your MIDI and audio stems are physically routed through our studio, sculpted by hand, and captured back into pristine 24-bit digital audio.</p>
+                        <p class="border-l-2 border-amber-500 pl-4 italic text-zinc-300">Your MIDI and audio stems are physically routed through our studio, sculpted by hand, and captured back into pristine 24-bit digital audio.</p>
                     </div>
                 </div>
                 
@@ -181,7 +181,7 @@
                             <path d="M 200,0 L 200,600 M 400,0 L 400,600 M 600,0 L 600,600" stroke="#18181b" stroke-width="2"/>
                             <rect x="50" y="40" width="300" height="220" fill="#000000" rx="12" stroke="#27272a" stroke-width="6"/>
                             <path d="M 50,150 L 350,150 M 200,40 L 200,260" stroke="#18181b" stroke-width="2" stroke-dasharray="8 8"/>
-                            <path d="M 50,150 L 100,150 L 100,80 L 200,80 L 200,220 L 300,220 L 300,150 L 350,150" stroke="#dc2626" stroke-width="5" stroke-linejoin="miter" fill="none" class="animate-pulse" style="filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.6));"/>
+                            <path d="M 50,150 L 100,150 L 100,80 L 200,80 L 200,220 L 300,220 L 300,150 L 350,150" stroke="#f59e0b" stroke-width="5" stroke-linejoin="miter" fill="none" class="animate-pulse" style="filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.6));"/>
                             <g stroke="#3f3f46" stroke-width="2">
                                 <circle cx="480" cy="100" r="35" fill="#18181b"/><line x1="480" y1="100" x2="480" y2="70" stroke="#d4d4d8" stroke-width="4" stroke-linecap="round"/>
                                 <circle cx="580" cy="100" r="35" fill="#18181b"/><line x1="580" y1="100" x2="605" y2="75" stroke="#d4d4d8" stroke-width="4" stroke-linecap="round"/>
@@ -196,18 +196,18 @@
                                 <circle cx="480" cy="380" r="18"/><circle cx="580" cy="380" r="18"/><circle cx="680" cy="380" r="18"/>
                                 <circle cx="480" cy="480" r="18"/><circle cx="580" cy="480" r="18"/><circle cx="680" cy="480" r="18"/>
                             </g>
-                            <circle cx="430" cy="70" r="8" fill="#dc2626" class="animate-pulse" style="filter: drop-shadow(0 0 6px #dc2626);"/>
-                            <circle cx="530" cy="170" r="8" fill="#dc2626" style="filter: drop-shadow(0 0 6px #dc2626);"/>
+                            <circle cx="430" cy="70" r="8" fill="#f59e0b" class="animate-pulse" style="filter: drop-shadow(0 0 6px #f59e0b);"/>
+                            <circle cx="530" cy="170" r="8" fill="#f59e0b" style="filter: drop-shadow(0 0 6px #f59e0b);"/>
                             <circle cx="630" cy="170" r="8" fill="#27272a"/>
-                            <path d="M 220,380 C 220,600 580,600 580,480" fill="none" stroke="#dc2626" stroke-width="12" stroke-linecap="round" style="filter: drop-shadow(0 15px 15px rgba(0,0,0,0.6));"/>
+                            <path d="M 220,380 C 220,600 580,600 580,480" fill="none" stroke="#f59e0b" stroke-width="12" stroke-linecap="round" style="filter: drop-shadow(0 15px 15px rgba(0,0,0,0.6));"/>
                             <path d="M 320,480 C 320,650 680,650 680,380" fill="none" stroke="#52525b" stroke-width="12" stroke-linecap="round" style="filter: drop-shadow(0 15px 15px rgba(0,0,0,0.6));"/>
                             <g fill="#27272a">
                                 <circle cx="220" cy="380" r="10"/><circle cx="580" cy="480" r="10"/><circle cx="320" cy="480" r="10"/><circle cx="680" cy="380" r="10"/>
                             </g>
                         </svg>
                     </div>
-                    <div class="absolute -top-2 -left-2 w-4 h-4 border-t-2 border-l-2 border-red-500"></div>
-                    <div class="absolute -bottom-2 -right-2 w-4 h-4 border-b-2 border-r-2 border-red-500"></div>
+                    <div class="absolute -top-2 -left-2 w-4 h-4 border-t-2 border-l-2 border-amber-500"></div>
+                    <div class="absolute -bottom-2 -right-2 w-4 h-4 border-b-2 border-r-2 border-amber-500"></div>
                 </div>
             </div>
         </div>
@@ -221,22 +221,28 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-zinc-900 border border-zinc-800 p-8 hover:border-red-500/50 transition-colors group reveal [transition-delay:100ms] hardware-card">
+                <!-- Jose -->
+                <div class="bg-zinc-900 border border-zinc-800 p-8 hover:border-amber-500/50 transition-colors group reveal [transition-delay:100ms] hardware-card">
                     <h3 class="text-xl font-bold text-white mb-2 uppercase tracking-wide">Jose Velazquez</h3>
-                    <p class="text-red-500 font-mono text-xs mb-4">CHIEF SYSTEMS ARCHITECT & SIGNAL ENGINEER</p>
+                    <p class="text-amber-500 font-mono text-xs mb-4">CHIEF SYSTEMS ARCHITECT & SIGNAL ENGINEER</p>
                     <p class="text-zinc-400 text-sm leading-relaxed mb-4">
                         With two decades spent engineering complex media platforms and infrastructure for the BBC, IBM, and Google, Jose is the technie behind the studio's signal flow. Jose bridges the gap between physical circuitry and pristine digital capture. Applying his background in media preservation and hardware architecture, he ensures that every raw, unpredictable volt of analogue saturation is routed and recorded without ever losing its original, brutalist character.
                     </p>
-                    <a href="https://github.com/josev2046/v-w-web-audio-tools" target="_blank" class="inline-flex items-center gap-2 text-xs font-mono text-zinc-500 hover:text-red-500 transition-colors border border-zinc-800 bg-zinc-950 px-3 py-1.5 rounded-sm">
+                    <a href="https://github.com/josev2046/v-w-web-audio-tools" target="_blank" class="inline-flex items-center gap-2 text-xs font-mono text-zinc-500 hover:text-amber-500 transition-colors border border-zinc-800 bg-zinc-950 px-3 py-1.5 rounded-sm">
                         <i data-lucide="github" class="w-3.5 h-3.5"></i> VIEW JOSE'S OPEN-SOURCE AUDIO TOOLS
                     </a>
                 </div>
-                <div class="bg-zinc-900 border border-zinc-800 p-8 hover:border-red-500/50 transition-colors group reveal [transition-delay:200ms] hardware-card">
+                
+                <!-- Simon -->
+                <div class="bg-zinc-900 border border-zinc-800 p-8 hover:border-amber-500/50 transition-colors group reveal [transition-delay:200ms] hardware-card">
                     <h3 class="text-xl font-bold text-white mb-2 uppercase tracking-wide">Simon Velazquez</h3>
-                    <p class="text-red-500 font-mono text-xs mb-4">RESIDENT ARTIST & COMPOSER</p>
-                    <p class="text-zinc-400 text-sm leading-relaxed">
+                    <p class="text-amber-500 font-mono text-xs mb-4">RESIDENT ARTIST & COMPOSER</p>
+                    <p class="text-zinc-400 text-sm leading-relaxed mb-4">
                         An accomplished electronic artist and instrumentalist from Spain, Simon brings deep musicality and emotion to the studio's raw voltage. Known for his captivating live performances, his original compositions blend vintage analogue synthesisers with organic pianos, cinematic strings, and progressive arrangements. Within Voltage & Wave, Simon is the musical ear guiding the machinery. He ensures that every translated sequence, filter sweep, and unquantised bassline isn't just a technical process, but a deeply expressive, human performance.
                     </p>
+                    <a href="https://soundcloud.com/simonvelazquez" target="_blank" class="inline-flex items-center gap-2 text-xs font-mono text-zinc-500 hover:text-amber-500 transition-colors border border-zinc-800 bg-zinc-950 px-3 py-1.5 rounded-sm">
+                        <i data-lucide="music" class="w-3.5 h-3.5"></i> VIEW SIMON'S WORK ON SOUNDCLOUD
+                    </a>
                 </div>
             </div>
         </div>
@@ -250,46 +256,46 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-zinc-900/50 border border-zinc-800 p-8 hover:border-red-500/50 transition-colors group reveal [transition-delay:100ms] hardware-card">
-                    <div class="w-12 h-12 bg-zinc-800 flex items-center justify-center rounded mb-6 group-hover:bg-red-500/10 group-hover:text-red-500 transition-colors group-hover:scale-110 duration-300">
+                <div class="bg-zinc-900/50 border border-zinc-800 p-8 hover:border-amber-500/50 transition-colors group reveal [transition-delay:100ms] hardware-card">
+                    <div class="w-12 h-12 bg-zinc-800 flex items-center justify-center rounded mb-6 group-hover:bg-amber-500/10 group-hover:text-amber-500 transition-colors group-hover:scale-110 duration-300">
                         <i data-lucide="waves" class="w-6 h-6"></i>
                     </div>
                     <h3 class="text-xl font-bold text-white mb-2">Analogue Filter Processing & Re-amping</h3>
-                    <p class="text-red-500 font-mono text-xs mb-4">YOUR DIGITAL AUDIO, DRIVEN THROUGH PHYSICAL CIRCUITS.</p>
+                    <p class="text-amber-500 font-mono text-xs mb-4">YOUR DIGITAL AUDIO, DRIVEN THROUGH PHYSICAL CIRCUITS.</p>
                     <p class="text-zinc-400 text-sm leading-relaxed">
                         Send us your flat basslines, drums, or soft-synth stems. We will route them through the legendary, aggressive resonant low-pass filters of our vintage Korg MS-10 or Behringer K-2. Whether you want subtle harmonic warmth or brutal, overdriven EBM distortion, we tweak the VCAs and filters in real-time to breathe life into your tracks.
                     </p>
                 </div>
-                <div class="bg-zinc-900/50 border border-zinc-800 p-8 hover:border-red-500/50 transition-colors group reveal [transition-delay:200ms] hardware-card">
-                    <div class="w-12 h-12 bg-zinc-800 flex items-center justify-center rounded mb-6 group-hover:bg-red-500/10 group-hover:text-red-500 transition-colors group-hover:scale-110 duration-300">
+                <div class="bg-zinc-900/50 border border-zinc-800 p-8 hover:border-amber-500/50 transition-colors group reveal [transition-delay:200ms] hardware-card">
+                    <div class="w-12 h-12 bg-zinc-800 flex items-center justify-center rounded mb-6 group-hover:bg-amber-500/10 group-hover:text-amber-500 transition-colors group-hover:scale-110 duration-300">
                         <i data-lucide="list-ordered" class="w-6 h-6"></i>
                     </div>
                     <h3 class="text-xl font-bold text-white mb-2">Authentic Vintage Sequencing</h3>
-                    <p class="text-red-500 font-mono text-xs mb-4">BREAKING THE DIGITAL GRID WITH UNQUANTISED SWING.</p>
+                    <p class="text-amber-500 font-mono text-xs mb-4">BREAKING THE DIGITAL GRID WITH UNQUANTISED SWING.</p>
                     <p class="text-zinc-400 text-sm leading-relaxed">
                         Digital metronomes can feel lifeless. Send us your MIDI melodies, and we will manually translate them onto our 1978 Korg SQ-10 analogue sequencer by ear. Because the SQ-10 uses continuous voltage rather than quantised steps, your basslines will gain a natural, drifting, human groove that software simply cannot synthesise.
                     </p>
                 </div>
                 <div class="bg-zinc-900/30 border border-zinc-800 p-8 transition-colors group reveal [transition-delay:300ms] relative overflow-hidden opacity-80">
                     <div class="absolute top-6 right-6 flex items-center gap-2">
-                        <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
-                        <span class="text-[10px] font-mono text-red-500 uppercase tracking-widest border border-red-500/30 px-2 py-0.5 bg-red-500/10">ON REPAIR BENCH</span>
+                        <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
+                        <span class="text-[10px] font-mono text-amber-500 uppercase tracking-widest border border-amber-500/30 px-2 py-0.5 bg-amber-500/10">ON REPAIR BENCH</span>
                     </div>
                     <div class="w-12 h-12 bg-zinc-900/50 flex items-center justify-center rounded mb-6 text-zinc-600 border border-zinc-800">
                         <i data-lucide="wrench" class="w-5 h-5"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-zinc-500 mb-2 line-through decoration-red-500/50">VC-10 Vocoder Processing</h3>
-                    <p class="text-red-600 font-mono text-xs mb-4">DIAGNOSTICS IN PROGRESS // CARRIER SIGNAL LOST.</p>
+                    <h3 class="text-xl font-bold text-zinc-500 mb-2 line-through decoration-amber-500/50">VC-10 Vocoder Processing</h3>
+                    <p class="text-amber-600 font-mono text-xs mb-4">DIAGNOSTICS IN PROGRESS // CARRIER SIGNAL LOST.</p>
                     <p class="text-zinc-500 text-sm leading-relaxed">
                         The Korg VC-10 is currently dismantled on the repair bench awaiting fresh New Old Stock (NOS) components. Robotic, analogue vocal textures will return to the studio offering once circuitry calibration is complete.
                     </p>
                 </div>
-                <div class="bg-zinc-900/50 border border-zinc-800 p-8 hover:border-red-500/50 transition-colors group reveal [transition-delay:400ms] hardware-card">
-                    <div class="w-12 h-12 bg-zinc-800 flex items-center justify-center rounded mb-6 group-hover:bg-red-500/10 group-hover:text-red-500 transition-colors group-hover:scale-110 duration-300">
+                <div class="bg-zinc-900/50 border border-zinc-800 p-8 hover:border-amber-500/50 transition-colors group reveal [transition-delay:400ms] hardware-card">
+                    <div class="w-12 h-12 bg-zinc-800 flex items-center justify-center rounded mb-6 group-hover:bg-amber-500/10 group-hover:text-amber-500 transition-colors group-hover:scale-110 duration-300">
                         <i data-lucide="settings-2" class="w-6 h-6"></i>
                     </div>
                     <h3 class="text-xl font-bold text-white mb-2">Custom Hardware Sound Design</h3>
-                    <p class="text-red-500 font-mono text-xs mb-4">BESPOKE STEMS, BUILT FROM THE GROUND UP.</p>
+                    <p class="text-amber-500 font-mono text-xs mb-4">BESPOKE STEMS, BUILT FROM THE GROUND UP.</p>
                     <p class="text-zinc-400 text-sm leading-relaxed">
                         Need a massive, chorused Pulse Width Modulation (PWM) bassline or a generative, tumbling arpeggio? We provide custom sound design using our hardware arsenal. Tell us the tempo and the key, and we will deliver raw, mix-ready analogue stems straight to your inbox.
                     </p>
@@ -307,33 +313,33 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
                 <div class="hardware-card bg-zinc-900 border border-zinc-800 p-4 rounded-sm reveal [transition-delay:100ms]">
-                    <img src="https://placehold.co/600x400/18181b/dc2626?text=Korg+MS-10" alt="Korg MS-10 Monosynth" class="w-full h-48 object-cover mb-4 filter grayscale contrast-125">
+                    <img src="https://placehold.co/600x400/18181b/f59e0b?text=Korg+MS-10" alt="Korg MS-10 Monosynth" class="w-full h-48 object-cover mb-4 filter grayscale contrast-125">
                     <h4 class="text-white font-bold font-mono">Korg MS-10 (1978)</h4>
                     <p class="text-zinc-500 text-xs mt-2">Original vintage analogue monosynth, famous for its biting PWM and aggressive filter.</p>
                 </div>
                 <div class="hardware-card bg-zinc-900 border border-zinc-800 p-4 rounded-sm reveal [transition-delay:200ms]">
-                    <img src="https://placehold.co/600x400/18181b/dc2626?text=Korg+SQ-10" alt="Korg SQ-10 Sequencer" class="w-full h-48 object-cover mb-4 filter grayscale contrast-125">
+                    <img src="https://placehold.co/600x400/18181b/f59e0b?text=Korg+SQ-10" alt="Korg SQ-10 Sequencer" class="w-full h-48 object-cover mb-4 filter grayscale contrast-125">
                     <h4 class="text-white font-bold font-mono">Korg SQ-10 (1978)</h4>
                     <p class="text-zinc-500 text-xs mt-2">Vintage analogue step sequencer (Hz/V). Pure unquantised voltage control.</p>
                 </div>
                 <div class="hardware-card bg-zinc-900 border border-zinc-800 p-4 rounded-sm reveal [transition-delay:250ms]">
-                    <img src="https://placehold.co/600x400/18181b/dc2626?text=Focusrite+4i4" alt="Focusrite 4i4 4th Gen" class="w-full h-48 object-cover mb-4 filter grayscale contrast-125">
+                    <img src="https://placehold.co/600x400/18181b/f59e0b?text=Focusrite+4i4" alt="Focusrite 4i4 4th Gen" class="w-full h-48 object-cover mb-4 filter grayscale contrast-125">
                     <h4 class="text-white font-bold font-mono">Focusrite 4i4 (4th Gen)</h4>
                     <p class="text-zinc-500 text-xs mt-2">Precision AD/DA conversion. The transparent bridge between the digital DAW and analogue voltage.</p>
                 </div>
                 <div class="bg-zinc-900 border border-zinc-800/50 p-4 rounded-sm reveal [transition-delay:300ms] relative opacity-60">
                     <div class="absolute top-8 right-8 z-20 shadow-lg">
-                        <span class="bg-zinc-950/90 border border-red-500 text-red-500 px-3 py-1 font-mono text-[10px] uppercase tracking-widest backdrop-blur-md shadow-[0_0_10px_rgba(220,38,38,0.3)]">MAINTENANCE</span>
+                        <span class="bg-zinc-950/90 border border-amber-500 text-amber-500 px-3 py-1 font-mono text-[10px] uppercase tracking-widest backdrop-blur-md shadow-[0_0_10px_rgba(245,158,11,0.3)]">MAINTENANCE</span>
                     </div>
-                    <img src="https://placehold.co/600x400/18181b/dc2626?text=Korg+VC-10" alt="Korg VC-10 Vocoder" class="w-full h-48 object-cover mb-4 filter grayscale opacity-40 mix-blend-luminosity">
+                    <img src="https://placehold.co/600x400/18181b/f59e0b?text=Korg+VC-10" alt="Korg VC-10 Vocoder" class="w-full h-48 object-cover mb-4 filter grayscale opacity-40 mix-blend-luminosity">
                     <h4 class="text-zinc-500 font-bold font-mono line-through decoration-zinc-700">Korg VC-10 (1978)</h4>
-                    <p class="text-red-500 font-mono text-[10px] mt-1 mb-2">STATUS: AWAITING COMPONENTS</p>
+                    <p class="text-amber-500 font-mono text-[10px] mt-1 mb-2">STATUS: AWAITING COMPONENTS</p>
                     <p class="text-zinc-600 text-xs">The legendary analogue vocoder. Temporarily offline for circuitry repair.</p>
                 </div>
             </div>
             <div class="border-t border-zinc-800 pt-8 reveal text-center">
                 <div class="inline-flex items-center gap-3 text-zinc-500 font-mono text-sm border border-zinc-800 bg-zinc-900/50 px-4 py-2 rounded-sm">
-                    <span class="w-1.5 h-1.5 bg-red-500 animate-pulse rounded-full"></span>
+                    <span class="w-1.5 h-1.5 bg-amber-500 animate-pulse rounded-full"></span>
                     FULL ARSENAL SPEC COMING SOON...
                 </div>
             </div>
@@ -344,8 +350,8 @@
         <div class="absolute inset-0 bg-synth-grid [mask-image:radial-gradient(ellipse_at_center,white,transparent_75%)] -z-10 opacity-40"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center mb-6 reveal">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 font-mono text-xs mb-6">
-                    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-500 font-mono text-xs mb-6">
+                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
                     SIGNAL ANALYSIS // MS-10 RE-AMP PASS
                 </div>
                 <h2 class="text-3xl font-bold text-white mb-4 uppercase tracking-wide">Signal Analysis</h2>
@@ -382,26 +388,26 @@
                 </div>
                 
                 <!-- Wet Card -->
-                <div class="hardware-card bg-zinc-900 border border-red-500/30 p-4 rounded-sm reveal [transition-delay:200ms] flex flex-col justify-between">
+                <div class="hardware-card bg-zinc-900 border border-amber-500/30 p-4 rounded-sm reveal [transition-delay:200ms] flex flex-col justify-between">
                     <div>
                         <img src="l_wet_wave.png" alt="Waveform after MS-10 re-amping" class="w-full h-auto mb-4 border border-zinc-800 bg-zinc-950">
-                        <h4 class="text-red-500 font-bold font-mono text-sm">MS-10 RE-AMPED</h4>
+                        <h4 class="text-amber-500 font-bold font-mono text-sm">MS-10 RE-AMPED</h4>
                         <p class="text-zinc-500 text-xs mt-2 mb-4">Same performance, driven through the filter and returned. Denser, saturated, and shaped by a manually ridden cutoff sweep.</p>
                     </div>
 
-                    <div class="mt-auto border-t border-red-500/20 pt-4 flex items-center gap-4">
+                    <div class="mt-auto border-t border-amber-500/20 pt-4 flex items-center gap-4">
                         <audio id="audio-wet" src="ms10_reamped.wav" preload="metadata"></audio>
-                        <button id="btn-wet" class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-sm transition-colors border border-red-500/30">
+                        <button id="btn-wet" class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 rounded-sm transition-colors border border-amber-500/30">
                             <span id="play-wrap-wet" class="flex"><i data-lucide="play" class="w-4 h-4 ml-0.5"></i></span>
                             <span id="pause-wrap-wet" class="hidden"><i data-lucide="pause" class="w-4 h-4"></i></span>
                         </button>
                         <div class="flex-1 flex flex-col gap-1.5">
-                            <div class="flex justify-between items-center text-[10px] font-mono text-red-500/70 uppercase tracking-widest">
+                            <div class="flex justify-between items-center text-[10px] font-mono text-amber-500/70 uppercase tracking-widest">
                                 <span>Hardware Return</span>
                                 <span id="time-wet">0:00</span>
                             </div>
-                            <div id="track-wet" class="h-2 w-full bg-zinc-950 rounded-sm overflow-hidden cursor-pointer border border-red-500/20">
-                                <div id="progress-wet" class="h-full bg-red-500 w-0 pointer-events-none transition-all duration-75 shadow-[0_0_8px_rgba(220,38,38,0.6)]"></div>
+                            <div id="track-wet" class="h-2 w-full bg-zinc-950 rounded-sm overflow-hidden cursor-pointer border border-amber-500/20">
+                                <div id="progress-wet" class="h-full bg-amber-500 w-0 pointer-events-none transition-all duration-75 shadow-[0_0_8px_rgba(245,158,11,0.6)]"></div>
                             </div>
                         </div>
                     </div>
@@ -414,9 +420,9 @@
                     <h4 class="text-white font-bold font-mono text-sm">DRY SPECTROGRAM</h4>
                     <p class="text-zinc-500 text-xs mt-2">Harmonic content stacked cleanly above each note, tight noise floor, nothing above the source's natural overtone series.</p>
                 </div>
-                <div class="hardware-card bg-zinc-900 border border-red-500/30 p-4 rounded-sm reveal [transition-delay:400ms]">
+                <div class="hardware-card bg-zinc-900 border border-amber-500/30 p-4 rounded-sm reveal [transition-delay:400ms]">
                     <img src="l_wet_spec.png" alt="Spectrogram after MS-10 re-amping" class="w-full h-auto mb-4 border border-zinc-800 bg-zinc-950">
-                    <h4 class="text-red-500 font-bold font-mono text-sm">RE-AMPED SPECTROGRAM</h4>
+                    <h4 class="text-amber-500 font-bold font-mono text-sm">RE-AMPED SPECTROGRAM</h4>
                     <p class="text-zinc-500 text-xs mt-2">The resonant peak tracks the filter sweep — an irregular, note-following ridge, not a smooth automated curve. Harmonics extend well above the dry signal, and a raised noise floor confirms a genuine analogue return path.</p>
                 </div>
             </div>
@@ -437,7 +443,7 @@
                 <svg viewBox="0 0 950 650" class="w-full max-w-5xl min-w-[800px] h-auto font-mono" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" /></marker>
-                        <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#ef4444" /></marker>
+                        <marker id="arrow-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b" /></marker>
                         <marker id="arrow-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#f97316" /></marker>
                         <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#22c55e" /></marker>
                         <marker id="arrow-blue-rev" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 10 0 L 0 5 L 10 10 z" fill="#3b82f6" /></marker>
@@ -452,11 +458,11 @@
                             <path d="M 215 275 L 345 275" marker-start="url(#arrow-blue-rev)" marker-end="url(#arrow-blue)" />
                             <path d="M 425 245 L 425 195" marker-end="url(#arrow-blue)" />
                         </g>
-                        <g stroke="#ef4444">
-                            <path d="M 345 290 L 235 290 L 235 150 L 215 150" marker-end="url(#arrow-red)" />
-                            <path d="M 425 315 L 425 395" marker-end="url(#arrow-red)" />
-                            <path d="M 505 410 L 590 410 L 590 290 L 675 290" marker-end="url(#arrow-red)" />
-                            <path d="M 505 435 L 560 435 L 560 425 L 675 425" marker-end="url(#arrow-red)" />
+                        <g stroke="#f59e0b">
+                            <path d="M 345 290 L 235 290 L 235 150 L 215 150" marker-end="url(#arrow-amber)" />
+                            <path d="M 425 315 L 425 395" marker-end="url(#arrow-amber)" />
+                            <path d="M 505 410 L 590 410 L 590 290 L 675 290" marker-end="url(#arrow-amber)" />
+                            <path d="M 505 435 L 560 435 L 560 425 L 675 425" marker-end="url(#arrow-amber)" />
                         </g>
                         <g stroke="#f97316">
                             <path d="M 505 155 L 675 155" marker-end="url(#arrow-orange)" />
@@ -476,15 +482,15 @@
                         <g transform="translate(345, 245)"><rect width="160" height="70" rx="4" fill="#202022" stroke="#52525b" stroke-width="2"/><text x="80" y="32" fill="#d4d4d8" text-anchor="middle">Focusrite 4i4 Gen 4</text><text x="80" y="50" fill="#71717a" font-size="10" text-anchor="middle">INTERFACE</text></g>
                         <g transform="translate(345, 395)"><rect width="160" height="50" rx="4" fill="#202022" stroke="#52525b" stroke-width="2"/><text x="80" y="30" fill="#d4d4d8" text-anchor="middle">Palmer DACCAPO</text></g>
                         <g transform="translate(345, 515)"><rect width="160" height="50" rx="4" fill="#202022" stroke="#52525b" stroke-width="2"/><text x="80" y="30" fill="#d4d4d8" text-anchor="middle">Palmer PAN 02</text></g>
-                        <g transform="translate(675, 125)"><rect width="180" height="70" rx="4" fill="#09090b" stroke="#ef4444" stroke-width="2"/><text x="90" y="40" fill="#d4d4d8" text-anchor="middle">Korg SQ-10</text></g>
-                        <g transform="translate(675, 245)"><rect width="180" height="70" rx="4" fill="#09090b" stroke="#ef4444" stroke-width="2"/><text x="90" y="40" fill="#d4d4d8" text-anchor="middle">Korg MS-10</text></g>
-                        <g transform="translate(675, 395)" opacity="0.6"><rect width="180" height="70" rx="4" fill="#09090b" stroke="#52525b" stroke-width="2"/><line x1="10" y1="35" x2="170" y2="35" stroke="#ef4444" stroke-width="2" /><text x="90" y="30" fill="#71717a" text-anchor="middle">Korg VC-10</text><text x="90" y="55" fill="#ef4444" font-size="10" text-anchor="middle">OFFLINE</text></g>
+                        <g transform="translate(675, 125)"><rect width="180" height="70" rx="4" fill="#09090b" stroke="#f59e0b" stroke-width="2"/><text x="90" y="40" fill="#d4d4d8" text-anchor="middle">Korg SQ-10</text></g>
+                        <g transform="translate(675, 245)"><rect width="180" height="70" rx="4" fill="#09090b" stroke="#f59e0b" stroke-width="2"/><text x="90" y="40" fill="#d4d4d8" text-anchor="middle">Korg MS-10</text></g>
+                        <g transform="translate(675, 395)" opacity="0.6"><rect width="180" height="70" rx="4" fill="#09090b" stroke="#52525b" stroke-width="2"/><line x1="10" y1="35" x2="170" y2="35" stroke="#f59e0b" stroke-width="2" /><text x="90" y="30" fill="#71717a" text-anchor="middle">Korg VC-10</text><text x="90" y="55" fill="#f59e0b" font-size="10" text-anchor="middle">OFFLINE</text></g>
                     </g>
                     <g transform="translate(35, 500)" font-size="11" fill="#a1a1aa">
                         <rect width="180" height="110" rx="4" fill="#18181b" stroke="#3f3f46" stroke-width="1"/>
                         <text x="90" y="20" fill="#d4d4d8" font-weight="bold" text-anchor="middle">SIGNAL KEY</text>
                         <line x1="15" y1="40" x2="45" y2="40" stroke="#3b82f6" stroke-width="2"/><text x="55" y="44">Digital / USB Sync</text>
-                        <line x1="15" y1="60" x2="45" y2="60" stroke="#ef4444" stroke-width="2"/><text x="55" y="64">Hi-Z Audio Out</text>
+                        <line x1="15" y1="60" x2="45" y2="60" stroke="#f59e0b" stroke-width="2"/><text x="55" y="64">Hi-Z Audio Out</text>
                         <line x1="15" y1="80" x2="45" y2="80" stroke="#f97316" stroke-width="2"/><text x="55" y="84">Control Voltage</text>
                         <line x1="15" y1="100" x2="45" y2="100" stroke="#22c55e" stroke-width="2"/><text x="55" y="104">Balanced Audio In</text>
                     </g>
@@ -500,22 +506,22 @@
                 <div class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-zinc-800 -translate-y-1/2 reveal"></div>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div class="relative bg-zinc-950 p-6 border border-zinc-800 z-10 text-center reveal [transition-delay:100ms] hardware-card">
-                        <div class="w-10 h-10 bg-red-500 text-zinc-950 font-mono font-bold flex items-center justify-center mx-auto mb-4 rounded-sm shadow-[0_0_15px_rgba(220,38,38,0.3)]">1</div>
+                        <div class="w-10 h-10 bg-amber-500 text-zinc-950 font-mono font-bold flex items-center justify-center mx-auto mb-4 rounded-sm shadow-[0_0_15px_rgba(245,158,11,0.3)]">1</div>
                         <h4 class="text-white font-bold mb-2">Data Submission</h4>
                         <p class="text-zinc-400 text-sm">Send us your dry audio stems, MIDI sequences, or sound design briefs, along with a reference track for vibe.</p>
                     </div>
                     <div class="relative bg-zinc-950 p-6 border border-zinc-800 z-10 text-center reveal [transition-delay:200ms] hardware-card">
-                        <div class="w-10 h-10 bg-zinc-800 text-red-500 font-mono font-bold flex items-center justify-center mx-auto mb-4 rounded-sm">2</div>
+                        <div class="w-10 h-10 bg-zinc-800 text-amber-500 font-mono font-bold flex items-center justify-center mx-auto mb-4 rounded-sm">2</div>
                         <h4 class="text-white font-bold mb-2">Signal Routing</h4>
                         <p class="text-zinc-400 text-sm">We physically patch the studio for your chosen path: driving audio into vintage filters, designing custom voices, or translating MIDI to CV.</p>
                     </div>
                     <div class="relative bg-zinc-950 p-6 border border-zinc-800 z-10 text-center reveal [transition-delay:300ms] hardware-card">
-                        <div class="w-10 h-10 bg-zinc-800 text-red-500 font-mono font-bold flex items-center justify-center mx-auto mb-4 rounded-sm">3</div>
+                        <div class="w-10 h-10 bg-zinc-800 text-amber-500 font-mono font-bold flex items-center justify-center mx-auto mb-4 rounded-sm">3</div>
                         <h4 class="text-white font-bold mb-2">Tactile Processing</h4>
                         <p class="text-zinc-400 text-sm">No automation. Your tracks are processed in real-time as we manually ride the circuitry—tweaking filters, envelopes, and sequences.</p>
                     </div>
                     <div class="relative bg-zinc-950 p-6 border border-zinc-800 z-10 text-center reveal [transition-delay:400ms] hardware-card">
-                        <div class="w-10 h-10 bg-zinc-800 text-red-500 font-mono font-bold flex items-center justify-center mx-auto mb-4 rounded-sm">4</div>
+                        <div class="w-10 h-10 bg-zinc-800 text-amber-500 font-mono font-bold flex items-center justify-center mx-auto mb-4 rounded-sm">4</div>
                         <h4 class="text-white font-bold mb-2">Digital Capture</h4>
                         <p class="text-zinc-400 text-sm">Receive phase-aligned, mix-ready 24-bit/48kHz digital WAV files, perfectly preserving the unpredictable analogue character.</p>
                     </div>
@@ -524,6 +530,7 @@
         </div>
     </section>
 
+    <!-- PROTOCOL SECTION -->
     <section id="protocol" class="py-24 bg-zinc-950 border-t border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 reveal">
@@ -534,69 +541,69 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- 1. Channel Format -->
                 <div class="hardware-card bg-zinc-900 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:100ms]">
-                    <i data-lucide="audio-lines" class="w-6 h-6 text-red-500 mb-4"></i>
+                    <i data-lucide="audio-lines" class="w-6 h-6 text-amber-500 mb-4"></i>
                     <h4 class="text-white font-bold font-mono text-sm mb-2">CHANNEL FORMAT</h4>
                     <ul class="text-zinc-400 text-xs space-y-2 leading-relaxed">
-                        <li><span class="text-red-500 mr-1">■</span> Strictly mono (single-channel WAV or AIFF).</li>
-                        <li><span class="text-red-500 mr-1">■</span> For stereo sources: Export separate left and right mono stems for independent processing. Maintain identical interface buffer/latency settings during capture to ensure sample-accurate alignment when hard-panning the returns.</li>
+                        <li><span class="text-amber-500 mr-1">■</span> Strictly mono (single-channel WAV or AIFF).</li>
+                        <li><span class="text-amber-500 mr-1">■</span> For stereo sources: Export separate left and right mono stems for independent processing. Maintain identical interface buffer/latency settings during capture to ensure sample-accurate alignment when hard-panning the returns.</li>
                     </ul>
                 </div>
                 
                 <!-- 2. Gain Staging -->
                 <div class="hardware-card bg-zinc-900 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:200ms]">
-                    <i data-lucide="activity" class="w-6 h-6 text-red-500 mb-4"></i>
+                    <i data-lucide="activity" class="w-6 h-6 text-amber-500 mb-4"></i>
                     <h4 class="text-white font-bold font-mono text-sm mb-2">GAIN STAGING</h4>
                     <ul class="text-zinc-400 text-xs space-y-2 leading-relaxed">
-                        <li><span class="text-red-500 mr-1">■</span> Peak levels between -6dBFS and -3dBFS. This ensures a robust output without digital clipping prior to conversion.</li>
-                        <li><span class="text-red-500 mr-1">■</span> <em class="text-zinc-300">Routing Note:</em> The patch bay `EXT SIGNAL IN` has a 3Vp-p limit and may clip prematurely. We route via the front-panel input for greater headroom, utilising the `EXTERNAL SIGNAL LEVEL` knob to set the precise analogue drive.</li>
+                        <li><span class="text-amber-500 mr-1">■</span> Peak levels between -6dBFS and -3dBFS. This ensures a robust output without digital clipping prior to conversion.</li>
+                        <li><span class="text-amber-500 mr-1">■</span> <em class="text-zinc-300">Routing Note:</em> The patch bay `EXT SIGNAL IN` has a 3Vp-p limit and may clip prematurely. We route via the front-panel input for greater headroom, utilising the `EXTERNAL SIGNAL LEVEL` knob to set the precise analogue drive.</li>
                     </ul>
                 </div>
 
                 <!-- 3. Dynamic Range -->
                 <div class="hardware-card bg-zinc-900 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:300ms]">
-                    <i data-lucide="maximize" class="w-6 h-6 text-red-500 mb-4"></i>
+                    <i data-lucide="maximize" class="w-6 h-6 text-amber-500 mb-4"></i>
                     <h4 class="text-white font-bold font-mono text-sm mb-2">DYNAMIC RANGE</h4>
                     <ul class="text-zinc-400 text-xs space-y-2 leading-relaxed">
-                        <li><span class="text-red-500 mr-1">■</span> 100% uncompressed.</li>
-                        <li><span class="text-red-500 mr-1">■</span> Bypass all digital compression or limiting. The hardware voltage-controlled amplifier and filter rely on natural volume fluctuations to overdrive interactively.</li>
+                        <li><span class="text-amber-500 mr-1">■</span> 100% uncompressed.</li>
+                        <li><span class="text-amber-500 mr-1">■</span> Bypass all digital compression or limiting. The hardware voltage-controlled amplifier and filter rely on natural volume fluctuations to overdrive interactively.</li>
                     </ul>
                 </div>
 
                 <!-- 4. Frequency Content -->
                 <div class="hardware-card bg-zinc-900 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:400ms]">
-                    <i data-lucide="bar-chart-2" class="w-6 h-6 text-red-500 mb-4"></i>
+                    <i data-lucide="bar-chart-2" class="w-6 h-6 text-amber-500 mb-4"></i>
                     <h4 class="text-white font-bold font-mono text-sm mb-2">FREQUENCY CONTENT</h4>
                     <ul class="text-zinc-400 text-xs space-y-2 leading-relaxed">
-                        <li><span class="text-red-500 mr-1">■</span> Full spectrum and raw.</li>
-                        <li><span class="text-red-500 mr-1">■</span> Do not apply pre-equalisation. The resonant low-pass filter requires dense, high-frequency harmonic content to process effectively.</li>
+                        <li><span class="text-amber-500 mr-1">■</span> Full spectrum and raw.</li>
+                        <li><span class="text-amber-500 mr-1">■</span> Do not apply pre-equalisation. The resonant low-pass filter requires dense, high-frequency harmonic content to process effectively.</li>
                     </ul>
                 </div>
 
                 <!-- 5. Effects -->
                 <div class="hardware-card bg-zinc-900 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:500ms]">
-                    <i data-lucide="droplet-off" class="w-6 h-6 text-red-500 mb-4"></i>
+                    <i data-lucide="droplet-off" class="w-6 h-6 text-amber-500 mb-4"></i>
                     <h4 class="text-white font-bold font-mono text-sm mb-2">EFFECTS</h4>
                     <ul class="text-zinc-400 text-xs space-y-2 leading-relaxed">
-                        <li><span class="text-red-500 mr-1">■</span> Completely dry.</li>
-                        <li><span class="text-red-500 mr-1">■</span> Disable all reverbs, delays, and digital modulation before export. Apply spatial processing only after the dry signal has been re-amped and recorded back into the DAW.</li>
+                        <li><span class="text-amber-500 mr-1">■</span> Completely dry.</li>
+                        <li><span class="text-amber-500 mr-1">■</span> Disable all reverbs, delays, and digital modulation before export. Apply spatial processing only after the dry signal has been re-amped and recorded back into the DAW.</li>
                     </ul>
                 </div>
 
                 <!-- 6. File Format -->
                 <div class="hardware-card bg-zinc-900 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:600ms]">
-                    <i data-lucide="file-audio-2" class="w-6 h-6 text-red-500 mb-4"></i>
+                    <i data-lucide="file-audio-2" class="w-6 h-6 text-amber-500 mb-4"></i>
                     <h4 class="text-white font-bold font-mono text-sm mb-2">FILE FORMAT</h4>
                     <ul class="text-zinc-400 text-xs space-y-2 leading-relaxed">
-                        <li><span class="text-red-500 mr-1">■</span> 24-bit WAV or AIFF.</li>
-                        <li><span class="text-red-500 mr-1">■</span> Sample rate matched to the project session (e.g., 48kHz).</li>
-                        <li><span class="text-red-500 mr-1">■</span> Strictly lossless to prevent digital compression artefacts from being exaggerated by the hardware's colouration.</li>
+                        <li><span class="text-amber-500 mr-1">■</span> 24-bit WAV or AIFF.</li>
+                        <li><span class="text-amber-500 mr-1">■</span> Sample rate matched to the project session (e.g., 48kHz).</li>
+                        <li><span class="text-amber-500 mr-1">■</span> Strictly lossless to prevent digital compression artefacts from being exaggerated by the hardware's colouration.</li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- NEW LAB SECTION (UPDATED COPY) -->
+    <!-- LAB SECTION -->
     <section id="lab" class="py-24 bg-zinc-900 border-t border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 reveal">
@@ -608,11 +615,11 @@
                     <i data-lucide="github" class="w-8 h-8 text-zinc-600"></i>
                 </div>
                 <h3 class="text-xl font-bold text-white mb-2">Generative Sound & Digital Synthesis</h3>
-                <p class="text-red-500 font-mono text-xs mb-4">ENGINEERED BY JOSE VELAZQUEZ</p>
+                <p class="text-amber-500 font-mono text-xs mb-4">ENGINEERED BY JOSE VELAZQUEZ</p>
                 <p class="text-zinc-400 text-sm leading-relaxed mb-8">
                     While our final processing path is strictly analogue, our research into electronic composition extends into custom code. Chief Systems Architect Jose Velazquez develops experimental Web Audio sequencers, radial polyrhythm engines, and browser-based synthesisers. These open-source tools act as our digital R&D playground—exploring generative sound design, Euclidean algorithms, and classic Korg-style sequencing environments natively in the browser.
                 </p>
-                <a href="https://github.com/josev2046/v-w-web-audio-tools" target="_blank" class="inline-flex items-center gap-2 bg-zinc-900 border border-zinc-700 hover:border-red-500 text-white px-6 py-3 font-mono text-sm transition-colors hover:text-red-500">
+                <a href="https://github.com/josev2046/v-w-web-audio-tools" target="_blank" class="inline-flex items-center gap-2 bg-zinc-900 border border-zinc-700 hover:border-amber-500 text-white px-6 py-3 font-mono text-sm transition-colors hover:text-amber-500">
                     <i data-lucide="code" class="w-4 h-4"></i> ACCESS REPOSITORY ON GITHUB
                 </a>
             </div>
@@ -622,14 +629,14 @@
     <section id="submit" class="py-24 bg-zinc-950 border-t border-zinc-800">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-zinc-900 border border-zinc-800 p-8 sm:p-12 shadow-2xl relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-600 to-red-400"></div>
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-600 to-amber-400"></div>
                 <div class="mb-10 text-center">
                     <h2 class="text-2xl font-mono font-bold text-white uppercase tracking-widest mb-2">Client Portal</h2>
                     <p class="text-zinc-400 text-sm">Submit your stems for analogue processing</p>
                 </div>
                 <div class="relative">
                     <div class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-zinc-950/70 backdrop-blur-sm border border-zinc-800 rounded-sm">
-                        <i data-lucide="lock" class="w-8 h-8 text-red-500 mb-3"></i>
+                        <i data-lucide="lock" class="w-8 h-8 text-amber-500 mb-3"></i>
                         <p class="text-white font-mono font-bold tracking-widest">PORTAL OFFLINE</p>
                         <p class="text-zinc-400 text-sm mt-2">Studio calibration in progress. Launching soon.</p>
                     </div>
@@ -637,18 +644,18 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div class="space-y-2">
                                 <label class="block font-mono text-xs text-zinc-500 uppercase">Full Name</label>
-                                <input type="text" disabled class="w-full bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-red-500 transition-colors placeholder-zinc-700" placeholder="e.g. Alex Turner">
+                                <input type="text" disabled class="w-full bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-700" placeholder="e.g. Alex Turner">
                             </div>
                             <div class="space-y-2">
                                 <label class="block font-mono text-xs text-zinc-500 uppercase">Email Address</label>
-                                <input type="email" disabled class="w-full bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-red-500 transition-colors placeholder-zinc-700" placeholder="producer@studio.com">
+                                <input type="email" disabled class="w-full bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-700" placeholder="producer@studio.com">
                             </div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div class="space-y-2">
                                 <label class="block font-mono text-xs text-zinc-500 uppercase">Select Service</label>
                                 <div class="relative">
-                                    <select disabled class="w-full appearance-none bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-red-500 transition-colors cursor-pointer">
+                                    <select disabled class="w-full appearance-none bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-amber-500 transition-colors cursor-pointer">
                                         <option value="" disabled selected>Select a processing path...</option>
                                         <option value="pass">Analogue Pass-Through</option>
                                         <option value="sequence">Sequence Translation</option>
@@ -662,28 +669,28 @@
                             </div>
                             <div class="space-y-2">
                                 <label class="block font-mono text-xs text-zinc-500 uppercase">Track Tempo / Key</label>
-                                <input type="text" disabled class="w-full bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-red-500 transition-colors placeholder-zinc-700" placeholder="e.g. 155 BPM / B-minor">
+                                <input type="text" disabled class="w-full bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-700" placeholder="e.g. 155 BPM / B-minor">
                             </div>
                         </div>
                         <div class="space-y-2 pt-4">
                             <label class="block font-mono text-xs text-zinc-500 uppercase">Upload Files (WAV or MIDI)</label>
-                            <div id="dropzone" class="border-2 border-dashed border-zinc-800 bg-zinc-950/50 p-8 text-center hover:border-red-500/50 hover:bg-zinc-950 transition-all cursor-pointer group rounded-sm">
-                                <i data-lucide="upload-cloud" class="w-8 h-8 text-zinc-600 mx-auto mb-3 group-hover:text-red-500 transition-colors"></i>
+                            <div id="dropzone" class="border-2 border-dashed border-zinc-800 bg-zinc-950/50 p-8 text-center hover:border-amber-500/50 hover:bg-zinc-950 transition-all cursor-pointer group rounded-sm">
+                                <i data-lucide="upload-cloud" class="w-8 h-8 text-zinc-600 mx-auto mb-3 group-hover:text-amber-500 transition-colors"></i>
                                 <p class="text-sm text-zinc-400 font-medium group-hover:text-zinc-300">Drag & drop your .wav or .mid files here</p>
                                 <p class="text-xs text-zinc-600 mt-1">Maximum file size: 250MB</p>
                                 <input type="file" class="hidden" disabled id="fileInput" multiple accept=".wav,.mid,.midi">
                             </div>
-                            <div id="fileList" class="text-sm text-red-500 font-mono mt-2 hidden"></div>
+                            <div id="fileList" class="text-sm text-amber-500 font-mono mt-2 hidden"></div>
                         </div>
                         <div class="space-y-2 pt-4">
                             <label class="block font-mono text-xs text-zinc-500 uppercase">Notes / Routing Instructions</label>
-                            <textarea rows="4" disabled class="w-full bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-red-500 transition-colors placeholder-zinc-700 resize-none" placeholder="e.g. Please sweep the filter resonance hard on the final 4 bars..."></textarea>
+                            <textarea rows="4" disabled class="w-full bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-700 resize-none" placeholder="e.g. Please sweep the filter resonance hard on the final 4 bars..."></textarea>
                         </div>
-                        <button type="submit" disabled id="submitBtn" class="w-full font-mono bg-red-500 hover:bg-red-400 text-zinc-950 font-bold p-4 flex justify-center items-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(220,38,38,0.3)]">
+                        <button type="submit" disabled id="submitBtn" class="w-full font-mono bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold p-4 flex justify-center items-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(245,158,11,0.3)]">
                             <span>INITIATE TRANSFER</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </button>
-                        <div id="successMsg" class="hidden bg-red-900/20 border border-red-500/50 p-4 text-center">
-                            <p class="text-red-400 font-mono text-sm uppercase"><i data-lucide="check-circle" class="inline w-4 h-4 mr-1"></i> Data transfer complete. We will be in touch shortly.</p>
+                        <div id="successMsg" class="hidden bg-amber-900/20 border border-amber-500/50 p-4 text-center">
+                            <p class="text-amber-400 font-mono text-sm uppercase"><i data-lucide="check-circle" class="inline w-4 h-4 mr-1"></i> Data transfer complete. We will be in touch shortly.</p>
                         </div>
                     </form>
                 </div>
@@ -726,12 +733,12 @@
         const fileList = document.getElementById('fileList');
 
         dropzone.addEventListener('click', () => { if(!fileInput.disabled) fileInput.click(); });
-        dropzone.addEventListener('dragover', (e) => { e.preventDefault(); if(!fileInput.disabled) dropzone.classList.add('border-red-500', 'bg-zinc-900'); });
-        dropzone.addEventListener('dragleave', () => { if(!fileInput.disabled) dropzone.classList.remove('border-red-500', 'bg-zinc-900'); });
+        dropzone.addEventListener('dragover', (e) => { e.preventDefault(); if(!fileInput.disabled) dropzone.classList.add('border-amber-500', 'bg-zinc-900'); });
+        dropzone.addEventListener('dragleave', () => { if(!fileInput.disabled) dropzone.classList.remove('border-amber-500', 'bg-zinc-900'); });
         dropzone.addEventListener('drop', (e) => {
             e.preventDefault();
             if(fileInput.disabled) return;
-            dropzone.classList.remove('border-red-500', 'bg-zinc-900');
+            dropzone.classList.remove('border-amber-500', 'bg-zinc-900');
             if (e.dataTransfer.files.length > 0) {
                 fileInput.files = e.dataTransfer.files;
                 updateFileList();
