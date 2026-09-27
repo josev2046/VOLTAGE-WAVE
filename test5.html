@@ -136,8 +136,13 @@
                         <h3 class="font-mono text-sm font-bold text-zinc-300 uppercase tracking-widest">Engineer's Log // Introduction</h3>
                     </div>
                     
-                    <!-- Cropped Widescreen Video -->
-                    <video src="video_1.mp4" controls class="w-full aspect-video object-cover object-[50%_35%] rounded-sm border border-zinc-800 bg-black"></video>
+                    <!-- Uncropped Video with Ambient Fill -->
+                    <div class="relative bg-black border border-zinc-800 w-full flex justify-center overflow-hidden rounded-sm aspect-video">
+                        <!-- Blurred ambient background (fills the wide space) -->
+                        <video src="video_1.mp4" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110 pointer-events-none"></video>
+                        <!-- Main uncropped video (object-contain ensures nothing is cut off) -->
+                        <video src="video_1.mp4" controls class="absolute inset-0 w-full h-full object-contain z-10"></video>
+                    </div>
                     
                     <div class="mt-4 border-t border-zinc-800 pt-4">
                         <p class="text-zinc-400 text-sm font-sans leading-relaxed italic border-l-2 border-zinc-700 pl-4">
