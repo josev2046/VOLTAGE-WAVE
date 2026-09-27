@@ -115,7 +115,7 @@
         
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <!-- Title -->
-            <div class="reveal">
+            <div class="reveal mb-12">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 font-mono text-xs mb-6">
                     <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
                     HARDWARE CAPABILITIES // MS-10
@@ -126,37 +126,38 @@
                 <p class="text-lg text-zinc-400 max-w-2xl font-light">
                     Routing sterile digital stems through the Korg MS-10's External Signal processor transforms the synthesiser into a highly characterful outboard effects unit. Below are the core treatment protocols available.
                 </p>
-                <button id="show-video-btn" class="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-sm border border-zinc-700 bg-zinc-900 text-zinc-300 hover:border-red-500 hover:text-red-500 transition-colors font-mono text-[10px] uppercase tracking-widest cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>
-                    View Engineer's Log
-                </button>
             </div>
 
-            <!-- ENGINEER'S LOG / VIDEO EMBED -->
-            <div id="video-container" class="w-full reveal mt-12 transition-opacity duration-500">
-                <div class="analysis-card border border-[#222] p-4 rounded flex flex-col relative group">
-                    <button id="hide-video-btn" class="absolute top-4 right-4 z-20 text-zinc-500 hover:text-white transition-colors bg-black/80 hover:bg-red-500 p-1.5 rounded-sm opacity-0 group-hover:opacity-100 duration-200" title="Dismiss Video">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                    </button>
+            <!-- ENGINEER'S LOG / COLLAPSIBLE VIDEO EMBED -->
+            <div class="w-full reveal mb-12">
+                <div class="analysis-card border border-[#222] p-4 rounded flex flex-col transition-all duration-300">
                     
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="w-2 h-2 rounded-full bg-zinc-500"></span>
-                        <h3 class="font-mono text-sm font-bold text-zinc-300 uppercase tracking-widest">Engineer's Log // Introduction</h3>
+                    <!-- Header & Toggle Bar -->
+                    <div class="flex flex-wrap items-center justify-between gap-4 mb-2">
+                        <div class="flex items-center gap-2">
+                            <span id="video-status-indicator" class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                            <h3 class="font-mono text-sm font-bold text-zinc-300 uppercase tracking-widest">Engineer's Log // Introduction</h3>
+                        </div>
+                        <button id="video-toggle-btn" class="font-mono text-[10px] text-zinc-400 hover:text-red-500 transition-colors uppercase tracking-widest px-3 py-1.5 border border-zinc-800 rounded-sm hover:border-red-500/50 bg-zinc-900/50 flex items-center gap-2 cursor-pointer">
+                            <span id="video-toggle-text">Minimize Footage</span>
+                        </button>
                     </div>
                     
-                    <!-- Cropped Widescreen Container -->
-                    <div class="relative bg-black border border-zinc-800 w-full flex justify-center overflow-hidden rounded-sm aspect-video md:aspect-[21/9]">
-                        <!-- Blurred ambient background (autoplaying, muted, no controls) -->
-                        <video src="video_1.mp4" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110 pointer-events-none"></video>
-                        <!-- Main uncropped video (object-contain ensures nothing is cut off) -->
-                        <video id="main-video" src="video_1.mp4" controls class="absolute inset-0 w-full h-full object-contain z-10 drop-shadow-2xl"></video>
+                    <!-- Collapsible Content (Video + Quote) -->
+                    <div id="video-player-wrapper" class="mt-4">
+                        <!-- Uncropped Video with Ambient Blur Frame -->
+                        <div class="relative bg-black border border-zinc-800 w-full flex justify-center overflow-hidden rounded-sm aspect-video">
+                            <video src="video_1.mp4" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110 pointer-events-none"></video>
+                            <video id="main-video" src="video_1.mp4" controls class="absolute inset-0 w-full h-full object-contain z-10"></video>
+                        </div>
+                        
+                        <div class="mt-4 border-t border-zinc-800 pt-4">
+                            <p class="text-zinc-400 text-sm font-sans leading-relaxed italic border-l-2 border-zinc-700 pl-4">
+                                "I'm trying to convey the whole point of trying this Voltage & Wave re-amping approach... how different a stem may sound from taking the signal as is, as a digital signal in and out, versus running that through the crying circuits of the Korg MS-10."
+                            </p>
+                        </div>
                     </div>
-                    
-                    <div class="mt-4 border-t border-zinc-800 pt-4">
-                        <p class="text-zinc-400 text-sm font-sans leading-relaxed italic border-l-2 border-zinc-700 pl-4">
-                            "I'm trying to convey the whole point of trying this Voltage & Wave re-amping approach... how different a stem may sound from taking the signal as is, as a digital signal in and out, versus running that through the crying circuits of the Korg MS-10."
-                        </p>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -752,27 +753,46 @@
             }, { threshold: 0.1 });
             reveals.forEach(reveal => observer.observe(reveal));
 
-            // -- Video LocalStorage Logic --
-            const videoContainer = document.getElementById('video-container');
-            const showVideoBtn = document.getElementById('show-video-btn');
-            const hideVideoBtn = document.getElementById('hide-video-btn');
+            // -- Video Minimizer Logic --
+            const videoWrapper = document.getElementById('video-player-wrapper');
+            const videoToggleBtn = document.getElementById('video-toggle-btn');
+            const videoToggleText = document.getElementById('video-toggle-text');
             const mainVideo = document.getElementById('main-video');
+            const statusIndicator = document.getElementById('video-status-indicator');
 
-            if (localStorage.getItem('ms10_video_seen') === 'true') {
-                videoContainer.classList.add('hidden');
+            if (videoWrapper && videoToggleBtn) {
+                const hasSeenVideo = localStorage.getItem('vw_ms10_intro_seen');
+
+                const minimizeVideo = () => {
+                    videoWrapper.style.display = 'none';
+                    videoToggleText.innerText = 'View Footage';
+                    statusIndicator.classList.remove('bg-red-500', 'animate-pulse');
+                    statusIndicator.classList.add('bg-zinc-600');
+                    if (mainVideo) mainVideo.pause();
+                };
+
+                const expandVideo = () => {
+                    videoWrapper.style.display = 'block';
+                    videoToggleText.innerText = 'Minimize Footage';
+                    statusIndicator.classList.remove('bg-zinc-600');
+                    statusIndicator.classList.add('bg-red-500', 'animate-pulse');
+                    localStorage.setItem('vw_ms10_intro_seen', 'true');
+                };
+
+                // If they've been here before, default to minimized
+                if (hasSeenVideo) {
+                    minimizeVideo();
+                }
+
+                // Toggle button click listener
+                videoToggleBtn.addEventListener('click', () => {
+                    if (videoWrapper.style.display === 'none') {
+                        expandVideo();
+                    } else {
+                        minimizeVideo();
+                    }
+                });
             }
-
-            hideVideoBtn.addEventListener('click', () => {
-                videoContainer.classList.add('hidden');
-                if(mainVideo) mainVideo.pause();
-                localStorage.setItem('ms10_video_seen', 'true');
-            });
-
-            showVideoBtn.addEventListener('click', () => {
-                videoContainer.classList.remove('hidden');
-                videoContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            });
-
 
             const AUDIO_DURATION = 12; // 12 seconds
             
@@ -919,18 +939,299 @@
                 const deg = Math.PI / 180;
                 for (let i = 0; i < n_samples; ++i) {
                     const x = i * 2 / n_samples - 1;
-                    curve[i] = (3Due to system constraints regarding the reproduction of the full page text, I cannot print the entire 800-line HTML file again. However, implementing this feature is very straightforward. 
+                    curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
+                }
+                return curve;
+            }
 
-We can achieve this by using the browser's `localStorage` to leave a tiny invisible "bookmark" on the user's browser the first time they visit. On future visits, the page will see that bookmark and automatically hide the video, while providing a toggle button to bring it back.
+            // -- Safe Web Audio API Engine --
+            let currentCtx = null;
+            let currentNodes = [];
+            let currentBtn = null;
+            let animationFrameId = null;
 
-Here are the **three specific parts** of your code you need to update:
+            function stopAllAudio() {
+                if (currentCtx) {
+                    currentNodes.forEach(n => {
+                        try { n.stop(); } catch(e){}
+                        try { n.disconnect(); } catch(e){}
+                    });
+                    currentNodes = [];
+                    currentCtx.close();
+                    currentCtx = null;
+                }
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null;
+                }
+                document.querySelectorAll('.play-btn').forEach(b => {
+                    b.dataset.playing = "false";
+                    b.querySelector('.icon-play').classList.remove('hidden');
+                    b.querySelector('.icon-stop').classList.add('hidden');
+                    let timerEl = b.parentElement.querySelector('.timer');
+                    if(timerEl) timerEl.innerText = "0:00";
+                });
+                document.querySelectorAll('.playhead').forEach(p => p.style.display = 'none');
+                currentBtn = null;
+            }
 
-### 1. Add the Toggle Button
-Find the `HARDWARE CAPABILITIES // MS-10` tag in your HTML. We will update that container to be a Flexbox row so the new "Watch Log" button sits nicely next to it. 
+            function playSound(btn, type, isWet) {
+                if (btn.dataset.playing === "true") {
+                    stopAllAudio();
+                    return;
+                }
+                
+                stopAllAudio();
+                currentBtn = btn;
+                
+                currentCtx = new (window.AudioContext || window.webkitAudioContext)();
+                let t0 = currentCtx.currentTime;
 
-Replace this block:
-```html
-<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 font-mono text-xs mb-6">
-    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-    HARDWARE CAPABILITIES // MS-10
-</div>
+                const masterGain = currentCtx.createGain();
+                masterGain.connect(currentCtx.destination);
+                currentNodes.push(masterGain);
+
+                // --- SOUND LOGIC ---
+                if (type === 'sat') {
+                    // 12s EBM Bassline (96 sixteenth notes)
+                    const filter = currentCtx.createBiquadFilter();
+                    const dist = currentCtx.createWaveShaper();
+                    if (isWet) {
+                        dist.curve = makeDistortionCurve(100);
+                        filter.type = 'lowpass';
+                        filter.Q.value = 6;
+                        dist.connect(filter);
+                        filter.connect(masterGain);
+                        currentNodes.push(dist, filter);
+                    }
+
+                    for(let i=0; i < AUDIO_DURATION * 8; i++) {
+                        let t = t0 + i * 0.125;
+                        let osc = currentCtx.createOscillator();
+                        let env = currentCtx.createGain();
+                        
+                        let freq = 41.20; // E1
+                        if (i % 16 === 2 || i % 16 === 10) freq = 82.41; // E2
+                        if (i % 16 === 6 || i % 16 === 14) freq = 49.00; // G1
+                        if (i % 16 === 15) freq = 55.00; // A1
+
+                        osc.type = isWet ? 'sawtooth' : 'triangle';
+                        osc.frequency.value = freq;
+                        
+                        env.gain.setValueAtTime(0.001, t);
+                        env.gain.linearRampToValueAtTime(isWet ? 0.5 : 0.4, t + 0.01);
+                        env.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+                        
+                        osc.connect(env);
+                        
+                        if (isWet) {
+                            filter.frequency.setValueAtTime(200, t);
+                            filter.frequency.exponentialRampToValueAtTime(2500, t + 0.02);
+                            filter.frequency.exponentialRampToValueAtTime(200, t + 0.12);
+                            env.connect(dist);
+                        } else {
+                            env.connect(masterGain);
+                        }
+                        osc.start(t);
+                        osc.stop(t + 0.13);
+                        currentNodes.push(osc, env);
+                    }
+                } 
+                else if (type === 'filter') {
+                    // Lush Chord
+                    const freqs = [130.81, 155.56, 196.00, 293.66]; // C3, Eb3, G3, D4
+                    const filter = currentCtx.createBiquadFilter();
+                    filter.type = 'lowpass';
+                    filter.Q.value = isWet ? 12 : 1;
+                    filter.connect(masterGain);
+                    currentNodes.push(filter);
+
+                    if (isWet) {
+                        const lfo = currentCtx.createOscillator();
+                        lfo.type = 'sine';
+                        lfo.frequency.value = 0.5; // 0.5 Hz sweep
+                        const lfoGain = currentCtx.createGain();
+                        lfoGain.gain.value = 2500;
+                        filter.frequency.value = 3000;
+                        lfo.connect(lfoGain);
+                        lfoGain.connect(filter.frequency);
+                        lfo.start(t0);
+                        lfo.stop(t0 + AUDIO_DURATION);
+                        currentNodes.push(lfo, lfoGain);
+                    } else {
+                        filter.frequency.value = 3000;
+                    }
+
+                    freqs.forEach(f => {
+                        let osc = currentCtx.createOscillator();
+                        osc.type = isWet ? 'sawtooth' : 'square';
+                        osc.frequency.value = f;
+                        let osc2 = currentCtx.createOscillator();
+                        osc2.type = osc.type;
+                        osc2.frequency.value = f * 1.005;
+
+                        let env = currentCtx.createGain();
+                        env.gain.setValueAtTime(0.001, t0);
+                        env.gain.linearRampToValueAtTime(0.1, t0 + 0.5);
+                        env.gain.setValueAtTime(0.1, t0 + AUDIO_DURATION - 0.5);
+                        env.gain.linearRampToValueAtTime(0.001, t0 + AUDIO_DURATION);
+
+                        osc.connect(env);
+                        osc2.connect(env);
+                        env.connect(filter);
+                        
+                        osc.start(t0);
+                        osc2.start(t0);
+                        osc.stop(t0 + AUDIO_DURATION);
+                        osc2.stop(t0 + AUDIO_DURATION);
+                        currentNodes.push(osc, osc2, env);
+                    });
+                }
+                else if (type === 'gate') {
+                    // Chopped Drone
+                    const osc = currentCtx.createOscillator();
+                    osc.type = 'sawtooth';
+                    osc.frequency.value = 65.41; // C2
+
+                    const env = currentCtx.createGain();
+                    osc.connect(env);
+                    env.connect(masterGain);
+
+                    if (isWet) {
+                        for(let i=0; i < AUDIO_DURATION * 8; i++) {
+                            let t = t0 + i * 0.125;
+                            env.gain.setValueAtTime(0.001, t);
+                            env.gain.setValueAtTime(0.4, t + 0.01);
+                            env.gain.setValueAtTime(0.4, t + 0.06);
+                            env.gain.setValueAtTime(0.001, t + 0.07);
+                        }
+                    } else {
+                        env.gain.setValueAtTime(0.001, t0);
+                        env.gain.linearRampToValueAtTime(0.4, t0 + 0.1);
+                        env.gain.setValueAtTime(0.4, t0 + AUDIO_DURATION - 0.1);
+                        env.gain.linearRampToValueAtTime(0.001, t0 + AUDIO_DURATION);
+                    }
+
+                    osc.start(t0);
+                    osc.stop(t0 + AUDIO_DURATION);
+                    currentNodes.push(osc, env);
+                }
+                else if (type === 'noise') {
+                    // Kicks and Hiss
+                    const bufferSize = currentCtx.sampleRate * AUDIO_DURATION;
+                    const noiseBuffer = currentCtx.createBuffer(1, bufferSize, currentCtx.sampleRate);
+                    const output = noiseBuffer.getChannelData(0);
+                    for (let j = 0; j < bufferSize; j++) {
+                        output[j] = Math.random() * 2 - 1;
+                    }
+                    
+                    for(let i=0; i < AUDIO_DURATION * 2; i++) {
+                        let t = t0 + i * 0.5; // Every half second
+                        let osc = currentCtx.createOscillator();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(150, t);
+                        osc.frequency.exponentialRampToValueAtTime(40, t + 0.1);
+
+                        let env = currentCtx.createGain();
+                        env.gain.setValueAtTime(0.001, t);
+                        env.gain.linearRampToValueAtTime(isWet ? 0.6 : 0.4, t + 0.01);
+                        env.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+                        
+                        osc.connect(env);
+                        env.connect(masterGain);
+                        osc.start(t);
+                        osc.stop(t + 0.4);
+                        currentNodes.push(osc, env);
+
+                        if (isWet) {
+                            let noiseSrc = currentCtx.createBufferSource();
+                            noiseSrc.buffer = noiseBuffer;
+                            let noiseEnv = currentCtx.createGain();
+                            noiseEnv.gain.setValueAtTime(0.001, t);
+                            noiseEnv.gain.linearRampToValueAtTime(0.5, t + 0.01);
+                            noiseEnv.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+
+                            let filter = currentCtx.createBiquadFilter();
+                            filter.type = 'highpass';
+                            filter.frequency.value = 1000;
+
+                            noiseSrc.connect(noiseEnv);
+                            noiseEnv.connect(filter);
+                            filter.connect(masterGain);
+                            
+                            noiseSrc.start(t);
+                            noiseSrc.stop(t + 0.2);
+                            currentNodes.push(noiseSrc, noiseEnv, filter);
+                        }
+                    }
+                    
+                    if (isWet) {
+                        let hissSrc = currentCtx.createBufferSource();
+                        hissSrc.buffer = noiseBuffer;
+                        hissSrc.loop = true;
+                        
+                        let hissFilter = currentCtx.createBiquadFilter();
+                        hissFilter.type = 'lowpass';
+                        hissFilter.frequency.value = 3000;
+
+                        let hissGain = currentCtx.createGain();
+                        hissGain.gain.setValueAtTime(0.001, t0);
+                        hissGain.gain.linearRampToValueAtTime(0.04, t0 + 0.1); 
+                        
+                        hissSrc.connect(hissFilter);
+                        hissFilter.connect(hissGain);
+                        hissGain.connect(masterGain);
+                        
+                        hissSrc.start(t0);
+                        hissSrc.stop(t0 + AUDIO_DURATION);
+                        currentNodes.push(hissSrc, hissFilter, hissGain);
+                    }
+                }
+
+                // --- UI UPDATES ---
+                btn.dataset.playing = "true";
+                btn.querySelector('.icon-play').classList.add('hidden');
+                btn.querySelector('.icon-stop').classList.remove('hidden');
+                
+                let timerEl = btn.parentElement.querySelector('.timer');
+                let colContainer = btn.closest('.flex-col.gap-4');
+                let playheads = colContainer ? colContainer.querySelectorAll('.playhead') : [];
+                playheads.forEach(p => p.style.display = 'block');
+
+                function updatePlayUI() {
+                    if (!currentCtx || btn.dataset.playing !== "true") return;
+                    
+                    let elap = currentCtx.currentTime - t0;
+                    if (elap >= AUDIO_DURATION) {
+                        stopAllAudio();
+                        return;
+                    }
+                    
+                    // Time update
+                    if (timerEl) {
+                        let secs = Math.floor(elap);
+                        timerEl.innerText = `0:${secs < 10 ? '0' : ''}${secs}`;
+                    }
+                    
+                    // Playhead update
+                    let pct = (elap / AUDIO_DURATION) * 100;
+                    playheads.forEach(p => p.style.left = `${pct}%`);
+                    
+                    animationFrameId = requestAnimationFrame(updatePlayUI);
+                }
+                
+                animationFrameId = requestAnimationFrame(updatePlayUI);
+            }
+
+            // Click Listeners
+            document.querySelectorAll('.play-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const type = btn.dataset.type;
+                    const isWet = btn.dataset.wet === 'true';
+                    playSound(btn, type, isWet);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
