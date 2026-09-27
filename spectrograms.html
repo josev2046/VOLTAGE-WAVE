@@ -34,6 +34,7 @@
             }
         }
     </script>
+    
     <style>
         body {
             background-color: #09090b;
@@ -56,9 +57,8 @@
 
         .hardware-card { transition: all 0.3s ease; }
         .hardware-card:hover {
-            transform: translateY(-5px);
-            border-color: #dc2626;
-            box-shadow: 0 10px 30px -10px rgba(220, 38, 38, 0.2);
+            border-color: rgba(220, 38, 38, 0.5);
+            box-shadow: 0 4px 20px -5px rgba(220, 38, 38, 0.1);
         }
 
         ::-webkit-scrollbar { width: 8px; }
@@ -88,23 +88,24 @@
             100% { transform: translate(0) }
         }
         .glitch-hover:hover { animation: analog-glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite; }
+        
+        .progress-bar { transition: width 0.05s linear; }
     </style>
 </head>
 <body class="antialiased relative selection:bg-red-500 selection:text-zinc-950">
     <div class="scanlines fixed inset-0"></div>
 
-    <!-- NAVIGATION -->
     <nav class="fixed w-full z-40 top-0 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <a href="index.html" class="flex-shrink-0 flex items-center gap-3 cursor-pointer glitch-hover">
+                <a href="#" class="flex-shrink-0 flex items-center gap-3 cursor-pointer glitch-hover">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-red-500 w-6 h-6">
                         <path d="M2 12h4v-7h6v14h6v-7h4"/>
                     </svg>
                     <span class="font-mono font-bold text-white tracking-widest hidden sm:block">VOLTAGE & WAVE</span>
                 </a>
                 <div class="flex space-x-8 font-mono text-sm items-center">
-                    <a href="index.html" class="text-zinc-400 hover:text-red-500 transition-colors flex items-center gap-2">
+                    <a href="#" class="text-zinc-400 hover:text-red-500 transition-colors flex items-center gap-2">
                         <i data-lucide="arrow-left" class="w-4 h-4"></i> RETURN TO STUDIO
                     </a>
                 </div>
@@ -112,10 +113,9 @@
         </div>
     </nav>
 
-    <!-- HEADER -->
     <section class="relative pt-32 pb-16 overflow-hidden border-b border-zinc-800">
         <div class="absolute inset-0 bg-synth-grid [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 reveal active">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 font-mono text-xs mb-6">
                 <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
                 HARDWARE CAPABILITIES // MS-10
@@ -129,7 +129,6 @@
         </div>
     </section>
 
-    <!-- PROTOCOL 01: SATURATION -->
     <section class="py-20 border-b border-zinc-800 bg-zinc-950">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="mb-12 reveal">
@@ -148,58 +147,60 @@
 
             <!-- Signal Analysis Grid 1 -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- DRY -->
+                <!-- DRY COLUMN -->
                 <div class="space-y-6 reveal">
-                    <div class="hardware-card bg-zinc-900 border border-zinc-800 p-4 rounded-sm flex flex-col">
-                        <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Dry Stem Waveform</div>
-                        <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-950" width="400" height="96" data-wet="false"></canvas>
-                        <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
-                            <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-sm transition-colors border border-zinc-700" data-type="sat" data-wet="false">
-                                <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
-                            </button>
-                            <div class="flex-1 flex flex-col gap-1.5">
-                                <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">
-                                    <span>Digital Source (Dry)</span>
-                                </div>
+                    <div class="hardware-card bg-zinc-900 border border-zinc-800 p-4 rounded-sm flex flex-col relative overflow-hidden">
+                        <div class="progress-bg absolute inset-y-0 left-0 bg-zinc-800/30 w-0 pointer-events-none z-0"></div>
+                        <div class="relative z-10">
+                            <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2 flex justify-between">
+                                <span>Dry Stem Waveform</span>
+                                <span class="time-display">0:00 / 0:03</span>
+                            </div>
+                            <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-950 rounded-sm" width="400" height="96" data-wet="false"></canvas>
+                            <div class="mt-auto pt-2 flex items-center gap-4">
+                                <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-sm transition-colors border border-zinc-700" data-type="sat" data-wet="false">
+                                    <i data-lucide="play" class="w-4 h-4 ml-0.5 icon-play"></i>
+                                    <i data-lucide="square" class="w-4 h-4 hidden icon-stop"></i>
+                                </button>
+                                <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Digital Source (Dry)</div>
                             </div>
                         </div>
                     </div>
                     <div class="hardware-card bg-zinc-900 border border-zinc-800 p-4 rounded-sm flex flex-col">
                         <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Dry Spectrogram</div>
-                        <canvas class="spectrogram w-full h-32 border border-zinc-800 bg-zinc-950" width="400" height="128" data-wet="false"></canvas>
-                        <p class="text-xs text-zinc-500 mt-3 font-light">Clean dynamic range, quantised harmonic stacking. Flat noise floor.</p>
+                        <canvas class="spectrogram w-full h-32 border border-zinc-800 bg-zinc-950 rounded-sm" width="400" height="128" data-wet="false"></canvas>
+                        <p class="text-xs text-zinc-500 mt-3 font-light leading-relaxed">Clean dynamic range, quantised harmonic stacking. Flat noise floor characteristic of digital stems.</p>
                     </div>
                 </div>
-                <!-- WET -->
+                <!-- WET COLUMN -->
                 <div class="space-y-6 reveal [transition-delay:100ms]">
-                    <div class="hardware-card bg-zinc-900 border border-red-500/30 p-4 rounded-sm flex flex-col relative">
-                        <div class="text-[10px] font-mono text-red-500 uppercase tracking-widest mb-2 flex items-center gap-2">
-                            <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
-                            MS-10 Re-Amped Waveform
-                        </div>
-                        <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-950" width="400" height="96" data-wet="true"></canvas>
-                        <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
-                            <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-red-500 hover:bg-red-400 text-white rounded-sm transition-colors border border-red-600" data-type="sat" data-wet="true">
-                                <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
-                            </button>
-                            <div class="flex-1 flex flex-col gap-1.5">
-                                <div class="text-[10px] font-mono text-red-400 uppercase tracking-widest">
-                                    <span>Hardware Return (Driven)</span>
-                                </div>
+                    <div class="hardware-card bg-zinc-900 border border-red-500/30 p-4 rounded-sm flex flex-col relative overflow-hidden shadow-[0_0_15px_rgba(220,38,38,0.03)]">
+                        <div class="progress-bg absolute inset-y-0 left-0 bg-red-900/20 w-0 pointer-events-none z-0"></div>
+                        <div class="relative z-10">
+                            <div class="text-[10px] font-mono text-red-500 uppercase tracking-widest mb-2 flex justify-between items-center">
+                                <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>MS-10 Re-Amped Waveform</div>
+                                <span class="time-display text-red-700">0:00 / 0:03</span>
+                            </div>
+                            <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-950 rounded-sm" width="400" height="96" data-wet="true"></canvas>
+                            <div class="mt-auto pt-2 flex items-center gap-4">
+                                <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-red-500 hover:bg-red-400 text-white rounded-sm transition-colors border border-red-600" data-type="sat" data-wet="true">
+                                    <i data-lucide="play" class="w-4 h-4 ml-0.5 icon-play"></i>
+                                    <i data-lucide="square" class="w-4 h-4 hidden icon-stop"></i>
+                                </button>
+                                <div class="text-[10px] font-mono text-red-400 uppercase tracking-widest">Hardware Return (Driven)</div>
                             </div>
                         </div>
                     </div>
-                    <div class="hardware-card bg-zinc-900 border border-red-500/30 p-4 rounded-sm flex flex-col">
+                    <div class="hardware-card bg-zinc-900 border border-red-500/30 p-4 rounded-sm flex flex-col shadow-[0_0_15px_rgba(220,38,38,0.03)]">
                         <div class="text-[10px] font-mono text-red-500 uppercase tracking-widest mb-2">Re-Amped Spectrogram</div>
-                        <canvas class="spectrogram w-full h-32 border border-zinc-800 bg-zinc-950" width="400" height="128" data-wet="true"></canvas>
-                        <p class="text-xs text-zinc-500 mt-3 font-light">Added harmonic density, saturated transient response, and raised analogue noise floor.</p>
+                        <canvas class="spectrogram w-full h-32 border border-zinc-800 bg-zinc-950 rounded-sm" width="400" height="128" data-wet="true"></canvas>
+                        <p class="text-xs text-zinc-500 mt-3 font-light leading-relaxed">Added harmonic density, saturated transient response, and a raised analogue noise floor confirming circuit colouration.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- PROTOCOL 02: KORG-35 FILTER DYNAMICS -->
     <section class="py-20 border-b border-zinc-800 bg-zinc-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="mb-12 reveal">
@@ -218,43 +219,60 @@
 
             <!-- Signal Analysis Grid 2 -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- DRY -->
                 <div class="space-y-6 reveal">
-                    <div class="hardware-card bg-zinc-950 border border-zinc-800 p-4 rounded-sm flex flex-col">
-                        <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Dry Stem Waveform</div>
-                        <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-900" width="400" height="96" data-wet="false"></canvas>
-                        <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
-                            <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-sm transition-colors border border-zinc-700" data-type="filter" data-wet="false">
-                                <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
-                            </button>
-                            <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Digital Source (Dry)</div>
+                    <div class="hardware-card bg-zinc-950 border border-zinc-800 p-4 rounded-sm flex flex-col relative overflow-hidden">
+                        <div class="progress-bg absolute inset-y-0 left-0 bg-zinc-800/30 w-0 pointer-events-none z-0"></div>
+                        <div class="relative z-10">
+                            <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2 flex justify-between">
+                                <span>Dry Stem Waveform</span>
+                                <span class="time-display">0:00 / 0:03</span>
+                            </div>
+                            <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-900 rounded-sm" width="400" height="96" data-wet="false"></canvas>
+                            <div class="mt-auto pt-2 flex items-center gap-4">
+                                <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-sm transition-colors border border-zinc-700" data-type="filter" data-wet="false">
+                                    <i data-lucide="play" class="w-4 h-4 ml-0.5 icon-play"></i>
+                                    <i data-lucide="square" class="w-4 h-4 hidden icon-stop"></i>
+                                </button>
+                                <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Digital Source (Static Drone)</div>
+                            </div>
                         </div>
                     </div>
                     <div class="hardware-card bg-zinc-950 border border-zinc-800 p-4 rounded-sm flex flex-col">
                         <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Dry Spectrogram</div>
-                        <canvas class="spectrogram w-full h-32 border border-zinc-800 bg-zinc-900" width="400" height="128" data-wet="false"></canvas>
+                        <canvas class="spectrogram w-full h-32 border border-zinc-800 bg-zinc-900 rounded-sm" width="400" height="128" data-wet="false"></canvas>
+                        <p class="text-xs text-zinc-500 mt-3 font-light leading-relaxed">Sustained broad-spectrum frequency response with no movement over time.</p>
                     </div>
                 </div>
+                <!-- WET -->
                 <div class="space-y-6 reveal [transition-delay:100ms]">
-                    <div class="hardware-card bg-zinc-950 border border-red-500/30 p-4 rounded-sm flex flex-col">
-                        <div class="text-[10px] font-mono text-red-500 uppercase tracking-widest mb-2">MS-10 Re-Amped Waveform</div>
-                        <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-900" width="400" height="96" data-wet="true"></canvas>
-                        <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
-                            <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-red-500 hover:bg-red-400 text-white rounded-sm transition-colors border border-red-600" data-type="filter" data-wet="true">
-                                <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
-                            </button>
-                            <div class="text-[10px] font-mono text-red-400 uppercase tracking-widest">Hardware Return (LFO Sweep)</div>
+                    <div class="hardware-card bg-zinc-950 border border-red-500/30 p-4 rounded-sm flex flex-col relative overflow-hidden shadow-[0_0_15px_rgba(220,38,38,0.03)]">
+                        <div class="progress-bg absolute inset-y-0 left-0 bg-red-900/20 w-0 pointer-events-none z-0"></div>
+                        <div class="relative z-10">
+                            <div class="text-[10px] font-mono text-red-500 uppercase tracking-widest mb-2 flex justify-between items-center">
+                                <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>MS-10 Re-Amped Waveform</div>
+                                <span class="time-display text-red-700">0:00 / 0:03</span>
+                            </div>
+                            <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-900 rounded-sm" width="400" height="96" data-wet="true" data-fx="filter"></canvas>
+                            <div class="mt-auto pt-2 flex items-center gap-4">
+                                <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-red-500 hover:bg-red-400 text-white rounded-sm transition-colors border border-red-600" data-type="filter" data-wet="true">
+                                    <i data-lucide="play" class="w-4 h-4 ml-0.5 icon-play"></i>
+                                    <i data-lucide="square" class="w-4 h-4 hidden icon-stop"></i>
+                                </button>
+                                <div class="text-[10px] font-mono text-red-400 uppercase tracking-widest">Hardware Return (LFO Sweep)</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="hardware-card bg-zinc-950 border border-red-500/30 p-4 rounded-sm flex flex-col">
+                    <div class="hardware-card bg-zinc-950 border border-red-500/30 p-4 rounded-sm flex flex-col shadow-[0_0_15px_rgba(220,38,38,0.03)]">
                         <div class="text-[10px] font-mono text-red-500 uppercase tracking-widest mb-2">Re-Amped Spectrogram</div>
-                        <canvas class="spectrogram w-full h-32 border border-zinc-800 bg-zinc-900" width="400" height="128" data-wet="true"></canvas>
+                        <canvas class="spectrogram w-full h-32 border border-zinc-800 bg-zinc-900 rounded-sm" width="400" height="128" data-wet="true" data-fx="filter"></canvas>
+                        <p class="text-xs text-zinc-500 mt-3 font-light leading-relaxed">Visible sinusoidal cutoff curve tracking the LFO modulation, rolling off high harmonics periodically.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- PROTOCOL 03: VCA GATING -->
     <section class="py-20 border-b border-zinc-800 bg-zinc-950">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="mb-12 reveal">
@@ -273,35 +291,60 @@
 
             <!-- Signal Analysis Grid 3 -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- DRY -->
                 <div class="space-y-6 reveal">
-                    <div class="hardware-card bg-zinc-900 border border-zinc-800 p-4 rounded-sm flex flex-col">
-                        <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Dry Stem Waveform</div>
-                        <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-950" width="400" height="96" data-wet="false"></canvas>
-                        <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
-                            <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-sm transition-colors border border-zinc-700" data-type="gate" data-wet="false">
-                                <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
-                            </button>
-                            <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Digital Source (Sustained)</div>
+                    <div class="hardware-card bg-zinc-900 border border-zinc-800 p-4 rounded-sm flex flex-col relative overflow-hidden">
+                        <div class="progress-bg absolute inset-y-0 left-0 bg-zinc-800/30 w-0 pointer-events-none z-0"></div>
+                        <div class="relative z-10">
+                            <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2 flex justify-between">
+                                <span>Dry Stem Waveform</span>
+                                <span class="time-display">0:00 / 0:03</span>
+                            </div>
+                            <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-950 rounded-sm" width="400" height="96" data-wet="false"></canvas>
+                            <div class="mt-auto pt-2 flex items-center gap-4">
+                                <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-sm transition-colors border border-zinc-700" data-type="gate" data-wet="false">
+                                    <i data-lucide="play" class="w-4 h-4 ml-0.5 icon-play"></i>
+                                    <i data-lucide="square" class="w-4 h-4 hidden icon-stop"></i>
+                                </button>
+                                <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Digital Source (Sustained)</div>
+                            </div>
                         </div>
                     </div>
+                    <div class="hardware-card bg-zinc-900 border border-zinc-800 p-4 rounded-sm flex flex-col">
+                        <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Dry Spectrogram</div>
+                        <canvas class="spectrogram w-full h-32 border border-zinc-800 bg-zinc-950 rounded-sm" width="400" height="128" data-wet="false"></canvas>
+                        <p class="text-xs text-zinc-500 mt-3 font-light leading-relaxed">Continuous amplitude over time with no dynamic modulation.</p>
+                    </div>
                 </div>
+                <!-- WET -->
                 <div class="space-y-6 reveal [transition-delay:100ms]">
-                    <div class="hardware-card bg-zinc-900 border border-red-500/30 p-4 rounded-sm flex flex-col">
-                        <div class="text-[10px] font-mono text-red-500 uppercase tracking-widest mb-2">MS-10 Re-Amped Waveform</div>
-                        <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-950" width="400" height="96" data-wet="true"></canvas>
-                        <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
-                            <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-red-500 hover:bg-red-400 text-white rounded-sm transition-colors border border-red-600" data-type="gate" data-wet="true">
-                                <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
-                            </button>
-                            <div class="text-[10px] font-mono text-red-400 uppercase tracking-widest">Hardware Return (Gated)</div>
+                    <div class="hardware-card bg-zinc-900 border border-red-500/30 p-4 rounded-sm flex flex-col relative overflow-hidden shadow-[0_0_15px_rgba(220,38,38,0.03)]">
+                        <div class="progress-bg absolute inset-y-0 left-0 bg-red-900/20 w-0 pointer-events-none z-0"></div>
+                        <div class="relative z-10">
+                            <div class="text-[10px] font-mono text-red-500 uppercase tracking-widest mb-2 flex justify-between items-center">
+                                <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>MS-10 Re-Amped Waveform</div>
+                                <span class="time-display text-red-700">0:00 / 0:03</span>
+                            </div>
+                            <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-950 rounded-sm" width="400" height="96" data-wet="true" data-fx="gate"></canvas>
+                            <div class="mt-auto pt-2 flex items-center gap-4">
+                                <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-red-500 hover:bg-red-400 text-white rounded-sm transition-colors border border-red-600" data-type="gate" data-wet="true">
+                                    <i data-lucide="play" class="w-4 h-4 ml-0.5 icon-play"></i>
+                                    <i data-lucide="square" class="w-4 h-4 hidden icon-stop"></i>
+                                </button>
+                                <div class="text-[10px] font-mono text-red-400 uppercase tracking-widest">Hardware Return (Square Gated)</div>
+                            </div>
                         </div>
+                    </div>
+                    <div class="hardware-card bg-zinc-900 border border-red-500/30 p-4 rounded-sm flex flex-col shadow-[0_0_15px_rgba(220,38,38,0.03)]">
+                        <div class="text-[10px] font-mono text-red-500 uppercase tracking-widest mb-2">Re-Amped Spectrogram</div>
+                        <canvas class="spectrogram w-full h-32 border border-zinc-800 bg-zinc-950 rounded-sm" width="400" height="128" data-wet="true" data-fx="gate"></canvas>
+                        <p class="text-xs text-zinc-500 mt-3 font-light leading-relaxed">Distinct vertical pillars showing complete amplitude nulls where the VCA is triggered closed.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- PROTOCOL 04: TRANSIENTS & NOISE -->
     <section class="py-20 border-b border-zinc-800 bg-zinc-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="mb-12 reveal">
@@ -320,28 +363,54 @@
             
             <!-- Signal Analysis Grid 4 -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- DRY -->
                 <div class="space-y-6 reveal">
-                    <div class="hardware-card bg-zinc-950 border border-zinc-800 p-4 rounded-sm flex flex-col">
-                        <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Dry Stem Waveform</div>
-                        <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-900" width="400" height="96" data-wet="false"></canvas>
-                        <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
-                            <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-sm transition-colors border border-zinc-700" data-type="noise" data-wet="false">
-                                <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
-                            </button>
-                            <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Digital Source (Dry)</div>
+                    <div class="hardware-card bg-zinc-950 border border-zinc-800 p-4 rounded-sm flex flex-col relative overflow-hidden">
+                        <div class="progress-bg absolute inset-y-0 left-0 bg-zinc-800/30 w-0 pointer-events-none z-0"></div>
+                        <div class="relative z-10">
+                            <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2 flex justify-between">
+                                <span>Dry Stem Waveform</span>
+                                <span class="time-display">0:00 / 0:03</span>
+                            </div>
+                            <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-900 rounded-sm" width="400" height="96" data-wet="false" data-fx="noise"></canvas>
+                            <div class="mt-auto pt-2 flex items-center gap-4">
+                                <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-sm transition-colors border border-zinc-700" data-type="noise" data-wet="false">
+                                    <i data-lucide="play" class="w-4 h-4 ml-0.5 icon-play"></i>
+                                    <i data-lucide="square" class="w-4 h-4 hidden icon-stop"></i>
+                                </button>
+                                <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Digital Source (Dull Kick)</div>
+                            </div>
                         </div>
                     </div>
+                    <div class="hardware-card bg-zinc-950 border border-zinc-800 p-4 rounded-sm flex flex-col">
+                        <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Dry Spectrogram</div>
+                        <canvas class="spectrogram w-full h-32 border border-zinc-800 bg-zinc-900 rounded-sm" width="400" height="128" data-wet="false" data-fx="noise"></canvas>
+                        <p class="text-xs text-zinc-500 mt-3 font-light leading-relaxed">Slow attack envelopes show as wide, indistinct low-frequency blobs with minimal upper harmonics.</p>
+                    </div>
                 </div>
+                <!-- WET -->
                 <div class="space-y-6 reveal [transition-delay:100ms]">
-                    <div class="hardware-card bg-zinc-950 border border-red-500/30 p-4 rounded-sm flex flex-col">
-                        <div class="text-[10px] font-mono text-red-500 uppercase tracking-widest mb-2">MS-10 Re-Amped Waveform</div>
-                        <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-900" width="400" height="96" data-wet="true"></canvas>
-                        <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
-                            <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-red-500 hover:bg-red-400 text-white rounded-sm transition-colors border border-red-600" data-type="noise" data-wet="true">
-                                <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
-                            </button>
-                            <div class="text-[10px] font-mono text-red-400 uppercase tracking-widest">Hardware Return (Shaped/Noisy)</div>
+                    <div class="hardware-card bg-zinc-950 border border-red-500/30 p-4 rounded-sm flex flex-col relative overflow-hidden shadow-[0_0_15px_rgba(220,38,38,0.03)]">
+                        <div class="progress-bg absolute inset-y-0 left-0 bg-red-900/20 w-0 pointer-events-none z-0"></div>
+                        <div class="relative z-10">
+                            <div class="text-[10px] font-mono text-red-500 uppercase tracking-widest mb-2 flex justify-between items-center">
+                                <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>MS-10 Re-Amped Waveform</div>
+                                <span class="time-display text-red-700">0:00 / 0:03</span>
+                            </div>
+                            <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-900 rounded-sm" width="400" height="96" data-wet="true" data-fx="noise"></canvas>
+                            <div class="mt-auto pt-2 flex items-center gap-4">
+                                <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-red-500 hover:bg-red-400 text-white rounded-sm transition-colors border border-red-600" data-type="noise" data-wet="true">
+                                    <i data-lucide="play" class="w-4 h-4 ml-0.5 icon-play"></i>
+                                    <i data-lucide="square" class="w-4 h-4 hidden icon-stop"></i>
+                                </button>
+                                <div class="text-[10px] font-mono text-red-400 uppercase tracking-widest">Hardware Return (Shaped + Hiss)</div>
+                            </div>
                         </div>
+                    </div>
+                    <div class="hardware-card bg-zinc-950 border border-red-500/30 p-4 rounded-sm flex flex-col shadow-[0_0_15px_rgba(220,38,38,0.03)]">
+                        <div class="text-[10px] font-mono text-red-500 uppercase tracking-widest mb-2">Re-Amped Spectrogram</div>
+                        <canvas class="spectrogram w-full h-32 border border-zinc-800 bg-zinc-900 rounded-sm" width="400" height="128" data-wet="true" data-fx="noise"></canvas>
+                        <p class="text-xs text-zinc-500 mt-3 font-light leading-relaxed">Sharp vertical lines indicate fast transients. Diffuse background speckling represents injected white noise.</p>
                     </div>
                 </div>
             </div>
@@ -349,10 +418,10 @@
         </div>
     </section>
 
-    <!-- ROBUST JAVASCRIPT SYSTEM -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // 1. Initialize Icons & Scroll Reveal
+            
+            // 1. Initialise Icons & Scroll Reveal
             lucide.createIcons();
             const reveals = document.querySelectorAll('.reveal');
             const observer = new IntersectionObserver((entries) => {
@@ -367,19 +436,39 @@
                     const ctx = canvas.getContext('2d');
                     if(!ctx) return;
                     const isWet = canvas.dataset.wet === 'true';
+                    const fxType = canvas.dataset.fx || 'sat';
                     const w = canvas.width;
                     const h = canvas.height;
 
                     ctx.clearRect(0, 0, w, h);
                     ctx.beginPath();
                     ctx.strokeStyle = isWet ? '#ef4444' : '#06b6d4'; // Red vs Cyan
-                    ctx.lineWidth = 2;
+                    ctx.lineWidth = 1.5;
 
-                    for(let x=0; x<w; x+=2) {
-                        let amp = isWet 
-                            ? (Math.sin(x*0.15) + (Math.random()*0.4 - 0.2)) * 0.8  // distorted/noisy
-                            : Math.sin(x*0.08) * 0.5; // clean
-                        let y = h/2 + (amp * h * 0.4);
+                    for(let x=0; x<w; x+=1.5) {
+                        let y = h/2;
+                        let amp = 0;
+                        
+                        if (fxType === 'gate' && isWet) {
+                            // Gating visual (chunks of silence)
+                            if (Math.floor(x / 40) % 2 === 0) {
+                                amp = Math.sin(x*0.2) * 0.7;
+                            }
+                        } else if (fxType === 'noise') {
+                            // Transient visual
+                            let cycle = x % 100;
+                            if (cycle < 20) {
+                                amp = Math.sin(x*0.5) * (1 - cycle/20) * (isWet ? 0.9 : 0.4); // Sharp attack if wet
+                            }
+                            if (isWet) amp += (Math.random() - 0.5) * 0.15; // Hiss
+                        } else {
+                            // Saturation / Filter visual
+                            amp = isWet 
+                                ? (Math.sin(x*0.1) + (Math.random()*0.2 - 0.1)) * 0.8  // Distorted
+                                : Math.sin(x*0.08) * 0.5; // Clean
+                        }
+                        
+                        y += (amp * h * 0.4);
                         if(x===0) ctx.moveTo(x, y);
                         else ctx.lineTo(x, y);
                     }
@@ -391,6 +480,7 @@
                     const ctx = canvas.getContext('2d', { alpha: false });
                     if(!ctx) return;
                     const isWet = canvas.dataset.wet === 'true';
+                    const fxType = canvas.dataset.fx || 'sat';
                     const w = canvas.width;
                     const h = canvas.height;
 
@@ -398,26 +488,54 @@
                     ctx.fillStyle = '#09090b'; 
                     ctx.fillRect(0, 0, w, h);
 
-                    // Add Noise Floor 
+                    // Noise Floor 
                     ctx.fillStyle = isWet ? 'rgba(220, 38, 38, 0.15)' : 'rgba(6, 182, 212, 0.05)';
-                    for(let i=0; i<400; i++) {
-                        ctx.fillRect(Math.random()*w, Math.random()*h, Math.random()*3+1, Math.random()*3+1);
+                    for(let i=0; i< (isWet && fxType==='noise' ? 1200 : 300); i++) {
+                        ctx.fillRect(Math.random()*w, Math.random()*h, Math.random()*2+1, Math.random()*2+1);
                     }
 
-                    // Draw Harmonics
-                    const numHarmonics = isWet ? 14 : 5;
-                    for(let k=1; k<=numHarmonics; k++) {
-                        let y = h - (k * (h/16));
-                        ctx.beginPath();
-                        ctx.strokeStyle = isWet ? `rgba(239, 68, 68, ${1 - k/16})` : `rgba(6, 182, 212, ${1 - k/8})`;
-                        ctx.lineWidth = isWet ? 4 : 2;
-
-                        for(let x=0; x<w; x+=5) {
-                            let offset = isWet ? Math.sin(x*0.03 + k)*4 : Math.sin(x*0.01)*1;
-                            if(x===0) ctx.moveTo(x, y + offset);
-                            else ctx.lineTo(x, y + offset);
+                    // Draw Frequencies
+                    const numHarmonics = isWet ? 16 : 6;
+                    
+                    if (fxType === 'noise') {
+                        // Vertical transients
+                        for(let x=20; x<w; x+=100) {
+                            ctx.fillStyle = isWet ? 'rgba(239, 68, 68, 0.6)' : 'rgba(6, 182, 212, 0.3)';
+                            ctx.fillRect(x, 10, isWet ? 4 : 8, h-20);
+                            ctx.fillStyle = isWet ? 'rgba(239, 68, 68, 0.3)' : 'rgba(6, 182, 212, 0.1)';
+                            ctx.fillRect(x+ (isWet?4:8), 50, 10, h-50);
                         }
-                        ctx.stroke();
+                    } else if (fxType === 'gate' && isWet) {
+                        // Chopped harmonics
+                        for(let k=1; k<=8; k++) {
+                            let y = h - (k * (h/10));
+                            ctx.fillStyle = `rgba(239, 68, 68, ${1 - k/10})`;
+                            for(let x=0; x<w; x+=40) {
+                                ctx.fillRect(x, y, 20, 3);
+                            }
+                        }
+                    } else {
+                        // Standard / Sweeping harmonics
+                        for(let k=1; k<=numHarmonics; k++) {
+                            let y = h - (k * (h/18));
+                            ctx.beginPath();
+                            ctx.strokeStyle = isWet ? `rgba(239, 68, 68, ${1 - k/18})` : `rgba(6, 182, 212, ${1 - k/8})`;
+                            ctx.lineWidth = isWet ? 3 : 2;
+
+                            for(let x=0; x<w; x+=3) {
+                                let offset = 0;
+                                if (fxType === 'filter' && isWet) {
+                                    offset = Math.sin(x*0.02)*15 * (k/4); // Sweep effect
+                                    if (y + offset < 20) continue; // High cut
+                                } else {
+                                    offset = isWet ? (Math.random()*2 - 1) : 0; // Grit
+                                }
+                                
+                                if(x===0) ctx.moveTo(x, y + offset);
+                                else ctx.lineTo(x, y + offset);
+                            }
+                            ctx.stroke();
+                        }
                     }
                 });
             }
@@ -425,10 +543,10 @@
 
             // 3. Web Audio API Synthesis Engine
             let audioCtx = null;
-            let activeOsc = null;
-            let activeGain = null;
+            let activeNodes = [];
+            let activeInterval = null;
             let currentBtn = null;
-            let stopTimeout = null;
+            const DEMO_DURATION = 3; // seconds
 
             function initAudio() {
                 if(!audioCtx) {
@@ -438,6 +556,17 @@
                     audioCtx.resume();
                 }
                 return audioCtx;
+            }
+
+            // Procedural Noise Buffer creation
+            function createNoiseBuffer(duration, ctx) {
+                const bufferSize = ctx.sampleRate * duration;
+                const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+                return buffer;
             }
 
             function makeDistortionCurve(amount) {
@@ -452,97 +581,212 @@
                 return curve;
             }
 
-            function resetAllButtons() {
+            function resetAllUI() {
                 document.querySelectorAll('.play-btn').forEach(b => {
                     b.dataset.playing = 'false';
-                    b.querySelector('i').setAttribute('data-lucide', 'play');
+                    b.classList.remove('animate-pulse', 'border-red-400');
+                    b.querySelector('.icon-play').classList.remove('hidden');
+                    b.querySelector('.icon-stop').classList.add('hidden');
                 });
-                lucide.createIcons();
+                document.querySelectorAll('.progress-bg').forEach(bg => {
+                    bg.style.width = '0%';
+                });
+                document.querySelectorAll('.time-display').forEach(td => {
+                    td.textContent = `0:00 / 0:03`;
+                });
             }
 
             function stopAudio() {
-                if(activeOsc) {
-                    try { activeOsc.stop(); } catch(e){}
-                    activeOsc.disconnect();
-                    activeGain.disconnect();
-                    activeOsc = null;
-                }
-                if(stopTimeout) clearTimeout(stopTimeout);
-                resetAllButtons();
+                activeNodes.forEach(node => {
+                    try { node.stop(); } catch(e){}
+                    try { node.disconnect(); } catch(e){}
+                });
+                activeNodes = [];
+                if(activeInterval) clearInterval(activeInterval);
+                resetAllUI();
+                currentBtn = null;
             }
 
             function playDemo(type, isWet, btn) {
-                // If clicking the currently playing button, just stop it
+                // Toggle off if already playing this one
                 if(btn.dataset.playing === 'true') {
                     stopAudio();
                     return;
                 }
 
-                // Stop anything currently playing
-                stopAudio();
+                stopAudio(); // Ensure everything is clear
 
                 const ctx = initAudio();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-
-                // Set new button state
-                btn.dataset.playing = 'true';
-                btn.querySelector('i').setAttribute('data-lucide', 'square');
-                lucide.createIcons();
-
-                // Sound Generation Logic
-                osc.type = isWet ? 'sawtooth' : 'sine';
-                osc.frequency.setValueAtTime(isWet ? 65 : 130, ctx.currentTime);
-
-                gain.gain.setValueAtTime(0, ctx.currentTime);
+                const now = ctx.currentTime;
                 
-                // Gating effect logic
-                if(type === 'gate' && isWet) {
-                    for(let i=0; i<8; i++) {
-                        gain.gain.setValueAtTime(0.5, ctx.currentTime + (i * 0.25));
-                        gain.gain.setValueAtTime(0, ctx.currentTime + (i * 0.25) + 0.1);
+                // Update UI state
+                currentBtn = btn;
+                btn.dataset.playing = 'true';
+                btn.classList.add('animate-pulse');
+                btn.querySelector('.icon-play').classList.add('hidden');
+                btn.querySelector('.icon-stop').classList.remove('hidden');
+
+                // Master Out with safe envelope (avoiding 0 for exponentialRamp)
+                const masterGain = ctx.createGain();
+                masterGain.gain.setValueAtTime(0.001, now);
+                masterGain.gain.linearRampToValueAtTime(0.7, now + 0.05);
+                masterGain.gain.setValueAtTime(0.7, now + DEMO_DURATION - 0.1);
+                masterGain.gain.linearRampToValueAtTime(0.001, now + DEMO_DURATION);
+                masterGain.connect(ctx.destination);
+                activeNodes.push(masterGain);
+
+                // --- Synthesis Logic based on Protocol ---
+                if (type === 'sat') {
+                    const osc = ctx.createOscillator();
+                    osc.type = isWet ? 'sawtooth' : 'triangle';
+                    osc.frequency.setValueAtTime(55, now); // Low A
+                    osc.frequency.setValueAtTime(65.41, now + 1.5); // C
+                    
+                    if (isWet) {
+                        const dist = ctx.createWaveShaper();
+                        dist.curve = makeDistortionCurve(400);
+                        const filter = ctx.createBiquadFilter();
+                        filter.type = 'lowpass';
+                        filter.frequency.value = 2000;
+                        
+                        osc.connect(dist);
+                        dist.connect(filter);
+                        filter.connect(masterGain);
+                        masterGain.gain.value = 0.3; // compensate volume
+                    } else {
+                        osc.connect(masterGain);
                     }
-                } else if(type === 'noise' && isWet) {
-                     gain.gain.linearRampToValueAtTime(0.6, ctx.currentTime + 0.01); // sharp attack
-                     gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
-                } else {
-                    gain.gain.linearRampToValueAtTime(isWet ? 0.3 : 0.5, ctx.currentTime + 0.05);
-                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.9);
-                }
-
-                // Routing
-                osc.connect(gain);
-
-                if(isWet) {
+                    osc.start(now);
+                    activeNodes.push(osc);
+                } 
+                else if (type === 'filter') {
+                    const osc1 = ctx.createOscillator();
+                    const osc2 = ctx.createOscillator();
+                    osc1.type = 'sawtooth';
+                    osc2.type = 'sawtooth';
+                    osc1.frequency.value = 110;
+                    osc2.frequency.value = 111; // Detune
+                    
                     const filter = ctx.createBiquadFilter();
                     filter.type = 'lowpass';
-                    filter.frequency.setValueAtTime(type === 'filter' ? 200 : 1500, ctx.currentTime);
-                    if(type === 'filter') {
-                        filter.frequency.exponentialRampToValueAtTime(3000, ctx.currentTime + 1.5);
-                    }
                     filter.Q.value = 8;
-
-                    const dist = ctx.createWaveShaper();
-                    dist.curve = makeDistortionCurve(400);
-
-                    gain.connect(dist);
-                    dist.connect(filter);
-                    filter.connect(ctx.destination);
-                } else {
-                    gain.connect(ctx.destination);
+                    
+                    osc1.connect(filter);
+                    osc2.connect(filter);
+                    filter.connect(masterGain);
+                    
+                    if (isWet) {
+                        const lfo = ctx.createOscillator();
+                        lfo.frequency.value = 1.2;
+                        const lfoGain = ctx.createGain();
+                        lfoGain.gain.value = 1500;
+                        filter.frequency.value = 1800;
+                        
+                        lfo.connect(lfoGain);
+                        lfoGain.connect(filter.frequency);
+                        lfo.start(now);
+                        activeNodes.push(lfo);
+                    } else {
+                        filter.frequency.value = 800;
+                    }
+                    
+                    osc1.start(now);
+                    osc2.start(now);
+                    activeNodes.push(osc1, osc2);
+                }
+                else if (type === 'gate') {
+                    const osc1 = ctx.createOscillator();
+                    osc1.type = 'square';
+                    osc1.frequency.value = 220;
+                    
+                    const gateGain = ctx.createGain();
+                    gateGain.gain.value = 0.5;
+                    osc1.connect(gateGain);
+                    gateGain.connect(masterGain);
+                    
+                    if (isWet) {
+                        const lfo = ctx.createOscillator();
+                        lfo.type = 'square';
+                        lfo.frequency.value = 6;
+                        const lfoAmp = ctx.createGain();
+                        lfoAmp.gain.value = 0.5;
+                        
+                        lfo.connect(lfoAmp);
+                        lfoAmp.connect(gateGain.gain);
+                        lfo.start(now);
+                        activeNodes.push(lfo);
+                    }
+                    osc1.start(now);
+                    activeNodes.push(osc1);
+                }
+                else if (type === 'noise') {
+                    // 4 Kick drums
+                    for(let i=0; i<3; i++) {
+                        const t = now + i;
+                        const osc = ctx.createOscillator();
+                        const kGain = ctx.createGain();
+                        
+                        if (isWet) {
+                            // Punchy
+                            osc.frequency.setValueAtTime(150, t);
+                            osc.frequency.exponentialRampToValueAtTime(40, t + 0.1);
+                            kGain.gain.setValueAtTime(1, t);
+                            kGain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+                            
+                            // Add noise burst
+                            const noiseNode = ctx.createBufferSource();
+                            noiseNode.buffer = createNoiseBuffer(0.3, ctx);
+                            const nFilter = ctx.createBiquadFilter();
+                            nFilter.type = 'bandpass';
+                            nFilter.frequency.value = 4000;
+                            const nGain = ctx.createGain();
+                            nGain.gain.setValueAtTime(0.6, t);
+                            nGain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+                            
+                            noiseNode.connect(nFilter);
+                            nFilter.connect(nGain);
+                            nGain.connect(masterGain);
+                            noiseNode.start(t);
+                            activeNodes.push(noiseNode);
+                            
+                        } else {
+                            // Dull
+                            osc.frequency.setValueAtTime(80, t);
+                            osc.frequency.exponentialRampToValueAtTime(50, t + 0.2);
+                            kGain.gain.setValueAtTime(0.001, t);
+                            kGain.gain.linearRampToValueAtTime(0.8, t + 0.05);
+                            kGain.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
+                        }
+                        
+                        osc.connect(kGain);
+                        kGain.connect(masterGain);
+                        osc.start(t);
+                        osc.stop(t+0.9);
+                        activeNodes.push(osc);
+                    }
                 }
 
-                osc.start(ctx.currentTime);
-                activeOsc = osc;
-                activeGain = gain;
-
-                // Auto-stop after 2 seconds
-                stopTimeout = setTimeout(() => {
-                    stopAudio();
-                }, 2000);
+                // UI Progress Animation
+                const card = btn.closest('.hardware-card');
+                const progressBg = card.querySelector('.progress-bg');
+                const timeDisplay = card.querySelector('.time-display');
+                
+                let elapsed = 0;
+                activeInterval = setInterval(() => {
+                    elapsed += 0.05;
+                    if(elapsed >= DEMO_DURATION) {
+                        stopAudio();
+                    } else {
+                        const pct = (elapsed / DEMO_DURATION) * 100;
+                        progressBg.style.width = `${pct}%`;
+                        const seconds = Math.floor(elapsed);
+                        const ms = Math.floor((elapsed % 1) * 100).toString().padStart(2, '0');
+                        timeDisplay.textContent = `0:0${seconds} / 0:03`;
+                    }
+                }, 50);
             }
 
-            // Attach Click Listeners
+            // Attach Listeners
             document.querySelectorAll('.play-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const type = btn.dataset.type;
