@@ -164,7 +164,7 @@
     </section>
 
     <!-- PROTOCOL 01: SATURATION -->
-    <section class="py-20 border-b border-zinc-800 bg-[#0a0a0c]">
+    <section id="protocol-01" class="py-20 border-b border-zinc-800 bg-[#0a0a0c]">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <div class="mb-8 reveal">
@@ -784,6 +784,17 @@
                     minimizeVideo();
                 } else {
                     expandVideo();
+                }
+
+                // Automatically collapse video once playback finishes and scroll to protocols
+                if (mainVideo) {
+                    mainVideo.addEventListener('ended', () => {
+                        minimizeVideo();
+                        const protocol01 = document.getElementById('protocol-01');
+                        if (protocol01) {
+                            protocol01.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    });
                 }
 
                 // Toggle button listener
