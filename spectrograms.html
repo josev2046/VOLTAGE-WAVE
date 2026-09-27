@@ -1,1 +1,517 @@
+<!DOCTYPE html><html lang="en" class="scroll-smooth"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MS-10 TREATMENTS // Voltage & Wave</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        red: {
+                            400: '#ef4444',
+                            500: '#dc2626',
+                            600: '#b91c1c',
+                        },
+                        zinc: {
+                            850: '#202022',
+                            900: '#18181b',
+                            950: '#09090b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #09090b;
+            color: #d4d4d8;
+        }
+        
+        .scanlines::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(220, 38, 38, 0.04), rgba(220, 38, 38, 0.02), rgba(200, 38, 38, 0.04));
+            z-index: 50;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            opacity: 0.3;
+        }
 
+        .glow-text {
+            text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+        }
+
+        .hardware-card {
+            transition: all 0.3s ease;
+        }
+        .hardware-card:hover {
+            transform: translateY(-5px);
+            border-color: #dc2626;
+            box-shadow: 0 10px 30px -10px rgba(220, 38, 38, 0.2);
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #09090b; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #dc2626; }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .bg-synth-grid {
+            background-image: linear-gradient(to right, rgba(220, 38, 38, 0.07) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(220, 38, 38, 0.07) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        
+        @keyframes analog-glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 1px); color: #ef4444; text-shadow: 2px 0 #dc2626; }
+            40% { transform: translate(-1px, -1px) }
+            60% { transform: translate(2px, 1px); text-shadow: -2px 0 #dc2626; }
+            80% { transform: translate(1px, -1px) }
+            100% { transform: translate(0) }
+        }
+        .glitch-hover:hover {
+            animation: analog-glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+        }
+
+        /* Waveform simulation styles */
+        .wave-dry {
+            background: repeating-linear-gradient(90deg, #52525b 0px, #52525b 2px, transparent 2px, transparent 4px);
+            mask-image: linear-gradient(to bottom, transparent, black 40%, black 60%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 40%, black 60%, transparent);
+        }
+        .wave-wet {
+            background: repeating-linear-gradient(90deg, #ef4444 0px, #ef4444 2px, transparent 2px, transparent 4px);
+            mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+        }
+    </style>
+</head>
+<body class="antialiased relative selection:bg-red-500 selection:text-zinc-950">
+    <div class="scanlines fixed inset-0"></div>
+
+    <!-- NAVIGATION -->
+    <nav class="fixed w-full z-40 top-0 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-3 cursor-pointer glitch-hover">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-red-500 w-6 h-6">
+                        <path d="M2 12h4v-7h6v14h6v-7h4"/>
+                    </svg>
+                    <span class="font-mono font-bold text-white tracking-widest hidden sm:block">VOLTAGE & WAVE</span>
+                </a>
+                <div class="flex space-x-8 font-mono text-sm items-center">
+                    <a href="spectrograms.html" class="text-zinc-400 hover:text-red-500 transition-colors flex items-center gap-2">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> RETURN TO ARCHIVE
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <section class="relative pt-32 pb-16 overflow-hidden border-b border-zinc-800">
+        <div class="absolute inset-0 bg-synth-grid [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 reveal active">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 font-mono text-xs mb-6">
+                <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                HARDWARE CAPABILITIES // MS-10
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4 uppercase">
+                The Analog <span class="text-red-500 glow-text">Grinder</span>
+            </h1>
+            <p class="text-lg text-zinc-400 max-w-2xl font-light">
+                Routing sterile digital stems through the Korg MS-10's External Signal processor transforms the synthesizer into a highly characterful outboard effects unit. Below are the core treatment protocols available.
+            </p>
+        </div>
+    </section>
+
+    <!-- PROTOCOL 01: SATURATION -->
+    <section class="py-16 border-b border-zinc-800 bg-zinc-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <div class="lg:col-span-8 reveal active">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-red-500 font-mono font-bold text-xl">01.</span>
+                        <h2 class="text-2xl font-bold text-white uppercase tracking-wide">Analog Saturation & Overdrive</h2>
+                    </div>
+                    <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-4">
+                        <span class="border border-zinc-700 px-2 py-1">Hardware: Korg MS-10</span>
+                        <span class="border border-red-500/30 bg-red-500/10 text-red-400 px-2 py-1">Component: VCA / Ext In</span>
+                    </div>
+                    <p class="text-zinc-400 text-sm max-w-3xl leading-relaxed mb-8">
+                        <strong>Engineer Notes:</strong> By driving a digital track aggressively into the MS-10's External Signal In, we force the VCA and Korg-35 filter circuitry into musical clipping. This breaks up the signal, instantly adding rich harmonic distortion, weight, and grit to thin basslines or sterile drum tracks. Even with the filter fully open, the analog signal path inherently rounds off harsh digital highs and warms the low-mids.
+                    </p>
+
+                    <!-- A/B Audio Player Layout -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- DRY PLAYER -->
+                        <div class="audio-player bg-zinc-900 border border-zinc-800 rounded p-4 relative overflow-hidden group">
+                            <div class="absolute inset-y-0 left-0 bg-zinc-800/40 w-0 progress-bar pointer-events-none transition-all duration-75"></div>
+                            <div class="relative z-10 flex flex-col gap-3">
+                                <div class="flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
+                                    <span class="text-zinc-500 font-bold">DRY // Unprocessed</span>
+                                    <span class="text-zinc-600 time-display">0:00 / 0:10</span>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <button class="play-toggle w-8 h-8 flex items-center justify-center rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors">
+                                        <i data-lucide="play" class="w-4 h-4 ml-1 icon-play"></i>
+                                        <i data-lucide="square" class="w-4 h-4 hidden icon-stop"></i>
+                                    </button>
+                                    <div class="flex-1 h-10 bg-zinc-950 rounded border border-zinc-800/50 relative overflow-hidden">
+                                        <div class="absolute inset-0 wave-dry opacity-50"></div>
+                                    </div>
+                                </div>
+                                <audio src="#" class="hidden"></audio>
+                            </div>
+                        </div>
+
+                        <!-- WET PLAYER -->
+                        <div class="audio-player bg-zinc-900 border border-red-900/30 rounded p-4 relative overflow-hidden shadow-[0_0_15px_rgba(220,38,38,0.03)] group">
+                            <div class="absolute inset-y-0 left-0 bg-red-900/20 w-0 progress-bar pointer-events-none transition-all duration-75"></div>
+                            <div class="relative z-10 flex flex-col gap-3">
+                                <div class="flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
+                                    <span class="text-red-500 font-bold">WET // MS-10 Processed</span>
+                                    <span class="text-red-700 time-display">0:00 / 0:10</span>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <button class="play-toggle w-8 h-8 flex items-center justify-center rounded-full bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 text-red-500 transition-colors">
+                                        <i data-lucide="play" class="w-4 h-4 ml-1 icon-play fill-red-500/20"></i>
+                                        <i data-lucide="square" class="w-4 h-4 hidden icon-stop fill-red-500/20"></i>
+                                    </button>
+                                    <div class="flex-1 h-10 bg-zinc-950 rounded border border-zinc-800/50 relative overflow-hidden">
+                                        <div class="absolute inset-0 wave-wet opacity-70"></div>
+                                    </div>
+                                </div>
+                                <audio src="#" class="hidden"></audio>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROTOCOL 02: KORG-35 FILTER DYNAMICS -->
+    <section class="py-16 border-b border-zinc-800 bg-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <div class="lg:col-span-8 reveal active">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-red-500 font-mono font-bold text-xl">02.</span>
+                        <h2 class="text-2xl font-bold text-white uppercase tracking-wide">Korg-35 Filter Dynamics</h2>
+                    </div>
+                    <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-4">
+                        <span class="border border-zinc-700 px-2 py-1">Hardware: Korg MS-10</span>
+                        <span class="border border-red-500/30 bg-red-500/10 text-red-400 px-2 py-1">Component: Korg-35 LPF / Mod Generator</span>
+                    </div>
+                    <p class="text-zinc-400 text-sm max-w-3xl leading-relaxed mb-8">
+                        <strong>Engineer Notes:</strong> The aggressive Korg-35 Low-Pass Filter is utilized in two primary ways. <em>Manual Groove Riding:</em> Real-time manipulation of the Cutoff and Resonance knobs to inject human feel, evolving movement, and aggressive squelch into static loops. <em>Rhythmic LFO Sweeps:</em> Patching the Modulation Generator (LFO) to the filter cutoff to apply cyclic, synchronized movement—ideal for creating pulsating pads or classic auto-wah effects on guitars and soft-synths.
+                    </p>
+
+                    <!-- A/B Audio Player Layout -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="audio-player bg-zinc-950 border border-zinc-800 rounded p-4 relative overflow-hidden group">
+                            <div class="absolute inset-y-0 left-0 bg-zinc-800/40 w-0 progress-bar pointer-events-none transition-all duration-75"></div>
+                            <div class="relative z-10 flex flex-col gap-3">
+                                <div class="flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
+                                    <span class="text-zinc-500 font-bold">DRY // Static Synth Pad</span>
+                                    <span class="text-zinc-600 time-display">0:00 / 0:10</span>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <button class="play-toggle w-8 h-8 flex items-center justify-center rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors">
+                                        <i data-lucide="play" class="w-4 h-4 ml-1 icon-play"></i>
+                                        <i data-lucide="square" class="w-4 h-4 hidden icon-stop"></i>
+                                    </button>
+                                    <div class="flex-1 h-10 bg-zinc-900 rounded border border-zinc-800/50 relative overflow-hidden">
+                                        <div class="absolute inset-0 wave-dry opacity-50"></div>
+                                    </div>
+                                </div>
+                                <audio src="#" class="hidden"></audio>
+                            </div>
+                        </div>
+
+                        <div class="audio-player bg-zinc-950 border border-red-900/30 rounded p-4 relative overflow-hidden shadow-[0_0_15px_rgba(220,38,38,0.03)] group">
+                            <div class="absolute inset-y-0 left-0 bg-red-900/20 w-0 progress-bar pointer-events-none transition-all duration-75"></div>
+                            <div class="relative z-10 flex flex-col gap-3">
+                                <div class="flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
+                                    <span class="text-red-500 font-bold">WET // Filter Sweeps</span>
+                                    <span class="text-red-700 time-display">0:00 / 0:10</span>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <button class="play-toggle w-8 h-8 flex items-center justify-center rounded-full bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 text-red-500 transition-colors">
+                                        <i data-lucide="play" class="w-4 h-4 ml-1 icon-play fill-red-500/20"></i>
+                                        <i data-lucide="square" class="w-4 h-4 hidden icon-stop fill-red-500/20"></i>
+                                    </button>
+                                    <div class="flex-1 h-10 bg-zinc-900 rounded border border-zinc-800/50 relative overflow-hidden">
+                                        <div class="absolute inset-0 wave-wet opacity-70"></div>
+                                    </div>
+                                </div>
+                                <audio src="#" class="hidden"></audio>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROTOCOL 03: VCA GATING -->
+    <section class="py-16 border-b border-zinc-800 bg-zinc-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <div class="lg:col-span-8 reveal active">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-red-500 font-mono font-bold text-xl">03.</span>
+                        <h2 class="text-2xl font-bold text-white uppercase tracking-wide">VCA Gating & Rhythmic Chopping</h2>
+                    </div>
+                    <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-4">
+                        <span class="border border-zinc-700 px-2 py-1">Hardware: Korg MS-10</span>
+                        <span class="border border-red-500/30 bg-red-500/10 text-red-400 px-2 py-1">Component: VCA Initial Gain / Patchbay</span>
+                    </div>
+                    <p class="text-zinc-400 text-sm max-w-3xl leading-relaxed mb-8">
+                        <strong>Engineer Notes:</strong> By patching a square wave from the Modulation Generator (or an external trigger pulse) directly into the VCA Initial Gain input, we rhythmically mute and unmute the external audio. This transforms sustained drones, ambient noise, or long synth chords into tight, percussive rhythmic sequences. 
+                    </p>
+
+                    <!-- A/B Audio Player Layout -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="audio-player bg-zinc-900 border border-zinc-800 rounded p-4 relative overflow-hidden group">
+                            <div class="absolute inset-y-0 left-0 bg-zinc-800/40 w-0 progress-bar pointer-events-none transition-all duration-75"></div>
+                            <div class="relative z-10 flex flex-col gap-3">
+                                <div class="flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
+                                    <span class="text-zinc-500 font-bold">DRY // Sustained Drone</span>
+                                    <span class="text-zinc-600 time-display">0:00 / 0:10</span>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <button class="play-toggle w-8 h-8 flex items-center justify-center rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors">
+                                        <i data-lucide="play" class="w-4 h-4 ml-1 icon-play"></i>
+                                        <i data-lucide="square" class="w-4 h-4 hidden icon-stop"></i>
+                                    </button>
+                                    <div class="flex-1 h-10 bg-zinc-950 rounded border border-zinc-800/50 relative overflow-hidden">
+                                        <div class="absolute inset-0 wave-dry opacity-50"></div>
+                                    </div>
+                                </div>
+                                <audio src="#" class="hidden"></audio>
+                            </div>
+                        </div>
+
+                        <div class="audio-player bg-zinc-900 border border-red-900/30 rounded p-4 relative overflow-hidden shadow-[0_0_15px_rgba(220,38,38,0.03)] group">
+                            <div class="absolute inset-y-0 left-0 bg-red-900/20 w-0 progress-bar pointer-events-none transition-all duration-75"></div>
+                            <div class="relative z-10 flex flex-col gap-3">
+                                <div class="flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
+                                    <span class="text-red-500 font-bold">WET // LFO Square Gate</span>
+                                    <span class="text-red-700 time-display">0:00 / 0:10</span>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <button class="play-toggle w-8 h-8 flex items-center justify-center rounded-full bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 text-red-500 transition-colors">
+                                        <i data-lucide="play" class="w-4 h-4 ml-1 icon-play fill-red-500/20"></i>
+                                        <i data-lucide="square" class="w-4 h-4 hidden icon-stop fill-red-500/20"></i>
+                                    </button>
+                                    <div class="flex-1 h-10 bg-zinc-950 rounded border border-zinc-800/50 relative overflow-hidden">
+                                        <div class="absolute inset-0 wave-wet opacity-70" style="mask-image: repeating-linear-gradient(90deg, black 0%, black 50%, transparent 50%, transparent 100%); background-size: 20px 10px;"></div>
+                                    </div>
+                                </div>
+                                <audio src="#" class="hidden"></audio>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROTOCOL 04: TRANSIENTS & NOISE -->
+    <section class="py-16 border-b border-zinc-800 bg-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <div class="lg:col-span-8 reveal active">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-red-500 font-mono font-bold text-xl">04.</span>
+                        <h2 class="text-2xl font-bold text-white uppercase tracking-wide">Transient Reshaping & Lo-Fi Noise</h2>
+                    </div>
+                    <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-4">
+                        <span class="border border-zinc-700 px-2 py-1">Hardware: Korg MS-10</span>
+                        <span class="border border-red-500/30 bg-red-500/10 text-red-400 px-2 py-1">Component: Envelope Generator / Noise Gen</span>
+                    </div>
+                    <p class="text-zinc-400 text-sm max-w-3xl leading-relaxed mb-8">
+                        <strong>Engineer Notes:</strong> <em>Transient Reshaping:</em> The Envelope Generator (EG) modulates the filter cutoff, snapping it open and closed rapidly via an external trigger to add sharp, synthetic attack transients to dull acoustic drums. <em>Noise Texturing:</em> The onboard White or Pink Noise generator is blended with the external input. Filtering them together glues the track to a bed of analog hiss, effectively simulating degraded tape or vintage sampler grit.
+                    </p>
+
+                    <!-- A/B Audio Player Layout -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="audio-player bg-zinc-950 border border-zinc-800 rounded p-4 relative overflow-hidden group">
+                            <div class="absolute inset-y-0 left-0 bg-zinc-800/40 w-0 progress-bar pointer-events-none transition-all duration-75"></div>
+                            <div class="relative z-10 flex flex-col gap-3">
+                                <div class="flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
+                                    <span class="text-zinc-500 font-bold">DRY // Flat Drums</span>
+                                    <span class="text-zinc-600 time-display">0:00 / 0:10</span>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <button class="play-toggle w-8 h-8 flex items-center justify-center rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors">
+                                        <i data-lucide="play" class="w-4 h-4 ml-1 icon-play"></i>
+                                        <i data-lucide="square" class="w-4 h-4 hidden icon-stop"></i>
+                                    </button>
+                                    <div class="flex-1 h-10 bg-zinc-900 rounded border border-zinc-800/50 relative overflow-hidden">
+                                        <div class="absolute inset-0 wave-dry opacity-50"></div>
+                                    </div>
+                                </div>
+                                <audio src="#" class="hidden"></audio>
+                            </div>
+                        </div>
+
+                        <div class="audio-player bg-zinc-950 border border-red-900/30 rounded p-4 relative overflow-hidden shadow-[0_0_15px_rgba(220,38,38,0.03)] group">
+                            <div class="absolute inset-y-0 left-0 bg-red-900/20 w-0 progress-bar pointer-events-none transition-all duration-75"></div>
+                            <div class="relative z-10 flex flex-col gap-3">
+                                <div class="flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
+                                    <span class="text-red-500 font-bold">WET // Snappy + Hiss</span>
+                                    <span class="text-red-700 time-display">0:00 / 0:10</span>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <button class="play-toggle w-8 h-8 flex items-center justify-center rounded-full bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 text-red-500 transition-colors">
+                                        <i data-lucide="play" class="w-4 h-4 ml-1 icon-play fill-red-500/20"></i>
+                                        <i data-lucide="square" class="w-4 h-4 hidden icon-stop fill-red-500/20"></i>
+                                    </button>
+                                    <div class="flex-1 h-10 bg-zinc-900 rounded border border-zinc-800/50 relative overflow-hidden">
+                                        <div class="absolute inset-0 wave-wet opacity-70"></div>
+                                    </div>
+                                </div>
+                                <audio src="#" class="hidden"></audio>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Scroll animations
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            reveals.forEach(reveal => {
+                reveal.classList.remove('active');
+                observer.observe(reveal);
+            });
+            
+            lucide.createIcons();
+
+            // Audio Player Logic (Simulated playback for placeholders)
+            const players = document.querySelectorAll('.audio-player');
+            let activePlayer = null;
+            let activeInterval = null;
+            const SIMULATION_DURATION = 10; // Seconds
+
+            players.forEach(player => {
+                const btn = player.querySelector('.play-toggle');
+                const playIcon = player.querySelector('.icon-play');
+                const stopIcon = player.querySelector('.icon-stop');
+                const progressBar = player.querySelector('.progress-bar');
+                const timeDisplay = player.querySelector('.time-display');
+                // The actual audio element exists as per requirements, but for src="#" 
+                // we'll run a simulated timeline to demonstrate UI functionality.
+                const audioElement = player.querySelector('audio'); 
+                
+                let isPlaying = false;
+                let currentTime = 0;
+
+                const updateUI = () => {
+                    const pct = (currentTime / SIMULATION_DURATION) * 100;
+                    progressBar.style.width = `${pct}%`;
+                    
+                    const formattedTime = Math.floor(currentTime).toString().padStart(2, '0');
+                    timeDisplay.textContent = `0:${formattedTime} / 0:${SIMULATION_DURATION}`;
+                };
+
+                player.pauseFn = () => {
+                    isPlaying = false;
+                    playIcon.classList.remove('hidden');
+                    stopIcon.classList.add('hidden');
+                    btn.classList.remove('animate-pulse');
+                    if (audioElement && audioElement.src !== window.location.href + '#') {
+                        audioElement.pause();
+                    }
+                };
+
+                const stop = () => {
+                    player.pauseFn();
+                    currentTime = 0;
+                    updateUI();
+                    if (activePlayer === player) activePlayer = null;
+                };
+
+                const play = () => {
+                    // Pause globally any other playing element
+                    if (activePlayer && activePlayer !== player) {
+                        activePlayer.pauseFn();
+                    }
+                    
+                    isPlaying = true;
+                    activePlayer = player;
+                    
+                    playIcon.classList.add('hidden');
+                    stopIcon.classList.remove('hidden');
+                    
+                    // Attempt to play actual audio if it was provided
+                    if (audioElement && audioElement.src !== window.location.href + '#') {
+                        audioElement.play().catch(()=>console.log("No real audio loaded."));
+                    }
+                    
+                    // Simulation loop for UI
+                    if (activeInterval) clearInterval(activeInterval);
+                    activeInterval = setInterval(() => {
+                        if (!isPlaying) return;
+                        currentTime += 0.1;
+                        if (currentTime >= SIMULATION_DURATION) {
+                            stop();
+                            clearInterval(activeInterval);
+                        } else {
+                            updateUI();
+                        }
+                    }, 100);
+                };
+
+                btn.addEventListener('click', () => {
+                    if (isPlaying) {
+                        player.pauseFn();
+                        clearInterval(activeInterval);
+                    } else {
+                        play();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
