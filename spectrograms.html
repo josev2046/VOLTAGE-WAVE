@@ -34,7 +34,6 @@
             }
         }
     </script>
-    
     <style>
         body {
             background-color: #09090b;
@@ -53,8 +52,13 @@
             opacity: 0.3;
         }
 
-        .glow-text {
-            text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+        .glow-text { text-shadow: 0 0 10px rgba(220, 38, 38, 0.5); }
+
+        .hardware-card { transition: all 0.3s ease; }
+        .hardware-card:hover {
+            transform: translateY(-5px);
+            border-color: #dc2626;
+            box-shadow: 0 10px 30px -10px rgba(220, 38, 38, 0.2);
         }
 
         ::-webkit-scrollbar { width: 8px; }
@@ -67,10 +71,7 @@
             transform: translateY(30px);
             transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
         .bg-synth-grid {
             background-image: linear-gradient(to right, rgba(220, 38, 38, 0.07) 1px, transparent 1px),
@@ -86,26 +87,13 @@
             80% { transform: translate(1px, -1px) }
             100% { transform: translate(0) }
         }
-        .glitch-hover:hover {
-            animation: analog-glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
-        }
-
-        /* Waveform simulation styles */
-        .wave-dry {
-            background: repeating-linear-gradient(90deg, #52525b 0px, #52525b 2px, transparent 2px, transparent 4px);
-            mask-image: linear-gradient(to bottom, transparent, black 40%, black 60%, transparent);
-            -webkit-mask-image: linear-gradient(to bottom, transparent, black 40%, black 60%, transparent);
-        }
-        .wave-wet {
-            background: repeating-linear-gradient(90deg, #ef4444 0px, #ef4444 2px, transparent 2px, transparent 4px);
-            mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
-            -webkit-mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
-        }
+        .glitch-hover:hover { animation: analog-glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite; }
     </style>
 </head>
 <body class="antialiased relative selection:bg-red-500 selection:text-zinc-950">
     <div class="scanlines fixed inset-0"></div>
 
+    <!-- NAVIGATION -->
     <nav class="fixed w-full z-40 top-0 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
@@ -116,17 +104,18 @@
                     <span class="font-mono font-bold text-white tracking-widest hidden sm:block">VOLTAGE & WAVE</span>
                 </a>
                 <div class="flex space-x-8 font-mono text-sm items-center">
-                    <a href="spectrograms.html" class="text-zinc-400 hover:text-red-500 transition-colors flex items-center gap-2">
-                        <i data-lucide="arrow-left" class="w-4 h-4"></i> RETURN TO ARCHIVE
+                    <a href="index.html" class="text-zinc-400 hover:text-red-500 transition-colors flex items-center gap-2">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> RETURN TO STUDIO
                     </a>
                 </div>
             </div>
         </div>
     </nav>
 
+    <!-- HEADER -->
     <section class="relative pt-32 pb-16 overflow-hidden border-b border-zinc-800">
         <div class="absolute inset-0 bg-synth-grid [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 reveal active">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 reveal">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 font-mono text-xs mb-6">
                 <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
                 HARDWARE CAPABILITIES // MS-10
@@ -140,62 +129,171 @@
         </div>
     </section>
 
-    <section class="py-16 border-b border-zinc-800 bg-zinc-950">
+    <!-- PROTOCOL 01: SATURATION -->
+    <section class="py-20 border-b border-zinc-800 bg-zinc-950">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                <div class="lg:col-span-8 reveal active">
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="text-red-500 font-mono font-bold text-xl">01.</span>
-                        <h2 class="text-2xl font-bold text-white uppercase tracking-wide">Analogue Saturation & Overdrive</h2>
-                    </div>
-                    <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-4">
-                        <span class="border border-zinc-700 px-2 py-1">Hardware: Korg MS-10</span>
-                        <span class="border border-red-500/30 bg-red-500/10 text-red-400 px-2 py-1">Component: VCA / Ext In</span>
-                    </div>
-                    <p class="text-zinc-400 text-sm max-w-3xl leading-relaxed mb-8">
-                        <strong>Engineer Notes:</strong> By driving a digital track aggressively into the MS-10's External Signal In, we force the VCA and Korg-35 filter circuitry into musical clipping. This breaks up the signal, instantly adding rich harmonic distortion, weight, and grit to thin basslines or sterile drum tracks. Even with the filter fully open, the analogue signal path inherently rounds off harsh digital highs and warms the low-mids.
-                    </p>
+            <div class="mb-12 reveal">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="text-red-500 font-mono font-bold text-xl">01.</span>
+                    <h2 class="text-2xl font-bold text-white uppercase tracking-wide">Analogue Saturation & Overdrive</h2>
+                </div>
+                <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-4">
+                    <span class="border border-zinc-700 px-2 py-1">Hardware: Korg MS-10</span>
+                    <span class="border border-red-500/30 bg-red-500/10 text-red-400 px-2 py-1">Component: VCA / Ext In</span>
+                </div>
+                <p class="text-zinc-400 text-sm mt-4 max-w-3xl leading-relaxed">
+                    <strong>Engineer Notes:</strong> By driving a digital track aggressively into the MS-10's External Signal In, we force the VCA and Korg-35 filter circuitry into musical clipping. This breaks up the signal, instantly adding rich harmonic distortion, weight, and grit to thin basslines or sterile drum tracks. Even with the filter fully open, the analogue signal path inherently rounds off harsh digital highs and warms the low-mids.
+                </p>            
+            </div>
 
-                    <!-- A/B Audio Player Layout -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <!-- DRY PLAYER -->
-                        <div class="audio-player bg-zinc-900 border border-zinc-800 rounded p-4 relative overflow-hidden group" data-protocol="saturation" data-wet="false">
-                            <div class="absolute inset-y-0 left-0 bg-zinc-800/40 w-0 progress-bar pointer-events-none transition-all duration-75"></div>
-                            <div class="relative z-10 flex flex-col gap-3">
-                                <div class="flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
-                                    <span class="text-zinc-500 font-bold">DRY // Clean Triangle Bass</span>
-                                    <span class="text-zinc-600 time-display">0:00 / 0:04</span>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <button class="play-toggle w-8 h-8 flex items-center justify-center rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors">
-                                        <i data-lucide="play" class="w-4 h-4 ml-1 icon-play"></i>
-                                        <i data-lucide="square" class="w-4 h-4 hidden icon-stop"></i>
-                                    </button>
-                                    <div class="flex-1 h-10 bg-zinc-950 rounded border border-zinc-800/50 relative overflow-hidden">
-                                        <div class="absolute inset-0 wave-dry opacity-50"></div>
-                                    </div>
+            <!-- Signal Analysis Grid 1 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- DRY -->
+                <div class="space-y-6 reveal">
+                    <div class="hardware-card bg-zinc-900 border border-zinc-800 p-4 rounded-sm flex flex-col">
+                        <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Dry Stem Waveform</div>
+                        <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-950" width="400" height="96" data-wet="false"></canvas>
+                        <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
+                            <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-sm transition-colors border border-zinc-700" data-type="sat" data-wet="false">
+                                <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
+                            </button>
+                            <div class="flex-1 flex flex-col gap-1.5">
+                                <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">
+                                    <span>Digital Source (Dry)</span>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- WET PLAYER -->
-                        <div class="audio-player bg-zinc-900 border border-red-900/30 rounded p-4 relative overflow-hidden shadow-[0_0_15px_rgba(220,38,38,0.03)] group" data-protocol="saturation" data-wet="true">
-                            <div class="absolute inset-y-0 left-0 bg-red-900/20 w-0 progress-bar pointer-events-none transition-all duration-75"></div>
-                            <div class="relative z-10 flex flex-col gap-3">
-                                <div class="flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
-                                    <span class="text-red-500 font-bold">WET // Clipped & Driven</span>
-                                    <span class="text-red-700 time-display">0:00 / 0:04</span>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <button class="play-toggle w-8 h-8 flex items-center justify-center rounded-full bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 text-red-500 transition-colors">
-                                        <i data-lucide="play" class="w-4 h-4 ml-1 icon-play fill-red-500/20"></i>
-                                        <i data-lucide="square" class="w-4 h-4 hidden icon-stop fill-red-500/20"></i>
-                                    </button>
-                                    <div class="flex-1 h-10 bg-zinc-950 rounded border border-zinc-800/50 relative overflow-hidden">
-                                        <div class="absolute inset-0 wave-wet opacity-70" style="mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);"></div>
-                                    </div>
+                    </div>
+                    <div class="hardware-card bg-zinc-900 border border-zinc-800 p-4 rounded-sm flex flex-col">
+                        <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Dry Spectrogram</div>
+                        <canvas class="spectrogram w-full h-32 border border-zinc-800 bg-zinc-950" width="400" height="128" data-wet="false"></canvas>
+                        <p class="text-xs text-zinc-500 mt-3 font-light">Clean dynamic range, quantised harmonic stacking. Flat noise floor.</p>
+                    </div>
+                </div>
+                <!-- WET -->
+                <div class="space-y-6 reveal [transition-delay:100ms]">
+                    <div class="hardware-card bg-zinc-900 border border-red-500/30 p-4 rounded-sm flex flex-col relative">
+                        <div class="text-[10px] font-mono text-red-500 uppercase tracking-widest mb-2 flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+                            MS-10 Re-Amped Waveform
+                        </div>
+                        <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-950" width="400" height="96" data-wet="true"></canvas>
+                        <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
+                            <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-red-500 hover:bg-red-400 text-white rounded-sm transition-colors border border-red-600" data-type="sat" data-wet="true">
+                                <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
+                            </button>
+                            <div class="flex-1 flex flex-col gap-1.5">
+                                <div class="text-[10px] font-mono text-red-400 uppercase tracking-widest">
+                                    <span>Hardware Return (Driven)</span>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="hardware-card bg-zinc-900 border border-red-500/30 p-4 rounded-sm flex flex-col">
+                        <div class="text-[10px] font-mono text-red-500 uppercase tracking-widest mb-2">Re-Amped Spectrogram</div>
+                        <canvas class="spectrogram w-full h-32 border border-zinc-800 bg-zinc-950" width="400" height="128" data-wet="true"></canvas>
+                        <p class="text-xs text-zinc-500 mt-3 font-light">Added harmonic density, saturated transient response, and raised analogue noise floor.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROTOCOL 02: KORG-35 FILTER DYNAMICS -->
+    <section class="py-20 border-b border-zinc-800 bg-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 reveal">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="text-red-500 font-mono font-bold text-xl">02.</span>
+                    <h2 class="text-2xl font-bold text-white uppercase tracking-wide">Korg-35 Filter Dynamics</h2>
+                </div>
+                <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-4">
+                    <span class="border border-zinc-700 px-2 py-1">Hardware: Korg MS-10</span>
+                    <span class="border border-red-500/30 bg-red-500/10 text-red-400 px-2 py-1">Component: Korg-35 LPF / Mod Generator</span>
+                </div>
+                <p class="text-zinc-400 text-sm max-w-3xl leading-relaxed">
+                    <strong>Engineer Notes:</strong> The aggressive Korg-35 Low-Pass Filter is utilised in two primary ways. <em>Manual Groove Riding:</em> Real-time manipulation of the Cutoff and Resonance knobs to inject human feel, evolving movement, and aggressive squelch into static loops. <em>Rhythmic LFO Sweeps:</em> Patching the Modulation Generator (LFO) to the filter cutoff to apply cyclic, synchronised movement—ideal for creating pulsating pads or classic auto-wah effects on guitars and soft-synths.
+                </p>
+            </div>
+
+            <!-- Signal Analysis Grid 2 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="space-y-6 reveal">
+                    <div class="hardware-card bg-zinc-950 border border-zinc-800 p-4 rounded-sm flex flex-col">
+                        <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Dry Stem Waveform</div>
+                        <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-900" width="400" height="96" data-wet="false"></canvas>
+                        <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
+                            <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-sm transition-colors border border-zinc-700" data-type="filter" data-wet="false">
+                                <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
+                            </button>
+                            <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Digital Source (Dry)</div>
+                        </div>
+                    </div>
+                    <div class="hardware-card bg-zinc-950 border border-zinc-800 p-4 rounded-sm flex flex-col">
+                        <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Dry Spectrogram</div>
+                        <canvas class="spectrogram w-full h-32 border border-zinc-800 bg-zinc-900" width="400" height="128" data-wet="false"></canvas>
+                    </div>
+                </div>
+                <div class="space-y-6 reveal [transition-delay:100ms]">
+                    <div class="hardware-card bg-zinc-950 border border-red-500/30 p-4 rounded-sm flex flex-col">
+                        <div class="text-[10px] font-mono text-red-500 uppercase tracking-widest mb-2">MS-10 Re-Amped Waveform</div>
+                        <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-900" width="400" height="96" data-wet="true"></canvas>
+                        <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
+                            <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-red-500 hover:bg-red-400 text-white rounded-sm transition-colors border border-red-600" data-type="filter" data-wet="true">
+                                <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
+                            </button>
+                            <div class="text-[10px] font-mono text-red-400 uppercase tracking-widest">Hardware Return (LFO Sweep)</div>
+                        </div>
+                    </div>
+                    <div class="hardware-card bg-zinc-950 border border-red-500/30 p-4 rounded-sm flex flex-col">
+                        <div class="text-[10px] font-mono text-red-500 uppercase tracking-widest mb-2">Re-Amped Spectrogram</div>
+                        <canvas class="spectrogram w-full h-32 border border-zinc-800 bg-zinc-900" width="400" height="128" data-wet="true"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROTOCOL 03: VCA GATING -->
+    <section class="py-20 border-b border-zinc-800 bg-zinc-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 reveal">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="text-red-500 font-mono font-bold text-xl">03.</span>
+                    <h2 class="text-2xl font-bold text-white uppercase tracking-wide">VCA Gating & Rhythmic Chopping</h2>
+                </div>
+                <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-4">
+                    <span class="border border-zinc-700 px-2 py-1">Hardware: Korg MS-10</span>
+                    <span class="border border-red-500/30 bg-red-500/10 text-red-400 px-2 py-1">Component: VCA Initial Gain / Patchbay</span>
+                </div>
+                <p class="text-zinc-400 text-sm max-w-3xl leading-relaxed">
+                    <strong>Engineer Notes:</strong> By patching a square wave from the Modulation Generator (or an external trigger pulse) directly into the VCA Initial Gain input, we rhythmically mute and unmute the external audio. This transforms sustained drones, ambient noise, or long synth chords into tight, percussive rhythmic sequences.
+                </p>
+            </div>
+
+            <!-- Signal Analysis Grid 3 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="space-y-6 reveal">
+                    <div class="hardware-card bg-zinc-900 border border-zinc-800 p-4 rounded-sm flex flex-col">
+                        <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Dry Stem Waveform</div>
+                        <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-950" width="400" height="96" data-wet="false"></canvas>
+                        <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
+                            <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-sm transition-colors border border-zinc-700" data-type="gate" data-wet="false">
+                                <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
+                            </button>
+                            <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Digital Source (Sustained)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-6 reveal [transition-delay:100ms]">
+                    <div class="hardware-card bg-zinc-900 border border-red-500/30 p-4 rounded-sm flex flex-col">
+                        <div class="text-[10px] font-mono text-red-500 uppercase tracking-widest mb-2">MS-10 Re-Amped Waveform</div>
+                        <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-950" width="400" height="96" data-wet="true"></canvas>
+                        <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
+                            <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-red-500 hover:bg-red-400 text-white rounded-sm transition-colors border border-red-600" data-type="gate" data-wet="true">
+                                <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
+                            </button>
+                            <div class="text-[10px] font-mono text-red-400 uppercase tracking-widest">Hardware Return (Gated)</div>
                         </div>
                     </div>
                 </div>
@@ -203,229 +301,145 @@
         </div>
     </section>
 
-    <section class="py-16 border-b border-zinc-800 bg-zinc-900">
+    <!-- PROTOCOL 04: TRANSIENTS & NOISE -->
+    <section class="py-20 border-b border-zinc-800 bg-zinc-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                <div class="lg:col-span-8 reveal active">
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="text-red-500 font-mono font-bold text-xl">02.</span>
-                        <h2 class="text-2xl font-bold text-white uppercase tracking-wide">Korg-35 Filter Dynamics</h2>
-                    </div>
-                    <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-4">
-                        <span class="border border-zinc-700 px-2 py-1">Hardware: Korg MS-10</span>
-                        <span class="border border-red-500/30 bg-red-500/10 text-red-400 px-2 py-1">Component: Korg-35 LPF / Mod Generator</span>
-                    </div>
-                    <p class="text-zinc-400 text-sm max-w-3xl leading-relaxed mb-8">
-                        <strong>Engineer Notes:</strong> The aggressive Korg-35 Low-Pass Filter is utilised in two primary ways. <em>Manual Groove Riding:</em> Real-time manipulation of the Cutoff and Resonance knobs to inject human feel, evolving movement, and aggressive squelch into static loops. <em>Rhythmic LFO Sweeps:</em> Patching the Modulation Generator (LFO) to the filter cutoff to apply cyclic, synchronised movement—ideal for creating pulsating pads or classic auto-wah effects on guitars and soft-synths.
-                    </p>
-
-                    <!-- A/B Audio Player Layout -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="audio-player bg-zinc-950 border border-zinc-800 rounded p-4 relative overflow-hidden group" data-protocol="filter" data-wet="false">
-                            <div class="absolute inset-y-0 left-0 bg-zinc-800/40 w-0 progress-bar pointer-events-none transition-all duration-75"></div>
-                            <div class="relative z-10 flex flex-col gap-3">
-                                <div class="flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
-                                    <span class="text-zinc-500 font-bold">DRY // Static Saw Drone</span>
-                                    <span class="text-zinc-600 time-display">0:00 / 0:04</span>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <button class="play-toggle w-8 h-8 flex items-center justify-center rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors">
-                                        <i data-lucide="play" class="w-4 h-4 ml-1 icon-play"></i>
-                                        <i data-lucide="square" class="w-4 h-4 hidden icon-stop"></i>
-                                    </button>
-                                    <div class="flex-1 h-10 bg-zinc-900 rounded border border-zinc-800/50 relative overflow-hidden">
-                                        <div class="absolute inset-0 wave-dry opacity-50"></div>
-                                    </div>
-                                </div>
-                            </div>
+            <div class="mb-12 reveal">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="text-red-500 font-mono font-bold text-xl">04.</span>
+                    <h2 class="text-2xl font-bold text-white uppercase tracking-wide">Transient Reshaping & Lo-Fi Noise</h2>
+                </div>
+                <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-4">
+                    <span class="border border-zinc-700 px-2 py-1">Hardware: Korg MS-10</span>
+                    <span class="border border-red-500/30 bg-red-500/10 text-red-400 px-2 py-1">Component: Envelope Generator / Noise Gen</span>
+                </div>
+                <p class="text-zinc-400 text-sm max-w-3xl leading-relaxed">
+                    <strong>Engineer Notes:</strong> <em>Transient Reshaping:</em> The Envelope Generator (EG) modulates the filter cutoff, snapping it open and closed rapidly via an external trigger to add sharp, synthetic attack transients to dull acoustic drums. <em>Noise Texturing:</em> The onboard White or Pink Noise generator is blended with the external input. Filtering them together glues the track to a bed of analogue hiss, effectively simulating degraded tape or vintage sampler grit.
+                </p>
+            </div>
+            
+            <!-- Signal Analysis Grid 4 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="space-y-6 reveal">
+                    <div class="hardware-card bg-zinc-950 border border-zinc-800 p-4 rounded-sm flex flex-col">
+                        <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Dry Stem Waveform</div>
+                        <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-900" width="400" height="96" data-wet="false"></canvas>
+                        <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
+                            <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-sm transition-colors border border-zinc-700" data-type="noise" data-wet="false">
+                                <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
+                            </button>
+                            <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Digital Source (Dry)</div>
                         </div>
-
-                        <div class="audio-player bg-zinc-950 border border-red-900/30 rounded p-4 relative overflow-hidden shadow-[0_0_15px_rgba(220,38,38,0.03)] group" data-protocol="filter" data-wet="true">
-                            <div class="absolute inset-y-0 left-0 bg-red-900/20 w-0 progress-bar pointer-events-none transition-all duration-75"></div>
-                            <div class="relative z-10 flex flex-col gap-3">
-                                <div class="flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
-                                    <span class="text-red-500 font-bold">WET // LFO Sweeping LPF</span>
-                                    <span class="text-red-700 time-display">0:00 / 0:04</span>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <button class="play-toggle w-8 h-8 flex items-center justify-center rounded-full bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 text-red-500 transition-colors">
-                                        <i data-lucide="play" class="w-4 h-4 ml-1 icon-play fill-red-500/20"></i>
-                                        <i data-lucide="square" class="w-4 h-4 hidden icon-stop fill-red-500/20"></i>
-                                    </button>
-                                    <div class="flex-1 h-10 bg-zinc-900 rounded border border-zinc-800/50 relative overflow-hidden">
-                                        <div class="absolute inset-0 wave-wet opacity-70"></div>
-                                    </div>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+                <div class="space-y-6 reveal [transition-delay:100ms]">
+                    <div class="hardware-card bg-zinc-950 border border-red-500/30 p-4 rounded-sm flex flex-col">
+                        <div class="text-[10px] font-mono text-red-500 uppercase tracking-widest mb-2">MS-10 Re-Amped Waveform</div>
+                        <canvas class="waveform w-full h-24 mb-4 border border-zinc-800 bg-zinc-900" width="400" height="96" data-wet="true"></canvas>
+                        <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
+                            <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-red-500 hover:bg-red-400 text-white rounded-sm transition-colors border border-red-600" data-type="noise" data-wet="true">
+                                <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
+                            </button>
+                            <div class="text-[10px] font-mono text-red-400 uppercase tracking-widest">Hardware Return (Shaped/Noisy)</div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </section>
 
-    <section class="py-16 border-b border-zinc-800 bg-zinc-950">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                <div class="lg:col-span-8 reveal active">
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="text-red-500 font-mono font-bold text-xl">03.</span>
-                        <h2 class="text-2xl font-bold text-white uppercase tracking-wide">VCA Gating & Rhythmic Chopping</h2>
-                    </div>
-                    <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-4">
-                        <span class="border border-zinc-700 px-2 py-1">Hardware: Korg MS-10</span>
-                        <span class="border border-red-500/30 bg-red-500/10 text-red-400 px-2 py-1">Component: VCA Initial Gain / Patchbay</span>
-                    </div>
-                    <p class="text-zinc-400 text-sm max-w-3xl leading-relaxed mb-8">
-                        <strong>Engineer Notes:</strong> By patching a square wave from the Modulation Generator (or an external trigger pulse) directly into the VCA Initial Gain input, we rhythmically mute and unmute the external audio. This transforms sustained drones, ambient noise, or long synth chords into tight, percussive rhythmic sequences. 
-                    </p>
-
-                    <!-- A/B Audio Player Layout -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="audio-player bg-zinc-900 border border-zinc-800 rounded p-4 relative overflow-hidden group" data-protocol="vca" data-wet="false">
-                            <div class="absolute inset-y-0 left-0 bg-zinc-800/40 w-0 progress-bar pointer-events-none transition-all duration-75"></div>
-                            <div class="relative z-10 flex flex-col gap-3">
-                                <div class="flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
-                                    <span class="text-zinc-500 font-bold">DRY // Sustained Pad</span>
-                                    <span class="text-zinc-600 time-display">0:00 / 0:04</span>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <button class="play-toggle w-8 h-8 flex items-center justify-center rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors">
-                                        <i data-lucide="play" class="w-4 h-4 ml-1 icon-play"></i>
-                                        <i data-lucide="square" class="w-4 h-4 hidden icon-stop"></i>
-                                    </button>
-                                    <div class="flex-1 h-10 bg-zinc-950 rounded border border-zinc-800/50 relative overflow-hidden">
-                                        <div class="absolute inset-0 wave-dry opacity-50"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="audio-player bg-zinc-900 border border-red-900/30 rounded p-4 relative overflow-hidden shadow-[0_0_15px_rgba(220,38,38,0.03)] group" data-protocol="vca" data-wet="true">
-                            <div class="absolute inset-y-0 left-0 bg-red-900/20 w-0 progress-bar pointer-events-none transition-all duration-75"></div>
-                            <div class="relative z-10 flex flex-col gap-3">
-                                <div class="flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
-                                    <span class="text-red-500 font-bold">WET // Square Wave Gated</span>
-                                    <span class="text-red-700 time-display">0:00 / 0:04</span>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <button class="play-toggle w-8 h-8 flex items-center justify-center rounded-full bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 text-red-500 transition-colors">
-                                        <i data-lucide="play" class="w-4 h-4 ml-1 icon-play fill-red-500/20"></i>
-                                        <i data-lucide="square" class="w-4 h-4 hidden icon-stop fill-red-500/20"></i>
-                                    </button>
-                                    <div class="flex-1 h-10 bg-zinc-950 rounded border border-zinc-800/50 relative overflow-hidden">
-                                        <div class="absolute inset-0 wave-wet opacity-70" style="mask-image: repeating-linear-gradient(90deg, black 0%, black 50%, transparent 50%, transparent 100%); background-size: 20px 10px;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-16 border-b border-zinc-800 bg-zinc-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                <div class="lg:col-span-8 reveal active">
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="text-red-500 font-mono font-bold text-xl">04.</span>
-                        <h2 class="text-2xl font-bold text-white uppercase tracking-wide">Transient Reshaping & Lo-Fi Noise</h2>
-                    </div>
-                    <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-4">
-                        <span class="border border-zinc-700 px-2 py-1">Hardware: Korg MS-10</span>
-                        <span class="border border-red-500/30 bg-red-500/10 text-red-400 px-2 py-1">Component: Envelope Generator / Noise Gen</span>
-                    </div>
-                    <p class="text-zinc-400 text-sm max-w-3xl leading-relaxed mb-8">
-                        <strong>Engineer Notes:</strong> <em>Transient Reshaping:</em> The Envelope Generator (EG) modulates the filter cutoff, snapping it open and closed rapidly via an external trigger to add sharp, synthetic attack transients to dull acoustic drums. <em>Noise Texturing:</em> The onboard White or Pink Noise generator is blended with the external input. Filtering them together glues the track to a bed of analogue hiss, effectively simulating degraded tape or vintage sampler grit.
-                    </p>
-
-                    <!-- A/B Audio Player Layout -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="audio-player bg-zinc-950 border border-zinc-800 rounded p-4 relative overflow-hidden group" data-protocol="transient" data-wet="false">
-                            <div class="absolute inset-y-0 left-0 bg-zinc-800/40 w-0 progress-bar pointer-events-none transition-all duration-75"></div>
-                            <div class="relative z-10 flex flex-col gap-3">
-                                <div class="flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
-                                    <span class="text-zinc-500 font-bold">DRY // Dull Kick Drum</span>
-                                    <span class="text-zinc-600 time-display">0:00 / 0:04</span>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <button class="play-toggle w-8 h-8 flex items-center justify-center rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors">
-                                        <i data-lucide="play" class="w-4 h-4 ml-1 icon-play"></i>
-                                        <i data-lucide="square" class="w-4 h-4 hidden icon-stop"></i>
-                                    </button>
-                                    <div class="flex-1 h-10 bg-zinc-900 rounded border border-zinc-800/50 relative overflow-hidden">
-                                        <div class="absolute inset-0 wave-dry opacity-50" style="background-size: 25% 100%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="audio-player bg-zinc-950 border border-red-900/30 rounded p-4 relative overflow-hidden shadow-[0_0_15px_rgba(220,38,38,0.03)] group" data-protocol="transient" data-wet="true">
-                            <div class="absolute inset-y-0 left-0 bg-red-900/20 w-0 progress-bar pointer-events-none transition-all duration-75"></div>
-                            <div class="relative z-10 flex flex-col gap-3">
-                                <div class="flex justify-between items-center text-[10px] font-mono tracking-widest uppercase">
-                                    <span class="text-red-500 font-bold">WET // Snappy + Hiss</span>
-                                    <span class="text-red-700 time-display">0:00 / 0:04</span>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <button class="play-toggle w-8 h-8 flex items-center justify-center rounded-full bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 text-red-500 transition-colors">
-                                        <i data-lucide="play" class="w-4 h-4 ml-1 icon-play fill-red-500/20"></i>
-                                        <i data-lucide="square" class="w-4 h-4 hidden icon-stop fill-red-500/20"></i>
-                                    </button>
-                                    <div class="flex-1 h-10 bg-zinc-900 rounded border border-zinc-800/50 relative overflow-hidden">
-                                        <div class="absolute inset-0 wave-wet opacity-70" style="background-size: 25% 100%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
+    <!-- ROBUST JAVASCRIPT SYSTEM -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // Scroll animations
+            // 1. Initialize Icons & Scroll Reveal
+            lucide.createIcons();
             const reveals = document.querySelectorAll('.reveal');
             const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+            }, { threshold: 0.1 });
+            reveals.forEach(reveal => observer.observe(reveal));
+
+            // 2. Procedural Canvas Drawing
+            function drawProceduralVisuals() {
+                // Waveforms
+                document.querySelectorAll('canvas.waveform').forEach(canvas => {
+                    const ctx = canvas.getContext('2d');
+                    if(!ctx) return;
+                    const isWet = canvas.dataset.wet === 'true';
+                    const w = canvas.width;
+                    const h = canvas.height;
+
+                    ctx.clearRect(0, 0, w, h);
+                    ctx.beginPath();
+                    ctx.strokeStyle = isWet ? '#ef4444' : '#06b6d4'; // Red vs Cyan
+                    ctx.lineWidth = 2;
+
+                    for(let x=0; x<w; x+=2) {
+                        let amp = isWet 
+                            ? (Math.sin(x*0.15) + (Math.random()*0.4 - 0.2)) * 0.8  // distorted/noisy
+                            : Math.sin(x*0.08) * 0.5; // clean
+                        let y = h/2 + (amp * h * 0.4);
+                        if(x===0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    ctx.stroke();
+                });
+
+                // Spectrograms
+                document.querySelectorAll('canvas.spectrogram').forEach(canvas => {
+                    const ctx = canvas.getContext('2d', { alpha: false });
+                    if(!ctx) return;
+                    const isWet = canvas.dataset.wet === 'true';
+                    const w = canvas.width;
+                    const h = canvas.height;
+
+                    // Dark Background
+                    ctx.fillStyle = '#09090b'; 
+                    ctx.fillRect(0, 0, w, h);
+
+                    // Add Noise Floor 
+                    ctx.fillStyle = isWet ? 'rgba(220, 38, 38, 0.15)' : 'rgba(6, 182, 212, 0.05)';
+                    for(let i=0; i<400; i++) {
+                        ctx.fillRect(Math.random()*w, Math.random()*h, Math.random()*3+1, Math.random()*3+1);
+                    }
+
+                    // Draw Harmonics
+                    const numHarmonics = isWet ? 14 : 5;
+                    for(let k=1; k<=numHarmonics; k++) {
+                        let y = h - (k * (h/16));
+                        ctx.beginPath();
+                        ctx.strokeStyle = isWet ? `rgba(239, 68, 68, ${1 - k/16})` : `rgba(6, 182, 212, ${1 - k/8})`;
+                        ctx.lineWidth = isWet ? 4 : 2;
+
+                        for(let x=0; x<w; x+=5) {
+                            let offset = isWet ? Math.sin(x*0.03 + k)*4 : Math.sin(x*0.01)*1;
+                            if(x===0) ctx.moveTo(x, y + offset);
+                            else ctx.lineTo(x, y + offset);
+                        }
+                        ctx.stroke();
                     }
                 });
-            }, { threshold: 0.1 });
-            reveals.forEach(reveal => {
-                reveal.classList.remove('active');
-                observer.observe(reveal);
-            });
-            
-            lucide.createIcons();
+            }
+            drawProceduralVisuals();
 
-            // Web Audio API Engine
+            // 3. Web Audio API Synthesis Engine
             let audioCtx = null;
-            let activeNodes = [];
-            
+            let activeOsc = null;
+            let activeGain = null;
+            let currentBtn = null;
+            let stopTimeout = null;
+
             function initAudio() {
-                if (!audioCtx) {
+                if(!audioCtx) {
                     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 }
-                if (audioCtx.state === 'suspended') {
+                if(audioCtx.state === 'suspended') {
                     audioCtx.resume();
                 }
+                return audioCtx;
             }
 
-            function stopAllAudio() {
-                activeNodes.forEach(node => {
-                    try { node.stop(); } catch(e) {}
-                    try { node.disconnect(); } catch(e) {}
-                });
-                activeNodes = [];
-            }
-
-            // Distortion Curve generator for Protocol 1
             function makeDistortionCurve(amount) {
                 const k = typeof amount === 'number' ? amount : 50;
                 const n_samples = 44100;
@@ -438,303 +452,102 @@
                 return curve;
             }
 
-            // White Noise Generator for Protocol 4
-            function createNoiseBuffer(duration) {
-                const bufferSize = audioCtx.sampleRate * duration;
-                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                const data = buffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) {
-                    data[i] = Math.random() * 2 - 1;
-                }
-                return buffer;
+            function resetAllButtons() {
+                document.querySelectorAll('.play-btn').forEach(b => {
+                    b.dataset.playing = 'false';
+                    b.querySelector('i').setAttribute('data-lucide', 'play');
+                });
+                lucide.createIcons();
             }
 
-            // Synthesise the requested sound
-            function playSound(protocol, isWet) {
-                initAudio();
-                stopAllAudio();
+            function stopAudio() {
+                if(activeOsc) {
+                    try { activeOsc.stop(); } catch(e){}
+                    activeOsc.disconnect();
+                    activeGain.disconnect();
+                    activeOsc = null;
+                }
+                if(stopTimeout) clearTimeout(stopTimeout);
+                resetAllButtons();
+            }
+
+            function playDemo(type, isWet, btn) {
+                // If clicking the currently playing button, just stop it
+                if(btn.dataset.playing === 'true') {
+                    stopAudio();
+                    return;
+                }
+
+                // Stop anything currently playing
+                stopAudio();
+
+                const ctx = initAudio();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                // Set new button state
+                btn.dataset.playing = 'true';
+                btn.querySelector('i').setAttribute('data-lucide', 'square');
+                lucide.createIcons();
+
+                // Sound Generation Logic
+                osc.type = isWet ? 'sawtooth' : 'sine';
+                osc.frequency.setValueAtTime(isWet ? 65 : 130, ctx.currentTime);
+
+                gain.gain.setValueAtTime(0, ctx.currentTime);
                 
-                const now = audioCtx.currentTime;
-                const DURATION = 4;
-                
-                // Master Output with gentle fade out to prevent clicks
-                const masterGain = audioCtx.createGain();
-                masterGain.gain.setValueAtTime(0.5, now);
-                masterGain.gain.setValueAtTime(0.5, now + DURATION - 0.1);
-                masterGain.gain.linearRampToValueAtTime(0.001, now + DURATION);
-                masterGain.connect(audioCtx.destination);
-                activeNodes.push(masterGain);
-
-                if (protocol === 'saturation') {
-                    // Protocol 1: Saturation (Triangle Bassline)
-                    const osc = audioCtx.createOscillator();
-                    osc.type = 'triangle';
-                    
-                    // Simple 4-note sequence
-                    [0, 1, 2, 3].forEach(i => {
-                        osc.frequency.setValueAtTime(55, now + i); // A1
-                        osc.frequency.setValueAtTime(65.41, now + i + 0.5); // C2
-                    });
-
-                    if (isWet) {
-                        const shaper = audioCtx.createWaveShaper();
-                        shaper.curve = makeDistortionCurve(400); // Heavy clip
-                        shaper.oversample = '4x';
-                        
-                        const filter = audioCtx.createBiquadFilter();
-                        filter.type = 'lowpass';
-                        filter.frequency.value = 2500; // tame the harshness slightly
-
-                        osc.connect(shaper);
-                        shaper.connect(filter);
-                        filter.connect(masterGain);
-                        
-                        // Lower master gain to compensate for distortion boost
-                        masterGain.gain.value = 0.2;
-                    } else {
-                        osc.connect(masterGain);
+                // Gating effect logic
+                if(type === 'gate' && isWet) {
+                    for(let i=0; i<8; i++) {
+                        gain.gain.setValueAtTime(0.5, ctx.currentTime + (i * 0.25));
+                        gain.gain.setValueAtTime(0, ctx.currentTime + (i * 0.25) + 0.1);
                     }
-                    
-                    osc.start(now);
-                    osc.stop(now + DURATION);
-                    activeNodes.push(osc);
-                } 
-                else if (protocol === 'filter') {
-                    // Protocol 2: Filter Dynamics (Sawtooth Drone)
-                    const osc1 = audioCtx.createOscillator();
-                    const osc2 = audioCtx.createOscillator();
-                    osc1.type = 'sawtooth';
-                    osc2.type = 'sawtooth';
-                    osc1.frequency.value = 110; // A2
-                    osc2.frequency.value = 111; // Slight detune for thickness
-                    
-                    const filter = audioCtx.createBiquadFilter();
+                } else if(type === 'noise' && isWet) {
+                     gain.gain.linearRampToValueAtTime(0.6, ctx.currentTime + 0.01); // sharp attack
+                     gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                } else {
+                    gain.gain.linearRampToValueAtTime(isWet ? 0.3 : 0.5, ctx.currentTime + 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.9);
+                }
+
+                // Routing
+                osc.connect(gain);
+
+                if(isWet) {
+                    const filter = ctx.createBiquadFilter();
                     filter.type = 'lowpass';
-                    filter.Q.value = 8; // High resonance (squeal)
-                    
-                    osc1.connect(filter);
-                    osc2.connect(filter);
-                    filter.connect(masterGain);
-                    
-                    if (isWet) {
-                        // LFO sweeping the cutoff
-                        const lfo = audioCtx.createOscillator();
-                        lfo.type = 'sine';
-                        lfo.frequency.value = 1.5; // 1.5 Hz sweep
-                        
-                        const lfoGain = audioCtx.createGain();
-                        lfoGain.gain.value = 1500; // Sweep depth
-                        
-                        filter.frequency.value = 1800; // Base frequency
-                        lfo.connect(lfoGain);
-                        lfoGain.connect(filter.frequency);
-                        
-                        lfo.start(now);
-                        lfo.stop(now + DURATION);
-                        activeNodes.push(lfo);
-                    } else {
-                        // Static filter
-                        filter.frequency.value = 800;
+                    filter.frequency.setValueAtTime(type === 'filter' ? 200 : 1500, ctx.currentTime);
+                    if(type === 'filter') {
+                        filter.frequency.exponentialRampToValueAtTime(3000, ctx.currentTime + 1.5);
                     }
+                    filter.Q.value = 8;
 
-                    osc1.start(now);
-                    osc2.start(now);
-                    osc1.stop(now + DURATION);
-                    osc2.stop(now + DURATION);
-                    activeNodes.push(osc1, osc2);
-                }
-                else if (protocol === 'vca') {
-                    // Protocol 3: VCA Gating (Pad Chopping)
-                    const osc1 = audioCtx.createOscillator();
-                    const osc2 = audioCtx.createOscillator();
-                    osc1.type = 'square';
-                    osc2.type = 'sawtooth';
-                    osc1.frequency.value = 220; // A3
-                    osc2.frequency.value = 329.63; // E4 (Fifth)
-                    
-                    const synthGain = audioCtx.createGain();
-                    synthGain.gain.value = 0.5;
-                    
-                    osc1.connect(synthGain);
-                    osc2.connect(synthGain);
-                    
-                    if (isWet) {
-                        // Rhythmic Gating via LFO on Gain
-                        const gateLFO = audioCtx.createOscillator();
-                        gateLFO.type = 'square';
-                        gateLFO.frequency.value = 6; // 6 Hz rhythm
-                        
-                        // Scale LFO to 0-1 range for gain
-                        const gateScale = audioCtx.createGain();
-                        gateScale.gain.value = 0.5; // Depth
-                        synthGain.gain.value = 0.5; // Base
-                        
-                        gateLFO.connect(gateScale);
-                        gateScale.connect(synthGain.gain);
-                        
-                        gateLFO.start(now);
-                        gateLFO.stop(now + DURATION);
-                        activeNodes.push(gateLFO);
-                    }
-                    
-                    synthGain.connect(masterGain);
-                    
-                    osc1.start(now);
-                    osc2.start(now);
-                    osc1.stop(now + DURATION);
-                    osc2.stop(now + DURATION);
-                    activeNodes.push(osc1, osc2);
-                }
-                else if (protocol === 'transient') {
-                    // Protocol 4: Transient Reshaping & Noise (Kick Drum)
-                    // Trigger a kick every second
-                    for (let i = 0; i < 4; i++) {
-                        const time = now + i;
-                        
-                        const osc = audioCtx.createOscillator();
-                        osc.type = 'sine';
-                        
-                        const kickGain = audioCtx.createGain();
-                        
-                        if (isWet) {
-                            // Snappy Kick
-                            osc.frequency.setValueAtTime(150, time);
-                            osc.frequency.exponentialRampToValueAtTime(40, time + 0.1);
-                            
-                            kickGain.gain.setValueAtTime(1, time);
-                            kickGain.gain.exponentialRampToValueAtTime(0.001, time + 0.3);
-                            
-                            // Analogue Hiss / Snappy Noise Envelope
-                            const noiseBuffer = createNoiseBuffer(0.3);
-                            const noiseSource = audioCtx.createBufferSource();
-                            noiseSource.buffer = noiseBuffer;
-                            
-                            const noiseFilter = audioCtx.createBiquadFilter();
-                            noiseFilter.type = 'bandpass';
-                            noiseFilter.frequency.value = 5000;
-                            
-                            const noiseGain = audioCtx.createGain();
-                            noiseGain.gain.setValueAtTime(0.5, time);
-                            noiseGain.gain.exponentialRampToValueAtTime(0.001, time + 0.1); // Quick snap
-                            
-                            noiseSource.connect(noiseFilter);
-                            noiseFilter.connect(noiseGain);
-                            noiseGain.connect(masterGain);
-                            
-                            noiseSource.start(time);
-                            activeNodes.push(noiseSource);
-                            
-                            // Constant low level analogue hiss
-                            const backgroundNoise = audioCtx.createBufferSource();
-                            backgroundNoise.buffer = createNoiseBuffer(1);
-                            backgroundNoise.loop = true;
-                            const bgNoiseGain = audioCtx.createGain();
-                            bgNoiseGain.gain.value = 0.02;
-                            backgroundNoise.connect(bgNoiseGain);
-                            bgNoiseGain.connect(masterGain);
-                            backgroundNoise.start(time);
-                            backgroundNoise.stop(time + 1); // Stop before next loop kicks it again
-                            activeNodes.push(backgroundNoise);
+                    const dist = ctx.createWaveShaper();
+                    dist.curve = makeDistortionCurve(400);
 
-                        } else {
-                            // Dull Kick
-                            osc.frequency.setValueAtTime(100, time);
-                            osc.frequency.exponentialRampToValueAtTime(50, time + 0.2);
-                            
-                            kickGain.gain.setValueAtTime(0.001, time);
-                            kickGain.gain.linearRampToValueAtTime(0.8, time + 0.05); // slow attack
-                            kickGain.gain.exponentialRampToValueAtTime(0.001, time + 0.6); // slow release
-                        }
-                        
-                        osc.connect(kickGain);
-                        kickGain.connect(masterGain);
-                        
-                        osc.start(time);
-                        osc.stop(time + 1);
-                        activeNodes.push(osc);
-                    }
+                    gain.connect(dist);
+                    dist.connect(filter);
+                    filter.connect(ctx.destination);
+                } else {
+                    gain.connect(ctx.destination);
                 }
+
+                osc.start(ctx.currentTime);
+                activeOsc = osc;
+                activeGain = gain;
+
+                // Auto-stop after 2 seconds
+                stopTimeout = setTimeout(() => {
+                    stopAudio();
+                }, 2000);
             }
 
-            // Audio Player UI Controller
-            const players = document.querySelectorAll('.audio-player');
-            let activePlayer = null;
-            let activeInterval = null;
-            const SIMULATION_DURATION = 4; // 4 Seconds per request
-
-            players.forEach(player => {
-                const btn = player.querySelector('.play-toggle');
-                const playIcon = player.querySelector('.icon-play');
-                const stopIcon = player.querySelector('.icon-stop');
-                const progressBar = player.querySelector('.progress-bar');
-                const timeDisplay = player.querySelector('.time-display');
-                
-                const protocol = player.getAttribute('data-protocol');
-                const isWet = player.getAttribute('data-wet') === 'true';
-                
-                let isPlaying = false;
-                let currentTime = 0;
-
-                const updateUI = () => {
-                    const pct = (currentTime / SIMULATION_DURATION) * 100;
-                    progressBar.style.width = `${pct}%`;
-                    const formattedTime = Math.floor(currentTime).toString().padStart(2, '0');
-                    timeDisplay.textContent = `0:0${formattedTime} / 0:04`;
-                };
-
-                player.pauseFn = () => {
-                    isPlaying = false;
-                    playIcon.classList.remove('hidden');
-                    stopIcon.classList.add('hidden');
-                    btn.classList.remove('animate-pulse');
-                    progressBar.style.width = '0%';
-                    timeDisplay.textContent = `0:00 / 0:04`;
-                };
-
-                const stop = () => {
-                    player.pauseFn();
-                    currentTime = 0;
-                    stopAllAudio();
-                    if (activePlayer === player) activePlayer = null;
-                };
-
-                const play = () => {
-                    if (activePlayer && activePlayer !== player) {
-                        activePlayer.pauseFn();
-                    }
-                    
-                    isPlaying = true;
-                    activePlayer = player;
-                    currentTime = 0;
-                    
-                    playIcon.classList.add('hidden');
-                    stopIcon.classList.remove('hidden');
-                    btn.classList.add('animate-pulse');
-                    
-                    // Start synthesis
-                    playSound(protocol, isWet);
-                    
-                    // UI Animation loop
-                    if (activeInterval) clearInterval(activeInterval);
-                    activeInterval = setInterval(() => {
-                        if (!isPlaying) return;
-                        currentTime += 0.05;
-                        if (currentTime >= SIMULATION_DURATION) {
-                            stop();
-                            clearInterval(activeInterval);
-                        } else {
-                            updateUI();
-                        }
-                    }, 50);
-                };
-
+            // Attach Click Listeners
+            document.querySelectorAll('.play-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    if (isPlaying) {
-                        stop();
-                        clearInterval(activeInterval);
-                    } else {
-                        play();
-                    }
+                    const type = btn.dataset.type;
+                    const isWet = btn.dataset.wet === 'true';
+                    playDemo(type, isWet, btn);
                 });
             });
         });
