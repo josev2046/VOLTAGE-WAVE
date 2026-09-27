@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGNAL ARCHIVE // Voltage & Wave</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        red: {
+                            400: '#ef4444',
+                            500: '#dc2626',
+                            600: '#b91c1c',
+                        },
+                        zinc: {
+                            850: '#202022',
+                            900: '#18181b',
+                            950: '#09090b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #09090b;
+            color: #d4d4d8;
+        }
+        
+        .scanlines::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(220, 38, 38, 0.04), rgba(220, 38, 38, 0.02), rgba(200, 38, 38, 0.04));
+            z-index: 50;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .glow-text {
+            text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+        }
+
+        .hardware-card {
+            transition: all 0.3s ease;
+        }
+        .hardware-card:hover {
+            transform: translateY(-5px);
+            border-color: #dc2626;
+            box-shadow: 0 10px 30px -10px rgba(220, 38, 38, 0.2);
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #09090b; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #dc2626; }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .bg-synth-grid {
+            background-image: linear-gradient(to right, rgba(220, 38, 38, 0.07) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(220, 38, 38, 0.07) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        
+        @keyframes analog-glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 1px); color: #ef4444; text-shadow: 2px 0 #dc2626; }
+            40% { transform: translate(-1px, -1px) }
+            60% { transform: translate(2px, 1px); text-shadow: -2px 0 #dc2626; }
+            80% { transform: translate(1px, -1px) }
+            100% { transform: translate(0) }
+        }
+        .glitch-hover:hover {
+            animation: analog-glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+        }
+    </style>
+</head>
+<body class="antialiased relative selection:bg-red-500 selection:text-zinc-950">
+    <div class="scanlines fixed inset-0"></div>
+
+    <!-- NAVIGATION -->
+    <nav class="fixed w-full z-40 top-0 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-3 cursor-pointer glitch-hover">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-red-500 w-6 h-6">
+                        <path d="M2 12h4v-7h6v14h6v-7h4"/>
+                    </svg>
+                    <span class="font-mono font-bold text-white tracking-widest hidden sm:block">VOLTAGE & WAVE</span>
+                </a>
+                <div class="flex space-x-8 font-mono text-sm items-center">
+                    <a href="index.html" class="text-zinc-400 hover:text-red-500 transition-colors flex items-center gap-2">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> RETURN TO STUDIO
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <section class="relative pt-32 pb-16 overflow-hidden border-b border-zinc-800">
+        <div class="absolute inset-0 bg-synth-grid [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 reveal">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 font-mono text-xs mb-6">
+                <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                PORTFOLIO // RECORDED EVIDENCE
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4 uppercase">
+                The Signal <span class="text-red-500 glow-text">Archive</span>
+            </h1>
+            <p class="text-lg text-zinc-400 max-w-2xl font-light">
+                Telemetry data, spectrograms, and phase-aligned audio captures demonstrating the exact effect our hardware has on sterile digital sources. A/B test the results below.
+            </p>
+        </div>
+    </section>
+
+    <!-- CASE STUDY 1: MS-10 BASSLINE -->
+    <section class="py-24 border-b border-zinc-800 bg-zinc-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 reveal">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="text-red-500 font-mono font-bold text-xl">01.</span>
+                    <h2 class="text-2xl font-bold text-white uppercase tracking-wide">EBM Bassline Sweep</h2>
+                </div>
+                <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500">
+                    <span class="border border-zinc-700 px-2 py-1">Source: Soft-Synth</span>
+                    <span class="border border-zinc-700 px-2 py-1">Hardware: Korg MS-10</span>
+                    <span class="border border-red-500/30 bg-red-500/10 text-red-400 px-2 py-1">Process: Filter Re-amp</span>
+                </div>
+                <p class="text-zinc-400 text-sm mt-4 max-w-3xl leading-relaxed">
+                    <strong>Engineer Notes:</strong> The client provided a very flat, dynamically rigid bassline generated in a DAW. We routed the stem directly into the MS-10's External Signal processor, driving the VCA slightly to introduce harmonic distortion. During the recording pass, the low-pass filter cutoff and peak resonance were manually ridden to follow the groove, bringing human movement to a previously robotic track.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- DRY COLUMN -->
+                <div class="space-y-6 reveal [transition-delay:100ms]">
+                    <div class="hardware-card bg-zinc-900 border border-zinc-800 p-4 rounded-sm flex flex-col">
+                        <img src="l_dry_wave.png" alt="Dry Waveform" class="w-full h-auto mb-4 border border-zinc-800 bg-zinc-950">
+                        <img src="l_dry_spec.png" alt="Dry Spectrogram" class="w-full h-auto mb-4 border border-zinc-800 bg-zinc-950">
+                        <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
+                            <audio id="audio-bass-dry" src="bass_dry.wav" preload="metadata"></audio>
+                            <button class="audio-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-sm transition-colors border border-zinc-700" data-target="bass-dry">
+                                <span class="play-icon flex"><i data-lucide="play" class="w-4 h-4 ml-0.5"></i></span>
+                                <span class="pause-icon hidden"><i data-lucide="pause" class="w-4 h-4"></i></span>
+                            </button>
+                            <div class="flex-1 flex flex-col gap-1.5">
+                                <div class="flex justify-between items-center text-[10px] font-mono text-zinc-500 uppercase tracking-widest">
+                                    <span>Digital Source (Dry)</span>
+                                    <span class="time-display">0:00</span>
+                                </div>
+                                <div class="progress-track h-2 w-full bg-zinc-950 rounded-sm overflow-hidden cursor-pointer border border-zinc-800" data-target="bass-dry">
+                                    <div class="progress-bar h-full bg-zinc-500 w-0 pointer-events-none transition-all duration-75"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WET COLUMN -->
+                <div class="space-y-6 reveal [transition-delay:200ms]">
+                    <div class="hardware-card bg-zinc-900 border border-red-500/30 p-4 rounded-sm flex flex-col">
+                        <img src="l_wet_wave.png" alt="Wet Waveform" class="w-full h-auto mb-4 border border-zinc-800 bg-zinc-950">
+                        <img src="l_wet_spec.png" alt="Wet Spectrogram" class="w-full h-auto mb-4 border border-zinc-800 bg-zinc-950">
+                        <div class="mt-auto border-t border-red-500/20 pt-4 flex items-center gap-4">
+                            <audio id="audio-bass-wet" src="bass_wet.wav" preload="metadata"></audio>
+                            <button class="audio-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-sm transition-colors border border-red-500/30" data-target="bass-wet">
+                                <span class="play-icon flex"><i data-lucide="play" class="w-4 h-4 ml-0.5"></i></span>
+                                <span class="pause-icon hidden"><i data-lucide="pause" class="w-4 h-4"></i></span>
+                            </button>
+                            <div class="flex-1 flex flex-col gap-1.5">
+                                <div class="flex justify-between items-center text-[10px] font-mono text-red-500/70 uppercase tracking-widest">
+                                    <span>Analogue Return (Wet)</span>
+                                    <span class="time-display">0:00</span>
+                                </div>
+                                <div class="progress-track h-2 w-full bg-zinc-950 rounded-sm overflow-hidden cursor-pointer border border-red-500/20" data-target="bass-wet">
+                                    <div class="progress-bar h-full bg-red-500 w-0 pointer-events-none transition-all duration-75 shadow-[0_0_8px_rgba(220,38,38,0.6)]"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CASE STUDY 2: DRUM BREAK -->
+    <section class="py-24 border-b border-zinc-800 bg-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 reveal">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="text-red-500 font-mono font-bold text-xl">02.</span>
+                    <h2 class="text-2xl font-bold text-white uppercase tracking-wide">Drum Transient Shaping</h2>
+                </div>
+                <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500">
+                    <span class="border border-zinc-700 px-2 py-1">Source: Digital Samples</span>
+                    <span class="border border-zinc-700 px-2 py-1">Hardware: Palmer DACCAPO / Korg MS-10</span>
+                    <span class="border border-red-500/30 bg-red-500/10 text-red-400 px-2 py-1">Process: VCA Overdrive</span>
+                </div>
+                <p class="text-zinc-400 text-sm mt-4 max-w-3xl leading-relaxed">
+                    <strong>Engineer Notes:</strong> A rigid, in-the-box techno drum loop lacking cohesion. Instead of using a digital saturator, we re-amped the entire drum bus through the Palmer DACCAPO to achieve correct impedance, then smashed it into the Korg hardware. We bypassed the oscillator and pushed the input volume into the red. The analogue circuitry naturally compressed the sharp digital transients and glued the kit together with authentic noise-floor grit.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- DRY COLUMN -->
+                <div class="space-y-6 reveal [transition-delay:100ms]">
+                    <div class="hardware-card bg-zinc-950 border border-zinc-800 p-4 rounded-sm flex flex-col">
+                        <img src="https://placehold.co/600x200/18181b/52525b?text=Dry+Drum+Waveform" alt="Dry Waveform" class="w-full h-auto mb-4 border border-zinc-800 bg-zinc-950">
+                        <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
+                            <audio id="audio-drum-dry" src="drum_dry.wav" preload="metadata"></audio>
+                            <button class="audio-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-sm transition-colors border border-zinc-700" data-target="drum-dry">
+                                <span class="play-icon flex"><i data-lucide="play" class="w-4 h-4 ml-0.5"></i></span>
+                                <span class="pause-icon hidden"><i data-lucide="pause" class="w-4 h-4"></i></span>
+                            </button>
+                            <div class="flex-1 flex flex-col gap-1.5">
+                                <div class="flex justify-between items-center text-[10px] font-mono text-zinc-500 uppercase tracking-widest">
+                                    <span>Digital Source (Dry)</span>
+                                    <span class="time-display">0:00</span>
+                                </div>
+                                <div class="progress-track h-2 w-full bg-zinc-900 rounded-sm overflow-hidden cursor-pointer border border-zinc-800" data-target="drum-dry">
+                                    <div class="progress-bar h-full bg-zinc-500 w-0 pointer-events-none transition-all duration-75"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WET COLUMN -->
+                <div class="space-y-6 reveal [transition-delay:200ms]">
+                    <div class="hardware-card bg-zinc-950 border border-red-500/30 p-4 rounded-sm flex flex-col">
+                        <img src="https://placehold.co/600x200/18181b/dc2626?text=Overdriven+Drum+Waveform" alt="Wet Waveform" class="w-full h-auto mb-4 border border-zinc-800 bg-zinc-950">
+                        <div class="mt-auto border-t border-red-500/20 pt-4 flex items-center gap-4">
+                            <audio id="audio-drum-wet" src="drum_wet.wav" preload="metadata"></audio>
+                            <button class="audio-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-sm transition-colors border border-red-500/30" data-target="drum-wet">
+                                <span class="play-icon flex"><i data-lucide="play" class="w-4 h-4 ml-0.5"></i></span>
+                                <span class="pause-icon hidden"><i data-lucide="pause" class="w-4 h-4"></i></span>
+                            </button>
+                            <div class="flex-1 flex flex-col gap-1.5">
+                                <div class="flex justify-between items-center text-[10px] font-mono text-red-500/70 uppercase tracking-widest">
+                                    <span>Analogue Return (Wet)</span>
+                                    <span class="time-display">0:00</span>
+                                </div>
+                                <div class="progress-track h-2 w-full bg-zinc-900 rounded-sm overflow-hidden cursor-pointer border border-red-500/20" data-target="drum-wet">
+                                    <div class="progress-bar h-full bg-red-500 w-0 pointer-events-none transition-all duration-75 shadow-[0_0_8px_rgba(220,38,38,0.6)]"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CASE STUDY 3: MIDI TO CV -->
+    <section class="py-24 bg-zinc-950 border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 reveal">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="text-red-500 font-mono font-bold text-xl">03.</span>
+                    <h2 class="text-2xl font-bold text-white uppercase tracking-wide">Unquantised Sequencing</h2>
+                </div>
+                <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500">
+                    <span class="border border-zinc-700 px-2 py-1">Source: MIDI File</span>
+                    <span class="border border-zinc-700 px-2 py-1">Hardware: Kenton Pro Solo / Korg SQ-10</span>
+                    <span class="border border-red-500/30 bg-red-500/10 text-red-400 px-2 py-1">Process: MIDI to Hz/V</span>
+                </div>
+                <p class="text-zinc-400 text-sm mt-4 max-w-3xl leading-relaxed">
+                    <strong>Engineer Notes:</strong> The client provided a MIDI melody. Instead of mapping it to a soft-synth, we sent a digital clock pulse out of the interface to sync the Korg SQ-10. We then manually dialed in the pitch voltages for all 12 steps by ear. Because the SQ-10 has no digital quantisation, the resulting sequence naturally "drifts" off the perfect grid, providing an organic, hypnotic pulse impossible to program with a mouse.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- DRY COLUMN -->
+                <div class="space-y-6 reveal [transition-delay:100ms]">
+                    <div class="hardware-card bg-zinc-900 border border-zinc-800 p-4 rounded-sm flex flex-col">
+                        <div class="mt-auto flex items-center gap-4">
+                            <audio id="audio-arp-dry" src="arp_dry.wav" preload="metadata"></audio>
+                            <button class="audio-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-sm transition-colors border border-zinc-700" data-target="arp-dry">
+                                <span class="play-icon flex"><i data-lucide="play" class="w-4 h-4 ml-0.5"></i></span>
+                                <span class="pause-icon hidden"><i data-lucide="pause" class="w-4 h-4"></i></span>
+                            </button>
+                            <div class="flex-1 flex flex-col gap-1.5">
+                                <div class="flex justify-between items-center text-[10px] font-mono text-zinc-500 uppercase tracking-widest">
+                                    <span>MIDI via Soft-Synth (Perfect Grid)</span>
+                                    <span class="time-display">0:00</span>
+                                </div>
+                                <div class="progress-track h-2 w-full bg-zinc-950 rounded-sm overflow-hidden cursor-pointer border border-zinc-800" data-target="arp-dry">
+                                    <div class="progress-bar h-full bg-zinc-500 w-0 pointer-events-none transition-all duration-75"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WET COLUMN -->
+                <div class="space-y-6 reveal [transition-delay:200ms]">
+                    <div class="hardware-card bg-zinc-900 border border-red-500/30 p-4 rounded-sm flex flex-col">
+                        <div class="mt-auto flex items-center gap-4">
+                            <audio id="audio-arp-wet" src="arp_wet.wav" preload="metadata"></audio>
+                            <button class="audio-btn w-10 h-10 flex-shrink-0 flex items-center justify-center bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-sm transition-colors border border-red-500/30" data-target="arp-wet">
+                                <span class="play-icon flex"><i data-lucide="play" class="w-4 h-4 ml-0.5"></i></span>
+                                <span class="pause-icon hidden"><i data-lucide="pause" class="w-4 h-4"></i></span>
+                            </button>
+                            <div class="flex-1 flex flex-col gap-1.5">
+                                <div class="flex justify-between items-center text-[10px] font-mono text-red-500/70 uppercase tracking-widest">
+                                    <span>SQ-10 Continuous Voltage (Human Swing)</span>
+                                    <span class="time-display">0:00</span>
+                                </div>
+                                <div class="progress-track h-2 w-full bg-zinc-950 rounded-sm overflow-hidden cursor-pointer border border-red-500/20" data-target="arp-wet">
+                                    <div class="progress-bar h-full bg-red-500 w-0 pointer-events-none transition-all duration-75 shadow-[0_0_8px_rgba(220,38,38,0.6)]"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CALL TO ACTION -->
+    <section class="py-24 bg-zinc-900">
+        <div class="max-w-4xl mx-auto px-4 text-center reveal">
+            <h2 class="text-3xl font-bold text-white mb-6 uppercase tracking-wide">Ready to break the grid?</h2>
+            <p class="text-zinc-400 mb-8 font-light">Submit your sterile stems and let the physical electricity do the heavy lifting.</p>
+            <a href="index.html#submit" class="inline-flex justify-center items-center gap-2 bg-red-500 hover:bg-red-400 text-zinc-950 px-8 py-4 font-bold font-mono transition-all hover:shadow-[0_0_20px_rgba(220,38,38,0.4)]">
+                BOOK SESSION <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-zinc-950 border-t border-zinc-900 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-zinc-600 w-5 h-5">
+                    <path d="M2 12h4v-7h6v14h6v-7h4"/>
+                </svg>
+                <span class="font-mono text-zinc-600 text-xs tracking-widest">VOLTAGE & WAVE STUDIO | patch@voltageandwave.co.uk</span>
+            </div>
+            <p class="text-zinc-600 text-xs font-mono">
+                &copy; <span id="year"></span> Analogue Operations. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Scroll Reveal Logic
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); 
+                }
+            });
+        }, { root: null, threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // Scalable Audio Player Logic
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${m}:${s.toString().padStart(2, '0')}`;
+        }
+
+        const audioBtns = document.querySelectorAll('.audio-btn');
+        const audioElements = document.querySelectorAll('audio');
+
+        // Function to pause all audio except the one passed in
+        function pauseAllExcept(targetId) {
+            audioBtns.forEach(btn => {
+                const btnTarget = btn.getAttribute('data-target');
+                if (btnTarget !== targetId) {
+                    const audio = document.getElementById(`audio-${btnTarget}`);
+                    const playIcon = btn.querySelector('.play-icon');
+                    const pauseIcon = btn.querySelector('.pause-icon');
+                    audio.pause();
+                    playIcon.classList.remove('hidden');
+                    pauseIcon.classList.add('hidden');
+                }
+            });
+        }
+
+        audioBtns.forEach(btn => {
+            const targetId = btn.getAttribute('data-target');
+            const audio = document.getElementById(`audio-${targetId}`);
+            const playIcon = btn.querySelector('.play-icon');
+            const pauseIcon = btn.querySelector('.pause-icon');
+            const track = document.querySelector(`.progress-track[data-target="${targetId}"]`);
+            const progress = track.querySelector('.progress-bar');
+            const timeDisplay = btn.parentElement.querySelector('.time-display');
+
+            // Play/Pause Button
+            btn.addEventListener('click', () => {
+                pauseAllExcept(targetId);
+
+                if (audio.paused) {
+                    audio.play().catch(err => {
+                        console.error("Audio playback failed:", err);
+                        alert(`Please upload the source file for ${targetId}`);
+                    });
+                    playIcon.classList.add('hidden');
+                    pauseIcon.classList.remove('hidden');
+                } else {
+                    audio.pause();
+                    playIcon.classList.remove('hidden');
+                    pauseIcon.classList.add('hidden');
+                }
+            });
+
+            // Update Progress Bar
+            audio.addEventListener('timeupdate', () => {
+                const percent = (audio.currentTime / audio.duration) * 100;
+                progress.style.width = `${percent}%`;
+                timeDisplay.textContent = formatTime(audio.currentTime);
+            });
+
+            // Reset when track ends
+            audio.addEventListener('ended', () => {
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+                progress.style.width = `0%`;
+                timeDisplay.textContent = formatTime(0);
+            });
+
+            // Click Track to Seek
+            track.addEventListener('click', (e) => {
+                const rect = track.getBoundingClientRect();
+                const pos = (e.clientX - rect.left) / rect.width;
+                if (!isNaN(audio.duration)) {
+                    audio.currentTime = pos * audio.duration;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
