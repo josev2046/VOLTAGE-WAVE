@@ -128,18 +128,18 @@
                 </p>
             </div>
 
-            <!-- ENGINEER'S LOG / COLLAPSIBLE VIDEO EMBED -->
+            <!-- INTRODUCTION / COLLAPSIBLE VIDEO EMBED -->
             <div class="w-full reveal mb-12">
                 <div class="analysis-card border border-[#222] p-4 rounded flex flex-col transition-all duration-300">
                     
                     <!-- Header & Toggle Bar -->
-                    <div class="flex flex-wrap items-center justify-between gap-4 mb-2">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
                         <div class="flex items-center gap-2">
                             <span id="video-status-indicator" class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                            <h3 class="font-mono text-sm font-bold text-zinc-300 uppercase tracking-widest">Engineer's Log // Introduction</h3>
+                            <h3 class="font-mono text-sm font-bold text-zinc-300 uppercase tracking-widest">Introduction</h3>
                         </div>
                         <button id="video-toggle-btn" class="font-mono text-[10px] text-zinc-400 hover:text-red-500 transition-colors uppercase tracking-widest px-3 py-1.5 border border-zinc-800 rounded-sm hover:border-red-500/50 bg-zinc-900/50 flex items-center gap-2 cursor-pointer">
-                            <span id="video-toggle-text">Minimize Footage</span>
+                            <span id="video-toggle-text">Minimize</span>
                         </button>
                     </div>
                     
@@ -765,7 +765,7 @@
 
                 const minimizeVideo = () => {
                     videoWrapper.style.display = 'none';
-                    videoToggleText.innerText = 'View Footage';
+                    videoToggleText.innerText = "Engineer's Log";
                     statusIndicator.classList.remove('bg-red-500', 'animate-pulse');
                     statusIndicator.classList.add('bg-zinc-600');
                     if (mainVideo) mainVideo.pause();
@@ -773,18 +773,20 @@
 
                 const expandVideo = () => {
                     videoWrapper.style.display = 'block';
-                    videoToggleText.innerText = 'Minimize Footage';
+                    videoToggleText.innerText = 'Minimize';
                     statusIndicator.classList.remove('bg-zinc-600');
                     statusIndicator.classList.add('bg-red-500', 'animate-pulse');
                     localStorage.setItem('vw_ms10_intro_seen', 'true');
                 };
 
-                // If they've been here before, default to minimized
+                // Open on first visit, collapsed on second/subsequent visits
                 if (hasSeenVideo) {
                     minimizeVideo();
+                } else {
+                    expandVideo();
                 }
 
-                // Toggle button click listener
+                // Toggle button listener
                 videoToggleBtn.addEventListener('click', () => {
                     if (videoWrapper.style.display === 'none') {
                         expandVideo();
