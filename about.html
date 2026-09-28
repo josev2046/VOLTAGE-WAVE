@@ -130,6 +130,50 @@
                 </p>
             </div>
 
+            <!-- ERRATA SECTION -->
+            <div class="w-full reveal mb-12">
+                <div class="border border-red-500/40 bg-[#160505] p-6 rounded-sm relative overflow-hidden shadow-[0_0_20px_rgba(220,38,38,0.05)]">
+                    <!-- Left Accent Bar -->
+                    <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
+                    
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-xl">⚠️</span>
+                        <h2 class="font-mono text-sm font-bold text-red-500 uppercase tracking-widest">Errata & Signal-Flow Updates</h2>
+                        <span class="font-mono text-[10px] border border-red-500/30 bg-red-500/10 px-2 py-0.5 text-red-400 hidden sm:inline-block ml-2">KORG MS-10 COMPANION NOTES</span>
+                    </div>
+                    <p class="text-sm text-zinc-400 italic mb-5 border-b border-red-900/30 pb-4">
+                        Please review these physical hardware and patch routing adjustments before attempting processing protocols.
+                    </p>
+                    
+                    <ul class="space-y-5 text-sm text-zinc-300 font-sans leading-relaxed">
+                        <li class="flex gap-4">
+                            <span class="font-mono text-red-500 font-bold mt-0.5">1.</span>
+                            <div>
+                                <strong class="text-white font-semibold tracking-wide">Silencing the Internal VCO (Section 7):</strong> To use the MS-10 purely as an external effects processor without a background drone, select the <strong class="text-zinc-100 font-mono text-xs bg-zinc-800/50 px-1 py-0.5 rounded-sm">Rectangle (Pulse)</strong> waveform and turn the <strong class="text-zinc-100 font-mono text-xs bg-zinc-800/50 px-1 py-0.5 rounded-sm">PW/PWM</strong> control fully clockwise. Because the MS-10 lacks an oscillator mixer mute, this narrows the pulse width to silence the internal VCO.
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <span class="font-mono text-red-500 font-bold mt-0.5">2.</span>
+                            <div>
+                                <strong class="text-white font-semibold tracking-wide">Input Physicality & Attenuation (Sections 6, 9, & Panel Map):</strong> The MS-10 features a single <strong class="text-zinc-100 font-mono text-xs bg-zinc-800/50 px-1 py-0.5 rounded-sm">EXT SIGNAL IN</strong> jack located on the front right patch panel (attenuated via the <strong class="text-zinc-100 font-mono text-xs bg-zinc-800/50 px-1 py-0.5 rounded-sm">EXTERNAL SIGNAL LEVEL</strong> knob). References to a "rear patchbay input" or dedicated "ESP section" apply to the MS-20 and should be disregarded for MS-10 routing.
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <span class="font-mono text-red-500 font-bold mt-0.5">3.</span>
+                            <div>
+                                <strong class="text-white font-semibold tracking-wide">S-Trigger Conversion in Protocol P-04:</strong> The MS-10 requires an inverted S-Trigger (Switch-to-Ground) rather than a standard positive audio transient. Route a MIDI note from your DAW through the <strong class="text-zinc-100">Kenton Pro Solo</strong> S-Trigger output into the <strong class="text-zinc-100 font-mono text-xs bg-zinc-800/50 px-1 py-0.5 rounded-sm">TRIG IN</strong> jack to reliably fire the envelope.
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <span class="font-mono text-red-500 font-bold mt-0.5">4.</span>
+                            <div>
+                                <strong class="text-white font-semibold tracking-wide">Line-Level Headroom & Re-Amping (Section 5):</strong> The MS-10 patch panel input expects hot line/modular signals (up to 3Vp-p). Skip the Palmer DACCAPO re-amp box—patching directly from your Focusrite line output via a balanced-to-unbalanced TS cable yields superior headroom, punchier transients, and a lower noise floor.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
             <!-- INTRODUCTION / COLLAPSIBLE VIDEO EMBED -->
             <div class="w-full reveal mb-12">
                 <div class="analysis-card border border-[#222] p-4 rounded flex flex-col transition-all duration-300">
