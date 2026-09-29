@@ -244,7 +244,9 @@
       <p class="text-xs text-zinc-500 leading-relaxed mb-6">${d[1]}</p>
       <div class="mt-auto flex items-center border-t pt-4" style="border-color:${b}">
        <button aria-label="Play or stop ${wet?'hardware return':'reference'}" class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-sm border ${wet?'border-red-900/50 bg-red-950/20 text-red-500 hover:bg-red-900/40':'border-zinc-700 bg-zinc-800/30 text-zinc-300 hover:bg-zinc-700/50'} transition-colors" data-type="${p.type}" data-wet="${wet}">
-        <svg class="w-4 h-4 ml-0.5 icon-play" fill="currentColor" viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg><svg class="w-4 h-4 icon-stop hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg></button>
+        <svg class="w-4 h-4 ml-0.5 icon-play" fill="currentColor" viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>
+        <svg class="w-4 h-4 icon-stop hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+       </button>
        <div class="flex-1 flex items-center font-mono text-[10px] text-zinc-500 uppercase tracking-widest ml-4"><span>${wet?'Hardware Return':'Digital Source'}</span><div class="flex-1 border-b mx-3" style="border-color:${b}"></div><span class="timer w-8 text-right">0:00</span></div>
       </div>
      </div>
@@ -328,76 +330,83 @@
 
     function stopAll() {
      if (ctx) {
-      nodes.forEach(o => { try{ o.stop() }catch(e){} try{ o.disconnect() }catch(e){} });
-      nodes = []; ctx.close(); ctx = null;
+      nodes.forEach(n => { try{ n.stop(); }catch(e){} try{ n.disconnect(); }catch(e){} });
+      nodes = [];
+      try { ctx.close(); } catch(e){}
+      ctx = null;
      }
      if (raf) { cancelAnimationFrame(raf); raf = null; }
+     
      document.querySelectorAll('.play-btn').forEach(b => {
       b.dataset.playing = 'false';
-      b.querySelector('.icon-play').classList.remove('hidden');
-      b.querySelector('.icon-stop').classList.add('hidden');
-      let timer = b.parentElement.querySelector('.timer');
+      const p = b.querySelector('.icon-play');
+      const s = b.querySelector('.icon-stop');
+      if (p) p.classList.remove('hidden');
+      if (s) s.classList.add('hidden');
+      const timer = b.parentElement.querySelector('.timer');
       if (timer) timer.textContent = '0:00';
      });
      document.querySelectorAll('.playhead').forEach(p => p.style.display = 'none');
     }
 
     function play(btn) {
-     if (btn.dataset.playing === 'true') return stopAll();
+     if (btn.dataset.playing === 'true') {
+         stopAll();
+         return;
+     }
      stopAll();
      
-     const type = btn.dataset.type, wet = btn.dataset.wet === 'true';
+     const type = btn.dataset.type;
+     const wet = btn.dataset.wet === 'true';
      const AudioContext = window.AudioContext || window.webkitAudioContext;
      ctx = new AudioContext();
      
-     if (ctx.state === 'suspended') ctx.resume();
+     if (ctx.state === 'suspended') {
+         ctx.resume();
+     }
 
-     const t0 = ctx.currentTime + 0.05, master = ctx.createGain(), cache = {};
-     master.gain.value = 0.28; 
+     const t0 = ctx.currentTime + 0.05;
+     const master = ctx.createGain();
+     master.gain.value = 0.25; 
      master.connect(ctx.destination); 
      nodes.push(master);
 
-     for (const e of build(type,wet).ev) {
-      const k = e.w + e.pw;
+     const noteData = build(type, wet);
+
+     for (const e of noteData.ev) {
       const o = ctx.createOscillator();
       const f = ctx.createBiquadFilter();
       const g = ctx.createGain();
       const s = t0 + e.t;
       const L = level(e);
       
-      try {
-          if (!cache[k]) {
-           const re = new Float32Array(64), im = new Float32Array(64);
-           for (let i=1; i<64; i++) {
-            if (e.w === 'saw') im[i] = 1/i;
-            else re[i] = 2 * Math.sin(i * Math.PI * e.pw) / i;
-           }
-           cache[k] = ctx.createPeriodicWave(re, im);
-          }
-          o.setPeriodicWave(cache[k]);
-      } catch (err) {
-          // Fallback if browser audio engine rejects the custom 64-length array
-          o.type = e.w === 'saw' ? 'sawtooth' : 'square';
-      }
-      
+      // Standard robust oscillator types
+      o.type = (e.w === 'pulse' || e.w === 'square') ? 'square' : 'sawtooth';
       o.frequency.value = e.f;
+      
       f.type = 'lowpass';
       f.frequency.value = e.fc;
       f.Q.value = e.q;
       
-      g.gain.setValueAtTime(0, s);
-      g.gain.linearRampToValueAtTime(L, s + 0.006);
-      g.gain.linearRampToValueAtTime(L, s + e.d);
-      g.gain.linearRampToValueAtTime(0, s + e.d + 0.07);
+      g.gain.setValueAtTime(0.0001, s);
+      g.gain.linearRampToValueAtTime(L, s + 0.008);
+      g.gain.setValueAtTime(L, s + e.d);
+      g.gain.linearRampToValueAtTime(0.0001, s + e.d + 0.07);
       
-      o.connect(f); f.connect(g); g.connect(master);
-      o.start(s); o.stop(s + e.d + 0.1);
+      o.connect(f); 
+      f.connect(g); 
+      g.connect(master);
+      
+      o.start(s); 
+      o.stop(s + e.d + 0.1);
       nodes.push(o, f, g);
      }
 
      btn.dataset.playing = 'true';
-     btn.querySelector('.icon-play').classList.add('hidden');
-     btn.querySelector('.icon-stop').classList.remove('hidden');
+     const iconPlay = btn.querySelector('.icon-play');
+     const iconStop = btn.querySelector('.icon-stop');
+     if (iconPlay) iconPlay.classList.add('hidden');
+     if (iconStop) iconStop.classList.remove('hidden');
      
      const timer = btn.parentElement.querySelector('.timer');
      const colContainer = btn.closest('.flex-col.gap-4');
@@ -407,7 +416,10 @@
      (function tick() {
       if (!ctx || btn.dataset.playing !== 'true') return;
       const el = Math.max(0, ctx.currentTime - t0);
-      if (el >= DUR) return stopAll();
+      if (el >= DUR) {
+          stopAll();
+          return;
+      }
       if (timer) timer.textContent = '0:' + String(Math.floor(el)).padStart(2,'0');
       heads.forEach(p => {
         p.style.left = p.dataset.c === 'spectrogram' ? `calc(38px + (100% - 38px) * ${el/DUR})` : `${el/DUR*100}%`;
@@ -416,15 +428,21 @@
      })();
     }
 
-    // Initialize Scroll Reveal & Audio Clicks on Content Loaded
+    // Delegated click handler for robust play button listening
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.play-btn');
+        if (btn) {
+            play(btn);
+        }
+    });
+
+    // Scroll reveal observer
     document.addEventListener("DOMContentLoaded", () => {
         const reveals = document.querySelectorAll('.reveal');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
         reveals.forEach(reveal => observer.observe(reveal));
-        
-        document.querySelectorAll('.play-btn').forEach(b => b.addEventListener('click', () => play(b)));
     });
     </script>
 </body>
