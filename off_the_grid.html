@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
+    <!-- Pink SQ-10 Theme Configuration -->
     <script>
         tailwind.config = {
             theme: {
@@ -19,12 +20,12 @@
                         mono: ['JetBrains Mono', 'monospace'],
                     },
                     colors: {
-                        red: {
-                            400: '#ef4444',
-                            500: '#dc2626',
-                            600: '#b91c1c',
-                            900: '#3a0a0a',
-                            950: '#200505',
+                        pink: {
+                            400: '#f472b6',
+                            500: '#ec4899',
+                            600: '#db2777',
+                            900: '#831843',
+                            950: '#500724',
                         },
                         zinc: {
                             850: '#202022',
@@ -43,24 +44,26 @@
             color: #d4d4d8;
         }
         
+        /* Pink Scanlines */
         .scanlines::before {
             content: " ";
             display: block;
             position: absolute;
             top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(220, 38, 38, 0.04), rgba(220, 38, 38, 0.02), rgba(200, 38, 38, 0.04));
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(236, 72, 153, 0.04), rgba(236, 72, 153, 0.02), rgba(219, 39, 119, 0.04));
             z-index: 50;
             background-size: 100% 2px, 3px 100%;
             pointer-events: none;
             opacity: 0.3;
         }
 
-        .glow-text { text-shadow: 0 0 10px rgba(220, 38, 38, 0.5); }
+        .glow-text { text-shadow: 0 0 10px rgba(236, 72, 153, 0.5); }
 
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #09090b; }
         ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #dc2626; }
+        ::-webkit-scrollbar-thumb:hover { background: #ec4899; }
 
         .reveal {
             opacity: 0;
@@ -69,17 +72,18 @@
         }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
+        /* Pink Synth Grid */
         .bg-synth-grid {
-            background-image: linear-gradient(to right, rgba(220, 38, 38, 0.07) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(220, 38, 38, 0.07) 1px, transparent 1px);
+            background-image: linear-gradient(to right, rgba(236, 72, 153, 0.07) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(236, 72, 153, 0.07) 1px, transparent 1px);
             background-size: 40px 40px;
         }
         
         @keyframes analog-glitch {
             0% { transform: translate(0) }
-            20% { transform: translate(-2px, 1px); color: #ef4444; text-shadow: 2px 0 #dc2626; }
+            20% { transform: translate(-2px, 1px); color: #ec4899; text-shadow: 2px 0 #db2777; }
             40% { transform: translate(-1px, -1px) }
-            60% { transform: translate(2px, 1px); text-shadow: -2px 0 #dc2626; }
+            60% { transform: translate(2px, 1px); text-shadow: -2px 0 #db2777; }
             80% { transform: translate(1px, -1px) }
             100% { transform: translate(0) }
         }
@@ -88,8 +92,7 @@
         .analysis-card { background-color: #0c0c0e; }
     </style>
 </head>
-<body class="antialiased relative selection:bg-red-500 selection:text-zinc-950">
-    <!-- FIX: Added pointer-events-none to the base scanlines wrapper to let clicks pass through -->
+<body class="antialiased relative selection:bg-pink-500 selection:text-zinc-950">
     <div class="scanlines fixed inset-0 pointer-events-none z-50"></div>
 
     <!-- NAVIGATION -->
@@ -97,13 +100,13 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <a href="index.html" class="flex-shrink-0 flex items-center gap-3 cursor-pointer glitch-hover">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-red-500 w-6 h-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-pink-500 w-6 h-6">
                         <path d="M2 12h4v-7h6v14h6v-7h4"/>
                     </svg>
                     <span class="font-mono font-bold text-white tracking-widest hidden sm:block">VOLTAGE & WAVE</span>
                 </a>
                 <div class="flex space-x-8 font-mono text-sm items-center">
-                    <a href="index.html" class="text-zinc-400 hover:text-red-500 transition-colors flex items-center gap-2">
+                    <a href="index.html" class="text-zinc-400 hover:text-pink-500 transition-colors flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
                         RETURN
                     </a>
@@ -117,15 +120,15 @@
         <div class="absolute inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="reveal mb-12">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 font-mono text-xs mb-6">
-                    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-pink-500/30 bg-pink-500/10 text-pink-500 font-mono text-xs mb-6">
+                    <span class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>
                     HARDWARE CAPABILITIES // SQ-10 // BOOK TWO
                 </div>
                 <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4 uppercase">
-                    Off the <span class="text-red-500 glow-text">Grid</span>
+                    Off the <span class="text-pink-500 glow-text">Grid</span>
                 </h1>
                 <p class="text-lg text-zinc-400 max-w-2xl font-light mb-8">
-                    The Korg SQ-10 makes no sound. It sends the MS-10 three control voltages per step, with continuous knobs and a free-running clock. Below, each protocol from the book, with an A/B you can hear.
+                    The Korg SQ-10 makes no sound. It sends the MS-10 three control voltages per step, with continuous knobs and a free-running clock. Below, each protocol from the book, with an exaggerated A/B you can hear.
                 </p>
                 <nav id="jump" class="flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-widest"></nav>
             </div>
@@ -156,21 +159,21 @@
      notes:'Channel A (±5V) sets rough pitch, Channel B (±1V) trims it, and the analog mixer adds the two before the MS-10 pitch input. A quantising MIDI-to-CV route cannot make intervals between semitones; the continuous knobs can.',
      cv:[{t:'CH A ±5V',s:'rough → IN 1',x:110,to:0},{t:'CH B ±1V',s:'fine → IN 2',x:310,to:0},{t:'ANALOG MIXER',s:'OUT → VCO CV IN',x:510,to:0}],
      dry:['Tuned to reference','Each step within a few cents of its target.','Every line sits on the semitone grid.'],
-     wet:['Micro-detuned via Channel B','Steady tones between semitone pitches.','Lines sit between the grid lines.'],
+     wet:['Extreme Micro-detuned via Channel B','Pushed completely off the 12TET semitone grid.','Lines sit aggressively between the grid lines.'],
      check:'Overlay a semitone grid on the spectrogram. Tuned steps sit on it; detuned steps sit between the lines. If every step lands on the grid, fine adjustment is not reaching the oscillator.',
      bench:'Demo assumes Channel B centre = 0V and that the MS-10 pitch input tracks the mixer sum.'},
     {id:'p-03',n:'03',type:'warp',title:'Warped Time',chip:'Channel C / VC Clock',
      notes:'Channel C patched into the clock\'s ÷2/V input stretches step time (each 1V halves the speed), so a regular loop is pushed and pulled with no swing template. The pitch sequence is untouched.',
      cv:[{t:'CHANNEL C',s:'0 to +5V',x:110,to:0},{t:'CLOCK ÷2/V',s:'lag per step',x:310,to:0},{t:'CH A + TRIG',s:'as P-01',x:510,to:0}],
      dry:['Fixed clock','Evenly spaced onsets, identical intervals.','Notes evenly spaced across the pass.'],
-     wet:['Channel C on the clock','Unequal onset spacing that repeats every loop.','Same pitches, uneven spacing. Dashed lines show the fixed grid.'],
+     wet:['Channel C on the clock','Unequal onset spacing that swings wildly every loop.','Same pitches, aggressively uneven spacing.'],
      check:'Measure the gaps between successive onsets. The fixed clock gives equal gaps; the warped pass gives a repeating unequal set every 12 steps.',
      bench:'Demo assumes a step\'s voltage stretches the interval that follows it. Korg does not say.'},
     {id:'p-04',n:'04',type:'colour',title:'MIDI-Stepped Tone Colour',chip:'Kenton Pro Solo / STEP jack / Korg-35 VCF',
      notes:'A DAW MIDI clip plays pitch and timing on the grid through the Kenton. Its gate also advances the SQ-10, whose Channel A drives the MS-10 filter cutoff. Same notes, same timing; the timbre changes note by note.',
      cv:[{t:'KENTON',s:'pitch + gate',x:110,to:0},{t:'SQ-10 STEP',s:'gate advances',x:310,to:0},{t:'CH A → VCF',s:'cutoff per step',x:510,to:0}],
      dry:['Fixed Channel A','Notes on the grid with one constant timbre.','Every note has the same brightness.'],
-     wet:['SQ-10 stepping the filter','Same notes and timing; brightness changes per note.','Harmonic height changes per note in a 12-step pattern.'],
+     wet:['SQ-10 stepping the filter','High-resonance filter leaps dramatically step to step.','Harmonic height spikes and plunges note by note.'],
      check:'Compare spectrograms note by note. Timing matches across both passes; only the harmonic content per note differs, repeating every 12 notes.',
      bench:'Kenton trigger polarity against the STEP jack\'s ↓ GND marking is unconfirmed.'}
     ];
@@ -182,7 +185,7 @@
      colour:{lo:60,hi:4200,ax:[[82.41,'E2'],[164.8,'E3'],[329.6,'E4'],[659.3,'E5'],[1318.5,'E6'],[2637,'E7']]}
     };
 
-    /* ---------- NOTE DATA ---------- */
+    /* ---------- NOTE DATA (Exaggerated for clarity) ---------- */
     const DUR = 12;
     const rng = s => () => { s|=0; s=s+0x6D2B79F5|0; let t=Math.imul(s^s>>>15,1|s); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296 };
     const hz = (root,semi,c=0) => root*Math.pow(2,(semi+c/100)/12);
@@ -193,24 +196,30 @@
      const add = (t,f,d,fc,o={}) => { if(t>=0 && t<DUR) ev.push({t,f,d,fc,q:o.q||3,w:o.w||'saw',pw:o.pw||.5,a:o.a||1}) };
      
      if (type === 'loop') {
-      const S=.25, dr=[.01,.04,-.02,.05], cd=[0,4,-3,6], kn=[-6,4,-3,7,-8,2,5,-4,6,-7,3,-2];
+      // Much more aggressive timing drift and pitch wandering
+      const S=.25, dr=[.02, .08, -.04, .1], cd=[0,5,-4,7], kn=[-12, 8, -6, 14, -16, 4, 10, -8, 12, -14, 6, -4];
       for(let p=0,t=0; t<DUR; p++) { 
         marks.push(t); const s = wet ? S*(1+dr[p%4]) : S;
-        for(let i=0; i<12; i++) add(t+i*s+(wet?(r()-.5)*.012:0), hz(82.41,PH[i],wet?kn[i]+cd[p%4]:0), s*.8, wet?1100+(i%3)*250:1400, wet?{w:'pulse',pw:.4}:{});
+        for(let i=0; i<12; i++) {
+            add(t+i*s+(wet?(r()-.5)*.03:0), hz(82.41,PH[i],wet?kn[i]+cd[p%4]:0), s*.8, wet?1100+(i%3)*400:1400, wet?{w:'pulse',pw:.4}:{});
+        }
         t += 12*s; 
       }
      }
      if (type === 'tune') {
-      const DT=[30,-25,40,-35,20,-45,35,-20,45,-30,25,-40];
-      for(let p=0; p<2; p++) { marks.push(p*6); for(let i=0; i<12; i++) add(p*6+i*.5, hz(110,TN[i],wet?DT[i]:(r()-.5)*3), .4, 1600) }
+      // Pushed to heavy microtonal dissonance
+      const DT=[45, -55, 60, -40, 30, -65, 50, -35, 70, -50, 40, -60];
+      for(let p=0; p<2; p++) { marks.push(p*6); for(let i=0; i<12; i++) add(p*6+i*.5, hz(110,TN[i],wet?DT[i]:0), .4, 1600) }
      }
      if (type === 'warp') {
-      const S=.22, v=[0,0,.6,0,1,0,0,.4,0,.8,0,.3]; grid=S;
+      // Massive timing lag/rushing swings
+      const S=.22, v=[0, -.5, 1.2, -.2, 1.5, 0, -.4, .8, -.6, 1.8, 0, .5]; grid=S;
       for(let t=0; t<DUR;) { marks.push(t); for(let i=0; i<12; i++) { add(t, hz(82.41,PH[i]), S*.8, 1200, {w:'pulse',pw:.4}); t+=wet?S*Math.pow(2,v[i]):S } }
      }
      if (type === 'colour') {
-      const S=.25, FC=[500,1200,2600,700,3400,900,1800,450,3000,1500,600,2200];
-      for(let t=0; t<DUR; t+=12*S) { marks.push(t); for(let i=0; i<12; i++) add(t+i*S, hz(82.41,PH[i]), .2, wet?FC[i]:1400, {q:4}) }
+      // Extreme filter jumping with high resonance (Q: 12)
+      const S=.25, FC=[200, 3000, 400, 4500, 150, 2500, 600, 100, 3500, 300, 5000, 800];
+      for(let t=0; t<DUR; t+=12*S) { marks.push(t); for(let i=0; i<12; i++) add(t+i*S, hz(82.41,PH[i]), .2, wet?FC[i]:1400, wet?{q:12,w:'pulse',pw:.3}:{q:2}) }
      }
      return { ev, marks, grid };
     }
@@ -229,14 +238,14 @@
     function schem(p) {
      const box = (x,y,w,t,s,c) => `<g transform="translate(${x-w/2},${y})"><rect width="${w}" height="50" fill="#18181b" stroke="${c}" stroke-width="${c==='#52525b'?1:2}"/><text x="${w/2}" y="22" fill="${c==='#52525b'?'#d4d4d8':c}" font-family="monospace" font-size="11" font-weight="bold" text-anchor="middle">${t}</text><text x="${w/2}" y="38" fill="#71717a" font-family="monospace" font-size="9" text-anchor="middle">${s}</text></g>`;
      const mx = i => 150+i*250, m = p.id; 
-     let o = `<defs><marker id="r${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ef4444"/></marker><marker id="c${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00bcd4"/></marker></defs>`;
+     let o = `<defs><marker id="r${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ec4899"/></marker><marker id="c${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00bcd4"/></marker></defs>`;
      p.cv.forEach(c => { o += `<path d="M${c.x} 70V96H${mx(c.to)}V123" fill="none" stroke="#00bcd4" stroke-width="2" stroke-dasharray="4" marker-end="url(#c${m})"/>`+box(c.x,20,170,c.t,c.s,'#00bcd4') });
-     MAIN.forEach((b,i) => { o += box(mx(i),125,170,b[0],b[1],i?'#52525b':'#ef4444'); if(i<2) o+=`<path d="M${mx(i)+85} 150H${mx(i+1)-85}" stroke="#ef4444" stroke-width="2" marker-end="url(#r${m})"/>` });
+     MAIN.forEach((b,i) => { o += box(mx(i),125,170,b[0],b[1],i?'#52525b':'#ec4899'); if(i<2) o+=`<path d="M${mx(i)+85} 150H${mx(i+1)-85}" stroke="#ec4899" stroke-width="2" marker-end="url(#r${m})"/>` });
      return `<svg viewBox="0 0 800 190" class="w-full min-w-[600px] h-auto pointer-events-none" xmlns="http://www.w3.org/2000/svg">${o}</svg>`;
     }
 
     function col(p,wet) {
-     const d=wet?p.wet:p.dry, b=wet?'#301010':'#222', k=wet?'text-red-500':'text-zinc-400', ph=wet?'bg-red-400 shadow-[0_0_5px_red]':'bg-zinc-300 shadow-[0_0_5px_white]';
+     const d=wet?p.wet:p.dry, b=wet?'#33101a':'#222', k=wet?'text-pink-500':'text-zinc-400', ph=wet?'bg-pink-400 shadow-[0_0_5px_#f472b6]':'bg-zinc-300 shadow-[0_0_5px_white]';
      const cv = (c,l) => `<canvas style="position:absolute;inset:0;width:100%;height:100%" class="${c} pointer-events-none" data-type="${p.type}" data-wet="${wet}"></canvas><div class="playhead absolute top-0 bottom-0 w-[2px] ${ph} z-20 pointer-events-none" data-c="${c}" style="left:0;display:none"></div><div class="absolute top-2 left-2 text-[9px] font-mono text-zinc-400 z-10 bg-black/50 px-1 pointer-events-none">${l}</div>`;
      return `<div class="flex flex-col gap-4">
      <div class="analysis-card border p-4 rounded flex flex-col" style="border-color:${b}">
@@ -244,7 +253,7 @@
       <h3 class="font-mono text-sm font-bold ${k} uppercase tracking-widest mb-2">${wet?'Hardware Return':'Reference'}</h3>
       <p class="text-xs text-zinc-500 leading-relaxed mb-6">${d[1]}</p>
       <div class="mt-auto flex items-center border-t pt-4" style="border-color:${b}">
-       <button aria-label="Play or stop ${wet?'hardware return':'reference'}" class="play-btn relative z-10 w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-sm border ${wet?'border-red-900/50 bg-red-950/20 text-red-500 hover:bg-red-900/40':'border-zinc-700 bg-zinc-800/30 text-zinc-300 hover:bg-zinc-700/50'} transition-colors cursor-pointer" data-type="${p.type}" data-wet="${wet}">
+       <button aria-label="Play or stop ${wet?'hardware return':'reference'}" class="play-btn relative z-10 w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-sm border ${wet?'border-pink-900/50 bg-pink-950/20 text-pink-500 hover:bg-pink-900/40':'border-zinc-700 bg-zinc-800/30 text-zinc-300 hover:bg-zinc-700/50'} transition-colors cursor-pointer" data-type="${p.type}" data-wet="${wet}">
         <svg class="w-4 h-4 ml-0.5 icon-play pointer-events-none" fill="currentColor" viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>
         <svg class="w-4 h-4 icon-stop hidden pointer-events-none" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
        </button>
@@ -260,20 +269,21 @@
     document.getElementById('protocols').innerHTML = P.map((p,i) => `
     <section id="${p.id}" class="py-20 border-b border-zinc-800 ${i%2?'bg-zinc-900':'bg-[#0a0a0c]'} scroll-mt-16 relative z-10">
      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center gap-3 mb-2"><span class="text-red-500 font-mono font-bold text-xl">P-${p.n}</span><h2 class="text-2xl font-bold text-white uppercase tracking-wide">${p.title}</h2></div>
-      <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest mb-5"><span class="border border-zinc-700 text-zinc-500 px-2 py-1">Hardware: Korg SQ-10</span><span class="border border-red-500/30 bg-red-500/10 text-red-400 px-2 py-1">${p.chip}</span>${p.bench?'<span class="border border-amber-500/40 bg-amber-500/10 text-amber-400 px-2 py-1">Confirm on bench</span>':''}</div>
+      <div class="flex items-center gap-3 mb-2"><span class="text-pink-500 font-mono font-bold text-xl">P-${p.n}</span><h2 class="text-2xl font-bold text-white uppercase tracking-wide">${p.title}</h2></div>
+      <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest mb-5"><span class="border border-zinc-700 text-zinc-500 px-2 py-1">Hardware: Korg SQ-10</span><span class="border border-pink-500/30 bg-pink-500/10 text-pink-400 px-2 py-1">${p.chip}</span>${p.bench?'<span class="border border-amber-500/40 bg-amber-500/10 text-amber-400 px-2 py-1">Confirm on bench</span>':''}</div>
       <p class="text-zinc-400 text-sm max-w-3xl leading-relaxed mb-2"><strong>Engineer notes:</strong> ${p.notes}</p>
       ${p.bench?`<p class="text-amber-500/80 text-xs max-w-3xl mb-2">${p.bench}</p>`:''}
       <div class="w-full bg-[#0a0a0c] border border-zinc-800 rounded-sm my-8 overflow-hidden"><div class="bg-zinc-900 border-b border-zinc-800 px-4 py-2 font-mono text-[10px] text-zinc-400 tracking-widest uppercase">Routing schematic // P-${p.n}</div><div class="p-4 overflow-x-auto">${schem(p)}</div></div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">${col(p,false)}${col(p,true)}</div>
-      <p class="mt-6 text-sm text-zinc-400 max-w-3xl border-l-2 border-red-500/60 pl-4"><strong class="text-white">What to check.</strong> ${p.check}</p>
+      <p class="mt-6 text-sm text-zinc-400 max-w-3xl border-l-2 border-pink-500/60 pl-4"><strong class="text-white">What to check.</strong> ${p.check}</p>
      </div>
     </section>`).join('');
 
-    document.getElementById('jump').innerHTML = P.map(p => `<a href="#${p.id}" class="border border-zinc-700 px-3 py-1.5 text-zinc-400 hover:text-red-500 hover:border-red-500/50 transition-colors relative z-10 cursor-pointer">P-${p.n} ${p.title}</a>`).join('');
+    document.getElementById('jump').innerHTML = P.map(p => `<a href="#${p.id}" class="border border-zinc-700 px-3 py-1.5 text-zinc-400 hover:text-pink-500 hover:border-pink-500/50 transition-colors relative z-10 cursor-pointer">P-${p.n} ${p.title}</a>`).join('');
 
     /* ---------- VISUALS ---------- */
-    const AMB='255,235,59', CYA='0,188,212';
+    const WET_C='236,72,153', DRY_C='0,188,212'; // Hot Pink vs Cyan
+    
     function size(cv) {
      const r = cv.parentElement.getBoundingClientRect(), d = window.devicePixelRatio||1, W = r.width||300, H = r.height||150;
      cv.width = W*d; cv.height = H*d;
@@ -287,7 +297,8 @@
      c.strokeStyle = 'rgba(161,161,170,.35)'; c.setLineDash([3,4]); c.fillStyle = '#71717a'; c.font = '9px monospace';
      if(wet&&grid) for(let t=0; t<DUR; t+=grid) { c.beginPath(); c.moveTo(t/DUR*w,h-14); c.lineTo(t/DUR*w,h); c.stroke() }
      marks.forEach((m,i) => { const x=m/DUR*w; c.beginPath(); c.moveTo(x,0); c.lineTo(x,h); c.stroke(); c.fillText('P'+(i+1),x+3,h-4) });
-     c.setLineDash([]); c.fillStyle = wet ? '#ef4444' : '#00bcd4';
+     
+     c.setLineDash([]); c.fillStyle = wet ? '#ec4899' : '#00bcd4';
      for(let i=0; i<w; i++) {
       const t = i/w*DUR; let a = 0;
       for(const e of ev) { const s=t-e.t; if(s>=0 && s<e.d+.25) a = Math.max(a, (s<.006 ? s/.006 : s<e.d ? 1 : Math.exp(-(s-e.d)/.025)) * level(e)) }
@@ -298,18 +309,25 @@
     function drawSpec(cv) {
      const [c,w,h] = size(cv), wet = cv.dataset.wet==='true', C = CFG[cv.dataset.type], {ev,marks} = build(cv.dataset.type,wet), ml = 38, mb = 16, pw = w-ml, ph = h-mb, n = rng(9);
      const y = f => ph*(1 - Math.log(f/C.lo)/Math.log(C.hi/C.lo)), x = t => ml + t/DUR*pw;
+     
      c.fillStyle = '#000'; c.fillRect(0,0,w,h);
      c.font = '9px monospace'; c.textAlign = 'right'; c.textBaseline = 'middle';
      if(C.semi) for(let k=-12; k<40; k++) { const f=C.semi*Math.pow(2,k/12); if(f<C.lo || f>C.hi) continue; c.fillStyle = k%12 ? 'rgba(255,255,255,.07)' : 'rgba(255,255,255,.2)'; c.fillRect(ml,y(f),pw,1) }
      C.ax.forEach(([f,l]) => { if(f<C.lo || f>C.hi) return; c.fillStyle = '#555'; c.fillText(l,ml-5,y(f)); c.fillRect(ml-3,y(f),3,1) });
      c.textAlign = 'center'; c.textBaseline = 'top'; 
      for(let s=0; s<=DUR; s+=2) { c.fillStyle = '#555'; c.fillRect(x(s),ph,1,3); c.fillText(s+'s',x(s),ph+4) }
+     
      c.save(); c.beginPath(); c.rect(ml,0,pw,ph); c.clip();
-     if(wet) { c.fillStyle = `rgba(${AMB},.08)`; for(let i=0; i<500; i++) c.fillRect(ml+n()*pw,n()*ph,2,1) }
+     
+     if(wet) { c.fillStyle = `rgba(${WET_C},.08)`; for(let i=0; i<500; i++) c.fillRect(ml+n()*pw,n()*ph,2,1) }
      marks.forEach(m => { c.fillStyle = 'rgba(161,161,170,.25)'; c.fillRect(x(m),0,1,ph) });
+     
      for(const e of ev) for(const [f,a] of spec(e)) {
-      if(f<C.lo || f>C.hi) continue; const al = Math.min(1, Math.pow(a*1.5,.6)); if(al<.07) continue;
-      c.fillStyle = `rgba(${wet?AMB:CYA},${al})`; c.fillRect(x(e.t),y(f)-1,Math.max(2,(e.d+.04)/DUR*pw),2);
+      if(f<C.lo || f>C.hi) continue; 
+      const al = Math.min(1, Math.pow(a*2.0,.5)); // Boosted amplitude visual
+      if(al<.05) continue;
+      c.fillStyle = `rgba(${wet?WET_C:DRY_C},${al})`; 
+      c.fillRect(x(e.t), y(f)-1.5, Math.max(2,(e.d+.04)/DUR*pw), 3); // Taller blocks
      }
      c.restore();
     }
