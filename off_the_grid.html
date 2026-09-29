@@ -2,21 +2,51 @@
 <html lang="en" class="scroll-smooth">
 <head>
 <meta charset="UTF-8">
+<!-- SQ10 build v2.1: CDN load order fixed, AudioContext resume added, Envelope ramps bulletproofed -->
+<script>
+(function(){function show(m){var d=document.getElementById('vw-err');if(!d){d=document.createElement('div');d.id='vw-err';d.style.cssText='position:fixed;left:8px;right:8px;bottom:8px;z-index:9999;background:#200505;border:1px solid #ef4444;color:#fca5a5;font:11px monospace;padding:8px 10px;white-space:pre-wrap;max-height:40vh;overflow:auto';(document.body||document.documentElement).appendChild(d)}d.textContent+=m+'\n'}
+addEventListener('error',function(e){show('Error: '+e.message+(e.lineno?' (line '+e.lineno+')':''))});
+addEventListener('unhandledrejection',function(e){show('Promise: '+(e.reason&&e.reason.message||e.reason))});
+addEventListener('load',function(){if(typeof tailwind==='undefined')show('Tailwind CDN did not load: layout will be unstyled.');if(!document.querySelector('#protocols canvas'))show('Protocol sections were not built.')})})();
+</script>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SQ-10 TREATMENTS // Voltage & Wave</title>
 
-<!-- CORRECT ORDER -->
-<script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif'],mono:['JetBrains Mono','monospace']}}}}</script>
+<!-- CRITICAL FIX: Tailwind config MUST load before the CDN script -->
+<script>
+tailwind = {
+    config: {
+        theme: {
+            extend: {
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                    mono: ['JetBrains Mono', 'monospace']
+                }
+            }
+        }
+    }
+}
+</script>
 <script src="https://cdn.tailwindcss.com"></script>
- 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
-body{background:#050505;color:#d4d4d8}
-.scanlines::before{content:" ";display:block;position:absolute;inset:0;background:linear-gradient(rgba(18,16,16,0) 50%,rgba(0,0,0,.25) 50%),linear-gradient(90deg,rgba(220,38,38,.04),rgba(220,38,38,.02),rgba(200,38,38,.04));z-index:50;background-size:100% 2px,3px 100%;pointer-events:none;opacity:.3}
-.glow-text{text-shadow:0 0 10px rgba(220,38,38,.5)}
-.bg-synth-grid{background-image:linear-gradient(to right,rgba(220,38,38,.07) 1px,transparent 1px),linear-gradient(to bottom,rgba(220,38,38,.07) 1px,transparent 1px);background-size:40px 40px}
-.card{background:#0c0c0e}
-@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+body { background: #050505; color: #d4d4d8; }
+.scanlines::before {
+    content: " "; display: block; position: absolute; inset: 0;
+    background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,.25) 50%),
+                linear-gradient(90deg, rgba(220,38,38,.04), rgba(220,38,38,.02), rgba(200,38,38,.04));
+    z-index: 50; background-size: 100% 2px, 3px 100%; pointer-events: none; opacity: .3;
+}
+.glow-text { text-shadow: 0 0 10px rgba(220,38,38,.5); }
+.bg-synth-grid {
+    background-image: linear-gradient(to right, rgba(220,38,38,.07) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(220,38,38,.07) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+.card { background: #0c0c0e; }
+@media(prefers-reduced-motion: reduce) { * { animation: none !important; } }
 </style>
 </head>
 <body class="antialiased relative selection:bg-red-500 selection:text-zinc-950">
@@ -53,8 +83,8 @@ body{background:#050505;color:#d4d4d8}
 </footer>
 
 <script>
-/* ---------- CONTENT (edit copy here) ---------- */
-const P=[
+/* ---------- CONTENT ---------- */
+const P = [
 {id:'p-01',n:'01',type:'loop',title:'Free-Running Pitch Loop',chip:'Channel A / Multiple Trig / VC Clock',
  notes:'A repeating 12-note figure played by the hardware, not programmed on a grid. Channel A sets each step\'s pitch, Multiple Trig Out fires the MS-10 envelope, and the free-running clock steps through it. Each pass differs slightly in timing and pitch.',
  cv:[{t:'CHANNEL A',s:'12 pitches',x:110,to:0},{t:'MULTIPLE TRIG',s:'every step',x:310,to:0},{t:'VC CLOCK',s:'free-running',x:510,to:0}],
@@ -83,60 +113,71 @@ const P=[
  check:'Compare spectrograms note by note. Timing matches across both passes; only the harmonic content per note differs, repeating every 12 notes.',
  bench:'Kenton trigger polarity against the STEP jack\'s ↓ GND marking is unconfirmed.'}
 ];
-const MAIN=[['KORG MS-10','VCO + VCF + EG'],['PAN 02 → 4i4','DI to interface'],['HARDWARE RETURN','recorded in DAW']];
-const CFG={
+const MAIN = [['KORG MS-10','VCO + VCF + EG'],['PAN 02 → 4i4','DI to interface'],['HARDWARE RETURN','recorded in DAW']];
+const CFG = {
  loop:{lo:60,hi:2400,ax:[[82.41,'E2'],[164.8,'E3'],[329.6,'E4'],[659.3,'E5'],[1318.5,'E6']]},
  tune:{lo:95,hi:520,ax:[[110,'A2'],[220,'A3'],[440,'A4']],semi:110},
  warp:{lo:60,hi:2400,ax:[[82.41,'E2'],[164.8,'E3'],[329.6,'E4'],[659.3,'E5'],[1318.5,'E6']]},
  colour:{lo:60,hi:4200,ax:[[82.41,'E2'],[164.8,'E3'],[329.6,'E4'],[659.3,'E5'],[1318.5,'E6'],[2637,'E7']]}
 };
 
-/* ---------- NOTE DATA: single source for audio + visuals ---------- */
-const DUR=12;
-const rng=s=>()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
-const hz=(root,semi,c=0)=>root*Math.pow(2,(semi+c/100)/12);
-const PH=[0,12,0,7,3,0,10,0,12,7,5,0], TN=[0,3,7,10,12,10,7,3,5,8,12,15];
-function build(type,wet){
- const r=rng(type.length*131+(wet?7:1)),ev=[],marks=[];let grid=0;
- const add=(t,f,d,fc,o={})=>{if(t>=0&&t<DUR)ev.push({t,f,d,fc,q:o.q??3,w:o.w||'saw',pw:o.pw||.5,a:o.a??1})};
- if(type==='loop'){
-  const S=.25,dr=[.01,.04,-.02,.05],cd=[0,4,-3,6],kn=[-6,4,-3,7,-8,2,5,-4,6,-7,3,-2];
-  for(let p=0,t=0;t<DUR;p++){marks.push(t);const s=wet?S*(1+dr[p%4]):S;
-   for(let i=0;i<12;i++)add(t+i*s+(wet?(r()-.5)*.012:0),hz(82.41,PH[i],wet?kn[i]+cd[p%4]:0),s*.8,wet?1100+(i%3)*250:1400,wet?{w:'pulse',pw:.4}:{});
-   t+=12*s}
- }
- if(type==='tune'){
-  const DT=[30,-25,40,-35,20,-45,35,-20,45,-30,25,-40];
-  for(let p=0;p<2;p++){marks.push(p*6);for(let i=0;i<12;i++)add(p*6+i*.5,hz(110,TN[i],wet?DT[i]:(r()-.5)*3),.4,1600)}
- }
- if(type==='warp'){
-  const S=.22,v=[0,0,.6,0,1,0,0,.4,0,.8,0,.3];grid=S;
-  for(let t=0;t<DUR;){marks.push(t);for(let i=0;i<12;i++){add(t,hz(82.41,PH[i]),S*.8,1200,{w:'pulse',pw:.4});t+=wet?S*Math.pow(2,v[i]):S}}
- }
- if(type==='colour'){
-  const S=.25,FC=[500,1200,2600,700,3400,900,1800,450,3000,1500,600,2200];
-  for(let t=0;t<DUR;t+=12*S){marks.push(t);for(let i=0;i<12;i++)add(t+i*S,hz(82.41,PH[i]),.2,wet?FC[i]:1400,{q:4})}
- }
- return{ev,marks,grid};
-}
-function spec(e){const o=[],Q=Math.pow(10,e.q/20);
- for(let n=1;n<=40&&e.f*n<20000;n++){const f=e.f*n,x=f/e.fc,a=e.w==='saw'?1/n:2*Math.abs(Math.sin(n*Math.PI*e.pw))/n;
-  o.push([f,a*e.a/Math.sqrt((1-x*x)**2+(x/Q)**2)])}
- return o}
-const level=e=>Math.min(1,.15+.85*Math.sqrt(spec(e).reduce((s,h)=>s+h[1]*h[1],0))/2.4);
+/* ---------- NOTE DATA ---------- */
+const DUR = 12;
+const rng = s => () => { s|=0; s=s+0x6D2B79F5|0; let t=Math.imul(s^s>>>15,1|s); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296 };
+const hz = (root,semi,c=0) => root*Math.pow(2,(semi+c/100)/12);
+const PH = [0,12,0,7,3,0,10,0,12,7,5,0], TN = [0,3,7,10,12,10,7,3,5,8,12,15];
 
-/* ---------- MARKUP ---------- */
-function schem(p){
- const box=(x,y,w,t,s,c)=>`<g transform="translate(${x-w/2},${y})"><rect width="${w}" height="50" fill="#18181b" stroke="${c}" stroke-width="${c==='#52525b'?1:2}"/><text x="${w/2}" y="22" fill="${c==='#52525b'?'#d4d4d8':c}" font-family="monospace" font-size="11" font-weight="bold" text-anchor="middle">${t}</text><text x="${w/2}" y="38" fill="#71717a" font-family="monospace" font-size="9" text-anchor="middle">${s}</text></g>`;
- const mx=i=>150+i*250,m=p.id;let o=`<defs><marker id="r${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ef4444"/></marker><marker id="c${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00bcd4"/></marker></defs>`;
- p.cv.forEach(c=>{o+=`<path d="M${c.x} 70V96H${mx(c.to)}V123" fill="none" stroke="#00bcd4" stroke-width="2" stroke-dasharray="4" marker-end="url(#c${m})"/>`+box(c.x,20,170,c.t,c.s,'#00bcd4')});
- MAIN.forEach((b,i)=>{o+=box(mx(i),125,170,b[0],b[1],i?'#52525b':'#ef4444');if(i<2)o+=`<path d="M${mx(i)+85} 150H${mx(i+1)-85}" stroke="#ef4444" stroke-width="2" marker-end="url(#r${m})"/>`});
- return`<svg viewBox="0 0 800 190" class="w-full min-w-[600px] h-auto" xmlns="http://www.w3.org/2000/svg">${o}</svg>`;
+function build(type,wet) {
+ const r = rng(type.length*131+(wet?7:1)), ev = [], marks = []; let grid = 0;
+ const add = (t,f,d,fc,o={}) => { if(t>=0 && t<DUR) ev.push({t,f,d,fc,q:o.q||3,w:o.w||'saw',pw:o.pw||.5,a:o.a||1}) };
+ 
+ if (type === 'loop') {
+  const S=.25, dr=[.01,.04,-.02,.05], cd=[0,4,-3,6], kn=[-6,4,-3,7,-8,2,5,-4,6,-7,3,-2];
+  for(let p=0,t=0; t<DUR; p++) { 
+    marks.push(t); const s = wet ? S*(1+dr[p%4]) : S;
+    for(let i=0; i<12; i++) add(t+i*s+(wet?(r()-.5)*.012:0), hz(82.41,PH[i],wet?kn[i]+cd[p%4]:0), s*.8, wet?1100+(i%3)*250:1400, wet?{w:'pulse',pw:.4}:{});
+    t += 12*s; 
+  }
+ }
+ if (type === 'tune') {
+  const DT=[30,-25,40,-35,20,-45,35,-20,45,-30,25,-40];
+  for(let p=0; p<2; p++) { marks.push(p*6); for(let i=0; i<12; i++) add(p*6+i*.5, hz(110,TN[i],wet?DT[i]:(r()-.5)*3), .4, 1600) }
+ }
+ if (type === 'warp') {
+  const S=.22, v=[0,0,.6,0,1,0,0,.4,0,.8,0,.3]; grid=S;
+  for(let t=0; t<DUR;) { marks.push(t); for(let i=0; i<12; i++) { add(t, hz(82.41,PH[i]), S*.8, 1200, {w:'pulse',pw:.4}); t+=wet?S*Math.pow(2,v[i]):S } }
+ }
+ if (type === 'colour') {
+  const S=.25, FC=[500,1200,2600,700,3400,900,1800,450,3000,1500,600,2200];
+  for(let t=0; t<DUR; t+=12*S) { marks.push(t); for(let i=0; i<12; i++) add(t+i*S, hz(82.41,PH[i]), .2, wet?FC[i]:1400, {q:4}) }
+ }
+ return { ev, marks, grid };
 }
-function col(p,wet){
- const d=wet?p.wet:p.dry,b=wet?'#301010':'#222',k=wet?'text-red-500':'text-zinc-400',ph=wet?'bg-red-400 shadow-[0_0_5px_red]':'bg-zinc-300 shadow-[0_0_5px_white]';
- const cv=(c,l)=>`<canvas style="position:absolute;inset:0;width:100%;height:100%" class="${c}" data-type="${p.type}" data-wet="${wet}"></canvas><div class="playhead absolute top-0 bottom-0 w-[2px] ${ph} z-20" data-c="${c}" style="left:0;display:none"></div><div class="absolute top-2 left-2 text-[9px] font-mono text-zinc-400 z-10 bg-black/50 px-1">${l}</div>`;
- return`<div class="flex flex-col gap-4">
+
+function spec(e) {
+ const o=[], Q=Math.pow(10,e.q/20);
+ for(let n=1; n<=40 && e.f*n<20000; n++) {
+  const f=e.f*n, x=f/e.fc, a=e.w==='saw' ? 1/n : 2*Math.abs(Math.sin(n*Math.PI*e.pw))/n;
+  o.push([f, a*e.a/Math.sqrt((1-x*x)**2+(x/Q)**2)]);
+ }
+ return o;
+}
+const level = e => Math.min(1, .15 + .85*Math.sqrt(spec(e).reduce((s,h) => s+h[1]*h[1],0))/2.4);
+
+/* ---------- MARKUP GENERATION ---------- */
+function schem(p) {
+ const box = (x,y,w,t,s,c) => `<g transform="translate(${x-w/2},${y})"><rect width="${w}" height="50" fill="#18181b" stroke="${c}" stroke-width="${c==='#52525b'?1:2}"/><text x="${w/2}" y="22" fill="${c==='#52525b'?'#d4d4d8':c}" font-family="monospace" font-size="11" font-weight="bold" text-anchor="middle">${t}</text><text x="${w/2}" y="38" fill="#71717a" font-family="monospace" font-size="9" text-anchor="middle">${s}</text></g>`;
+ const mx = i => 150+i*250, m = p.id; 
+ let o = `<defs><marker id="r${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ef4444"/></marker><marker id="c${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00bcd4"/></marker></defs>`;
+ p.cv.forEach(c => { o += `<path d="M${c.x} 70V96H${mx(c.to)}V123" fill="none" stroke="#00bcd4" stroke-width="2" stroke-dasharray="4" marker-end="url(#c${m})"/>`+box(c.x,20,170,c.t,c.s,'#00bcd4') });
+ MAIN.forEach((b,i) => { o += box(mx(i),125,170,b[0],b[1],i?'#52525b':'#ef4444'); if(i<2) o+=`<path d="M${mx(i)+85} 150H${mx(i+1)-85}" stroke="#ef4444" stroke-width="2" marker-end="url(#r${m})"/>` });
+ return `<svg viewBox="0 0 800 190" class="w-full min-w-[600px] h-auto" xmlns="http://www.w3.org/2000/svg">${o}</svg>`;
+}
+
+function col(p,wet) {
+ const d=wet?p.wet:p.dry, b=wet?'#301010':'#222', k=wet?'text-red-500':'text-zinc-400', ph=wet?'bg-red-400 shadow-[0_0_5px_red]':'bg-zinc-300 shadow-[0_0_5px_white]';
+ const cv = (c,l) => `<canvas style="position:absolute;inset:0;width:100%;height:100%" class="${c}" data-type="${p.type}" data-wet="${wet}"></canvas><div class="playhead absolute top-0 bottom-0 w-[2px] ${ph} z-20" data-c="${c}" style="left:0;display:none"></div><div class="absolute top-2 left-2 text-[9px] font-mono text-zinc-400 z-10 bg-black/50 px-1">${l}</div>`;
+ return `<div class="flex flex-col gap-4">
  <div class="card border p-4 rounded flex flex-col" style="border-color:${b}">
   <div class="relative bg-black h-36 border w-full mb-4 overflow-hidden" style="border-color:${b};position:relative;height:144px;width:100%">${cv('waveform',d[0].toUpperCase())}</div>
   <h3 class="font-mono text-sm font-bold ${k} uppercase tracking-widest mb-2">${wet?'Hardware Return':'Reference'}</h3>
@@ -152,7 +193,8 @@ function col(p,wet){
   <p class="text-xs text-zinc-500 leading-relaxed">${d[2]}</p>
  </div></div>`;
 }
-document.getElementById('protocols').innerHTML=P.map((p,i)=>`
+
+document.getElementById('protocols').innerHTML = P.map((p,i) => `
 <section id="${p.id}" class="py-20 border-b border-zinc-800 ${i%2?'bg-zinc-900':'bg-[#0a0a0c]'} scroll-mt-16">
  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
   <div class="flex items-center gap-3 mb-2"><span class="text-red-500 font-mono font-bold text-xl">P-${p.n}</span><h2 class="text-2xl font-bold text-white uppercase tracking-wide">${p.title}</h2></div>
@@ -164,77 +206,141 @@ document.getElementById('protocols').innerHTML=P.map((p,i)=>`
   <p class="mt-6 text-sm text-zinc-400 max-w-3xl border-l-2 border-red-500/60 pl-4"><strong class="text-white">What to check.</strong> ${p.check}</p>
  </div>
 </section>`).join('');
-document.getElementById('jump').innerHTML=P.map(p=>`<a href="#${p.id}" class="border border-zinc-700 px-3 py-1.5 text-zinc-400 hover:text-red-500 hover:border-red-500/50 transition-colors">P-${p.n} ${p.title}</a>`).join('');
+
+document.getElementById('jump').innerHTML = P.map(p => `<a href="#${p.id}" class="border border-zinc-700 px-3 py-1.5 text-zinc-400 hover:text-red-500 hover:border-red-500/50 transition-colors">P-${p.n} ${p.title}</a>`).join('');
 
 /* ---------- VISUALS ---------- */
-const AMB='255,235,59',CYA='0,188,212';
-function size(cv){const r=cv.parentElement.getBoundingClientRect(),d=window.devicePixelRatio||1,W=r.width||300,H=r.height||150;cv.width=W*d;cv.height=H*d;const c=cv.getContext('2d');c.scale(d,d);return[c,W,H]}
-function drawWave(cv){
- const[c,w,h]=size(cv),wet=cv.dataset.wet==='true',{ev,marks,grid}=build(cv.dataset.type,wet),n=rng(5),mid=h/2;
- c.fillStyle='#000';c.fillRect(0,0,w,h);
- c.strokeStyle='rgba(161,161,170,.35)';c.setLineDash([3,4]);c.fillStyle='#71717a';c.font='9px monospace';
- if(wet&&grid)for(let t=0;t<DUR;t+=grid){c.beginPath();c.moveTo(t/DUR*w,h-14);c.lineTo(t/DUR*w,h);c.stroke()}
- marks.forEach((m,i)=>{const x=m/DUR*w;c.beginPath();c.moveTo(x,0);c.lineTo(x,h);c.stroke();c.fillText('P'+(i+1),x+3,h-4)});
- c.setLineDash([]);c.fillStyle=wet?'#ef4444':'#00bcd4';
- for(let i=0;i<w;i++){const t=i/w*DUR;let a=0;
-  for(const e of ev){const s=t-e.t;if(s>=0&&s<e.d+.25)a=Math.max(a,(s<.006?s/.006:s<e.d?1:Math.exp(-(s-e.d)/.025))*level(e))}
-  const v=mid*.85*a*(.55+.45*n());c.fillRect(i,mid-v,1,v*2)}
+const AMB='255,235,59', CYA='0,188,212';
+function size(cv) {
+ const r = cv.parentElement.getBoundingClientRect(), d = window.devicePixelRatio||1, W = r.width||300, H = r.height||150;
+ cv.width = W*d; cv.height = H*d;
+ const c = cv.getContext('2d'); c.scale(d,d);
+ return [c,W,H];
 }
-function drawSpec(cv){
- const[c,w,h]=size(cv),wet=cv.dataset.wet==='true',C=CFG[cv.dataset.type],{ev,marks}=build(cv.dataset.type,wet),ml=38,mb=16,pw=w-ml,ph=h-mb,n=rng(9);
- const y=f=>ph*(1-Math.log(f/C.lo)/Math.log(C.hi/C.lo)),x=t=>ml+t/DUR*pw;
- c.fillStyle='#000';c.fillRect(0,0,w,h);
- c.font='9px monospace';c.textAlign='right';c.textBaseline='middle';
- if(C.semi)for(let k=-12;k<40;k++){const f=C.semi*Math.pow(2,k/12);if(f<C.lo||f>C.hi)continue;c.fillStyle=k%12?'rgba(255,255,255,.07)':'rgba(255,255,255,.2)';c.fillRect(ml,y(f),pw,1)}
- C.ax.forEach(([f,l])=>{if(f<C.lo||f>C.hi)return;c.fillStyle='#555';c.fillText(l,ml-5,y(f));c.fillRect(ml-3,y(f),3,1)});
- c.textAlign='center';c.textBaseline='top';for(let s=0;s<=DUR;s+=2){c.fillStyle='#555';c.fillRect(x(s),ph,1,3);c.fillText(s+'s',x(s),ph+4)}
- c.save();c.beginPath();c.rect(ml,0,pw,ph);c.clip();
- if(wet){c.fillStyle=`rgba(${AMB},.08)`;for(let i=0;i<500;i++)c.fillRect(ml+n()*pw,n()*ph,2,1)}
- marks.forEach(m=>{c.fillStyle='rgba(161,161,170,.25)';c.fillRect(x(m),0,1,ph)});
- for(const e of ev)for(const[f,a]of spec(e)){if(f<C.lo||f>C.hi)continue;const al=Math.min(1,Math.pow(a*1.5,.6));if(al<.07)continue;
-  c.fillStyle=`rgba(${wet?AMB:CYA},${al})`;c.fillRect(x(e.t),y(f)-1,Math.max(2,(e.d+.04)/DUR*pw),2)}
+
+function drawWave(cv) {
+ const [c,w,h] = size(cv), wet = cv.dataset.wet==='true', {ev,marks,grid} = build(cv.dataset.type,wet), n = rng(5), mid = h/2;
+ c.fillStyle = '#000'; c.fillRect(0,0,w,h);
+ c.strokeStyle = 'rgba(161,161,170,.35)'; c.setLineDash([3,4]); c.fillStyle = '#71717a'; c.font = '9px monospace';
+ if(wet&&grid) for(let t=0; t<DUR; t+=grid) { c.beginPath(); c.moveTo(t/DUR*w,h-14); c.lineTo(t/DUR*w,h); c.stroke() }
+ marks.forEach((m,i) => { const x=m/DUR*w; c.beginPath(); c.moveTo(x,0); c.lineTo(x,h); c.stroke(); c.fillText('P'+(i+1),x+3,h-4) });
+ c.setLineDash([]); c.fillStyle = wet ? '#ef4444' : '#00bcd4';
+ for(let i=0; i<w; i++) {
+  const t = i/w*DUR; let a = 0;
+  for(const e of ev) { const s=t-e.t; if(s>=0 && s<e.d+.25) a = Math.max(a, (s<.006 ? s/.006 : s<e.d ? 1 : Math.exp(-(s-e.d)/.025)) * level(e)) }
+  const v = mid*.85*a*(.55+.45*n()); c.fillRect(i,mid-v,1,v*2);
+ }
+}
+
+function drawSpec(cv) {
+ const [c,w,h] = size(cv), wet = cv.dataset.wet==='true', C = CFG[cv.dataset.type], {ev,marks} = build(cv.dataset.type,wet), ml = 38, mb = 16, pw = w-ml, ph = h-mb, n = rng(9);
+ const y = f => ph*(1 - Math.log(f/C.lo)/Math.log(C.hi/C.lo)), x = t => ml + t/DUR*pw;
+ c.fillStyle = '#000'; c.fillRect(0,0,w,h);
+ c.font = '9px monospace'; c.textAlign = 'right'; c.textBaseline = 'middle';
+ if(C.semi) for(let k=-12; k<40; k++) { const f=C.semi*Math.pow(2,k/12); if(f<C.lo || f>C.hi) continue; c.fillStyle = k%12 ? 'rgba(255,255,255,.07)' : 'rgba(255,255,255,.2)'; c.fillRect(ml,y(f),pw,1) }
+ C.ax.forEach(([f,l]) => { if(f<C.lo || f>C.hi) return; c.fillStyle = '#555'; c.fillText(l,ml-5,y(f)); c.fillRect(ml-3,y(f),3,1) });
+ c.textAlign = 'center'; c.textBaseline = 'top'; 
+ for(let s=0; s<=DUR; s+=2) { c.fillStyle = '#555'; c.fillRect(x(s),ph,1,3); c.fillText(s+'s',x(s),ph+4) }
+ c.save(); c.beginPath(); c.rect(ml,0,pw,ph); c.clip();
+ if(wet) { c.fillStyle = `rgba(${AMB},.08)`; for(let i=0; i<500; i++) c.fillRect(ml+n()*pw,n()*ph,2,1) }
+ marks.forEach(m => { c.fillStyle = 'rgba(161,161,170,.25)'; c.fillRect(x(m),0,1,ph) });
+ for(const e of ev) for(const [f,a] of spec(e)) {
+  if(f<C.lo || f>C.hi) continue; const al = Math.min(1, Math.pow(a*1.5,.6)); if(al<.07) continue;
+  c.fillStyle = `rgba(${wet?AMB:CYA},${al})`; c.fillRect(x(e.t),y(f)-1,Math.max(2,(e.d+.04)/DUR*pw),2);
+ }
  c.restore();
 }
-const drawAll=()=>{document.querySelectorAll('canvas.waveform').forEach(drawWave);document.querySelectorAll('canvas.spectrogram').forEach(drawSpec)};
-drawAll();
-addEventListener('load',()=>{drawAll();setTimeout(drawAll,400)});
-addEventListener('resize',drawAll);
-if(window.ResizeObserver){const ro=new ResizeObserver(()=>{clearTimeout(ro.t);ro.t=setTimeout(drawAll,60)});document.querySelectorAll('canvas').forEach(c=>ro.observe(c.parentElement))}
 
-/* ---------- AUDIO ---------- */
-let ctx=null,nodes=[],raf=null;
-function stopAll(){
- if(ctx){nodes.forEach(o=>{try{o.stop()}catch(e){}try{o.disconnect()}catch(e){}});nodes=[];ctx.close();ctx=null}
- if(raf){cancelAnimationFrame(raf);raf=null}
- document.querySelectorAll('.play-btn').forEach(b=>{b.dataset.playing='false';b.querySelector('.i-play').classList.remove('hidden');b.querySelector('.i-stop').classList.add('hidden');b.parentElement.querySelector('.timer').textContent='0:00'});
- document.querySelectorAll('.playhead').forEach(p=>p.style.display='none');
-}
-function play(btn){
- if(btn.dataset.playing==='true')return stopAll();
- stopAll();
- const type=btn.dataset.type,wet=btn.dataset.wet==='true';
- ctx=new(window.AudioContext||window.webkitAudioContext)();
- const t0=ctx.currentTime+.05,master=ctx.createGain(),cache={};master.gain.value=.28;master.connect(ctx.destination);nodes.push(master);
- for(const e of build(type,wet).ev){
-  const k=e.w+e.pw;
-  if(!cache[k]){const re=new Float32Array(41),im=new Float32Array(41);for(let i=1;i<=40;i++){if(e.w==='saw')im[i]=1/i;else re[i]=2*Math.sin(i*Math.PI*e.pw)/i}cache[k]=ctx.createPeriodicWave(re,im)}
-  const o=ctx.createOscillator(),f=ctx.createBiquadFilter(),g=ctx.createGain(),s=t0+e.t,L=level(e);
-  o.setPeriodicWave(cache[k]);o.frequency.value=e.f;f.type='lowpass';f.frequency.value=e.fc;f.Q.value=e.q;
-  g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(L,s+.006);g.gain.setValueAtTime(L,s+e.d);g.gain.linearRampToValueAtTime(0,s+e.d+.07);
-  o.connect(f);f.connect(g);g.connect(master);o.start(s);o.stop(s+e.d+.1);nodes.push(o,f,g);
+const drawAll = () => { document.querySelectorAll('canvas.waveform').forEach(drawWave); document.querySelectorAll('canvas.spectrogram').forEach(drawSpec) };
+drawAll();
+addEventListener('load', () => { drawAll(); setTimeout(drawAll,400) });
+addEventListener('resize', drawAll);
+if(window.ResizeObserver) { const ro = new ResizeObserver(() => { clearTimeout(ro.t); ro.t=setTimeout(drawAll,60) }); document.querySelectorAll('canvas').forEach(c=>ro.observe(c.parentElement)) }
+
+/* ---------- AUDIO ENGINE ---------- */
+let ctx = null, nodes = [], raf = null;
+
+function stopAll() {
+ if (ctx) {
+  nodes.forEach(o => { try{ o.stop() }catch(e){} try{ o.disconnect() }catch(e){} });
+  nodes = []; ctx.close(); ctx = null;
  }
- btn.dataset.playing='true';btn.querySelector('.i-play').classList.add('hidden');btn.querySelector('.i-stop').classList.remove('hidden');
- const timer=btn.parentElement.querySelector('.timer'),heads=[...btn.closest('.flex-col.gap-4').querySelectorAll('.playhead')];
- heads.forEach(p=>p.style.display='block');
- (function tick(){
-  if(!ctx||btn.dataset.playing!=='true')return;
-  const el=Math.max(0,ctx.currentTime-t0);if(el>=DUR)return stopAll();
-  timer.textContent='0:'+String(Math.floor(el)).padStart(2,'0');
-  heads.forEach(p=>p.style.left=p.dataset.c==='spectrogram'?`calc(38px + (100% - 38px) * ${el/DUR})`:`${el/DUR*100}%`);
-  raf=requestAnimationFrame(tick);
+ if (raf) { cancelAnimationFrame(raf); raf = null; }
+ document.querySelectorAll('.play-btn').forEach(b => {
+  b.dataset.playing = 'false';
+  b.querySelector('.i-play').classList.remove('hidden');
+  b.querySelector('.i-stop').classList.add('hidden');
+  b.parentElement.querySelector('.timer').textContent = '0:00';
+ });
+ document.querySelectorAll('.playhead').forEach(p => p.style.display = 'none');
+}
+
+function play(btn) {
+ if (btn.dataset.playing === 'true') return stopAll();
+ stopAll();
+ 
+ const type = btn.dataset.type, wet = btn.dataset.wet === 'true';
+ const AudioContext = window.AudioContext || window.webkitAudioContext;
+ ctx = new AudioContext();
+ 
+ // Force resume for restrictive modern browsers
+ if (ctx.state === 'suspended') ctx.resume();
+
+ const t0 = ctx.currentTime + 0.05, master = ctx.createGain(), cache = {};
+ master.gain.value = 0.28; 
+ master.connect(ctx.destination); 
+ nodes.push(master);
+
+ for (const e of build(type,wet).ev) {
+  const k = e.w + e.pw;
+  if (!cache[k]) {
+   const re = new Float32Array(41), im = new Float32Array(41);
+   for (let i=1; i<=40; i++) {
+    if (e.w === 'saw') im[i] = 1/i;
+    else re[i] = 2 * Math.sin(i * Math.PI * e.pw) / i;
+   }
+   cache[k] = ctx.createPeriodicWave(re, im);
+  }
+  const o = ctx.createOscillator(), f = ctx.createBiquadFilter(), g = ctx.createGain(), s = t0 + e.t, L = level(e);
+  
+  o.setPeriodicWave(cache[k]);
+  o.frequency.value = e.f;
+  f.type = 'lowpass';
+  f.frequency.value = e.fc;
+  f.Q.value = e.q;
+  
+  // Bulletproof gain envelope (prevents silent glitches in Safari)
+  g.gain.setValueAtTime(0, s);
+  g.gain.linearRampToValueAtTime(L, s + 0.006);
+  g.gain.linearRampToValueAtTime(L, s + e.d);     // Explicitly anchor before release
+  g.gain.linearRampToValueAtTime(0, s + e.d + 0.07);
+  
+  o.connect(f); f.connect(g); g.connect(master);
+  o.start(s); o.stop(s + e.d + 0.1);
+  nodes.push(o, f, g);
+ }
+
+ btn.dataset.playing = 'true';
+ btn.querySelector('.i-play').classList.add('hidden');
+ btn.querySelector('.i-stop').classList.remove('hidden');
+ 
+ const timer = btn.parentElement.querySelector('.timer');
+ const heads = [...btn.closest('.flex-col.gap-4').querySelectorAll('.playhead')];
+ heads.forEach(p => p.style.display = 'block');
+
+ (function tick() {
+  if (!ctx || btn.dataset.playing !== 'true') return;
+  const el = Math.max(0, ctx.currentTime - t0);
+  if (el >= DUR) return stopAll();
+  timer.textContent = '0:' + String(Math.floor(el)).padStart(2,'0');
+  heads.forEach(p => {
+    p.style.left = p.dataset.c === 'spectrogram' ? `calc(38px + (100% - 38px) * ${el/DUR})` : `${el/DUR*100}%`;
+  });
+  raf = requestAnimationFrame(tick);
  })();
 }
-document.querySelectorAll('.play-btn').forEach(b=>b.addEventListener('click',()=>play(b)));
+
+document.querySelectorAll('.play-btn').forEach(b => b.addEventListener('click', () => play(b)));
 </script>
 </body>
 </html>
