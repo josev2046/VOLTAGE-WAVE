@@ -89,7 +89,8 @@
     </style>
 </head>
 <body class="antialiased relative selection:bg-red-500 selection:text-zinc-950">
-    <div class="scanlines fixed inset-0"></div>
+    <!-- FIX: Added pointer-events-none to the base scanlines wrapper to let clicks pass through -->
+    <div class="scanlines fixed inset-0 pointer-events-none z-50"></div>
 
     <!-- NAVIGATION -->
     <nav class="fixed w-full z-40 top-0 bg-[#050505]/90 backdrop-blur-md border-b border-zinc-800">
@@ -113,7 +114,7 @@
 
     <!-- HEADER -->
     <section class="relative pt-32 pb-16 overflow-hidden border-b border-zinc-800 bg-[#0a0a0c]">
-        <div class="absolute inset-0 bg-synth-grid [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
+        <div class="absolute inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="reveal mb-12">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 font-mono text-xs mb-6">
@@ -231,23 +232,23 @@
      let o = `<defs><marker id="r${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ef4444"/></marker><marker id="c${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00bcd4"/></marker></defs>`;
      p.cv.forEach(c => { o += `<path d="M${c.x} 70V96H${mx(c.to)}V123" fill="none" stroke="#00bcd4" stroke-width="2" stroke-dasharray="4" marker-end="url(#c${m})"/>`+box(c.x,20,170,c.t,c.s,'#00bcd4') });
      MAIN.forEach((b,i) => { o += box(mx(i),125,170,b[0],b[1],i?'#52525b':'#ef4444'); if(i<2) o+=`<path d="M${mx(i)+85} 150H${mx(i+1)-85}" stroke="#ef4444" stroke-width="2" marker-end="url(#r${m})"/>` });
-     return `<svg viewBox="0 0 800 190" class="w-full min-w-[600px] h-auto" xmlns="http://www.w3.org/2000/svg">${o}</svg>`;
+     return `<svg viewBox="0 0 800 190" class="w-full min-w-[600px] h-auto pointer-events-none" xmlns="http://www.w3.org/2000/svg">${o}</svg>`;
     }
 
     function col(p,wet) {
      const d=wet?p.wet:p.dry, b=wet?'#301010':'#222', k=wet?'text-red-500':'text-zinc-400', ph=wet?'bg-red-400 shadow-[0_0_5px_red]':'bg-zinc-300 shadow-[0_0_5px_white]';
-     const cv = (c,l) => `<canvas style="position:absolute;inset:0;width:100%;height:100%" class="${c}" data-type="${p.type}" data-wet="${wet}"></canvas><div class="playhead absolute top-0 bottom-0 w-[2px] ${ph} z-20" data-c="${c}" style="left:0;display:none"></div><div class="absolute top-2 left-2 text-[9px] font-mono text-zinc-400 z-10 bg-black/50 px-1">${l}</div>`;
+     const cv = (c,l) => `<canvas style="position:absolute;inset:0;width:100%;height:100%" class="${c} pointer-events-none" data-type="${p.type}" data-wet="${wet}"></canvas><div class="playhead absolute top-0 bottom-0 w-[2px] ${ph} z-20 pointer-events-none" data-c="${c}" style="left:0;display:none"></div><div class="absolute top-2 left-2 text-[9px] font-mono text-zinc-400 z-10 bg-black/50 px-1 pointer-events-none">${l}</div>`;
      return `<div class="flex flex-col gap-4">
      <div class="analysis-card border p-4 rounded flex flex-col" style="border-color:${b}">
       <div class="relative bg-black h-36 border w-full mb-4 overflow-hidden" style="border-color:${b};position:relative;height:144px;width:100%">${cv('waveform',d[0].toUpperCase())}</div>
       <h3 class="font-mono text-sm font-bold ${k} uppercase tracking-widest mb-2">${wet?'Hardware Return':'Reference'}</h3>
       <p class="text-xs text-zinc-500 leading-relaxed mb-6">${d[1]}</p>
       <div class="mt-auto flex items-center border-t pt-4" style="border-color:${b}">
-       <button aria-label="Play or stop ${wet?'hardware return':'reference'}" class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-sm border ${wet?'border-red-900/50 bg-red-950/20 text-red-500 hover:bg-red-900/40':'border-zinc-700 bg-zinc-800/30 text-zinc-300 hover:bg-zinc-700/50'} transition-colors" data-type="${p.type}" data-wet="${wet}">
-        <svg class="w-4 h-4 ml-0.5 icon-play" fill="currentColor" viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>
-        <svg class="w-4 h-4 icon-stop hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+       <button aria-label="Play or stop ${wet?'hardware return':'reference'}" class="play-btn relative z-10 w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-sm border ${wet?'border-red-900/50 bg-red-950/20 text-red-500 hover:bg-red-900/40':'border-zinc-700 bg-zinc-800/30 text-zinc-300 hover:bg-zinc-700/50'} transition-colors cursor-pointer" data-type="${p.type}" data-wet="${wet}">
+        <svg class="w-4 h-4 ml-0.5 icon-play pointer-events-none" fill="currentColor" viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>
+        <svg class="w-4 h-4 icon-stop hidden pointer-events-none" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
        </button>
-       <div class="flex-1 flex items-center font-mono text-[10px] text-zinc-500 uppercase tracking-widest ml-4"><span>${wet?'Hardware Return':'Digital Source'}</span><div class="flex-1 border-b mx-3" style="border-color:${b}"></div><span class="timer w-8 text-right">0:00</span></div>
+       <div class="flex-1 flex items-center font-mono text-[10px] text-zinc-500 uppercase tracking-widest ml-4 pointer-events-none"><span>${wet?'Hardware Return':'Digital Source'}</span><div class="flex-1 border-b mx-3" style="border-color:${b}"></div><span class="timer w-8 text-right">0:00</span></div>
       </div>
      </div>
      <div class="analysis-card border p-4 rounded" style="border-color:${b}">
@@ -257,7 +258,7 @@
     }
 
     document.getElementById('protocols').innerHTML = P.map((p,i) => `
-    <section id="${p.id}" class="py-20 border-b border-zinc-800 ${i%2?'bg-zinc-900':'bg-[#0a0a0c]'} scroll-mt-16">
+    <section id="${p.id}" class="py-20 border-b border-zinc-800 ${i%2?'bg-zinc-900':'bg-[#0a0a0c]'} scroll-mt-16 relative z-10">
      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center gap-3 mb-2"><span class="text-red-500 font-mono font-bold text-xl">P-${p.n}</span><h2 class="text-2xl font-bold text-white uppercase tracking-wide">${p.title}</h2></div>
       <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest mb-5"><span class="border border-zinc-700 text-zinc-500 px-2 py-1">Hardware: Korg SQ-10</span><span class="border border-red-500/30 bg-red-500/10 text-red-400 px-2 py-1">${p.chip}</span>${p.bench?'<span class="border border-amber-500/40 bg-amber-500/10 text-amber-400 px-2 py-1">Confirm on bench</span>':''}</div>
@@ -269,7 +270,7 @@
      </div>
     </section>`).join('');
 
-    document.getElementById('jump').innerHTML = P.map(p => `<a href="#${p.id}" class="border border-zinc-700 px-3 py-1.5 text-zinc-400 hover:text-red-500 hover:border-red-500/50 transition-colors">P-${p.n} ${p.title}</a>`).join('');
+    document.getElementById('jump').innerHTML = P.map(p => `<a href="#${p.id}" class="border border-zinc-700 px-3 py-1.5 text-zinc-400 hover:text-red-500 hover:border-red-500/50 transition-colors relative z-10 cursor-pointer">P-${p.n} ${p.title}</a>`).join('');
 
     /* ---------- VISUALS ---------- */
     const AMB='255,235,59', CYA='0,188,212';
@@ -380,7 +381,6 @@
       const s = t0 + e.t;
       const L = level(e);
       
-      // Standard robust oscillator types
       o.type = (e.w === 'pulse' || e.w === 'square') ? 'square' : 'sawtooth';
       o.frequency.value = e.f;
       
@@ -428,7 +428,6 @@
      })();
     }
 
-    // Delegated click handler for robust play button listening
     document.addEventListener('click', (e) => {
         const btn = e.target.closest('.play-btn');
         if (btn) {
@@ -436,7 +435,6 @@
         }
     });
 
-    // Scroll reveal observer
     document.addEventListener("DOMContentLoaded", () => {
         const reveals = document.querySelectorAll('.reveal');
         const observer = new IntersectionObserver((entries) => {
