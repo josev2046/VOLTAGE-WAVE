@@ -165,7 +165,7 @@ document.getElementById('jump').innerHTML=P.map(p=>`<a href="#${p.id}" class="bo
 
 /* ---------- VISUALS ---------- */
 const AMB='255,235,59',CYA='0,188,212';
-function size(cv){const r=cv.parentElement.getBoundingClientRect(),d=window.devicePixelRatio||1;if(!r.width||!r.height){r.width=r.width||300;r.height=r.height||150}cv.width=r.width*d;cv.height=r.height*d;const c=cv.getContext('2d');c.scale(d,d);return[c,r.width,r.height]}
+function size(cv){const r=cv.parentElement.getBoundingClientRect(),d=window.devicePixelRatio||1,W=r.width||300,H=r.height||150;cv.width=W*d;cv.height=H*d;const c=cv.getContext('2d');c.scale(d,d);return[c,W,H]}
 function drawWave(cv){
  const[c,w,h]=size(cv),wet=cv.dataset.wet==='true',{ev,marks,grid}=build(cv.dataset.type,wet),n=rng(5),mid=h/2;
  c.fillStyle='#000';c.fillRect(0,0,w,h);
