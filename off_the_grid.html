@@ -132,10 +132,10 @@ function schem(p){
 }
 function col(p,wet){
  const d=wet?p.wet:p.dry,b=wet?'#301010':'#222',k=wet?'text-red-500':'text-zinc-400',ph=wet?'bg-red-400 shadow-[0_0_5px_red]':'bg-zinc-300 shadow-[0_0_5px_white]';
- const cv=(c,l)=>`<canvas class="w-full h-full absolute inset-0 ${c}" data-type="${p.type}" data-wet="${wet}"></canvas><div class="playhead absolute top-0 bottom-0 w-[2px] ${ph} z-20" data-c="${c}" style="left:0;display:none"></div><div class="absolute top-2 left-2 text-[9px] font-mono text-zinc-400 z-10 bg-black/50 px-1">${l}</div>`;
+ const cv=(c,l)=>`<canvas style="position:absolute;inset:0;width:100%;height:100%" class="${c}" data-type="${p.type}" data-wet="${wet}"></canvas><div class="playhead absolute top-0 bottom-0 w-[2px] ${ph} z-20" data-c="${c}" style="left:0;display:none"></div><div class="absolute top-2 left-2 text-[9px] font-mono text-zinc-400 z-10 bg-black/50 px-1">${l}</div>`;
  return`<div class="flex flex-col gap-4">
  <div class="card border p-4 rounded flex flex-col" style="border-color:${b}">
-  <div class="relative bg-black h-36 border w-full mb-4 overflow-hidden" style="border-color:${b}">${cv('waveform',d[0].toUpperCase())}</div>
+  <div class="relative bg-black h-36 border w-full mb-4 overflow-hidden" style="border-color:${b};position:relative;height:144px;width:100%">${cv('waveform',d[0].toUpperCase())}</div>
   <h3 class="font-mono text-sm font-bold ${k} uppercase tracking-widest mb-2">${wet?'Hardware Return':'Reference'}</h3>
   <p class="text-xs text-zinc-500 leading-relaxed mb-6">${d[1]}</p>
   <div class="mt-auto flex items-center border-t pt-4" style="border-color:${b}">
@@ -145,7 +145,7 @@ function col(p,wet){
   </div>
  </div>
  <div class="card border p-4 rounded" style="border-color:${b}">
-  <div class="relative bg-black h-48 border w-full mb-4 overflow-hidden" style="border-color:${b}">${cv('spectrogram',(wet?'HARDWARE':'REFERENCE')+' SPECTROGRAM')}</div>
+  <div class="relative bg-black h-48 border w-full mb-4 overflow-hidden" style="border-color:${b};position:relative;height:192px;width:100%">${cv('spectrogram',(wet?'HARDWARE':'REFERENCE')+' SPECTROGRAM')}</div>
   <p class="text-xs text-zinc-500 leading-relaxed">${d[2]}</p>
  </div></div>`;
 }
@@ -165,7 +165,7 @@ document.getElementById('jump').innerHTML=P.map(p=>`<a href="#${p.id}" class="bo
 
 /* ---------- VISUALS ---------- */
 const AMB='255,235,59',CYA='0,188,212';
-function size(cv){const r=cv.parentElement.getBoundingClientRect(),d=window.devicePixelRatio||1;cv.width=r.width*d;cv.height=r.height*d;const c=cv.getContext('2d');c.scale(d,d);return[c,r.width,r.height]}
+function size(cv){const r=cv.parentElement.getBoundingClientRect(),d=window.devicePixelRatio||1;if(!r.width||!r.height){r.width=r.width||300;r.height=r.height||150}cv.width=r.width*d;cv.height=r.height*d;const c=cv.getContext('2d');c.scale(d,d);return[c,r.width,r.height]}
 function drawWave(cv){
  const[c,w,h]=size(cv),wet=cv.dataset.wet==='true',{ev,marks,grid}=build(cv.dataset.type,wet),n=rng(5),mid=h/2;
  c.fillStyle='#000';c.fillRect(0,0,w,h);
@@ -193,7 +193,10 @@ function drawSpec(cv){
  c.restore();
 }
 const drawAll=()=>{document.querySelectorAll('canvas.waveform').forEach(drawWave);document.querySelectorAll('canvas.spectrogram').forEach(drawSpec)};
-drawAll();addEventListener('resize',drawAll);
+drawAll();
+addEventListener('load',()=>{drawAll();setTimeout(drawAll,400)});
+addEventListener('resize',drawAll);
+if(window.ResizeObserver){const ro=new ResizeObserver(()=>{clearTimeout(ro.t);ro.t=setTimeout(drawAll,60)});document.querySelectorAll('canvas').forEach(c=>ro.observe(c.parentElement))}
 
 /* ---------- AUDIO ---------- */
 let ctx=null,nodes=[],raf=null;
