@@ -4,11 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VOLTAGE & WAVE // Analogue Studio</title>
+    <meta name="description" content="Voltage & Wave: authentic analogue hardware processing, and Book One of the Hardware Capabilities Series, Korg MS-10 External Processing by José Velázquez, MA.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Voltage & Wave // Korg MS-10 External Processing (Book One)">
+    <meta property="og:description" content="An engineer's manual for analogue re-amping. Four step-by-step treatment protocols, now on Amazon UK.">
+    <meta property="og:image" content="https://voltageandwave.co.uk/book1-cover.jpg">
+    <meta property="og:url" content="https://voltageandwave.co.uk/">
+    <meta name="twitter:card" content="summary_large_image">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Book",
+      "name": "Korg MS-10 External Processing: An Engineer's Manual for Analogue Re-Amping",
+      "author": { "@type": "Person", "name": "José Velázquez, MA" },
+      "publisher": { "@type": "Organization", "name": "Voltage & Wave" },
+      "isbn": "9798177567976",
+      "bookFormat": "https://schema.org/Paperback",
+      "numberOfPages": 32,
+      "inLanguage": "en-GB",
+      "datePublished": "2026-09-27",
+      "image": "https://voltageandwave.co.uk/book1-cover.jpg",
+      "url": "https://www.amazon.co.uk/dp/B0HLKSNFX1"
+    }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@latest" onerror="this.onerror=null;var f=document.createElement('script');f.src='https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js';f.onload=function(){window.refreshIcons&&window.refreshIcons()};document.head.appendChild(f);"></script>
     
     <script>
         tailwind.config = {
@@ -121,6 +144,7 @@
                 </div>
                 <div class="hidden md:flex space-x-8 font-mono text-sm items-center">
                     <a href="#about" class="text-zinc-400 hover:text-amber-500 transition-colors">ABOUT</a>
+                    <a href="#books" class="text-zinc-400 hover:text-amber-500 transition-colors">BOOKS</a>
                     <a href="#services" class="text-zinc-400 hover:text-amber-500 transition-colors">SERVICES</a>
                     <a href="#arsenal" class="text-zinc-400 hover:text-amber-500 transition-colors">ARSENAL</a>
                     <a href="#protocol" class="text-zinc-400 hover:text-amber-500 transition-colors">PROTOCOL</a>
@@ -156,6 +180,108 @@
                     <a href="#about" class="inline-flex justify-center items-center gap-2 border border-zinc-700 hover:border-zinc-500 text-white px-8 py-4 transition-colors bg-zinc-900/50">
                         STUDIO PHILOSOPHY
                     </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BOOK ANNOUNCEMENT (open on first visit, collapsed on return visits) -->
+    <section id="books" class="py-10 bg-zinc-900 border-y border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="reveal bg-zinc-950 border border-amber-500/30 p-4 sm:p-5 rounded-sm transition-all duration-300">
+
+                <!-- Header & toggle bar (always visible) -->
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                        <span id="book-status-indicator" class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                        <h2 class="font-mono text-sm font-bold text-zinc-300 uppercase tracking-widest">New Release // Book One</h2>
+                        <span class="hidden md:inline font-mono text-xs text-zinc-500">Korg MS-10 External Processing</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <a id="book-mini-buy" href="https://www.amazon.co.uk/dp/B0HLKSNFX1" target="_blank" rel="noopener" style="display:none" class="font-mono text-[10px] uppercase tracking-widest px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold transition-colors">Buy on Amazon UK</a>
+                        <button id="book-toggle-btn" class="font-mono text-[10px] text-zinc-400 hover:text-amber-500 transition-colors uppercase tracking-widest px-3 py-1.5 border border-zinc-800 rounded-sm hover:border-amber-500/50 bg-zinc-900/50 flex items-center gap-2 cursor-pointer" aria-expanded="true" aria-controls="book-wrapper">
+                            <span id="book-toggle-text">Minimise</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Collapsible content -->
+                <div id="book-wrapper" class="mt-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                        <div class="lg:col-span-3">
+                            <a href="https://www.amazon.co.uk/dp/B0HLKSNFX1" target="_blank" rel="noopener" class="group block relative max-w-[14rem] mx-auto" aria-label="View Book One on Amazon UK">
+                                <div class="absolute -inset-6 bg-amber-500/10 blur-3xl rounded-full -z-10"></div>
+                                <img src="book1-cover.jpg" alt="Front cover of Korg MS-10 External Processing, Book One of the Hardware Capabilities Series" loading="lazy"
+                                     width="1093" height="1650"
+                                     class="w-full h-auto border border-zinc-800 shadow-2xl shadow-black transition-transform duration-500 group-hover:-translate-y-2 group-hover:border-amber-500/50">
+                            </a>
+                        </div>
+
+                        <div class="lg:col-span-9">
+                            <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest mb-4">
+                                <span class="border border-amber-500/30 bg-amber-500/10 text-amber-500 px-2 py-1">Hardware Capabilities Series</span>
+                                <span class="border border-zinc-700 text-zinc-500 px-2 py-1">Now available</span>
+                            </div>
+                            <h3 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">Korg MS-10 External Processing</h3>
+                            <p class="text-amber-500 font-mono text-sm mb-5">AN ENGINEER'S MANUAL FOR ANALOGUE RE-AMPING</p>
+                            <p class="text-zinc-400 leading-relaxed mb-6 max-w-2xl">
+                                Digital in. Analogue character out. Route clean digital stems through the Korg MS-10's analogue signal path (VCA, Korg-35 filter, envelope generator, modulation generator and patchbay) and get them back saturated, moving, gated or snapped. A working engineer's manual: repeatable procedures, not one-off recipes.
+                            </p>
+                            <ul class="space-y-2 text-sm text-zinc-400 mb-6 max-w-2xl">
+                                <li class="flex gap-3"><span class="text-amber-500 mt-0.5">■</span> Four step-by-step treatment protocols: saturation, filter dynamics, VCA gating, transient reshaping &amp; lo-fi noise</li>
+                                <li class="flex gap-3"><span class="text-amber-500 mt-0.5">■</span> Routing schematics with waveform and spectrogram references for every treatment</li>
+                                <li class="flex gap-3"><span class="text-amber-500 mt-0.5">■</span> Stem preparation specifications, gain staging and the full hybrid studio signal path</li>
+                                <li class="flex gap-3"><span class="text-amber-500 mt-0.5">■</span> Panel map, troubleshooting index and session log templates</li>
+                            </ul>
+                            <dl class="grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono text-xs mb-6 max-w-2xl border-y border-zinc-800 py-4">
+                                <div><dt class="text-zinc-600 uppercase tracking-widest mb-1">Author</dt><dd class="text-zinc-300">José Velázquez, MA</dd></div>
+                                <div><dt class="text-zinc-600 uppercase tracking-widest mb-1">Published</dt><dd class="text-zinc-300">27 Sep 2026</dd></div>
+                                <div><dt class="text-zinc-600 uppercase tracking-widest mb-1">Format</dt><dd class="text-zinc-300">Paperback, 32 pp</dd></div>
+                                <div><dt class="text-zinc-600 uppercase tracking-widest mb-1">ISBN</dt><dd class="text-zinc-300">9798177567976</dd></div>
+                            </dl>
+                            <div class="flex flex-col sm:flex-row gap-4 font-mono">
+                                <a href="https://www.amazon.co.uk/dp/B0HLKSNFX1" target="_blank" rel="noopener" class="inline-flex justify-center items-center gap-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 px-8 py-4 font-bold transition-all hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]">
+                                    BUY ON AMAZON UK <i data-lucide="external-link" class="w-4 h-4"></i>
+                                </a>
+                                <a href="about.html" class="inline-flex justify-center items-center gap-2 border border-zinc-700 hover:border-amber-500/60 text-white px-8 py-4 transition-colors bg-zinc-950/50">
+                                    <i data-lucide="audio-lines" class="w-4 h-4"></i> HEAR THE DEMOS &amp; COMPANION NOTES
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-10 pt-8 border-t border-zinc-800">
+                        <h4 class="font-mono text-xs text-zinc-500 uppercase tracking-widest mb-4">The series</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-zinc-900 border border-amber-500/30 p-5 rounded-sm">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="font-mono text-xs text-amber-500 uppercase tracking-widest">Book One</span>
+                                    <span class="text-[10px] font-mono text-amber-500 border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 uppercase tracking-widest">Available</span>
+                                </div>
+                                <h5 class="text-white font-bold mb-1">Korg MS-10</h5>
+                                <p class="text-zinc-500 text-sm">External processing and analogue re-amping.</p>
+                            </div>
+                            <div class="bg-zinc-900 border border-zinc-800 p-5 rounded-sm">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="font-mono text-xs text-zinc-400 uppercase tracking-widest">Book Two</span>
+                                    <span class="text-[10px] font-mono text-zinc-400 border border-zinc-700 px-2 py-0.5 uppercase tracking-widest">In development</span>
+                                </div>
+                                <h5 class="text-white font-bold mb-1">Korg SQ-10</h5>
+                                <p class="text-zinc-500 text-sm">Unquantised analogue step-sequencing and MIDI-to-CV translation.</p>
+                            </div>
+                            <div class="bg-zinc-900 border border-zinc-800/60 p-5 rounded-sm opacity-70">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="font-mono text-xs text-zinc-500 uppercase tracking-widest">Book Three</span>
+                                    <span class="text-[10px] font-mono text-zinc-500 border border-zinc-800 px-2 py-0.5 uppercase tracking-widest">Planned</span>
+                                </div>
+                                <h5 class="text-zinc-400 font-bold mb-1">Korg VC-10</h5>
+                                <p class="text-zinc-600 text-sm">Analogue vocoding, once the unit returns from the repair bench.</p>
+                            </div>
+                        </div>
+                        <p class="text-zinc-600 font-mono text-[11px] mt-6">
+                            Korg, MS-10, SQ-10 and VC-10 are trademarks of Korg Inc. Named here descriptively; no affiliation or endorsement implied.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -704,7 +830,11 @@
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-zinc-600 w-5 h-5">
                     <path d="M2 12h4v-7h6v14h6v-7h4"/>
                 </svg>
-                <span class="font-mono text-zinc-600 text-xs tracking-widest">VOLTAGE & WAVE STUDIO | patch@voltageandwave.co.uk</span>
+                <span class="font-mono text-zinc-600 text-xs tracking-widest">
+                    VOLTAGE & WAVE STUDIO | patch@voltageandwave.co.uk |
+                    <a href="#books" class="hover:text-amber-500 transition-colors">BOOKS</a> |
+                    <a href="https://www.amazon.co.uk/dp/B0HLKSNFX1" target="_blank" rel="noopener" class="hover:text-amber-500 transition-colors">BOOK ONE ON AMAZON UK</a>
+                </span>
             </div>
             <p class="text-zinc-600 text-xs font-mono">
                 &copy; <span id="year"></span> Analogue Operations. All rights reserved.
@@ -713,8 +843,59 @@
     </footer>
 
     <script>
-        lucide.createIcons();
+        // Icons are decorative: never let a blocked CDN break the rest of the page.
+        function refreshIcons() { if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons(); }
+        window.refreshIcons = refreshIcons;
+        refreshIcons();
+        window.addEventListener('load', refreshIcons);
         document.getElementById('year').textContent = new Date().getFullYear();
+
+        // --- BOOK ANNOUNCEMENT: open on first visit, collapsed on return visits ---
+        (function () {
+            const wrapper = document.getElementById('book-wrapper');
+            const toggleBtn = document.getElementById('book-toggle-btn');
+            const toggleText = document.getElementById('book-toggle-text');
+            const indicator = document.getElementById('book-status-indicator');
+            const miniBuy = document.getElementById('book-mini-buy');
+            if (!wrapper || !toggleBtn) return;
+
+            const KEY = 'vw_book1_announce_seen';
+            const store = {
+                get() { try { return localStorage.getItem(KEY); } catch (e) { return null; } },
+                set() { try { localStorage.setItem(KEY, 'true'); } catch (e) {} }
+            };
+
+            const minimise = () => {
+                wrapper.style.display = 'none';
+                toggleText.innerText = 'Book One';
+                toggleBtn.setAttribute('aria-expanded', 'false');
+                indicator.classList.remove('bg-amber-500', 'animate-pulse');
+                indicator.classList.add('bg-zinc-600');
+                miniBuy.style.display = '';
+            };
+            const expand = () => {
+                wrapper.style.display = 'block';
+                toggleText.innerText = 'Minimise';
+                toggleBtn.setAttribute('aria-expanded', 'true');
+                indicator.classList.remove('bg-zinc-600');
+                indicator.classList.add('bg-amber-500', 'animate-pulse');
+                miniBuy.style.display = 'none';
+                store.set();
+            };
+
+            // Open on first visit; collapsed on every visit after that.
+            if (store.get()) { minimise(); } else { expand(); }
+
+            toggleBtn.addEventListener('click', () => {
+                if (wrapper.style.display === 'none') { expand(); } else { minimise(); }
+            });
+
+            // Nav / footer "BOOKS" links always reveal the full details.
+            document.querySelectorAll('a[href="#books"]').forEach(a => {
+                a.addEventListener('click', () => { if (wrapper.style.display === 'none') expand(); });
+            });
+            if (location.hash === '#books') expand();
+        })();
 
         const revealElements = document.querySelectorAll('.reveal');
         const revealObserver = new IntersectionObserver((entries, observer) => {
@@ -767,7 +948,7 @@
             submitBtn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> TRANSMITTING...';
             submitBtn.disabled = true;
             submitBtn.classList.add('opacity-75');
-            lucide.createIcons();
+            refreshIcons();
 
             setTimeout(() => {
                 submitBtn.innerHTML = originalBtnHtml;
@@ -775,7 +956,7 @@
                 submitBtn.classList.remove('opacity-75');
                 submitBtn.style.display = 'none';
                 successMsg.classList.remove('hidden');
-                lucide.createIcons();
+                refreshIcons();
                 form.reset();
                 fileList.classList.add('hidden');
                 setTimeout(() => {
