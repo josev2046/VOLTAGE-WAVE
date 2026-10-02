@@ -1,465 +1,314 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SQ-10 TREATMENTS // Voltage & Wave</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    
-    <!-- Pink SQ-10 Theme Configuration -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        pink: {
-                            400: '#f472b6',
-                            500: '#ec4899',
-                            600: '#db2777',
-                            900: '#831843',
-                            950: '#500724',
-                        },
-                        zinc: {
-                            850: '#202022',
-                            900: '#18181b',
-                            950: '#09090b',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <style>
-        body {
-            background-color: #050505;
-            color: #d4d4d8;
-        }
-        
-        /* Pink Scanlines */
-        .scanlines::before {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                        linear-gradient(90deg, rgba(236, 72, 153, 0.04), rgba(236, 72, 153, 0.02), rgba(219, 39, 119, 0.04));
-            z-index: 50;
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
-            opacity: 0.3;
-        }
-
-        .glow-text { text-shadow: 0 0 10px rgba(236, 72, 153, 0.5); }
-
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #09090b; }
-        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #ec4899; }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-
-        /* Pink Synth Grid */
-        .bg-synth-grid {
-            background-image: linear-gradient(to right, rgba(236, 72, 153, 0.07) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(236, 72, 153, 0.07) 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
-        
-        @keyframes analog-glitch {
-            0% { transform: translate(0) }
-            20% { transform: translate(-2px, 1px); color: #ec4899; text-shadow: 2px 0 #db2777; }
-            40% { transform: translate(-1px, -1px) }
-            60% { transform: translate(2px, 1px); text-shadow: -2px 0 #db2777; }
-            80% { transform: translate(1px, -1px) }
-            100% { transform: translate(0) }
-        }
-        .glitch-hover:hover { animation: analog-glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite; }
-
-        .analysis-card { background-color: #0c0c0e; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQ-10 TREATMENTS // Voltage & Wave</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif'],mono:['JetBrains Mono','monospace']},colors:{pink:{400:'#f472b6',500:'#ec4899',600:'#db2777',900:'#831843',950:'#500724'},zinc:{850:'#202022',900:'#18181b',950:'#09090b'}}}}}
+</script>
+<style>
+body{background:#050505;color:#d4d4d8}
+.scanlines::before{content:" ";display:block;position:absolute;inset:0;background:linear-gradient(rgba(18,16,16,0) 50%,rgba(0,0,0,.25) 50%),linear-gradient(90deg,rgba(236,72,153,.04),rgba(236,72,153,.02),rgba(219,39,119,.04));z-index:50;background-size:100% 2px,3px 100%;pointer-events:none;opacity:.3}
+.glow-text{text-shadow:0 0 10px rgba(236,72,153,.5)}
+.bg-synth-grid{background-image:linear-gradient(to right,rgba(236,72,153,.07) 1px,transparent 1px),linear-gradient(to bottom,rgba(236,72,153,.07) 1px,transparent 1px);background-size:40px 40px}
+.analysis-card{background:#0c0c0e}
+</style>
 </head>
 <body class="antialiased relative selection:bg-pink-500 selection:text-zinc-950">
-    <div class="scanlines fixed inset-0 pointer-events-none z-50"></div>
+<div class="scanlines fixed inset-0 pointer-events-none z-50"></div>
+<nav class="fixed w-full z-40 top-0 bg-[#050505]/90 backdrop-blur-md border-b border-zinc-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="flex justify-between items-center h-16">
+<a href="index.html" class="flex items-center gap-3">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" class="text-pink-500 w-6 h-6"><path d="M2 12h4v-7h6v14h6v-7h4"/></svg>
+<span class="font-mono font-bold text-white tracking-widest hidden sm:block">VOLTAGE & WAVE</span></a>
+<a href="index.html" class="font-mono text-sm text-zinc-400 hover:text-pink-500 transition-colors">← RETURN</a>
+</div></div></nav>
 
-    <!-- NAVIGATION -->
-    <nav class="fixed w-full z-40 top-0 bg-[#050505]/90 backdrop-blur-md border-b border-zinc-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <a href="index.html" class="flex-shrink-0 flex items-center gap-3 cursor-pointer glitch-hover">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-pink-500 w-6 h-6">
-                        <path d="M2 12h4v-7h6v14h6v-7h4"/>
-                    </svg>
-                    <span class="font-mono font-bold text-white tracking-widest hidden sm:block">VOLTAGE & WAVE</span>
-                </a>
-                <div class="flex space-x-8 font-mono text-sm items-center">
-                    <a href="index.html" class="text-zinc-400 hover:text-pink-500 transition-colors flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-                        RETURN
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
+<section class="relative pt-32 pb-16 overflow-hidden border-b border-zinc-800 bg-[#0a0a0c]">
+<div class="absolute inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-pink-500/30 bg-pink-500/10 text-pink-500 font-mono text-xs mb-6"><span class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>HARDWARE CAPABILITIES // SQ-10 // BOOK TWO</div>
+<h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4 uppercase">Off the <span class="text-pink-500 glow-text">Grid</span></h1>
+<p class="text-lg text-zinc-400 max-w-2xl font-light mb-8">The Korg SQ-10 makes no sound. It sends the MS-10 three control voltages per step, with continuous knobs and an internal clock that is not synced to anything (in Stepped mode it can take an external clock at the STEP jack). Below, all twelve protocols from the book in four groups (pitch, time, timbre and hybrid stem work), each with an exaggerated A/B you can hear.</p>
+<div class="max-w-2xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 mb-8 text-sm text-zinc-300 leading-relaxed"><strong class="text-amber-400 font-mono uppercase tracking-widest text-xs">Read this first: you are meant to experiment.</strong><br>This is a 1978 analogue sequencer: knobs drift, units differ and the manuals leave some details open. Where you see a <span class="font-mono text-amber-400 text-xs uppercase">Confirm on bench</span> flag, that is a place the documentation stops and your own unit takes over. Treat it as an invitation: try the patch, listen, and check with a tuner or scope. What you find is part of the method, and your results belong in the session log.</div>
+<nav id="jump" class="flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-widest"></nav>
+</div></section>
 
-    <!-- HEADER -->
-    <section class="relative pt-32 pb-16 overflow-hidden border-b border-zinc-800 bg-[#0a0a0c]">
-        <div class="absolute inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="reveal mb-12">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-pink-500/30 bg-pink-500/10 text-pink-500 font-mono text-xs mb-6">
-                    <span class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>
-                    HARDWARE CAPABILITIES // SQ-10 // BOOK TWO
-                </div>
-                <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4 uppercase">
-                    Off the <span class="text-pink-500 glow-text">Grid</span>
-                </h1>
-                <p class="text-lg text-zinc-400 max-w-2xl font-light mb-8">
-                    The Korg SQ-10 makes no sound. It sends the MS-10 three control voltages per step, with continuous knobs and a free-running clock. Below, each protocol from the book, with an exaggerated A/B you can hear.
-                </p>
-                <nav id="jump" class="flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-widest"></nav>
-            </div>
-        </div>
-    </section>
+<main id="protocols"></main>
 
-    <main id="protocols"></main>
+<footer class="py-8 border-t border-zinc-800 bg-[#050505]"><div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+<p class="font-mono text-[10px] text-zinc-600 uppercase tracking-widest leading-relaxed max-w-3xl mx-auto">Audio, waveforms and spectrograms are generated in the browser from the same note data. They illustrate each treatment and are not hardware captures; real captures replace them once recorded. In P-10 and P-11 synth tones stand in for the DAW stem.</p>
+</div></footer>
 
-    <!-- AUTHOR'S NOTE -->
-    <footer class="py-8 border-t border-zinc-800 bg-[#050505]">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal active">
-            <p class="font-mono text-[10px] text-zinc-600 uppercase tracking-widest leading-relaxed max-w-3xl mx-auto">
-                Audio, waveforms and spectrograms are generated in the browser from the same note data. They illustrate each treatment and are not hardware captures; real captures replace them once recorded. Items marked CONFIRM ON BENCH are assumptions in the demo, not measured facts.
-            </p>
-        </div>
-    </footer>
+<script>
+/* ---------- CONTENT ---------- */
+const M1=[['KORG MS-10','VCO + VCF + EG'],['PAN 02 → 4i4','DI to interface'],['HARDWARE RETURN','recorded in DAW']];
+const M2=[['DAW STEM','→ EXT SIGNAL IN'],['KORG MS-10','VCF + VCA'],['HARDWARE RETURN','PAN 02 → 4i4 → DAW']];
+const mk=(type,g,title,chip,notes,cv,dry,wet,check,bench,main)=>({type,g,title,chip,notes,dry,wet,check,bench,main:main||M1,cv:cv.map((c,i)=>({t:c[0],s:c[1],x:110+i*200,to:c[2]||0}))});
+const P=[
+mk('loop','Pitch','Free-Running Pitch Loop','Channel A / Multiple Trig / VC Clock',
+ 'A repeating 12-note figure played by the hardware, not programmed on a grid. Channel A sets each step\'s pitch, Multiple Trig Out fires the MS-10 envelope, and the internal clock (not synced to anything) steps through it. Each pass differs slightly in timing and pitch.',
+ [['CHANNEL A','12 pitches'],['MULTIPLE TRIG','every step'],['VC CLOCK','internal, unsynced']],
+ ['Grid reference (DAW soft-synth)','Equal-tempered pitches, identical timing every pass.','Same spectral ridges on every pass, locked to the grid.'],
+ ['SQ-10 → MS-10 hardware return','A 12-step pattern that is steady but not sample-identical between passes.','Pass starts wander and the pitch ridges shift slightly between passes.'],
+ 'Compare successive loop passes in the waveform. Passes that align perfectly suggest the return is not the hardware.'),
+mk('tune','Pitch','Rough-and-Fine Tuning','Channel A / Channel B / Analog Mixer',
+ 'Channel A (±5V) sets rough pitch, Channel B (±1V) trims it, and the analog mixer adds the two before the MS-10 pitch input, as Korg intended. A quantising MIDI-to-CV route cannot make intervals between semitones; the continuous knobs can. On the MS-10\'s linear Hz/V jack (VCO CV IN) the same Channel B offset gives a different number of cents in each register, so each step is trimmed against a tuner.',
+ [['CH A ±5V','rough → IN 1'],['CH B ±1V','fine → IN 2'],['ANALOG MIXER','OUT → VCO CV IN']],
+ ['Tuned to reference','Each step within a few cents of its target.','Every line sits on the semitone grid.'],
+ ['Extreme micro-detuned via Channel B','Pushed completely off the 12TET semitone grid.','Lines sit aggressively between the grid lines.'],
+ 'Overlay a semitone grid on the spectrogram. Tuned steps sit on it; detuned steps sit between the lines. If every step lands on the grid, fine adjustment is not reaching the oscillator.',
+ 'The demo shows the tuned result, not the voltages. Korg\'s examples patch pitch into VCO CV IN, or VCO FREQ IN (keyboard sets the key and transposes). Cents are constant only on the FREQ jack (octave per volt, rated ±3V; use the ±1V range on A and B; Korg\'s service set-up has FM EG/EXT at 2 to 4); on VCO CV IN (Hz/V) tune by ear. Confirm Channel B centre = 0V.'),
+mk('micro','Pitch','Microtonal Scales','Channel A / Channel B / Tuning Tables',
+ 'A scale outside 12-tone equal temperament. Channel A rounds each step to the nearest semitone and Channel B offsets it toward the target cents. Tune each step against a tuner: on VCO CV IN (Hz/V) the offset needed differs by register. The demo plays a major scale in just intonation, with the offsets exaggerated ×3.',
+ [['CH A ±5V','nearest semitone'],['CH B ±1V','cents offset'],['ANALOG MIXER','OUT → VCO CV IN']],
+ ['12-TET major scale','Every step on the semitone grid.','Lines sit exactly on the grid.'],
+ ['Just-intonation scale (offsets ×3)','Steps pulled off the grid by the table offsets.','Thirds and sixths sit between the grid lines.'],
+ 'Check each step against the tuning table (Appendix A) on a tuner. If steps stay on the grid, Channel B is not reaching the oscillator.',
+ 'The demo shows the tuned result. On the FREQ jack (octave per volt) 1V = 1200 cents, so table offsets map to voltages; on VCO CV IN the offsets are set by ear.'),
+mk('glide','Pitch','Portamento Lines','Channel A / Portamento A',
+ 'Portamento A smooths the step-to-step voltage change, so each step slides into the next instead of jumping. Duty keeps the gates separate when you want them to be.',
+ [['CHANNEL A','12 pitches'],['PORTAMENTO A','glide time'],['MULTIPLE TRIG','as P-01']],
+ ['No portamento','Discrete pitch steps with gaps between them.','Separate blocks at each pitch.'],
+ ['Portamento raised','Pitch slides continuously from step to step.','Ridges slope between steps.'],
+ 'Look for slanted lines between steps in the spectrogram. Flat steps mean portamento is still at minimum.',
+ 'Demo assumes a linear glide in pitch.'),
+mk('warp','Time','Warped Time','Channel C / VC Clock',
+ 'Channel C patched into the clock\'s ÷2/V input stretches step time (each 1V doubles it), so a regular loop is pushed and pulled with no swing template. The pitch sequence is untouched.',
+ [['CHANNEL C','0 to +5V'],['CLOCK ÷2/V','lag per step'],['CH A + TRIG','as P-01']],
+ ['Fixed clock','Evenly spaced onsets, identical intervals.','Notes evenly spaced across the pass.'],
+ ['Channel C on the clock','Unequal onset spacing that swings wildly every loop.','Same pitches, aggressively uneven spacing.'],
+ 'Measure the gaps between successive onsets. The fixed clock gives equal gaps; the warped pass gives a repeating unequal set every 12 steps.',
+ 'Korg says Channel C into the clock varies step spacing and note length, but not which step\'s voltage governs which interval; the demo assumes the one that follows. Duty also sets how long Channel C is present within each step. Log it per take.'),
+mk('clock','Time','Self-Clocking Loops','Channel C / VC Clock (feedback)',
+ 'Channel C patched back into the clock\'s ×2/V input, so the sequence sets its own tempo. The loop rushes and relaxes by itself, identically every cycle.',
+ [['CHANNEL C','0 to +5V'],['CLOCK ×2/V','rush per step'],['CH A + TRIG','as P-01']],
+ ['Open loop','Fixed clock, equal gaps.','Notes evenly spaced.'],
+ ['Self-clocked','Gaps shrink then recover every loop.','Onsets bunch up mid-loop and relax.'],
+ 'Measure onset gaps across one loop. The same accelerating-then-relaxing set should recur every cycle.',
+ 'Demo assumes a step\'s voltage governs the interval after it. Keep Channel C low to avoid runaway (each 1V doubles the speed; 5V is 32×).'),
+mk('poly','Time','Polymeter via RESET IN','Trig Outs / Reset In',
+ 'A Trig Out patched into RESET IN cuts the loop short: the sequence returns to step 1 after the patched step, so Trig Out 5 gives a 5-step loop (Korg\'s service test covers Trig Outs 1 to 11). A 5-step SQ-10 line runs against a 12-step phrase and the two realign only after 60 steps.',
+ [['TRIG OUT 5','→ RESET IN'],['CHANNEL A','5 pitches'],['MULTIPLE TRIG','as P-01']],
+ ['12-step loop alone','One phrase, locked pass to pass.','Same ridges every pass.'],
+ ['5 against 12','The short loop drifts against the long phrase.','The upper line repeats every 5 steps while the lower repeats every 12.'],
+ 'Mark where both loops start together. They realign only once, at step 60.',
+ ''),
+mk('filt','Timbre','Stepped Filter, Free-Running','Channel B / Korg-35 VCF / VC Clock',
+ 'Channel B drives cutoff step by step while the internal clock runs unsynced, so timbre moves in a pattern that is not locked to any grid.',
+ [['CHANNEL A','12 pitches'],['CH B → VCF','cutoff per step'],['MULTIPLE TRIG','as P-01']],
+ ['Fixed cutoff','Constant brightness.','Same harmonic content every note.'],
+ ['Per-step cutoff','Brightness steps note by note with loose timing.','Harmonic height changes per note; onsets land slightly early or late.'],
+ 'Compare brightness note by note. Timing should drift between passes while the 12-step timbre pattern holds.',
+ 'The VCF control input is octave per volt (listed as 2 OCT/V, ±5V in the service manual; confirm by ear), so start Channel B on the ±1V range. The demo\'s cutoff swing is exaggerated.'),
+mk('series','Timbre','24-Step Series Mode','Series Modes / Channel A / Channel B',
+ 'With rows A and B in series the SQ-10 plays a 24-step phrase, so the figure takes twice as long to repeat.',
+ [['CH A 1–12','first half'],['CH B 1–12','second half'],['A OUT','per Korg table']],
+ ['12-step loop','Repeats every 12 notes.','The pattern repeats at 12.'],
+ ['24-step series','A different second half; repeats at 24.','The second half sits on different pitches before the pass restarts.'],
+ 'Count the notes between repeats: 12 on the reference, 24 on the series pass.',
+ 'Korg\'s own 24-note example takes the line from A OUT with knobs set A 1 to 12 then B 1 to 12. Its output table lists "A only", "B only" and "A and B together" per mode, and there is no jack called SERIES OUT. Channel C runs its 12 values twice across the 24 steps. Verify by ear which jack carries which steps.'),
+mk('stem','Hybrid','Stepped Filter on a Stem','DAW Stem / Ext Signal In / Channel A → VCF',
+ 'A clean DAW stem enters the MS-10 through Ext Signal In while Channel A moves the filter cutoff per step. Same timing as the dry stem; only the filtering changes. The MS-10 VCA is hard-wired to the EG, so the stem is heard only while a gate is held (play a key or patch a trigger). The demo uses a synth riff as a stand-in for the stem.',
+ [['CHANNEL A','cutoff per step',1],['EXT LEVEL','stem gain, 3Vpp max',1],['EG GATE','needed to open VCA',1]],
+ ['Dry stem','The riff unfiltered.','Constant brightness.'],
+ ['Stepped-filter return','The same riff with cutoff leaping per step.','Brightness changes per step; timing matches the dry stem.'],
+ 'Timing should match the dry stem exactly; only the harmonic content per step differs.',
+ 'Ext Signal In is rated 3Vpp max with a level knob, so it does not pass at unity. The VCO also sums with the stem and cannot be switched off; judge the return for VCO bleed. The demo shows the filtered stem only.',M2),
+mk('gate','Hybrid','Rhythmic VCA Gating on a Stem','DAW Stem / Ext Signal In / Multiple Trig / EG',
+ 'A sustained DAW pad runs through the VCA while the SQ-10 Multiple Trig Out chops it with the EG: rhythmic gating on steps that are not locked to the DAW grid. The stem is audible only while the EG is open. The demo uses synth tones as a stand-in for the pad.',
+ [['MULTIPLE TRIG','→ EG TRIG IN',1],['DUTY','gate length',1],['CLOCK','internal, unsynced',1]],
+ ['Sustained pad','Unbroken tones.','Long continuous bands.'],
+ ['Gated return','The pad chopped into short, loose pulses.','Bands break into short blocks.'],
+ 'Pulse spacing should wander slightly from pass to pass; the dry pad stays unbroken.',
+ 'Demo assumes the EG gives a short gate with a quick decay. The VCO still sums with the stem, and Ext Signal In is 3Vpp max.',M2),
+mk('colour','Hybrid','MIDI-Stepped Tone Colour','Kenton Pro Solo / STEP jack / Korg-35 VCF',
+ 'A DAW MIDI clip plays pitch and timing on the grid through the Kenton. Its gate also advances the SQ-10, whose Channel A drives the MS-10 filter cutoff. Same notes, same timing; the timbre changes note by note.',
+ [['KENTON','CV Hz/V + S-trig gate'],['SQ-10 STEP','gate advances'],['CH A → VCF','cutoff per step']],
+ ['Fixed Channel A','Notes on the grid with one constant timbre.','Every note has the same brightness.'],
+ ['SQ-10 stepping the filter','High-resonance filter leaps dramatically step to step.','Harmonic height spikes and plunges note by note.'],
+ 'Compare spectrograms note by note. Timing matches across both passes; only the harmonic content per note differs, repeating every 12 notes.',
+ 'Set the Kenton gate to S-trig and its CV to Hz/V (into VCO CV IN). Try no pull-up first, then a 5V pull-up if STEP does not respond, and verify on a scope. Options vary by Pro Solo revision. The SQ-10 must be in Stepped mode for STEP to advance; Korg\'s own example drives STEP from the MS-10 KBD TRIG OUT.')
+].map((p,i)=>(p.n=String(i+1).padStart(2,'0'),p.id='p-'+p.n,p));
 
-    <script>
-    /* ---------- CONTENT ---------- */
-    const P = [
-    {id:'p-01',n:'01',type:'loop',title:'Free-Running Pitch Loop',chip:'Channel A / Multiple Trig / VC Clock',
-     notes:'A repeating 12-note figure played by the hardware, not programmed on a grid. Channel A sets each step\'s pitch, Multiple Trig Out fires the MS-10 envelope, and the free-running clock steps through it. Each pass differs slightly in timing and pitch.',
-     cv:[{t:'CHANNEL A',s:'12 pitches',x:110,to:0},{t:'MULTIPLE TRIG',s:'every step',x:310,to:0},{t:'VC CLOCK',s:'free-running',x:510,to:0}],
-     dry:['Grid reference (DAW soft-synth)','Equal-tempered pitches, identical timing every pass.','Same spectral ridges on every pass, locked to the grid.'],
-     wet:['SQ-10 → MS-10 hardware return','A 12-step pattern that is steady but not sample-identical between passes.','Pass starts wander and the pitch ridges shift slightly between passes.'],
-     check:'Compare successive loop passes in the waveform. Passes that align perfectly suggest the return is not the hardware.'},
-    {id:'p-02',n:'02',type:'tune',title:'Rough-and-Fine Tuning',chip:'Channel A / Channel B / Analog Mixer',
-     notes:'Channel A (±5V) sets rough pitch, Channel B (±1V) trims it, and the analog mixer adds the two before the MS-10 pitch input. A quantising MIDI-to-CV route cannot make intervals between semitones; the continuous knobs can.',
-     cv:[{t:'CH A ±5V',s:'rough → IN 1',x:110,to:0},{t:'CH B ±1V',s:'fine → IN 2',x:310,to:0},{t:'ANALOG MIXER',s:'OUT → VCO CV IN',x:510,to:0}],
-     dry:['Tuned to reference','Each step within a few cents of its target.','Every line sits on the semitone grid.'],
-     wet:['Extreme Micro-detuned via Channel B','Pushed completely off the 12TET semitone grid.','Lines sit aggressively between the grid lines.'],
-     check:'Overlay a semitone grid on the spectrogram. Tuned steps sit on it; detuned steps sit between the lines. If every step lands on the grid, fine adjustment is not reaching the oscillator.',
-     bench:'Demo assumes Channel B centre = 0V and that the MS-10 pitch input tracks the mixer sum.'},
-    {id:'p-03',n:'03',type:'warp',title:'Warped Time',chip:'Channel C / VC Clock',
-     notes:'Channel C patched into the clock\'s ÷2/V input stretches step time (each 1V halves the speed), so a regular loop is pushed and pulled with no swing template. The pitch sequence is untouched.',
-     cv:[{t:'CHANNEL C',s:'0 to +5V',x:110,to:0},{t:'CLOCK ÷2/V',s:'lag per step',x:310,to:0},{t:'CH A + TRIG',s:'as P-01',x:510,to:0}],
-     dry:['Fixed clock','Evenly spaced onsets, identical intervals.','Notes evenly spaced across the pass.'],
-     wet:['Channel C on the clock','Unequal onset spacing that swings wildly every loop.','Same pitches, aggressively uneven spacing.'],
-     check:'Measure the gaps between successive onsets. The fixed clock gives equal gaps; the warped pass gives a repeating unequal set every 12 steps.',
-     bench:'Demo assumes a step\'s voltage stretches the interval that follows it. Korg does not say.'},
-    {id:'p-04',n:'04',type:'colour',title:'MIDI-Stepped Tone Colour',chip:'Kenton Pro Solo / STEP jack / Korg-35 VCF',
-     notes:'A DAW MIDI clip plays pitch and timing on the grid through the Kenton. Its gate also advances the SQ-10, whose Channel A drives the MS-10 filter cutoff. Same notes, same timing; the timbre changes note by note.',
-     cv:[{t:'KENTON',s:'pitch + gate',x:110,to:0},{t:'SQ-10 STEP',s:'gate advances',x:310,to:0},{t:'CH A → VCF',s:'cutoff per step',x:510,to:0}],
-     dry:['Fixed Channel A','Notes on the grid with one constant timbre.','Every note has the same brightness.'],
-     wet:['SQ-10 stepping the filter','High-resonance filter leaps dramatically step to step.','Harmonic height spikes and plunges note by note.'],
-     check:'Compare spectrograms note by note. Timing matches across both passes; only the harmonic content per note differs, repeating every 12 notes.',
-     bench:'Kenton trigger polarity against the STEP jack\'s ↓ GND marking is unconfirmed.'}
-    ];
-    const MAIN = [['KORG MS-10','VCO + VCF + EG'],['PAN 02 → 4i4','DI to interface'],['HARDWARE RETURN','recorded in DAW']];
-    const CFG = {
-     loop:{lo:60,hi:2400,ax:[[82.41,'E2'],[164.8,'E3'],[329.6,'E4'],[659.3,'E5'],[1318.5,'E6']]},
-     tune:{lo:95,hi:520,ax:[[110,'A2'],[220,'A3'],[440,'A4']],semi:110},
-     warp:{lo:60,hi:2400,ax:[[82.41,'E2'],[164.8,'E3'],[329.6,'E4'],[659.3,'E5'],[1318.5,'E6']]},
-     colour:{lo:60,hi:4200,ax:[[82.41,'E2'],[164.8,'E3'],[329.6,'E4'],[659.3,'E5'],[1318.5,'E6'],[2637,'E7']]}
-    };
+const L={lo:60,hi:2400,ax:[[82.41,'E2'],[164.8,'E3'],[329.6,'E4'],[659.3,'E5'],[1318.5,'E6']]};
+const T={lo:95,hi:520,ax:[[110,'A2'],[220,'A3'],[440,'A4']],semi:110};
+const F={lo:60,hi:4200,ax:[...L.ax,[2637,'E7']]};
+const CFG={loop:L,warp:L,clock:L,poly:L,series:L,stem:L,gate:L,glide:L,tune:T,micro:T,filt:F,colour:F};
 
-    /* ---------- NOTE DATA (Exaggerated for clarity) ---------- */
-    const DUR = 12;
-    const rng = s => () => { s|=0; s=s+0x6D2B79F5|0; let t=Math.imul(s^s>>>15,1|s); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296 };
-    const hz = (root,semi,c=0) => root*Math.pow(2,(semi+c/100)/12);
-    const PH = [0,12,0,7,3,0,10,0,12,7,5,0], TN = [0,3,7,10,12,10,7,3,5,8,12,15];
+/* ---------- NOTE DATA (exaggerated for clarity) ---------- */
+const DUR=12;
+const rng=s=>()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const hz=(root,semi,c=0)=>root*Math.pow(2,(semi+c/100)/12);
+const PH=[0,12,0,7,3,0,10,0,12,7,5,0],TN=[0,3,7,10,12,10,7,3,5,8,12,15];
+const FC=[200,3000,400,4500,150,2500,600,100,3500,300,5000,800];
+const PW={w:'pulse',pw:.4};
 
-    function build(type,wet) {
-     const r = rng(type.length*131+(wet?7:1)), ev = [], marks = []; let grid = 0;
-     const add = (t,f,d,fc,o={}) => { if(t>=0 && t<DUR) ev.push({t,f,d,fc,q:o.q||3,w:o.w||'saw',pw:o.pw||.5,a:o.a||1}) };
-     
-     if (type === 'loop') {
-      // Much more aggressive timing drift and pitch wandering
-      const S=.25, dr=[.02, .08, -.04, .1], cd=[0,5,-4,7], kn=[-12, 8, -6, 14, -16, 4, 10, -8, 12, -14, 6, -4];
-      for(let p=0,t=0; t<DUR; p++) { 
-        marks.push(t); const s = wet ? S*(1+dr[p%4]) : S;
-        for(let i=0; i<12; i++) {
-            add(t+i*s+(wet?(r()-.5)*.03:0), hz(82.41,PH[i],wet?kn[i]+cd[p%4]:0), s*.8, wet?1100+(i%3)*400:1400, wet?{w:'pulse',pw:.4}:{});
-        }
-        t += 12*s; 
-      }
-     }
-     if (type === 'tune') {
-      // Pushed to heavy microtonal dissonance
-      const DT=[45, -55, 60, -40, 30, -65, 50, -35, 70, -50, 40, -60];
-      for(let p=0; p<2; p++) { marks.push(p*6); for(let i=0; i<12; i++) add(p*6+i*.5, hz(110,TN[i],wet?DT[i]:0), .4, 1600) }
-     }
-     if (type === 'warp') {
-      // Massive timing lag/rushing swings
-      const S=.22, v=[0, -.5, 1.2, -.2, 1.5, 0, -.4, .8, -.6, 1.8, 0, .5]; grid=S;
-      for(let t=0; t<DUR;) { marks.push(t); for(let i=0; i<12; i++) { add(t, hz(82.41,PH[i]), S*.8, 1200, {w:'pulse',pw:.4}); t+=wet?S*Math.pow(2,v[i]):S } }
-     }
-     if (type === 'colour') {
-      // Extreme filter jumping with high resonance (Q: 12)
-      const S=.25, FC=[200, 3000, 400, 4500, 150, 2500, 600, 100, 3500, 300, 5000, 800];
-      for(let t=0; t<DUR; t+=12*S) { marks.push(t); for(let i=0; i<12; i++) add(t+i*S, hz(82.41,PH[i]), .2, wet?FC[i]:1400, wet?{q:12,w:'pulse',pw:.3}:{q:2}) }
-     }
-     return { ev, marks, grid };
-    }
+function build(type,w){
+ const r=rng(type.length*131+(w?7:1)),ev=[],marks=[];let grid=0;
+ const add=(t,f,d,fc,o={})=>{if(t>=0&&t<DUR)ev.push({t,f,d,fc,q:o.q||3,w:o.w||'saw',pw:o.pw||.5,a:o.a||1,f0:o.f0,gl:o.gl})};
+ const m=t=>marks.push(t);
+ const timing=(v,S,sg)=>{for(let t=0;t<DUR;){m(t);for(let i=0;i<12;i++){add(t,hz(82.41,PH[i]),S*.8,1200,PW);t+=w?S*Math.pow(2,sg*v[i]):S}}};
+ const colour=free=>{const S=.25;for(let p=0,t=0;t<DUR;p++,t+=12*S){m(t);for(let i=0;i<12;i++){const j=free&&w?(r()-.5)*.05+i*.004*(p%2?1:-1):0;add(t+i*S+j,hz(82.41,PH[i]),.2,w?FC[i]:1400,w?{q:12,w:'pulse',pw:.3}:{q:2})}}};
+ if(type==='loop'){const S=.25,dr=[.02,.08,-.04,.1],cd=[0,5,-4,7],kn=[-12,8,-6,14,-16,4,10,-8,12,-14,6,-4];
+  for(let p=0,t=0;t<DUR;p++){m(t);const s=w?S*(1+dr[p%4]):S;for(let i=0;i<12;i++)add(t+i*s+(w?(r()-.5)*.03:0),hz(82.41,PH[i],w?kn[i]+cd[p%4]:0),s*.8,w?1100+(i%3)*400:1400,w?PW:{});t+=12*s}}
+ if(type==='tune'){const DT=[45,-55,60,-40,30,-65,50,-35,70,-50,40,-60];
+  for(let p=0;p<2;p++){m(p*6);for(let i=0;i<12;i++)add(p*6+i*.5,hz(110,TN[i],w?DT[i]:0),.4,1600)}}
+ if(type==='micro'){const MJ=[0,2,4,5,7,9,11,12,11,9,7,5],JI=[0,4,-14,-2,2,-16,-12,0,-12,-16,2,-2];
+  for(let p=0;p<2;p++){m(p*6);for(let i=0;i<12;i++)add(p*6+i*.5,hz(110,MJ[i],w?JI[i]*3:0),.4,1600)}}
+ if(type==='glide'){for(let p=0;p<2;p++){m(p*6);for(let i=0;i<12;i++){const pr=hz(82.41,PH[(i+11)%12]);add(p*6+i*.5,hz(82.41,PH[i]),w?.5:.4,1400,w?{f0:pr,gl:.3}:{})}}}
+ if(type==='warp'){grid=.22;timing([0,-.5,1.2,-.2,1.5,0,-.4,.8,-.6,1.8,0,.5],.22,1)}
+ if(type==='clock'){grid=.3;timing([0,.2,.4,.6,.8,1,1,.8,.6,.4,.2,0],.3,-1)}
+ if(type==='poly'){const S=.2,U=[0,7,3,10,5];
+  for(let k=0;k<60;k++){if(k%12===0)m(k*S);add(k*S,hz(82.41,PH[k%12]),S*.8,1400);if(w)add(k*S,hz(164.8,U[k%5]),.15,1800,PW)}}
+ if(type==='filt')colour(true);
+ if(type==='colour')colour(false);
+ if(type==='series'){const S=.25,B=[7,5,12,3,0,8,10,7,15,5,3,12];
+  for(let k=0;k<48;k++){if(k%(w?24:12)===0)m(k*S);add(k*S,hz(82.41,w&&k%24>=12?B[k%12]:PH[k%12]),S*.8,1400)}}
+ if(type==='stem'){const S=.25,R=[0,0,12,0,0,7,0,0,12,0,7,0];
+  for(let t=0;t<DUR;t+=12*S){m(t);for(let i=0;i<12;i++)add(t+i*S,hz(110,R[i]),.18,w?FC[i]:1400,{q:w?8:2})}}
+ if(type==='gate'){const S=.25;
+  if(!w)for(let t=0;t<DUR;t+=3){m(t);add(t,110,2.9,1400,{q:2});add(t,165,2.9,1400,{q:2})}
+  else for(let k=0,t=0;t<DUR;k++){if(k%12===0)m(t);add(t,110,.14,1400,{q:2});add(t,165,.14,1400,{q:2});t+=S*(1+.12*Math.sin(k*.9)+(r()-.5)*.08)}}
+ return{ev,marks,grid};
+}
 
-    function spec(e) {
-     const o=[], Q=Math.pow(10,e.q/20);
-     for(let n=1; n<=40 && e.f*n<20000; n++) {
-      const f=e.f*n, x=f/e.fc, a=e.w==='saw' ? 1/n : 2*Math.abs(Math.sin(n*Math.PI*e.pw))/n;
-      o.push([f, a*e.a/Math.sqrt((1-x*x)**2+(x/Q)**2)]);
-     }
-     return o;
-    }
-    const level = e => Math.min(1, .15 + .85*Math.sqrt(spec(e).reduce((s,h) => s+h[1]*h[1],0))/2.4);
+function spec(e){
+ const o=[],Q=Math.pow(10,e.q/20);
+ for(let n=1;n<=40&&e.f*n<20000;n++){const f=e.f*n,x=f/e.fc,a=e.w==='saw'?1/n:2*Math.abs(Math.sin(n*Math.PI*e.pw))/n;o.push([f,a*e.a/Math.sqrt((1-x*x)**2+(x/Q)**2)])}
+ return o;
+}
+const level=e=>Math.min(1,.15+.85*Math.sqrt(spec(e).reduce((s,h)=>s+h[1]*h[1],0))/2.4);
+const parts=e=>{if(!e.f0)return[[e,e.t,e.d+.04]];const k=6,o=[];for(let j=0;j<k;j++)o.push([{...e,f:e.f0*Math.pow(e.f/e.f0,(j+.5)/k)},e.t+j/k*e.gl,e.gl/k+.01]);o.push([e,e.t+e.gl,Math.max(.02,e.d-e.gl+.04)]);return o};
 
-    /* ---------- MARKUP GENERATION ---------- */
-    function schem(p) {
-     const box = (x,y,w,t,s,c) => `<g transform="translate(${x-w/2},${y})"><rect width="${w}" height="50" fill="#18181b" stroke="${c}" stroke-width="${c==='#52525b'?1:2}"/><text x="${w/2}" y="22" fill="${c==='#52525b'?'#d4d4d8':c}" font-family="monospace" font-size="11" font-weight="bold" text-anchor="middle">${t}</text><text x="${w/2}" y="38" fill="#71717a" font-family="monospace" font-size="9" text-anchor="middle">${s}</text></g>`;
-     const mx = i => 150+i*250, m = p.id; 
-     let o = `<defs><marker id="r${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ec4899"/></marker><marker id="c${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00bcd4"/></marker></defs>`;
-     p.cv.forEach(c => { o += `<path d="M${c.x} 70V96H${mx(c.to)}V123" fill="none" stroke="#00bcd4" stroke-width="2" stroke-dasharray="4" marker-end="url(#c${m})"/>`+box(c.x,20,170,c.t,c.s,'#00bcd4') });
-     MAIN.forEach((b,i) => { o += box(mx(i),125,170,b[0],b[1],i?'#52525b':'#ec4899'); if(i<2) o+=`<path d="M${mx(i)+85} 150H${mx(i+1)-85}" stroke="#ec4899" stroke-width="2" marker-end="url(#r${m})"/>` });
-     return `<svg viewBox="0 0 800 190" class="w-full min-w-[600px] h-auto pointer-events-none" xmlns="http://www.w3.org/2000/svg">${o}</svg>`;
-    }
+/* ---------- MARKUP ---------- */
+function schem(p){
+ const box=(x,y,w,t,s,c)=>`<g transform="translate(${x-w/2},${y})"><rect width="${w}" height="50" fill="#18181b" stroke="${c}" stroke-width="${c==='#52525b'?1:2}"/><text x="${w/2}" y="22" fill="${c==='#52525b'?'#d4d4d8':c}" font-family="monospace" font-size="11" font-weight="bold" text-anchor="middle">${t}</text><text x="${w/2}" y="38" fill="#71717a" font-family="monospace" font-size="9" text-anchor="middle">${s}</text></g>`;
+ const mx=i=>150+i*250,m=p.id,hot=p.main===M2?1:0;
+ let o=`<defs><marker id="r${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ec4899"/></marker><marker id="c${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00bcd4"/></marker></defs>`;
+ p.cv.forEach(c=>{o+=`<path d="M${c.x} 70V96H${mx(c.to)}V123" fill="none" stroke="#00bcd4" stroke-width="2" stroke-dasharray="4" marker-end="url(#c${m})"/>`+box(c.x,20,170,c.t,c.s,'#00bcd4')});
+ p.main.forEach((b,i)=>{o+=box(mx(i),125,170,b[0],b[1],i===hot?'#ec4899':'#52525b');if(i<2)o+=`<path d="M${mx(i)+85} 150H${mx(i+1)-85}" stroke="#ec4899" stroke-width="2" marker-end="url(#r${m})"/>`});
+ return`<svg viewBox="0 0 800 190" class="w-full min-w-[600px] h-auto pointer-events-none" xmlns="http://www.w3.org/2000/svg">${o}</svg>`;
+}
 
-    function col(p,wet) {
-     const d=wet?p.wet:p.dry, b=wet?'#33101a':'#222', k=wet?'text-pink-500':'text-zinc-400', ph=wet?'bg-pink-400 shadow-[0_0_5px_#f472b6]':'bg-zinc-300 shadow-[0_0_5px_white]';
-     const cv = (c,l) => `<canvas style="position:absolute;inset:0;width:100%;height:100%" class="${c} pointer-events-none" data-type="${p.type}" data-wet="${wet}"></canvas><div class="playhead absolute top-0 bottom-0 w-[2px] ${ph} z-20 pointer-events-none" data-c="${c}" style="left:0;display:none"></div><div class="absolute top-2 left-2 text-[9px] font-mono text-zinc-400 z-10 bg-black/50 px-1 pointer-events-none">${l}</div>`;
-     return `<div class="flex flex-col gap-4">
-     <div class="analysis-card border p-4 rounded flex flex-col" style="border-color:${b}">
-      <div class="relative bg-black h-36 border w-full mb-4 overflow-hidden" style="border-color:${b};position:relative;height:144px;width:100%">${cv('waveform',d[0].toUpperCase())}</div>
-      <h3 class="font-mono text-sm font-bold ${k} uppercase tracking-widest mb-2">${wet?'Hardware Return':'Reference'}</h3>
-      <p class="text-xs text-zinc-500 leading-relaxed mb-6">${d[1]}</p>
-      <div class="mt-auto flex items-center border-t pt-4" style="border-color:${b}">
-       <button aria-label="Play or stop ${wet?'hardware return':'reference'}" class="play-btn relative z-10 w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-sm border ${wet?'border-pink-900/50 bg-pink-950/20 text-pink-500 hover:bg-pink-900/40':'border-zinc-700 bg-zinc-800/30 text-zinc-300 hover:bg-zinc-700/50'} transition-colors cursor-pointer" data-type="${p.type}" data-wet="${wet}">
-        <svg class="w-4 h-4 ml-0.5 icon-play pointer-events-none" fill="currentColor" viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>
-        <svg class="w-4 h-4 icon-stop hidden pointer-events-none" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
-       </button>
-       <div class="flex-1 flex items-center font-mono text-[10px] text-zinc-500 uppercase tracking-widest ml-4 pointer-events-none"><span>${wet?'Hardware Return':'Digital Source'}</span><div class="flex-1 border-b mx-3" style="border-color:${b}"></div><span class="timer w-8 text-right">0:00</span></div>
-      </div>
-     </div>
-     <div class="analysis-card border p-4 rounded" style="border-color:${b}">
-      <div class="relative bg-black h-48 border w-full mb-4 overflow-hidden" style="border-color:${b};position:relative;height:192px;width:100%">${cv('spectrogram',(wet?'HARDWARE':'REFERENCE')+' SPECTROGRAM')}</div>
-      <p class="text-xs text-zinc-500 leading-relaxed">${d[2]}</p>
-     </div></div>`;
-    }
+function col(p,wet){
+ const d=wet?p.wet:p.dry,b=wet?'#33101a':'#222',k=wet?'text-pink-500':'text-zinc-400',ph=wet?'bg-pink-400 shadow-[0_0_5px_#f472b6]':'bg-zinc-300 shadow-[0_0_5px_white]';
+ const cv=(c,l)=>`<canvas style="position:absolute;inset:0;width:100%;height:100%" class="${c} pointer-events-none" data-type="${p.type}" data-wet="${wet}"></canvas><div class="playhead absolute top-0 bottom-0 w-[2px] ${ph} z-20 pointer-events-none" data-c="${c}" style="left:0;display:none"></div><div class="absolute top-2 left-2 text-[9px] font-mono text-zinc-400 z-10 bg-black/50 px-1 pointer-events-none">${l}</div>`;
+ return`<div class="flex flex-col gap-4">
+ <div class="analysis-card border p-4 rounded flex flex-col" style="border-color:${b}">
+  <div class="relative bg-black border w-full mb-4 overflow-hidden" style="border-color:${b};height:144px">${cv('waveform',d[0].toUpperCase())}</div>
+  <h3 class="font-mono text-sm font-bold ${k} uppercase tracking-widest mb-2">${wet?'Hardware Return':'Reference'}</h3>
+  <p class="text-xs text-zinc-500 leading-relaxed mb-6">${d[1]}</p>
+  <div class="mt-auto flex items-center border-t pt-4" style="border-color:${b}">
+   <button aria-label="Play or stop ${wet?'hardware return':'reference'}" class="play-btn relative z-10 w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-sm border ${wet?'border-pink-900/50 bg-pink-950/20 text-pink-500 hover:bg-pink-900/40':'border-zinc-700 bg-zinc-800/30 text-zinc-300 hover:bg-zinc-700/50'} transition-colors cursor-pointer" data-type="${p.type}" data-wet="${wet}">
+    <svg class="w-4 h-4 ml-0.5 icon-play pointer-events-none" fill="currentColor" viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>
+    <svg class="w-4 h-4 icon-stop hidden pointer-events-none" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+   </button>
+   <div class="flex-1 flex items-center font-mono text-[10px] text-zinc-500 uppercase tracking-widest ml-4 pointer-events-none"><span>${wet?'Hardware Return':'Digital Source'}</span><div class="flex-1 border-b mx-3" style="border-color:${b}"></div><span class="timer w-8 text-right">0:00</span></div>
+  </div>
+ </div>
+ <div class="analysis-card border p-4 rounded" style="border-color:${b}">
+  <div class="relative bg-black border w-full mb-4 overflow-hidden" style="border-color:${b};height:192px">${cv('spectrogram',(wet?'HARDWARE':'REFERENCE')+' SPECTROGRAM')}</div>
+  <p class="text-xs text-zinc-500 leading-relaxed">${d[2]}</p>
+ </div></div>`;
+}
 
-    document.getElementById('protocols').innerHTML = P.map((p,i) => `
-    <section id="${p.id}" class="py-20 border-b border-zinc-800 ${i%2?'bg-zinc-900':'bg-[#0a0a0c]'} scroll-mt-16 relative z-10">
-     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center gap-3 mb-2"><span class="text-pink-500 font-mono font-bold text-xl">P-${p.n}</span><h2 class="text-2xl font-bold text-white uppercase tracking-wide">${p.title}</h2></div>
-      <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest mb-5"><span class="border border-zinc-700 text-zinc-500 px-2 py-1">Hardware: Korg SQ-10</span><span class="border border-pink-500/30 bg-pink-500/10 text-pink-400 px-2 py-1">${p.chip}</span>${p.bench?'<span class="border border-amber-500/40 bg-amber-500/10 text-amber-400 px-2 py-1">Confirm on bench</span>':''}</div>
-      <p class="text-zinc-400 text-sm max-w-3xl leading-relaxed mb-2"><strong>Engineer notes:</strong> ${p.notes}</p>
-      ${p.bench?`<p class="text-amber-500/80 text-xs max-w-3xl mb-2">${p.bench}</p>`:''}
-      <div class="w-full bg-[#0a0a0c] border border-zinc-800 rounded-sm my-8 overflow-hidden"><div class="bg-zinc-900 border-b border-zinc-800 px-4 py-2 font-mono text-[10px] text-zinc-400 tracking-widest uppercase">Routing schematic // P-${p.n}</div><div class="p-4 overflow-x-auto">${schem(p)}</div></div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">${col(p,false)}${col(p,true)}</div>
-      <p class="mt-6 text-sm text-zinc-400 max-w-3xl border-l-2 border-pink-500/60 pl-4"><strong class="text-white">What to check.</strong> ${p.check}</p>
-     </div>
-    </section>`).join('');
+document.getElementById('protocols').innerHTML=P.map((p,i)=>`
+<section id="${p.id}" class="py-20 border-b border-zinc-800 ${i%2?'bg-zinc-900':'bg-[#0a0a0c]'} scroll-mt-16 relative z-10">
+ <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="flex items-center gap-3 mb-2"><span class="text-pink-500 font-mono font-bold text-xl">P-${p.n}</span><h2 class="text-2xl font-bold text-white uppercase tracking-wide">${p.title}</h2></div>
+  <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest mb-5"><span class="border border-zinc-600 text-zinc-300 px-2 py-1">${p.g}</span><span class="border border-zinc-700 text-zinc-500 px-2 py-1">Hardware: Korg SQ-10</span><span class="border border-pink-500/30 bg-pink-500/10 text-pink-400 px-2 py-1">${p.chip}</span>${p.bench?'<span class="border border-amber-500/40 bg-amber-500/10 text-amber-400 px-2 py-1">Confirm on bench</span>':''}</div>
+  <p class="text-zinc-400 text-sm max-w-3xl leading-relaxed mb-2"><strong>Engineer notes:</strong> ${p.notes}</p>
+  ${p.bench?`<p class="text-amber-500/80 text-xs max-w-3xl mb-2">${p.bench}</p>`:''}
+  <div class="w-full bg-[#0a0a0c] border border-zinc-800 rounded-sm my-8 overflow-hidden"><div class="bg-zinc-900 border-b border-zinc-800 px-4 py-2 font-mono text-[10px] text-zinc-400 tracking-widest uppercase">Routing schematic // P-${p.n}</div><div class="p-4 overflow-x-auto">${schem(p)}</div></div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">${col(p,false)}${col(p,true)}</div>
+  <p class="mt-6 text-sm text-zinc-400 max-w-3xl border-l-2 border-pink-500/60 pl-4"><strong class="text-white">What to check.</strong> ${p.check}</p>
+ </div>
+</section>`).join('');
 
-    document.getElementById('jump').innerHTML = P.map(p => `<a href="#${p.id}" class="border border-zinc-700 px-3 py-1.5 text-zinc-400 hover:text-pink-500 hover:border-pink-500/50 transition-colors relative z-10 cursor-pointer">P-${p.n} ${p.title}</a>`).join('');
+document.getElementById('jump').innerHTML=P.map(p=>`<a href="#${p.id}" class="border border-zinc-700 px-3 py-1.5 text-zinc-400 hover:text-pink-500 hover:border-pink-500/50 transition-colors relative z-10">P-${p.n} ${p.title}</a>`).join('');
 
-    /* ---------- VISUALS ---------- */
-    const WET_C='236,72,153', DRY_C='0,188,212'; // Hot Pink vs Cyan
-    
-    function size(cv) {
-     const r = cv.parentElement.getBoundingClientRect(), d = window.devicePixelRatio||1, W = r.width||300, H = r.height||150;
-     cv.width = W*d; cv.height = H*d;
-     const c = cv.getContext('2d'); c.scale(d,d);
-     return [c,W,H];
-    }
+/* ---------- VISUALS ---------- */
+const WET_C='236,72,153',DRY_C='0,188,212';
+function size(cv){const r=cv.parentElement.getBoundingClientRect(),d=window.devicePixelRatio||1,W=r.width||300,H=r.height||150;cv.width=W*d;cv.height=H*d;const c=cv.getContext('2d');c.scale(d,d);return[c,W,H]}
 
-    function drawWave(cv) {
-     const [c,w,h] = size(cv), wet = cv.dataset.wet==='true', {ev,marks,grid} = build(cv.dataset.type,wet), n = rng(5), mid = h/2;
-     c.fillStyle = '#000'; c.fillRect(0,0,w,h);
-     c.strokeStyle = 'rgba(161,161,170,.35)'; c.setLineDash([3,4]); c.fillStyle = '#71717a'; c.font = '9px monospace';
-     if(wet&&grid) for(let t=0; t<DUR; t+=grid) { c.beginPath(); c.moveTo(t/DUR*w,h-14); c.lineTo(t/DUR*w,h); c.stroke() }
-     marks.forEach((m,i) => { const x=m/DUR*w; c.beginPath(); c.moveTo(x,0); c.lineTo(x,h); c.stroke(); c.fillText('P'+(i+1),x+3,h-4) });
-     
-     c.setLineDash([]); c.fillStyle = wet ? '#ec4899' : '#00bcd4';
-     for(let i=0; i<w; i++) {
-      const t = i/w*DUR; let a = 0;
-      for(const e of ev) { const s=t-e.t; if(s>=0 && s<e.d+.25) a = Math.max(a, (s<.006 ? s/.006 : s<e.d ? 1 : Math.exp(-(s-e.d)/.025)) * level(e)) }
-      const v = mid*.85*a*(.55+.45*n()); c.fillRect(i,mid-v,1,v*2);
-     }
-    }
+function drawWave(cv){
+ const[c,w,h]=size(cv),wet=cv.dataset.wet==='true',{ev,marks,grid}=build(cv.dataset.type,wet),n=rng(5),mid=h/2;
+ c.fillStyle='#000';c.fillRect(0,0,w,h);
+ c.strokeStyle='rgba(161,161,170,.35)';c.setLineDash([3,4]);c.fillStyle='#71717a';c.font='9px monospace';
+ if(wet&&grid)for(let t=0;t<DUR;t+=grid){c.beginPath();c.moveTo(t/DUR*w,h-14);c.lineTo(t/DUR*w,h);c.stroke()}
+ marks.forEach((m,i)=>{const x=m/DUR*w;c.beginPath();c.moveTo(x,0);c.lineTo(x,h);c.stroke();c.fillText('P'+(i+1),x+3,h-4)});
+ c.setLineDash([]);c.fillStyle=wet?'#ec4899':'#00bcd4';
+ for(let i=0;i<w;i++){const t=i/w*DUR;let a=0;
+  for(const e of ev){const s=t-e.t;if(s>=0&&s<e.d+.25)a=Math.max(a,(s<.006?s/.006:s<e.d?1:Math.exp(-(s-e.d)/.025))*level(e))}
+  const v=mid*.85*a*(.55+.45*n());c.fillRect(i,mid-v,1,v*2)}
+}
 
-    function drawSpec(cv) {
-     const [c,w,h] = size(cv), wet = cv.dataset.wet==='true', C = CFG[cv.dataset.type], {ev,marks} = build(cv.dataset.type,wet), ml = 38, mb = 16, pw = w-ml, ph = h-mb, n = rng(9);
-     const y = f => ph*(1 - Math.log(f/C.lo)/Math.log(C.hi/C.lo)), x = t => ml + t/DUR*pw;
-     
-     c.fillStyle = '#000'; c.fillRect(0,0,w,h);
-     c.font = '9px monospace'; c.textAlign = 'right'; c.textBaseline = 'middle';
-     if(C.semi) for(let k=-12; k<40; k++) { const f=C.semi*Math.pow(2,k/12); if(f<C.lo || f>C.hi) continue; c.fillStyle = k%12 ? 'rgba(255,255,255,.07)' : 'rgba(255,255,255,.2)'; c.fillRect(ml,y(f),pw,1) }
-     C.ax.forEach(([f,l]) => { if(f<C.lo || f>C.hi) return; c.fillStyle = '#555'; c.fillText(l,ml-5,y(f)); c.fillRect(ml-3,y(f),3,1) });
-     c.textAlign = 'center'; c.textBaseline = 'top'; 
-     for(let s=0; s<=DUR; s+=2) { c.fillStyle = '#555'; c.fillRect(x(s),ph,1,3); c.fillText(s+'s',x(s),ph+4) }
-     
-     c.save(); c.beginPath(); c.rect(ml,0,pw,ph); c.clip();
-     
-     if(wet) { c.fillStyle = `rgba(${WET_C},.08)`; for(let i=0; i<500; i++) c.fillRect(ml+n()*pw,n()*ph,2,1) }
-     marks.forEach(m => { c.fillStyle = 'rgba(161,161,170,.25)'; c.fillRect(x(m),0,1,ph) });
-     
-     for(const e of ev) for(const [f,a] of spec(e)) {
-      if(f<C.lo || f>C.hi) continue; 
-      const al = Math.min(1, Math.pow(a*2.0,.5)); // Boosted amplitude visual
-      if(al<.05) continue;
-      c.fillStyle = `rgba(${wet?WET_C:DRY_C},${al})`; 
-      c.fillRect(x(e.t), y(f)-1.5, Math.max(2,(e.d+.04)/DUR*pw), 3); // Taller blocks
-     }
-     c.restore();
-    }
+function drawSpec(cv){
+ const[c,w,h]=size(cv),wet=cv.dataset.wet==='true',C=CFG[cv.dataset.type],{ev,marks}=build(cv.dataset.type,wet),ml=38,mb=16,pw=w-ml,ph=h-mb,n=rng(9);
+ const y=f=>ph*(1-Math.log(f/C.lo)/Math.log(C.hi/C.lo)),x=t=>ml+t/DUR*pw;
+ c.fillStyle='#000';c.fillRect(0,0,w,h);
+ c.font='9px monospace';c.textAlign='right';c.textBaseline='middle';
+ if(C.semi)for(let k=-12;k<40;k++){const f=C.semi*Math.pow(2,k/12);if(f<C.lo||f>C.hi)continue;c.fillStyle=k%12?'rgba(255,255,255,.07)':'rgba(255,255,255,.2)';c.fillRect(ml,y(f),pw,1)}
+ C.ax.forEach(([f,l])=>{if(f<C.lo||f>C.hi)return;c.fillStyle='#555';c.fillText(l,ml-5,y(f));c.fillRect(ml-3,y(f),3,1)});
+ c.textAlign='center';c.textBaseline='top';
+ for(let s=0;s<=DUR;s+=2){c.fillStyle='#555';c.fillRect(x(s),ph,1,3);c.fillText(s+'s',x(s),ph+4)}
+ c.save();c.beginPath();c.rect(ml,0,pw,ph);c.clip();
+ if(wet){c.fillStyle=`rgba(${WET_C},.08)`;for(let i=0;i<500;i++)c.fillRect(ml+n()*pw,n()*ph,2,1)}
+ marks.forEach(m=>{c.fillStyle='rgba(161,161,170,.25)';c.fillRect(x(m),0,1,ph)});
+ for(const e of ev)for(const[h2,t,d]of parts(e))for(const[f,a]of spec(h2)){
+  if(f<C.lo||f>C.hi)continue;
+  const al=Math.min(1,Math.pow(a*2,.5));if(al<.05)continue;
+  c.fillStyle=`rgba(${wet?WET_C:DRY_C},${al})`;c.fillRect(x(t),y(f)-1.5,Math.max(2,d/DUR*pw),3)}
+ c.restore();
+}
 
-    const drawAll = () => { 
-        document.querySelectorAll('canvas.waveform').forEach(drawWave); 
-        document.querySelectorAll('canvas.spectrogram').forEach(drawSpec); 
-    };
-    drawAll();
-    window.addEventListener('load', () => { drawAll(); setTimeout(drawAll, 400); });
-    window.addEventListener('resize', drawAll);
-    if (window.ResizeObserver) { 
-        const ro = new ResizeObserver(() => { clearTimeout(ro.t); ro.t=setTimeout(drawAll, 60); }); 
-        document.querySelectorAll('canvas').forEach(c => ro.observe(c.parentElement)); 
-    }
+const drawAll=()=>{document.querySelectorAll('canvas.waveform').forEach(drawWave);document.querySelectorAll('canvas.spectrogram').forEach(drawSpec)};
+drawAll();
+window.addEventListener('load',()=>{drawAll();setTimeout(drawAll,400)});
+window.addEventListener('resize',drawAll);
+if(window.ResizeObserver){const ro=new ResizeObserver(()=>{clearTimeout(ro.t);ro.t=setTimeout(drawAll,60)});document.querySelectorAll('canvas').forEach(c=>ro.observe(c.parentElement))}
 
-    /* ---------- AUDIO ENGINE ---------- */
-    let ctx = null, nodes = [], raf = null;
-
-    function stopAll() {
-     if (ctx) {
-      nodes.forEach(n => { try{ n.stop(); }catch(e){} try{ n.disconnect(); }catch(e){} });
-      nodes = [];
-      try { ctx.close(); } catch(e){}
-      ctx = null;
-     }
-     if (raf) { cancelAnimationFrame(raf); raf = null; }
-     
-     document.querySelectorAll('.play-btn').forEach(b => {
-      b.dataset.playing = 'false';
-      const p = b.querySelector('.icon-play');
-      const s = b.querySelector('.icon-stop');
-      if (p) p.classList.remove('hidden');
-      if (s) s.classList.add('hidden');
-      const timer = b.parentElement.querySelector('.timer');
-      if (timer) timer.textContent = '0:00';
-     });
-     document.querySelectorAll('.playhead').forEach(p => p.style.display = 'none');
-    }
-
-    function play(btn) {
-     if (btn.dataset.playing === 'true') {
-         stopAll();
-         return;
-     }
-     stopAll();
-     
-     const type = btn.dataset.type;
-     const wet = btn.dataset.wet === 'true';
-     const AudioContext = window.AudioContext || window.webkitAudioContext;
-     ctx = new AudioContext();
-     
-     if (ctx.state === 'suspended') {
-         ctx.resume();
-     }
-
-     const t0 = ctx.currentTime + 0.05;
-     const master = ctx.createGain();
-     master.gain.value = 0.25; 
-     master.connect(ctx.destination); 
-     nodes.push(master);
-
-     const noteData = build(type, wet);
-
-     for (const e of noteData.ev) {
-      const o = ctx.createOscillator();
-      const f = ctx.createBiquadFilter();
-      const g = ctx.createGain();
-      const s = t0 + e.t;
-      const L = level(e);
-      
-      o.type = (e.w === 'pulse' || e.w === 'square') ? 'square' : 'sawtooth';
-      o.frequency.value = e.f;
-      
-      f.type = 'lowpass';
-      f.frequency.value = e.fc;
-      f.Q.value = e.q;
-      
-      g.gain.setValueAtTime(0.0001, s);
-      g.gain.linearRampToValueAtTime(L, s + 0.008);
-      g.gain.setValueAtTime(L, s + e.d);
-      g.gain.linearRampToValueAtTime(0.0001, s + e.d + 0.07);
-      
-      o.connect(f); 
-      f.connect(g); 
-      g.connect(master);
-      
-      o.start(s); 
-      o.stop(s + e.d + 0.1);
-      nodes.push(o, f, g);
-     }
-
-     btn.dataset.playing = 'true';
-     const iconPlay = btn.querySelector('.icon-play');
-     const iconStop = btn.querySelector('.icon-stop');
-     if (iconPlay) iconPlay.classList.add('hidden');
-     if (iconStop) iconStop.classList.remove('hidden');
-     
-     const timer = btn.parentElement.querySelector('.timer');
-     const colContainer = btn.closest('.flex-col.gap-4');
-     const heads = colContainer ? [...colContainer.querySelectorAll('.playhead')] : [];
-     heads.forEach(p => p.style.display = 'block');
-
-     (function tick() {
-      if (!ctx || btn.dataset.playing !== 'true') return;
-      const el = Math.max(0, ctx.currentTime - t0);
-      if (el >= DUR) {
-          stopAll();
-          return;
-      }
-      if (timer) timer.textContent = '0:' + String(Math.floor(el)).padStart(2,'0');
-      heads.forEach(p => {
-        p.style.left = p.dataset.c === 'spectrogram' ? `calc(38px + (100% - 38px) * ${el/DUR})` : `${el/DUR*100}%`;
-      });
-      raf = requestAnimationFrame(tick);
-     })();
-    }
-
-    document.addEventListener('click', (e) => {
-        const btn = e.target.closest('.play-btn');
-        if (btn) {
-            play(btn);
-        }
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-        const reveals = document.querySelectorAll('.reveal');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
-        }, { threshold: 0.1 });
-        reveals.forEach(reveal => observer.observe(reveal));
-    });
-    </script>
+/* ---------- AUDIO ENGINE ---------- */
+let ctx=null,nodes=[],raf=null;
+function stopAll(){
+ if(ctx){nodes.forEach(n=>{try{n.stop()}catch(e){}try{n.disconnect()}catch(e){}});nodes=[];try{ctx.close()}catch(e){}ctx=null}
+ if(raf){cancelAnimationFrame(raf);raf=null}
+ document.querySelectorAll('.play-btn').forEach(b=>{b.dataset.playing='false';b.querySelector('.icon-play')?.classList.remove('hidden');b.querySelector('.icon-stop')?.classList.add('hidden');const t=b.parentElement.querySelector('.timer');if(t)t.textContent='0:00'});
+ document.querySelectorAll('.playhead').forEach(p=>p.style.display='none');
+}
+function play(btn){
+ if(btn.dataset.playing==='true'){stopAll();return}
+ stopAll();
+ const AC=window.AudioContext||window.webkitAudioContext;ctx=new AC();if(ctx.state==='suspended')ctx.resume();
+ const t0=ctx.currentTime+.05,master=ctx.createGain();master.gain.value=.25;master.connect(ctx.destination);nodes.push(master);
+ for(const e of build(btn.dataset.type,btn.dataset.wet==='true').ev){
+  const o=ctx.createOscillator(),f=ctx.createBiquadFilter(),g=ctx.createGain(),s=t0+e.t,L2=level(e);
+  o.type=(e.w==='pulse'||e.w==='square')?'square':'sawtooth';
+  if(e.f0){o.frequency.setValueAtTime(e.f0,s);o.frequency.linearRampToValueAtTime(e.f,s+e.gl)}else o.frequency.value=e.f;
+  f.type='lowpass';f.frequency.value=e.fc;f.Q.value=e.q;
+  g.gain.setValueAtTime(.0001,s);g.gain.linearRampToValueAtTime(L2,s+.008);g.gain.setValueAtTime(L2,s+e.d);g.gain.linearRampToValueAtTime(.0001,s+e.d+.07);
+  o.connect(f);f.connect(g);g.connect(master);o.start(s);o.stop(s+e.d+.1);nodes.push(o,f,g);
+ }
+ btn.dataset.playing='true';
+ btn.querySelector('.icon-play')?.classList.add('hidden');btn.querySelector('.icon-stop')?.classList.remove('hidden');
+ const timer=btn.parentElement.querySelector('.timer'),cc=btn.closest('.flex-col.gap-4'),heads=cc?[...cc.querySelectorAll('.playhead')]:[];
+ heads.forEach(p=>p.style.display='block');
+ (function tick(){
+  if(!ctx||btn.dataset.playing!=='true')return;
+  const el=Math.max(0,ctx.currentTime-t0);
+  if(el>=DUR){stopAll();return}
+  if(timer)timer.textContent='0:'+String(Math.floor(el)).padStart(2,'0');
+  heads.forEach(p=>{p.style.left=p.dataset.c==='spectrogram'?`calc(38px + (100% - 38px) * ${el/DUR})`:`${el/DUR*100}%`});
+  raf=requestAnimationFrame(tick);
+ })();
+}
+document.addEventListener('click',e=>{const b=e.target.closest('.play-btn');if(b)play(b)});
+</script>
 </body>
 </html>
