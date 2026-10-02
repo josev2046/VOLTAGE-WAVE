@@ -34,14 +34,14 @@ body{background:#050505;color:#d4d4d8}
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-pink-500/30 bg-pink-500/10 text-pink-500 font-mono text-xs mb-6"><span class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>HARDWARE CAPABILITIES // SQ-10 // BOOK TWO</div>
 <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4 uppercase">Off the <span class="text-pink-500 glow-text">Grid</span></h1>
-<p class="text-lg text-zinc-400 max-w-2xl font-light mb-8">The Korg SQ-10 makes no sound. It sends the MS-10 three control voltages per step, with continuous knobs and a free-running clock. Below, all twelve protocols from the book in four groups (pitch, time, timbre and hybrid stem work), each with an exaggerated A/B you can hear.</p>
+<p class="text-lg text-zinc-400 max-w-2xl font-light mb-8">The Korg SQ-10 makes no sound. It sends the MS-10 three control voltages per step, with continuous knobs and an internal clock that is not synced to anything (it can also take an external clock at the STEP jack). Below, all twelve protocols from the book in four groups (pitch, time, timbre and hybrid stem work), each with an exaggerated A/B you can hear.</p>
 <nav id="jump" class="flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-widest"></nav>
 </div></section>
 
 <main id="protocols"></main>
 
 <footer class="py-8 border-t border-zinc-800 bg-[#050505]"><div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-<p class="font-mono text-[10px] text-zinc-600 uppercase tracking-widest leading-relaxed max-w-3xl mx-auto">Audio, waveforms and spectrograms are generated in the browser from the same note data. They illustrate each treatment and are not hardware captures; real captures replace them once recorded. In P-10 and P-11 synth tones stand in for the DAW stem. Items marked CONFIRM ON BENCH are assumptions in the demo, not measured facts.</p>
+<p class="font-mono text-[10px] text-zinc-600 uppercase tracking-widest leading-relaxed max-w-3xl mx-auto">Audio, waveforms and spectrograms are generated in the browser from the same note data. They illustrate each treatment and are not hardware captures; real captures replace them once recorded. In P-10 and P-11 synth tones stand in for the DAW stem. Items marked CONFIRM ON BENCH are open points to verify on the hardware, not measured facts.</p>
 </div></footer>
 
 <script>
@@ -51,25 +51,25 @@ const M2=[['DAW STEM','→ EXT SIGNAL IN'],['KORG MS-10','VCF + VCA'],['HARDWARE
 const mk=(type,g,title,chip,notes,cv,dry,wet,check,bench,main)=>({type,g,title,chip,notes,dry,wet,check,bench,main:main||M1,cv:cv.map((c,i)=>({t:c[0],s:c[1],x:110+i*200,to:c[2]||0}))});
 const P=[
 mk('loop','Pitch','Free-Running Pitch Loop','Channel A / Multiple Trig / VC Clock',
- 'A repeating 12-note figure played by the hardware, not programmed on a grid. Channel A sets each step\'s pitch, Multiple Trig Out fires the MS-10 envelope, and the free-running clock steps through it. Each pass differs slightly in timing and pitch.',
- [['CHANNEL A','12 pitches'],['MULTIPLE TRIG','every step'],['VC CLOCK','free-running']],
+ 'A repeating 12-note figure played by the hardware, not programmed on a grid. Channel A sets each step\'s pitch, Multiple Trig Out fires the MS-10 envelope, and the internal clock (not synced to anything) steps through it. Each pass differs slightly in timing and pitch.',
+ [['CHANNEL A','12 pitches'],['MULTIPLE TRIG','every step'],['VC CLOCK','internal, unsynced']],
  ['Grid reference (DAW soft-synth)','Equal-tempered pitches, identical timing every pass.','Same spectral ridges on every pass, locked to the grid.'],
  ['SQ-10 → MS-10 hardware return','A 12-step pattern that is steady but not sample-identical between passes.','Pass starts wander and the pitch ridges shift slightly between passes.'],
  'Compare successive loop passes in the waveform. Passes that align perfectly suggest the return is not the hardware.'),
 mk('tune','Pitch','Rough-and-Fine Tuning','Channel A / Channel B / Analog Mixer',
- 'Channel A (±5V) sets rough pitch, Channel B (±1V) trims it, and the analog mixer adds the two before the MS-10 pitch input. A quantising MIDI-to-CV route cannot make intervals between semitones; the continuous knobs can.',
+ 'Channel A (±5V) sets rough pitch, Channel B (±1V) trims it, and the analog mixer adds the two before the MS-10 pitch input, as Korg intended. A quantising MIDI-to-CV route cannot make intervals between semitones; the continuous knobs can. On the MS-10\'s linear Hz/V jack (VCO CV IN) the same Channel B offset gives a different number of cents in each register, so each step is trimmed against a tuner.',
  [['CH A ±5V','rough → IN 1'],['CH B ±1V','fine → IN 2'],['ANALOG MIXER','OUT → VCO CV IN']],
  ['Tuned to reference','Each step within a few cents of its target.','Every line sits on the semitone grid.'],
  ['Extreme micro-detuned via Channel B','Pushed completely off the 12TET semitone grid.','Lines sit aggressively between the grid lines.'],
  'Overlay a semitone grid on the spectrogram. Tuned steps sit on it; detuned steps sit between the lines. If every step lands on the grid, fine adjustment is not reaching the oscillator.',
- 'Demo assumes Channel B centre = 0V and that the MS-10 pitch input tracks the mixer sum.'),
+ 'The demo shows the tuned result, not the voltages. Confirm Channel B centre = 0V. Cents are constant only on the FREQ jack (octave per volt, rated ±3V; use the ±1V range on A and B there); on VCO CV IN (Hz/V) tune by ear.'),
 mk('micro','Pitch','Microtonal Scales','Channel A / Channel B / Tuning Tables',
- 'A scale outside 12-tone equal temperament. Channel A rounds each step to the nearest semitone and Channel B offsets it toward the target cents. The demo plays a major scale in just intonation, with the offsets exaggerated ×3.',
+ 'A scale outside 12-tone equal temperament. Channel A rounds each step to the nearest semitone and Channel B offsets it toward the target cents. Tune each step against a tuner: on VCO CV IN (Hz/V) the offset needed differs by register. The demo plays a major scale in just intonation, with the offsets exaggerated ×3.',
  [['CH A ±5V','nearest semitone'],['CH B ±1V','cents offset'],['ANALOG MIXER','OUT → VCO CV IN']],
  ['12-TET major scale','Every step on the semitone grid.','Lines sit exactly on the grid.'],
  ['Just-intonation scale (offsets ×3)','Steps pulled off the grid by the table offsets.','Thirds and sixths sit between the grid lines.'],
  'Check each step against the tuning table (Appendix A) on a tuner. If steps stay on the grid, Channel B is not reaching the oscillator.',
- 'Demo assumes the MS-10 pitch input tracks linearly.'),
+ 'The demo shows the tuned result. On the FREQ jack (octave per volt) 1V = 1200 cents, so table offsets map to voltages; on VCO CV IN the offsets are set by ear.'),
 mk('glide','Pitch','Portamento Lines','Channel A / Portamento A',
  'Portamento A smooths the step-to-step voltage change, so each step slides into the next instead of jumping. Duty keeps the gates separate when you want them to be.',
  [['CHANNEL A','12 pitches'],['PORTAMENTO A','glide time'],['MULTIPLE TRIG','as P-01']],
@@ -78,7 +78,7 @@ mk('glide','Pitch','Portamento Lines','Channel A / Portamento A',
  'Look for slanted lines between steps in the spectrogram. Flat steps mean portamento is still at minimum.',
  'Demo assumes a linear glide in pitch.'),
 mk('warp','Time','Warped Time','Channel C / VC Clock',
- 'Channel C patched into the clock\'s ÷2/V input stretches step time (each 1V halves the speed), so a regular loop is pushed and pulled with no swing template. The pitch sequence is untouched.',
+ 'Channel C patched into the clock\'s ÷2/V input stretches step time (each 1V doubles it), so a regular loop is pushed and pulled with no swing template. The pitch sequence is untouched.',
  [['CHANNEL C','0 to +5V'],['CLOCK ÷2/V','lag per step'],['CH A + TRIG','as P-01']],
  ['Fixed clock','Evenly spaced onsets, identical intervals.','Notes evenly spaced across the pass.'],
  ['Channel C on the clock','Unequal onset spacing that swings wildly every loop.','Same pitches, aggressively uneven spacing.'],
@@ -90,49 +90,49 @@ mk('clock','Time','Self-Clocking Loops','Channel C / VC Clock (feedback)',
  ['Open loop','Fixed clock, equal gaps.','Notes evenly spaced.'],
  ['Self-clocked','Gaps shrink then recover every loop.','Onsets bunch up mid-loop and relax.'],
  'Measure onset gaps across one loop. The same accelerating-then-relaxing set should recur every cycle.',
- 'Demo assumes a step\'s voltage governs the interval after it. Keep Channel C low to avoid runaway.'),
+ 'Demo assumes a step\'s voltage governs the interval after it. Keep Channel C low to avoid runaway (each 1V doubles the speed; 5V is 32×).'),
 mk('poly','Time','Polymeter via RESET IN','Trig Outs / Reset In',
  'A Trig Out patched into RESET IN cuts the loop short. A 5-step SQ-10 line runs against a 12-step phrase and the two realign only after 60 steps.',
  [['TRIG OUT 5','→ RESET IN'],['CHANNEL A','5 pitches'],['MULTIPLE TRIG','as P-01']],
  ['12-step loop alone','One phrase, locked pass to pass.','Same ridges every pass.'],
  ['5 against 12','The short loop drifts against the long phrase.','The upper line repeats every 5 steps while the lower repeats every 12.'],
  'Mark where both loops start together. They realign only once, at step 60.',
- 'Demo assumes RESET fires on the next step.'),
+ 'Whether RESET acts on the patched step or on the next clock decides if the loop is n or n−1 steps. Count a printed take and move to the adjacent Trig Out if needed.'),
 mk('filt','Timbre','Stepped Filter, Free-Running','Channel B / Korg-35 VCF / VC Clock',
- 'Channel B drives cutoff step by step while the clock runs free, so timbre moves in a pattern that is not locked to any grid.',
+ 'Channel B drives cutoff step by step while the internal clock runs unsynced, so timbre moves in a pattern that is not locked to any grid.',
  [['CHANNEL A','12 pitches'],['CH B → VCF','cutoff per step'],['MULTIPLE TRIG','as P-01']],
  ['Fixed cutoff','Constant brightness.','Same harmonic content every note.'],
  ['Per-step cutoff','Brightness steps note by note with loose timing.','Harmonic height changes per note; onsets land slightly early or late.'],
  'Compare brightness note by note. Timing should drift between passes while the 12-step timbre pattern holds.',
- 'Demo assumes Channel B reaches VCF CV IN directly.'),
+ 'The VCF control input is octave per volt (listed as 2 OCT/V, ±5V in the service manual; confirm by ear), so start Channel B on the ±1V range. The demo\'s cutoff swing is exaggerated.'),
 mk('series','Timbre','24-Step Series Mode','Series Modes / Channel A / Channel B',
  'With rows A and B in series the SQ-10 plays a 24-step phrase, so the figure takes twice as long to repeat.',
- [['CH A 1–12','first half'],['CH B 1–12','second half'],['SERIES OUT','→ VCO CV IN']],
+ [['CH A 1–12','first half'],['CH B 1–12','second half'],['A/B OUT','per Korg chart']],
  ['12-step loop','Repeats every 12 notes.','The pattern repeats at 12.'],
  ['24-step series','A different second half; repeats at 24.','The second half sits on different pitches before the pass restarts.'],
  'Count the notes between repeats: 12 on the reference, 24 on the series pass.',
- 'The series output connection is in Korg\'s chart, which the supplied manual does not reproduce.'),
+ 'Korg says the outputs in series mode depend on how A and B are connected, and the panel has no jack labelled SERIES OUT. Follow Korg\'s mode chart, which the supplied manual does not reproduce, and confirm which output carries steps 1 to 24.'),
 mk('stem','Hybrid','Stepped Filter on a Stem','DAW Stem / Ext Signal In / Channel A → VCF',
- 'A clean DAW stem enters the MS-10 through Ext Signal In while Channel A moves the filter cutoff per step. Same timing as the dry stem; only the filtering changes. The demo uses a synth riff as a stand-in for the stem.',
- [['CHANNEL A','cutoff per step',1],['EXT LEVEL','stem gain',1],['MULTIPLE TRIG','optional EG',1]],
+ 'A clean DAW stem enters the MS-10 through Ext Signal In while Channel A moves the filter cutoff per step. Same timing as the dry stem; only the filtering changes. The MS-10 VCA is hard-wired to the EG, so the stem is heard only while a gate is held (play a key or patch a trigger). The demo uses a synth riff as a stand-in for the stem.',
+ [['CHANNEL A','cutoff per step',1],['EXT LEVEL','stem gain, 3Vpp max',1],['EG GATE','needed to open VCA',1]],
  ['Dry stem','The riff unfiltered.','Constant brightness.'],
  ['Stepped-filter return','The same riff with cutoff leaping per step.','Brightness changes per step; timing matches the dry stem.'],
  'Timing should match the dry stem exactly; only the harmonic content per step differs.',
- 'Demo assumes Ext Signal In passes through the Korg-35 filter at unity.',M2),
+ 'Ext Signal In is rated 3Vpp max with a level knob, so it does not pass at unity. The VCO also sums with the stem and cannot be switched off; judge the return for VCO bleed. The demo shows the filtered stem only.',M2),
 mk('gate','Hybrid','Rhythmic VCA Gating on a Stem','DAW Stem / Ext Signal In / Multiple Trig / EG',
- 'A sustained DAW pad runs through the VCA while the SQ-10 Multiple Trig Out chops it with the EG: rhythmic gating on steps that are not locked to the DAW grid. The demo uses synth tones as a stand-in for the pad.',
- [['MULTIPLE TRIG','→ EG TRIG IN',1],['DUTY','gate length',1],['CLOCK','free-running',1]],
+ 'A sustained DAW pad runs through the VCA while the SQ-10 Multiple Trig Out chops it with the EG: rhythmic gating on steps that are not locked to the DAW grid. The stem is audible only while the EG is open. The demo uses synth tones as a stand-in for the pad.',
+ [['MULTIPLE TRIG','→ EG TRIG IN',1],['DUTY','gate length',1],['CLOCK','internal, unsynced',1]],
  ['Sustained pad','Unbroken tones.','Long continuous bands.'],
  ['Gated return','The pad chopped into short, loose pulses.','Bands break into short blocks.'],
  'Pulse spacing should wander slightly from pass to pass; the dry pad stays unbroken.',
- 'Demo assumes the EG gives a short gate with a quick decay.',M2),
+ 'Demo assumes the EG gives a short gate with a quick decay. The VCO still sums with the stem, and Ext Signal In is 3Vpp max.',M2),
 mk('colour','Hybrid','MIDI-Stepped Tone Colour','Kenton Pro Solo / STEP jack / Korg-35 VCF',
  'A DAW MIDI clip plays pitch and timing on the grid through the Kenton. Its gate also advances the SQ-10, whose Channel A drives the MS-10 filter cutoff. Same notes, same timing; the timbre changes note by note.',
- [['KENTON','pitch + gate'],['SQ-10 STEP','gate advances'],['CH A → VCF','cutoff per step']],
+ [['KENTON','CV Hz/V + S-trig gate'],['SQ-10 STEP','gate advances'],['CH A → VCF','cutoff per step']],
  ['Fixed Channel A','Notes on the grid with one constant timbre.','Every note has the same brightness.'],
  ['SQ-10 stepping the filter','High-resonance filter leaps dramatically step to step.','Harmonic height spikes and plunges note by note.'],
  'Compare spectrograms note by note. Timing matches across both passes; only the harmonic content per note differs, repeating every 12 notes.',
- 'Kenton trigger polarity against the STEP jack\'s ↓ GND marking is unconfirmed.')
+ 'Set the Kenton gate to S-trig and its CV to Hz/V (into VCO CV IN). Try no pull-up first, then a 5V pull-up if STEP does not respond, and verify on a scope. Options vary by Pro Solo revision.')
 ].map((p,i)=>(p.n=String(i+1).padStart(2,'0'),p.id='p-'+p.n,p));
 
 const L={lo:60,hi:2400,ax:[[82.41,'E2'],[164.8,'E3'],[329.6,'E4'],[659.3,'E5'],[1318.5,'E6']]};
