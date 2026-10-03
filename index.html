@@ -19,12 +19,12 @@
       "author": { "@type": "Person", "name": "José Velázquez, MA" },
       "publisher": { "@type": "Organization", "name": "Voltage & Wave" },
       "isbn": "9798177567976",
-      "bookFormat": "https://schema.org/Paperback",
+      "bookFormat": "https://schema.org/EBook",
       "numberOfPages": 32,
       "inLanguage": "en-GB",
       "datePublished": "2026-09-27",
       "image": "https://voltageandwave.co.uk/book1-cover.jpg",
-      "url": "https://www.amazon.co.uk/dp/B0HLKSNFX1"
+      "url": "https://www.amazon.co.uk/dp/B0HLQ2524M"
     }
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -185,12 +185,11 @@
         </div>
     </section>
 
-    <!-- BOOK ANNOUNCEMENT (open on first visit, collapsed on return visits) -->
+    <!-- BOOK ANNOUNCEMENT -->
     <section id="books" class="py-10 bg-zinc-900 border-y border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="reveal bg-zinc-950 border border-amber-500/30 p-4 sm:p-5 rounded-sm transition-all duration-300">
 
-                <!-- Header & toggle bar (always visible) -->
                 <div class="flex flex-wrap items-center justify-between gap-4">
                     <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
                         <span id="book-status-indicator" class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
@@ -198,18 +197,17 @@
                         <span class="hidden md:inline font-mono text-xs text-zinc-500">Korg MS-10 External Processing</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <a id="book-mini-buy" href="https://www.amazon.co.uk/dp/B0HLKSNFX1" target="_blank" rel="noopener" style="display:none" class="font-mono text-[10px] uppercase tracking-widest px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold transition-colors">Buy on Amazon UK</a>
+                        <a id="book-mini-buy" href="https://www.amazon.co.uk/dp/B0HLQ2524M" target="_blank" rel="noopener" style="display:none" class="font-mono text-[10px] uppercase tracking-widest px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold transition-colors">Buy Kindle Edition</a>
                         <button id="book-toggle-btn" class="font-mono text-[10px] text-zinc-400 hover:text-amber-500 transition-colors uppercase tracking-widest px-3 py-1.5 border border-zinc-800 rounded-sm hover:border-amber-500/50 bg-zinc-900/50 flex items-center gap-2 cursor-pointer" aria-expanded="true" aria-controls="book-wrapper">
                             <span id="book-toggle-text">Minimise</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Collapsible content -->
                 <div id="book-wrapper" class="mt-8">
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
                         <div class="lg:col-span-3">
-                            <a href="https://www.amazon.co.uk/dp/B0HLKSNFX1" target="_blank" rel="noopener" class="group block relative max-w-[14rem] mx-auto" aria-label="View Book One on Amazon UK">
+                            <a href="https://www.amazon.co.uk/dp/B0HLQ2524M" target="_blank" rel="noopener" class="group block relative max-w-[14rem] mx-auto" aria-label="View Book One Kindle Edition on Amazon UK">
                                 <div class="absolute -inset-6 bg-amber-500/10 blur-3xl rounded-full -z-10"></div>
                                 <img src="book1-cover.jpg" alt="Front cover of Korg MS-10 External Processing, Book One of the Hardware Capabilities Series" loading="lazy"
                                      width="1093" height="1650"
@@ -236,12 +234,12 @@
                             <dl class="grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono text-xs mb-6 max-w-2xl border-y border-zinc-800 py-4">
                                 <div><dt class="text-zinc-600 uppercase tracking-widest mb-1">Author</dt><dd class="text-zinc-300">José Velázquez, MA</dd></div>
                                 <div><dt class="text-zinc-600 uppercase tracking-widest mb-1">Published</dt><dd class="text-zinc-300">27 Sep 2026</dd></div>
-                                <div><dt class="text-zinc-600 uppercase tracking-widest mb-1">Format</dt><dd class="text-zinc-300">Paperback, 32 pp</dd></div>
+                                <div><dt class="text-zinc-600 uppercase tracking-widest mb-1">Format</dt><dd class="text-zinc-300">Kindle Edition</dd></div>
                                 <div><dt class="text-zinc-600 uppercase tracking-widest mb-1">ISBN</dt><dd class="text-zinc-300">9798177567976</dd></div>
                             </dl>
                             <div class="flex flex-col sm:flex-row gap-4 font-mono">
-                                <a href="https://www.amazon.co.uk/dp/B0HLKSNFX1" target="_blank" rel="noopener" class="inline-flex justify-center items-center gap-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 px-8 py-4 font-bold transition-all hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]">
-                                    BUY ON AMAZON UK <i data-lucide="external-link" class="w-4 h-4"></i>
+                                <a href="https://www.amazon.co.uk/dp/B0HLQ2524M" target="_blank" rel="noopener" class="inline-flex justify-center items-center gap-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 px-8 py-4 font-bold transition-all hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]">
+                                    BUY KINDLE EDITION <i data-lucide="external-link" class="w-4 h-4"></i>
                                 </a>
                                 <a href="about.html" class="inline-flex justify-center items-center gap-2 border border-zinc-700 hover:border-amber-500/60 text-white px-8 py-4 transition-colors bg-zinc-950/50">
                                     <i data-lucide="audio-lines" class="w-4 h-4"></i> HEAR THE DEMOS &amp; COMPANION NOTES
@@ -287,6 +285,7 @@
         </div>
     </section>
 
+    <!-- ABOUT SECTION -->
     <section id="about" class="py-20 bg-zinc-900 border-y border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -339,6 +338,7 @@
         </div>
     </section>
 
+    <!-- OPERATORS SECTION -->
     <section id="operators" class="py-24 bg-zinc-950 border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 reveal">
@@ -353,9 +353,7 @@
                     <p class="text-amber-500 font-mono text-xs mb-4">ARCHITECT & SIGNAL ENGINEER</p>
                     <p class="text-zinc-400 text-sm leading-relaxed mb-4">
                         José Velázquez is a London-based software architect, multimedia producer, and archivist. Over the last 20 years, he has led projects for the BBC, IBM, and Google, working across both software engineering and creative media.
-
-With a background in BBC broadcast operations and an MA in Documentary Research, José manages the engineering and signal flow at Voltage & Wave, handling the studio's analogue re-amping and hardware sequencing. His interest in electronica also extends to custom code, developing experimental, open-source Web Audio tools—including browser-based synthesisers and sequencers inspired by vintage hardware.
-
+                        With a background in BBC broadcast operations and an MA in Documentary Research, José manages the engineering and signal flow at Voltage & Wave, handling the studio's analogue re-amping and hardware sequencing. His interest in electronica also extends to custom code, developing experimental, open-source Web Audio tools—including browser-based synthesisers and sequencers inspired by vintage hardware.
                     </p>
                     <a href="https://github.com/josev2046/v-w-web-audio-tools" target="_blank" class="inline-flex items-center gap-2 text-xs font-mono text-zinc-500 hover:text-amber-500 transition-colors border border-zinc-800 bg-zinc-950 px-3 py-1.5 rounded-sm">
                         <i data-lucide="github" class="w-3.5 h-3.5"></i> VIEW JOSE'S OPEN-SOURCE AUDIO TOOLS
@@ -377,6 +375,7 @@ With a background in BBC broadcast operations and an MA in Documentary Research,
         </div>
     </section>
 
+    <!-- SERVICES SECTION -->
     <section id="services" class="py-24">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 reveal">
@@ -433,6 +432,7 @@ With a background in BBC broadcast operations and an MA in Documentary Research,
         </div>
     </section>
 
+    <!-- ARSENAL SECTION -->
     <section id="arsenal" class="py-24 bg-zinc-950 border-y border-zinc-800 relative">
         <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9IiMzZjNmNDYiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PC9zdmc+')] [mask-image:linear-gradient(to_bottom,white,transparent)]"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -475,159 +475,7 @@ With a background in BBC broadcast operations and an MA in Documentary Research,
         </div>
     </section>
 
-    <section id="proof" class="py-24 bg-zinc-950 border-y border-zinc-800 relative">
-        <div class="absolute inset-0 bg-synth-grid [mask-image:radial-gradient(ellipse_at_center,white,transparent_75%)] -z-10 opacity-40"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-6 reveal">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-500 font-mono text-xs mb-6">
-                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                    SIGNAL ANALYSIS // MS-10 RE-AMP PASS
-                </div>
-                <h2 class="text-3xl font-bold text-white mb-4 uppercase tracking-wide">Signal Analysis</h2>
-                <p class="text-zinc-400 max-w-2xl mx-auto font-light">
-                    Waveform and spectrogram captures taken directly off a stem before and after a pass through the MS-10's resonant filter. 
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <!-- Dry Card -->
-                <div class="hardware-card bg-zinc-900 border border-zinc-800 p-4 rounded-sm reveal [transition-delay:100ms] flex flex-col justify-between">
-                    <div>
-                        <img src="l_dry_wave.png" alt="Dry stem waveform before MS-10 processing" class="w-full h-auto mb-4 border border-zinc-800 bg-zinc-950">
-                        <h4 class="text-white font-bold font-mono text-sm">DRY STEM</h4>
-                        <p class="text-zinc-500 text-xs mt-2 mb-4">Flat, quantised, soft-synth bassline. Clean dynamic range, no colouration — the kind of stem that arrives in most inboxes.</p>
-                    </div>
-                    
-                    <div class="mt-auto border-t border-zinc-800 pt-4 flex items-center gap-4">
-                        <audio id="audio-dry" src="dry_bassline.wav" preload="metadata"></audio>
-                        <button id="btn-dry" class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-sm transition-colors border border-zinc-700">
-                            <span id="play-wrap-dry" class="flex"><i data-lucide="play" class="w-4 h-4 ml-0.5"></i></span>
-                            <span id="pause-wrap-dry" class="hidden"><i data-lucide="pause" class="w-4 h-4"></i></span>
-                        </button>
-                        <div class="flex-1 flex flex-col gap-1.5">
-                            <div class="flex justify-between items-center text-[10px] font-mono text-zinc-500 uppercase tracking-widest">
-                                <span>Digital Source</span>
-                                <span id="time-dry">0:00</span>
-                            </div>
-                            <div id="track-dry" class="h-2 w-full bg-zinc-950 rounded-sm overflow-hidden cursor-pointer border border-zinc-800">
-                                <div id="progress-dry" class="h-full bg-zinc-500 w-0 pointer-events-none transition-all duration-75"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Wet Card -->
-                <div class="hardware-card bg-zinc-900 border border-amber-500/30 p-4 rounded-sm reveal [transition-delay:200ms] flex flex-col justify-between">
-                    <div>
-                        <img src="l_wet_wave.png" alt="Waveform after MS-10 re-amping" class="w-full h-auto mb-4 border border-zinc-800 bg-zinc-950">
-                        <h4 class="text-amber-500 font-bold font-mono text-sm">MS-10 RE-AMPED</h4>
-                        <p class="text-zinc-500 text-xs mt-2 mb-4">Same performance, driven through the filter and returned. Denser, saturated, and shaped by a manually ridden cutoff sweep.</p>
-                    </div>
-
-                    <div class="mt-auto border-t border-amber-500/20 pt-4 flex items-center gap-4">
-                        <audio id="audio-wet" src="ms10_reamped.wav" preload="metadata"></audio>
-                        <button id="btn-wet" class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 rounded-sm transition-colors border border-amber-500/30">
-                            <span id="play-wrap-wet" class="flex"><i data-lucide="play" class="w-4 h-4 ml-0.5"></i></span>
-                            <span id="pause-wrap-wet" class="hidden"><i data-lucide="pause" class="w-4 h-4"></i></span>
-                        </button>
-                        <div class="flex-1 flex flex-col gap-1.5">
-                            <div class="flex justify-between items-center text-[10px] font-mono text-amber-500/70 uppercase tracking-widest">
-                                <span>Hardware Return</span>
-                                <span id="time-wet">0:00</span>
-                            </div>
-                            <div id="track-wet" class="h-2 w-full bg-zinc-950 rounded-sm overflow-hidden cursor-pointer border border-amber-500/20">
-                                <div id="progress-wet" class="h-full bg-amber-500 w-0 pointer-events-none transition-all duration-75 shadow-[0_0_8px_rgba(245,158,11,0.6)]"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="hardware-card bg-zinc-900 border border-zinc-800 p-4 rounded-sm reveal [transition-delay:300ms]">
-                    <img src="l_dry_spec.png" alt="Dry stem spectrogram" class="w-full h-auto mb-4 border border-zinc-800 bg-zinc-950">
-                    <h4 class="text-white font-bold font-mono text-sm">DRY SPECTROGRAM</h4>
-                    <p class="text-zinc-500 text-xs mt-2">Harmonic content stacked cleanly above each note, tight noise floor, nothing above the source's natural overtone series.</p>
-                </div>
-                <div class="hardware-card bg-zinc-900 border border-amber-500/30 p-4 rounded-sm reveal [transition-delay:400ms]">
-                    <img src="l_wet_spec.png" alt="Spectrogram after MS-10 re-amping" class="w-full h-auto mb-4 border border-zinc-800 bg-zinc-950">
-                    <h4 class="text-amber-500 font-bold font-mono text-sm">RE-AMPED SPECTROGRAM</h4>
-                    <p class="text-zinc-500 text-xs mt-2">The resonant peak tracks the filter sweep — an irregular, note-following ridge, not a smooth automated curve. Harmonics extend well above the dry signal, and a raised noise floor confirms a genuine analogue return path.</p>
-                </div>
-            </div>
-            
-            <p class="text-center text-zinc-600 font-mono text-xs mt-10 reveal">
-                To ensure a fluid user experience, the waveforms and spectrograms are procedurally generated rather than static hardware captures. They are, however, carefully calculated using genuine analogue harmonic behaviour. ANALYSIS GENERATED VIA LIBAVFILTER // WAVEFORM + SPECTROGRAM CAPTURE
-            </p>
-        </div>
-    </section>
-
-    <section id="signal-flow" class="py-24 bg-zinc-900 border-b border-zinc-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 reveal">
-                <h2 class="text-3xl font-bold text-white mb-4 uppercase tracking-wide">Hybrid Studio Signal Path</h2>
-                <p class="text-zinc-400 font-mono text-sm uppercase tracking-widest">Bridging the Physical and Digital Realms</p>
-            </div>
-            <div class="bg-zinc-950 border border-zinc-800 p-8 rounded-sm reveal shadow-2xl relative overflow-hidden flex justify-center items-center hardware-card w-full overflow-x-auto">
-                <svg viewBox="0 0 950 650" class="w-full max-w-5xl min-w-[800px] h-auto font-mono" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" /></marker>
-                        <marker id="arrow-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b" /></marker>
-                        <marker id="arrow-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#f97316" /></marker>
-                        <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#22c55e" /></marker>
-                        <marker id="arrow-blue-rev" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 10 0 L 0 5 L 10 10 z" fill="#3b82f6" /></marker>
-                    </defs>
-                    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="#18181b" stroke-width="1"/></pattern>
-                    <rect width="950" height="650" fill="url(#grid)" />
-                    <text x="125" y="40" fill="#52525b" font-size="14" font-weight="bold" text-anchor="middle" letter-spacing="2">DIGITAL REALM</text>
-                    <text x="425" y="40" fill="#52525b" font-size="14" font-weight="bold" text-anchor="middle" letter-spacing="2">BRIDGE</text>
-                    <text x="765" y="40" fill="#52525b" font-size="14" font-weight="bold" text-anchor="middle" letter-spacing="2">ANALOGUE ARSENAL</text>
-                    <g fill="none" stroke-width="2.5" stroke-linejoin="round">
-                        <g stroke="#3b82f6">
-                            <path d="M 215 275 L 345 275" marker-start="url(#arrow-blue-rev)" marker-end="url(#arrow-blue)" />
-                            <path d="M 425 245 L 425 195" marker-end="url(#arrow-blue)" />
-                        </g>
-                        <g stroke="#f59e0b">
-                            <path d="M 345 290 L 235 290 L 235 150 L 215 150" marker-end="url(#arrow-amber)" />
-                            <path d="M 425 315 L 425 395" marker-end="url(#arrow-amber)" />
-                            <path d="M 505 410 L 590 410 L 590 290 L 675 290" marker-end="url(#arrow-amber)" />
-                            <path d="M 505 435 L 560 435 L 560 425 L 675 425" marker-end="url(#arrow-amber)" />
-                        </g>
-                        <g stroke="#f97316">
-                            <path d="M 505 155 L 675 155" marker-end="url(#arrow-orange)" />
-                            <path d="M 505 175 L 630 175 L 630 260 L 675 260" marker-end="url(#arrow-orange)" />
-                            <path d="M 765 195 L 765 245" marker-end="url(#arrow-orange)" />
-                        </g>
-                        <g stroke="#22c55e">
-                            <path d="M 765 315 L 765 545 L 505 545" marker-end="url(#arrow-green)" />
-                            <path d="M 735 465 L 735 525 L 505 525" marker-end="url(#arrow-green)" />
-                            <path d="M 405 515 L 405 315" marker-end="url(#arrow-green)" />
-                        </g>
-                    </g>
-                    <g font-size="13" font-weight="bold">
-                        <g transform="translate(35, 125)"><rect width="180" height="50" rx="4" fill="#18181b" stroke="#3f3f46" stroke-width="2"/><text x="90" y="30" fill="#d4d4d8" text-anchor="middle">Kali LP-6 V2</text></g>
-                        <g transform="translate(35, 245)"><rect width="180" height="60" rx="4" fill="#18181b" stroke="#3b82f6" stroke-width="2"/><text x="90" y="35" fill="#d4d4d8" text-anchor="middle">Computer / DAW</text></g>
-                        <g transform="translate(345, 140)"><rect width="160" height="50" rx="4" fill="#202022" stroke="#52525b" stroke-width="2"/><text x="80" y="30" fill="#d4d4d8" text-anchor="middle">Kenton Pro Solo</text></g>
-                        <g transform="translate(345, 245)"><rect width="160" height="70" rx="4" fill="#202022" stroke="#52525b" stroke-width="2"/><text x="80" y="32" fill="#d4d4d8" text-anchor="middle">Focusrite 4i4 Gen 4</text><text x="80" y="50" fill="#71717a" font-size="10" text-anchor="middle">INTERFACE</text></g>
-                        <g transform="translate(345, 395)"><rect width="160" height="50" rx="4" fill="#202022" stroke="#52525b" stroke-width="2"/><text x="80" y="30" fill="#d4d4d8" text-anchor="middle">Palmer DACCAPO</text></g>
-                        <g transform="translate(345, 515)"><rect width="160" height="50" rx="4" fill="#202022" stroke="#52525b" stroke-width="2"/><text x="80" y="30" fill="#d4d4d8" text-anchor="middle">Palmer PAN 02</text></g>
-                        <g transform="translate(675, 125)"><rect width="180" height="70" rx="4" fill="#09090b" stroke="#f59e0b" stroke-width="2"/><text x="90" y="40" fill="#d4d4d8" text-anchor="middle">Korg SQ-10</text></g>
-                        <g transform="translate(675, 245)"><rect width="180" height="70" rx="4" fill="#09090b" stroke="#f59e0b" stroke-width="2"/><text x="90" y="40" fill="#d4d4d8" text-anchor="middle">Korg MS-10</text></g>
-                        <g transform="translate(675, 395)" opacity="0.6"><rect width="180" height="70" rx="4" fill="#09090b" stroke="#52525b" stroke-width="2"/><line x1="10" y1="35" x2="170" y2="35" stroke="#f59e0b" stroke-width="2" /><text x="90" y="30" fill="#71717a" text-anchor="middle">Korg VC-10</text><text x="90" y="55" fill="#f59e0b" font-size="10" text-anchor="middle">OFFLINE</text></g>
-                    </g>
-                    <g transform="translate(35, 500)" font-size="11" fill="#a1a1aa">
-                        <rect width="180" height="110" rx="4" fill="#18181b" stroke="#3f3f46" stroke-width="1"/>
-                        <text x="90" y="20" fill="#d4d4d8" font-weight="bold" text-anchor="middle">SIGNAL KEY</text>
-                        <line x1="15" y1="40" x2="45" y2="40" stroke="#3b82f6" stroke-width="2"/><text x="55" y="44">Digital / USB Sync</text>
-                        <line x1="15" y1="60" x2="45" y2="60" stroke="#f59e0b" stroke-width="2"/><text x="55" y="64">Hi-Z Audio Out</text>
-                        <line x1="15" y1="80" x2="45" y2="80" stroke="#f97316" stroke-width="2"/><text x="55" y="84">Control Voltage</text>
-                        <line x1="15" y1="100" x2="45" y2="100" stroke="#22c55e" stroke-width="2"/><text x="55" y="104">Balanced Audio In</text>
-                    </g>
-                </svg>
-            </div>
-        </div>
-    </section>
-
+    <!-- PROCESS / HOW IT WORKS -->
     <section class="py-24">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-white mb-16 text-center uppercase tracking-wide reveal">How It Works</h2>
@@ -659,7 +507,7 @@ With a background in BBC broadcast operations and an MA in Documentary Research,
         </div>
     </section>
 
-    <!-- PROTOCOL SECTION -->
+    <!-- STEM SPECIFICATIONS -->
     <section id="protocol" class="py-24 bg-zinc-950 border-t border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 reveal">
@@ -755,6 +603,7 @@ With a background in BBC broadcast operations and an MA in Documentary Research,
         </div>
     </section>
 
+    <!-- CLIENT PORTAL SUBMISSION -->
     <section id="submit" class="py-24 bg-zinc-950 border-t border-zinc-800">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-zinc-900 border border-zinc-800 p-8 sm:p-12 shadow-2xl relative overflow-hidden">
@@ -827,6 +676,7 @@ With a background in BBC broadcast operations and an MA in Documentary Research,
         </div>
     </section>
 
+    <!-- FOOTER -->
     <footer class="bg-zinc-950 border-t border-zinc-900 py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
@@ -836,7 +686,7 @@ With a background in BBC broadcast operations and an MA in Documentary Research,
                 <span class="font-mono text-zinc-600 text-xs tracking-widest">
                     VOLTAGE & WAVE STUDIO | patch@voltageandwave.co.uk |
                     <a href="#books" class="hover:text-amber-500 transition-colors">BOOKS</a> |
-                    <a href="https://www.amazon.co.uk/dp/B0HLKSNFX1" target="_blank" rel="noopener" class="hover:text-amber-500 transition-colors">BOOK ONE ON AMAZON UK</a>
+                    <a href="https://www.amazon.co.uk/dp/B0HLQ2524M" target="_blank" rel="noopener" class="hover:text-amber-500 transition-colors">KINDLE EDITION ON AMAZON UK</a>
                 </span>
             </div>
             <p class="text-zinc-600 text-xs font-mono">
@@ -967,74 +817,6 @@ With a background in BBC broadcast operations and an MA in Documentary Research,
                     submitBtn.style.display = 'flex';
                 }, 5000);
             }, 1500);
-        });
-
-        // --- CUSTOM AUDIO PLAYER LOGIC ---
-        function formatTime(seconds) {
-            if (isNaN(seconds)) return "0:00";
-            const m = Math.floor(seconds / 60);
-            const s = Math.floor(seconds % 60);
-            return `${m}:${s.toString().padStart(2, '0')}`;
-        }
-
-        const players = ['dry', 'wet'];
-        players.forEach(id => {
-            const audio = document.getElementById(`audio-${id}`);
-            const btn = document.getElementById(`btn-${id}`);
-            const playWrap = document.getElementById(`play-wrap-${id}`);
-            const pauseWrap = document.getElementById(`pause-wrap-${id}`);
-            const progress = document.getElementById(`progress-${id}`);
-            const track = document.getElementById(`track-${id}`);
-            const timeDisplay = document.getElementById(`time-${id}`);
-
-            // Toggle Play/Pause
-            btn.addEventListener('click', () => {
-                // Pause the other player for A/B comparison
-                players.forEach(otherId => {
-                    if (otherId !== id) {
-                        document.getElementById(`audio-${otherId}`).pause();
-                        document.getElementById(`play-wrap-${otherId}`).classList.remove('hidden');
-                        document.getElementById(`pause-wrap-${otherId}`).classList.add('hidden');
-                    }
-                });
-
-                if (audio.paused) {
-                    audio.play().catch(err => {
-                        console.error("Audio playback failed:", err);
-                        alert("Audio file could not be played. Please ensure files are named dry_bassline.wav and ms10_reamped.wav and are uploaded to the correct folder.");
-                    });
-                    playWrap.classList.add('hidden');
-                    pauseWrap.classList.remove('hidden');
-                } else {
-                    audio.pause();
-                    playWrap.classList.remove('hidden');
-                    pauseWrap.classList.add('hidden');
-                }
-            });
-
-            // Update Progress Bar & Time
-            audio.addEventListener('timeupdate', () => {
-                const percent = (audio.currentTime / audio.duration) * 100;
-                progress.style.width = `${percent}%`;
-                timeDisplay.textContent = formatTime(audio.currentTime);
-            });
-
-            // Reset when finished
-            audio.addEventListener('ended', () => {
-                playWrap.classList.remove('hidden');
-                pauseWrap.classList.add('hidden');
-                progress.style.width = `0%`;
-                timeDisplay.textContent = formatTime(0);
-            });
-
-            // Click on track to seek
-            track.addEventListener('click', (e) => {
-                const rect = track.getBoundingClientRect();
-                const pos = (e.clientX - rect.left) / rect.width;
-                if (!isNaN(audio.duration)) {
-                    audio.currentTime = pos * audio.duration;
-                }
-            });
         });
     </script>
 </body>
