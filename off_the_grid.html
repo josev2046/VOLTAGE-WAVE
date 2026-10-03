@@ -29,22 +29,51 @@ body{background:#050505;color:#d4d4d8}
 <a href="index.html" class="font-mono text-sm text-zinc-400 hover:text-pink-500 transition-colors">← RETURN</a>
 </div></div></nav>
 
-<section class="relative pt-32 pb-16 overflow-hidden border-b border-zinc-800 bg-[#0a0a0c]">
+<section class="relative pt-32 pb-20 overflow-hidden border-b border-zinc-800 bg-[#0a0a0c]">
 <div class="absolute inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-pink-500/30 bg-pink-500/10 text-pink-500 font-mono text-xs mb-6"><span class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>HARDWARE CAPABILITIES // SQ-10 // BOOK TWO</div>
-<h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4 uppercase">Off the <span class="text-pink-500 glow-text">Grid</span></h1>
-<p class="text-lg text-zinc-400 max-w-2xl font-light mb-8">The Korg SQ-10 makes no sound. It sends the MS-10 three control voltages per step, with continuous knobs and an internal clock that is not synced to anything (in Stepped mode it can take an external clock at the STEP jack). Below, all twelve protocols from the book in four groups (pitch, time, timbre and hybrid stem work), each with an exaggerated A/B you can hear.</p>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row gap-12 lg:items-start">
+  
+  <!-- Left Column: Title & Nav -->
+  <div class="flex-1">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-pink-500/30 bg-pink-500/10 text-pink-500 font-mono text-xs mb-6">
+      <span class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>HARDWARE CAPABILITIES // SQ-10 // BOOK TWO
+    </div>
+    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight mb-6 uppercase">Off the <span class="text-pink-500 glow-text">Grid</span></h1>
+    <p class="text-lg text-zinc-400 font-light mb-10 leading-relaxed max-w-2xl">
+      The Korg SQ-10 makes no sound. It sends the MS-10 three control voltages per step, with continuous knobs and an internal clock that is not synced to anything (in Stepped mode it can take an external clock at the STEP jack). Below, all twelve protocols from the book in four groups (pitch, time, timbre and hybrid stem work), each with an exaggerated A/B you can hear.
+    </p>
+    
+    <div class="mb-4 font-mono text-xs text-zinc-500 uppercase tracking-widest">Jump to Protocol:</div>
+    <nav id="jump" class="flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-widest max-w-2xl"></nav>
+  </div>
 
-<div class="max-w-2xl border border-amber-500/40 bg-amber-500/10 px-4 py-4 mb-8 text-sm text-zinc-300 leading-relaxed">
-  <strong class="text-amber-400 font-mono uppercase tracking-widest text-xs">Read this first: you are meant to experiment.</strong><br>
-  This is a 1978 analogue sequencer: knobs drift, units differ and the manuals leave some details open. Where you see a <span class="font-mono text-amber-400 text-xs uppercase">Confirm on bench</span> flag, that is a place the documentation stops and your own unit takes over. Treat it as an invitation: try the patch, listen, and check with a tuner or scope. What you find is part of the method, and your results belong in the session log.<br><br>
-  <strong class="text-amber-400 font-mono uppercase tracking-widest text-xs">About these interactive demos:</strong><br>
-  Audio, waveforms, and spectrograms are generated live in your browser. Rather than relying on heavy, static audio files of hardware captures, this streamlined approach uses Web Audio to ensure instant playback, crisp interactive visualizations, and a lightweight page design while clearly illustrating the mechanics of each protocol. In P-10 and P-11, synth tones stand in for the DAW stem.
+  <!-- Right Column: Operator Notes -->
+  <div class="lg:w-[420px] flex-shrink-0 flex flex-col gap-4 relative z-20">
+    <!-- Hardware Note -->
+    <div class="bg-zinc-900/80 backdrop-blur-md border border-amber-500/20 rounded-xl p-5 shadow-lg">
+      <h3 class="text-amber-400 font-mono uppercase tracking-widest text-xs mb-3 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+        Read this first: Experiment
+      </h3>
+      <p class="text-sm text-zinc-300 leading-relaxed">
+        This is a 1978 analogue sequencer: knobs drift, units differ and manuals leave some details open. Where you see a <span class="font-mono text-amber-400 text-[10px] uppercase bg-amber-500/10 px-1 py-0.5 rounded border border-amber-500/20">Confirm on bench</span> flag, your own unit takes over. Try the patch, listen, and check with a tuner or scope. Your results belong in the session log.
+      </p>
+    </div>
+
+    <!-- Web Audio Note -->
+    <div class="bg-zinc-900/80 backdrop-blur-md border border-pink-500/20 rounded-xl p-5 shadow-lg">
+      <h3 class="text-pink-400 font-mono uppercase tracking-widest text-xs mb-3 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.3 1.046A120.153 120.153 0 011.05 3.28a.75.75 0 00-.5 1.08l1.378 2.893a.75.75 0 001.077.29 118.847 118.847 0 008.204-4.57.75.75 0 00-.18-1.363l-1.32-.482a.75.75 0 00-.51-.044zm-6.2 6.643a.75.75 0 00-.63-.255 119.5 119.5 0 00-2.316.326.75.75 0 00-.582 1.079l1.455 3.197a.75.75 0 001.034.34 117.85 117.85 0 009.68-5.748.75.75 0 00-.166-1.353l-1.423-.518a.75.75 0 00-.53.003L4.103 7.689zM2.85 14.512a.75.75 0 00-.568.966l.847 3.39A.75.75 0 004 19.5a119.23 119.23 0 008.575-3.033.75.75 0 00.375-1.112l-1.611-3.22a.75.75 0 00-.916-.328 116.711 116.711 0 00-7.573 2.705z" clip-rule="evenodd" /></svg>
+        About these interactive demos
+      </h3>
+      <p class="text-sm text-zinc-300 leading-relaxed">
+        Audio, waveforms, and spectrograms are generated live in your browser. Rather than relying on heavy, static audio files of hardware captures, this streamlined approach uses Web Audio to ensure instant playback, crisp interactive visualizations, and a lightweight page design while clearly illustrating the mechanics of each protocol. In P-10 and P-11, synth tones stand in for the DAW stem.
+      </p>
+    </div>
+  </div>
+
 </div>
-
-<nav id="jump" class="flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-widest"></nav>
-</div></section>
+</section>
 
 <main id="protocols"></main>
 
@@ -208,7 +237,7 @@ function col(p,wet){
  const cv=(c,l)=>`<canvas style="position:absolute;inset:0;width:100%;height:100%" class="${c} pointer-events-none" data-type="${p.type}" data-wet="${wet}"></canvas><div class="playhead absolute top-0 bottom-0 w-[2px] ${ph} z-20 pointer-events-none" data-c="${c}" style="left:0;display:none"></div><div class="absolute top-2 left-2 text-[9px] font-mono text-zinc-400 z-10 bg-black/50 px-1 pointer-events-none">${l}</div>`;
  return`<div class="flex flex-col gap-4">
  <div class="analysis-card border p-4 rounded flex flex-col" style="border-color:${b}">
-  <div class="relative bg-black border w-full mb-4 overflow-hidden" style="border-color:${b};height:144px">${cv('waveform',d[0].toUpperCase())}</div>
+  <div class="relative bg-black border w-full mb-4 overflow-hidden rounded" style="border-color:${b};height:144px">${cv('waveform',d[0].toUpperCase())}</div>
   <h3 class="font-mono text-sm font-bold ${k} uppercase tracking-widest mb-2">${wet?'Hardware Return':'Reference'}</h3>
   <p class="text-xs text-zinc-500 leading-relaxed mb-6">${d[1]}</p>
   <div class="mt-auto flex items-center border-t pt-4" style="border-color:${b}">
@@ -220,25 +249,61 @@ function col(p,wet){
   </div>
  </div>
  <div class="analysis-card border p-4 rounded" style="border-color:${b}">
-  <div class="relative bg-black border w-full mb-4 overflow-hidden" style="border-color:${b};height:192px">${cv('spectrogram',(wet?'HARDWARE':'REFERENCE')+' SPECTROGRAM')}</div>
+  <div class="relative bg-black border w-full mb-4 overflow-hidden rounded" style="border-color:${b};height:192px">${cv('spectrogram',(wet?'HARDWARE':'REFERENCE')+' SPECTROGRAM')}</div>
   <p class="text-xs text-zinc-500 leading-relaxed">${d[2]}</p>
  </div></div>`;
 }
 
 document.getElementById('protocols').innerHTML=P.map((p,i)=>`
 <section id="${p.id}" class="py-20 border-b border-zinc-800 ${i%2?'bg-zinc-900':'bg-[#0a0a0c]'} scroll-mt-16 relative z-10">
- <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-  <div class="flex items-center gap-3 mb-2"><span class="text-pink-500 font-mono font-bold text-xl">P-${p.n}</span><h2 class="text-2xl font-bold text-white uppercase tracking-wide">${p.title}</h2></div>
-  <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest mb-5"><span class="border border-zinc-600 text-zinc-300 px-2 py-1">${p.g}</span><span class="border border-zinc-700 text-zinc-500 px-2 py-1">Hardware: Korg SQ-10</span><span class="border border-pink-500/30 bg-pink-500/10 text-pink-400 px-2 py-1">${p.chip}</span>${p.bench?'<span class="border border-amber-500/40 bg-amber-500/10 text-amber-400 px-2 py-1">Confirm on bench</span>':''}</div>
-  <p class="text-zinc-400 text-sm max-w-3xl leading-relaxed mb-2"><strong>Engineer notes:</strong> ${p.notes}</p>
-  ${p.bench?`<p class="text-amber-500/80 text-xs max-w-3xl mb-2">${p.bench}</p>`:''}
-  <div class="w-full bg-[#0a0a0c] border border-zinc-800 rounded-sm my-8 overflow-hidden"><div class="bg-zinc-900 border-b border-zinc-800 px-4 py-2 font-mono text-[10px] text-zinc-400 tracking-widest uppercase">Routing schematic // P-${p.n}</div><div class="p-4 overflow-x-auto">${schem(p)}</div></div>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">${col(p,false)}${col(p,true)}</div>
-  <p class="mt-6 text-sm text-zinc-400 max-w-3xl border-l-2 border-pink-500/60 pl-4"><strong class="text-white">What to check.</strong> ${p.check}</p>
+ <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="flex flex-col lg:flex-row gap-12">
+    <!-- Left: Info & Schematic -->
+    <div class="lg:w-1/3 flex-shrink-0 flex flex-col">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-pink-500 font-mono font-bold text-xl">P-${p.n}</span>
+        <h2 class="text-2xl font-bold text-white uppercase tracking-wide">${p.title}</h2>
+      </div>
+      <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest mb-6">
+        <span class="border border-zinc-700 bg-zinc-800/50 text-zinc-400 px-2 py-1 rounded">${p.g}</span>
+        <span class="border border-pink-500/30 bg-pink-500/10 text-pink-400 px-2 py-1 rounded">${p.chip}</span>
+        ${p.bench?'<span class="border border-amber-500/40 bg-amber-500/10 text-amber-400 px-2 py-1 rounded">Confirm on bench</span>':''}
+      </div>
+      <p class="text-zinc-400 text-sm leading-relaxed mb-4"><strong>Engineer notes:</strong> ${p.notes}</p>
+      ${p.bench?`<p class="text-amber-500/80 text-xs mb-8 border-l-2 border-amber-500/50 pl-3">${p.bench}</p>`:''}
+      
+      <div class="mt-auto hidden lg:block">
+         <p class="text-sm text-zinc-400 border-l-2 border-pink-500/60 pl-4"><strong class="text-white block mb-1">What to check.</strong> ${p.check}</p>
+      </div>
+    </div>
+    
+    <!-- Right: Visuals & Audio -->
+    <div class="lg:w-2/3 flex-shrink-0">
+      <div class="w-full bg-[#0a0a0c] border border-zinc-800 rounded mb-8 overflow-hidden">
+        <div class="bg-zinc-900/50 border-b border-zinc-800 px-4 py-2 font-mono text-[10px] text-zinc-400 tracking-widest uppercase flex items-center justify-between">
+          <span>Routing schematic // P-${p.n}</span>
+          <span class="text-zinc-600">SQ-10 / MS-10</span>
+        </div>
+        <div class="p-4 overflow-x-auto">${schem(p)}</div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        ${col(p,false)}
+        ${col(p,true)}
+      </div>
+      
+      <!-- Mobile check notes -->
+      <div class="mt-8 lg:hidden block">
+         <p class="text-sm text-zinc-400 border-l-2 border-pink-500/60 pl-4"><strong class="text-white block mb-1">What to check.</strong> ${p.check}</p>
+      </div>
+    </div>
+  </div>
  </div>
 </section>`).join('');
 
-document.getElementById('jump').innerHTML=P.map(p=>`<a href="#${p.id}" class="border border-zinc-700 px-3 py-1.5 text-zinc-400 hover:text-pink-500 hover:border-pink-500/50 transition-colors relative z-10">P-${p.n} ${p.title}</a>`).join('');
+document.getElementById('jump').innerHTML=P.map(p=>`
+<a href="#${p.id}" class="flex items-center gap-2 bg-zinc-900/60 border border-zinc-800 rounded-md px-3 py-2 text-[10px] text-zinc-400 hover:text-pink-400 hover:border-pink-500/40 hover:bg-pink-500/5 transition-all relative z-10 group">
+  <span class="text-zinc-600 group-hover:text-pink-500/60">P-${p.n}</span> ${p.title}
+</a>`).join('');
 
 /* ---------- VISUALS ---------- */
 const WET_C='236,72,153',DRY_C='0,188,212';
