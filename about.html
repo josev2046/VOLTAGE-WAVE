@@ -207,6 +207,7 @@
         /* ---------- PROTOCOL DATA ---------- */
         const M1 = [['KORG MS-10','VCO + VCF + EG'],['PAN 02 → 4i4','DI to interface'],['HARDWARE RETURN','recorded in DAW']];
         const M2 = [['DAW STEM','→ EXT SIGNAL IN'],['KORG MS-10','VCF + VCA'],['HARDWARE RETURN','PAN 02 → 4i4 → DAW']];
+        const M3 = [['DAW INTERFACE','Summed Output'],['EXT SIGNAL IN','Feedback Loop'],['HARDWARE RETURN','PAN 02 → 4i4 → DAW']];
         
         const mk = (type, g, title, chip, notes, cv, dry, wet, check, bench, main) => ({
             type, g, title, chip, notes, dry, wet, check, bench, main: main || M1,
@@ -237,37 +238,37 @@
                 'Dry stem stays unbroken; wet return breaks into short pulses.', false, M2),
                 
             mk('noise','Re-Amping','Transient Reshaping & Noise','Component: Envelope Generator / Noise Gen',
-                'The Envelope Generator modulates the filter cutoff, snapping it open and closed via an external trigger to add sharp attack transients. The onboard White or Pink Noise is blended with the external input, gluing the track to a bed of analogue hiss.',
-                [['DAW STEM','→ EXT SIGNAL IN'],['EXT TRIGGER','→ EG TRIG IN'],['NOISE GEN','Blended in Mixer']],
+                'The Envelope Generator modulates the filter cutoff, snapping it open and closed via an external trigger to add sharp attack transients. The onboard VCO Noise is blended with the external input, gluing the track to a bed of analogue hiss.',
+                [['DAW STEM','→ EXT SIGNAL IN'],['EXT TRIGGER','→ TRIG IN (fires EG)'],['VCO NOISE','Blended internally']],
                 ['DRY STEM (Drum Loop)', 'Clean, soft attack source simulating a dull kick drum.', 'Sharp, narrow bursts.'],
                 ['MS-10 RE-AMPED (Attack + Hiss)', 'Aggressive transient snap and analogue noise added to the attack phase.', 'A bed of noise floors filling the gaps between transients.'],
                 'Noise floor should bloom exactly on the kicks.', false, M2),
 
             // Advanced B-Sides
-            mk('crying','Hardware Abuse','The Crying Circuit (Feedback Loop)','Component: SIGNAL OUT / EXT SIGNAL IN',
-                'Routing the MS-10\'s SIGNAL OUT back into its own EXT SIGNAL IN creates a massive, unstable feedback loop. As the digital stem enters the circuit alongside it, its dynamics interrupt and "tear" the feedback loop, creating visceral, self-destructing distortion that reacts organically to volume peaks.',
-                [['SIGNAL OUT','→ EXT SIGNAL IN'],['EXT LEVEL','attenuates feedback'],['DAW STEM','mix to interrupt']],
+            mk('crying','Hardware Abuse','The Crying Circuit (Feedback)','Component: SIGNAL OUT / EXT IN',
+                'Routing the MS-10\'s SIGNAL OUT back into its own EXT SIGNAL IN creates a massive, unstable feedback loop. Since the MS-10 has only one external input, you must mix the DAW stem and the MS-10\'s output in your audio interface, sending the summed signal into EXT SIGNAL IN. The stem dynamics interrupt and "tear" the feedback loop.',
+                [['MS-10 OUT + STEM','Summed in Interface'],['SUMMED SIGNAL','→ EXT SIGNAL IN'],['EXT LEVEL','Controls Feedback']],
                 ['Dry Stem', 'Clean, standard synth bassline.', 'Standard harmonic ridges.'],
                 ['Crying Circuit', 'Visceral feedback tearing with the stem dynamics.', 'Chaotic feedback bands that dip and tear during transients.'],
-                'Warning: Watch your monitors. Feedback loops escalate instantly. Start with Ext Level at zero.', false, M2),
+                'Warning: Watch your monitors. Feedback loops escalate instantly. Start with Ext Level at zero.', false, M3),
                 
-            mk('ringmod','Audio-Rate Modulation','True Hardware Ring Modulation','Component: MOD GEN / VCA INITIAL GAIN',
-                'Using the MS-10\'s Modulation Generator at maximum speed as a carrier wave for ring modulation. Because the MG reaches high audio-rate frequencies at its extreme clockwise setting, patching it into the VCA creates true analogue ring modulation, generating clanging, metallic, industrial sum-and-difference sidebands.',
-                [['MOD GEN OUT','audio-rate frequency'],['MOD GEN OUT','→ VCA INITIAL GAIN'],['DAW STEM','→ EXT SIGNAL IN']],
-                ['Dry Stem', 'Clean, sustained pad or drone.', 'Smooth, horizontal harmonic lines.'],
-                ['Ring Modulation', 'Harsh, metallic, clanging bell-like tones.', 'Mirrored sidebands clustered around the source frequencies.'],
-                'Tuning the MG alters the harmonic relationships. Unpatched VCO must be silenced.', false, M2),
+            mk('pwm','Audio-Rate Modulation','Audio-Rate PWM Mutilation','Component: PWM IN / VCO',
+                'Route the DAW stem into the PWM IN jack. Set the MS-10 VCO to the Pulse waveform and turn the PW/PWM knob to the center. Hold a MIDI note to open the VCA. The external audio\'s waveform physically alters the pulse width of the synthesiser\'s square wave at audio rates, turning the pitch into a screaming clone of the stem.',
+                [['DAW STEM','→ PWM IN'],['VCO (PULSE)','PW/PWM center'],['MIDI GATE','Hold to open VCA']],
+                ['Dry Stem', 'A clean vocal chop, pad, or digital synth line.', 'Clean structural ridges.'],
+                ['PWM Mutilation', 'A metallic, screeching clone of the stem mapped to the MS-10\'s pitch.', 'A dense wall of noise and extreme harmonic distortion.'],
+                'This replaces the stem with the MS-10 oscillator, using the stem solely as an audio-rate modulator.', false, M1),
                 
-            mk('envtrack','Hybrid Control Voltage','DAW Envelope-Tracking Squelch','Component: DAW CV / VCF FREQ IN',
-                'Using your DAW to generate an exact CV envelope of a digital track, then sending that voltage into the MS-10 filter via a DC-coupled interface. The MS-10\'s filter cutoff opens and closes in exact 1:1 dynamic response to complex acoustic drums or riffs.',
-                [['DAW CV (ENV)','→ VCF FREQ IN'],['DAW STEM','→ EXT SIGNAL IN'],['VCF PEAK','high resonance']],
+            mk('envtrack','Hybrid Control Voltage','DAW Envelope-Tracking Squelch','Component: DAW CV / CUTOFF FREQ',
+                'Using your DAW to generate an exact CV envelope of a digital track, then sending that voltage into the MS-10 filter via a DC-coupled interface output. The MS-10\'s filter cutoff opens and closes in exact 1:1 dynamic response to complex acoustic drums or riffs.',
+                [['DAW CV (ENV)','→ CUTOFF FREQ IN'],['DAW STEM','→ EXT SIGNAL IN'],['VCF PEAK','High resonance']],
                 ['Dry Stem', 'Dynamic synth riff or drum break.', 'Varying amplitude but static frequency response.'],
                 ['Envelope-Tracked Filter', 'Screaming analogue filter sweeps tracking the exact digital dynamics.', 'Harmonic peaks swelling and contracting perfectly with the amplitude.'],
                 'Requires a DC-coupled audio interface to send the DAW envelope as physical Control Voltage.', false, M2),
                 
-            mk('trignoise','Percussive Synthesis','Transient-Gated Analogue Noise','Component: NOISE / EG / TRIG IN',
-                'Using incoming stem transients to trigger percussive, filtered noise bursts. Instead of a continuous hiss floor, this injects tight, percussive analogue noise bursts directly onto kick or snare impacts. It glues a vintage, sampler-like 12-bit crackle or 80s industrial snap to clean digital drums.',
-                [['DAW TRANSIENT','→ TRIG IN (fires EG)'],['NOISE OUT','→ EXT SIGNAL IN'],['DAW STEM','mixed with noise']],
+            mk('noiseburst','Percussive Synthesis','Transient-Gated Analogue Noise','Component: VCO NOISE / TRIG IN',
+                'Using incoming stem transients to trigger percussive, filtered noise bursts. We set the VCO waveform to White Noise and route the DAW Stem into EXT SIGNAL IN. The transient track goes to TRIG IN, injecting tight, percussive analogue noise bursts directly onto kick or snare impacts without adding a continuous hiss floor.',
+                [['DAW TRANSIENT','→ TRIG IN (fires EG)'],['VCO WAVEFORM','Set to White Noise'],['DAW STEM','→ EXT SIGNAL IN']],
                 ['Dry Stem', 'Clean, sterile digital drum loop.', 'Isolated transient spikes.'],
                 ['Gated Noise Injection', 'Drum hits layered with aggressive, gated analogue noise.', 'Dense broadband noise bursts glued strictly to the transients.'],
                 'Tune the EG Decay to match the transient length of the snare or kick.', false, M2)
@@ -282,7 +283,7 @@
         /* ---------- SCHEMATIC & COLUMN RENDERERS ---------- */
         function schem(p) {
             const box = (x, y, w, t, s, c) => `<g transform="translate(${x - w / 2},${y})"><rect width="${w}" height="50" fill="#18181b" stroke="${c}" stroke-width="${c === '#52525b' ? 1 : 2}"/><text x="${w / 2}" y="22" fill="${c === '#52525b' ? '#d4d4d8' : c}" font-family="monospace" font-size="11" font-weight="bold" text-anchor="middle">${t}</text><text x="${w / 2}" y="38" fill="#71717a" font-family="monospace" font-size="9" text-anchor="middle">${s}</text></g>`;
-            const mx = i => 150 + i * 250, m = p.id, hot = p.main === M2 ? 1 : 0;
+            const mx = i => 150 + i * 250, m = p.id, hot = (p.main === M2 || p.main === M3) ? 1 : 0;
             let o = `<defs><marker id="r${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ef4444"/></marker><marker id="c${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00bcd4"/></marker></defs>`;
             p.cv.forEach(c => { o += `<path d="M${c.x} 70V96H${mx(c.to)}V123" fill="none" stroke="#00bcd4" stroke-width="2" stroke-dasharray="4" marker-end="url(#c${m})"/>` + box(c.x, 20, 170, c.t, c.s, '#00bcd4') });
             p.main.forEach((b, i) => { o += box(mx(i), 125, 170, b[0], b[1], i === hot ? '#ef4444' : '#52525b'); if (i < 2) o += `<path d="M${mx(i) + 85} 150H${mx(i + 1) - 85}" stroke="#ef4444" stroke-width="2" marker-end="url(#r${m})"/>` });
@@ -348,7 +349,7 @@
                         </div>
                         <h2 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-6 uppercase">Beyond <span class="text-zinc-600">Re-Amping</span></h2>
                         <p class="text-lg text-zinc-400 max-w-3xl mx-auto font-light leading-relaxed">
-                            The following protocols step outside the scope of Book One's core re-amping focus. These are advanced hybrid synthesis techniques: utilizing unstable feedback loops, hardware ring modulation, precise DAW envelope tracking, and transient-gated analogue noise injection. Highly destructive, unpredictable, and perfect for industrial sound design.
+                            The following protocols step outside the scope of Book One's core re-amping focus. These are advanced hybrid synthesis techniques designed explicitly for the Korg MS-10's architecture: utilizing unstable feedback loops, audio-rate pulse width modulation, precise DAW envelope tracking, and transient-gated analogue noise injection. Highly destructive, unpredictable, and perfect for industrial sound design.
                         </p>
                     </div>
                 </section>`;
@@ -476,13 +477,14 @@
                         
                         if (type === 'sat' || type === 'crying') {
                             env = Math.pow(1 - notePhase16, 2); 
-                        } else if (type === 'filter' || type === 'ringmod') {
+                        } else if (type === 'filter' || type === 'pwm') {
                             env = (Math.sin(tPhase * Math.PI * 2 * 6) * 0.5 + 0.5) * 0.8 + 0.2; 
+                            if (type === 'pwm' && isWet) env = 1.0; 
                         } else if (type === 'gate' || type === 'envtrack') {
                             env = (noteIdx16 % 2 === 0) ? 1 : 0.05; 
                             if (!isWet) env = 0.8; 
                             if (type === 'envtrack') env = (noteIdx16 % 2 === 0) ? Math.pow(1 - notePhase16, 1.5) : 0.05; 
-                        } else if (type === 'noise' || type === 'trignoise') {
+                        } else if (type === 'noise' || type === 'noiseburst') {
                             let kickPhase = (tPhase * 24) % 1; 
                             env = Math.max(0, 1 - kickPhase * 4); 
                         }
@@ -491,8 +493,8 @@
                         let val = mid * noise * env * (isWet ? 0.9 : 0.5);
                         
                         // Hardware abuses visualizations
-                        if (isWet && type === 'crying') val *= (Math.random() > 0.8 ? 1.5 : 0.5); // Tearing
-                        if (isWet && type === 'ringmod') val *= (Math.sin(i * 0.5)); // AM Visual
+                        if (isWet && type === 'crying') val *= (Math.random() > 0.8 ? 1.5 : 0.5); 
+                        if (isWet && type === 'pwm') val *= (Math.sin(i * 0.5)); 
                         
                         val *= (Math.sin(i * 0.1) * 0.3 + 0.7);
                         ctx.fillRect(i, mid - val, 1, val * 2);
@@ -548,20 +550,20 @@
                             isNote = ((noteIdx16 % 2) === 0);
                             if (!isWet) isNote = true;
                             if (type === 'envtrack' && isNote) intensity = Math.pow(1 - notePhase16, 1.5);
-                        } else if (type === 'noise' || type === 'trignoise') {
+                        } else if (type === 'noise' || type === 'noiseburst') {
                             intensity = Math.max(0, 1 - kickPhase * 4) + 0.1;
                             if (isWet && kickPhase < 0.1) {
-                                ctx.fillStyle = `rgba(239, 68, 68, ${type==='trignoise'?0.8:0.4})`;
+                                ctx.fillStyle = `rgba(239, 68, 68, ${type==='noiseburst'?0.8:0.4})`;
                                 ctx.fillRect(ml + i, 0, 2, h - mb);
                             }
-                        } else if (type === 'filter' || type === 'ringmod') {
+                        } else if (type === 'filter' || type === 'pwm') {
                             intensity = (Math.sin(tPhase * Math.PI * 2 * 6) * 0.5 + 0.5) * 0.8 + 0.2;
                         }
 
                         if (!isNote) continue;
                         
                         let displayNumH = numH;
-                        if (isWet && type === 'ringmod') displayNumH = 30; // Mirror sidebands
+                        if (isWet && type === 'pwm') displayNumH = 30; // Mirror sidebands
 
                         for(let k = 1; k <= displayNumH; k++) {
                             let y = (h - mb) - (k * ((h - mb) / 30));
@@ -576,14 +578,13 @@
                             
                             // Hardware abuse visual mods
                             if (isWet && type === 'crying') alpha *= (Math.random() > 0.6 ? 1 : 0); // Tearing gaps
-                            if (isWet && type === 'ringmod' && k % 3 === 0) alpha *= 1.5; // Sideband clusters
+                            if (isWet && type === 'pwm' && k % 3 === 0) alpha *= 1.5; // Sideband clusters
 
                             ctx.fillStyle = isWet ? `rgba(255, 235, 59, ${alpha})` : `rgba(0, 188, 212, ${alpha})`;
                             let hrmSize = isWet ? Math.random() * 2.5 + 1 : 1.5;
                             ctx.fillRect(ml + i, y + Math.random() * 2, 2, hrmSize);
                         }
                         
-                        // Specific visual additions
                         if (isWet && type === 'sat') {
                             let sy = (h - mb) * 0.4 + Math.sin(i * 0.05) * (h - mb) * 0.3;
                             ctx.fillStyle = '#ffffff'; ctx.fillRect(ml + i, sy, 2, 4);
@@ -715,19 +716,19 @@
                         currentNodes.push(osc, env);
                     }
                 } 
-                else if (type === 'filter' || type === 'ringmod') {
+                else if (type === 'filter' || type === 'pwm') {
                     const freqs = [130.81, 155.56, 196.00, 293.66]; 
                     const filter = currentCtx.createBiquadFilter();
                     filter.type = 'lowpass';
                     filter.Q.value = isWet ? 12 : 1;
 
-                    if (isWet && type === 'ringmod') {
-                        // True Amplitude/Ring Mod
+                    if (isWet && type === 'pwm') {
+                        // Audio-Rate PWM
                         let rmOsc = currentCtx.createOscillator();
                         let rmGain = currentCtx.createGain();
                         rmOsc.type = 'square';
-                        rmOsc.frequency.value = 80; // High rate MG
-                        rmGain.gain.value = 0; // Carrier mod
+                        rmOsc.frequency.value = 80; 
+                        rmGain.gain.value = 0; 
                         rmOsc.connect(rmGain.gain);
                         rmOsc.start(t0);
                         rmOsc.stop(t0 + AUDIO_DURATION);
@@ -820,7 +821,7 @@
                         currentNodes.push(osc, env, filter);
                     }
                 }
-                else if (type === 'noise' || type === 'trignoise') {
+                else if (type === 'noise' || type === 'noiseburst') {
                     const bufferSize = currentCtx.sampleRate * AUDIO_DURATION;
                     const noiseBuffer = currentCtx.createBuffer(1, bufferSize, currentCtx.sampleRate);
                     const output = noiseBuffer.getChannelData(0);
@@ -851,11 +852,11 @@
                             let noiseEnv = currentCtx.createGain();
                             noiseEnv.gain.setValueAtTime(0.001, t);
                             noiseEnv.gain.linearRampToValueAtTime(0.8, t + 0.01);
-                            noiseEnv.gain.exponentialRampToValueAtTime(0.001, type === 'trignoise' ? 0.08 : 0.1);
+                            noiseEnv.gain.exponentialRampToValueAtTime(0.001, type === 'noiseburst' ? 0.08 : 0.1);
 
                             let filter = currentCtx.createBiquadFilter();
                             filter.type = 'highpass';
-                            filter.frequency.value = type === 'trignoise' ? 2000 : 1000;
+                            filter.frequency.value = type === 'noiseburst' ? 2000 : 1000;
 
                             noiseSrc.connect(noiseEnv);
                             noiseEnv.connect(filter);
