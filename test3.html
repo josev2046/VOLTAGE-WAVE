@@ -89,7 +89,8 @@
     </style>
 </head>
 <body class="antialiased relative selection:bg-red-500 selection:text-zinc-950">
-    <div class="scanlines fixed inset-0"></div>
+    <!-- ADDED pointer-events-none z-50 to prevent blocking clicks -->
+    <div class="scanlines fixed inset-0 pointer-events-none z-50"></div>
 
     <!-- NAVIGATION -->
     <nav class="fixed w-full z-40 top-0 bg-[#050505]/90 backdrop-blur-md border-b border-zinc-800">
@@ -117,7 +118,7 @@
         
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row gap-12 lg:items-start">
             
-            <!-- Left Column: Title & Video -->
+            <!-- Left Column: Title & Nav -->
             <div class="flex-1 reveal">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 font-mono text-xs mb-6">
                     <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
@@ -203,6 +204,7 @@
                         Audio, waveforms, and spectrograms are generated live in your browser. Rather than relying on heavy, static audio files of hardware captures, this streamlined approach uses Web Audio to ensure instant playback, crisp interactive visualizations, and a lightweight page design while clearly illustrating the mechanics of each protocol. In these demos, synth tones stand in for the DAW stems.
                     </p>
                 </div>
+
             </div>
         </div>
     </section>
@@ -219,7 +221,7 @@
         </div>
     </footer>
 
-    <!-- PROCEDURAL CANVAS & SAFE AUDIO SCRIPT -->
+    <!-- GENERATION & WEB AUDIO ENGINE -->
     <script>
         /* ---------- PROTOCOL DATA ---------- */
         const M1 = [['KORG MS-10','VCO + VCF + EG'],['PAN 02 → 4i4','DI to interface'],['HARDWARE RETURN','recorded in DAW']];
@@ -283,7 +285,7 @@
                 ['Envelope-Tracked Filter', 'Screaming analogue filter sweeps tracking the exact digital dynamics.', 'Harmonic peaks swelling and contracting perfectly with the amplitude.'],
                 'Requires a DC-coupled audio interface to send the DAW envelope as physical Control Voltage.', false, M2),
                 
-            mk('trignoise','Percussive Synthesis','Transient-Gated Analogue Noise','Component: VCO NOISE / TRIG IN',
+            mk('noiseburst','Percussive Synthesis','Transient-Gated Analogue Noise','Component: VCO NOISE / TRIG IN',
                 'Using incoming stem transients to trigger percussive, filtered noise bursts. We set the VCO waveform to White Noise and route the DAW Stem into EXT SIGNAL IN. The transient track goes to TRIG IN, injecting tight, percussive analogue noise bursts directly onto kick or snare impacts without adding a continuous hiss floor.',
                 [['DAW TRANSIENT','→ TRIG IN (fires EG)'],['VCO WAVEFORM','Set to White Noise'],['DAW STEM','→ EXT SIGNAL IN']],
                 ['Dry Stem', 'Clean, sterile digital drum loop.', 'Isolated transient spikes.'],
@@ -347,7 +349,7 @@
                         <canvas class="w-full h-full absolute inset-0 spectrogram" data-wet="${wet}" data-type="${p.type}"></canvas>
                         <div class="playhead absolute top-0 bottom-0 w-[2px] ${ph} z-20" style="left: 0%; display: none;"></div>
                     </div>
-                    ${d[2] ? `<h3 class="font-mono text-sm font-bold ${k} uppercase tracking-widest mb-2">${wet ? 'Re-Amped Spectrogram' : 'Dry Spectrogram'}</h3><p class="text-zinc-500 text-xs font-sans leading-relaxed">${d[2]}</p>` : ''}
+                    ${d[2] ? `<p class="text-zinc-500 text-xs font-sans leading-relaxed mt-2">${d[2]}</p>` : ''}
                 </div>
             </div>`;
         }
@@ -428,7 +430,44 @@
             }, { threshold: 0.1 });
             reveals.forEach(reveal => observer.observe(reveal));
 
-            const AUDIO_DURATION = 12; // 12 seconds
+            // Video Toggle Logic
+            const videoWrapper = document.getElementById('video-player-wrapper');
+            const videoToggleBtn = document.getElementById('video-toggle-btn');
+            const videoToggleText = document.getElementById('video-toggle-text');
+            const mainVideo = document.getElementById('main-video');
+            const statusIndicator = document.getElementById('video-status-indicator');
+
+            if (videoWrapper && videoToggleBtn) {
+                const hasSeenVideo = localStorage.getItem('vw_ms10_intro_seen');
+                const minimizeVideo = () => {
+                    videoWrapper.style.display = 'none';
+                    videoToggleText.innerText = "Engineer's Log";
+                    statusIndicator.classList.remove('bg-red-500', 'animate-pulse');
+                    statusIndicator.classList.add('bg-zinc-600');
+                    if (mainVideo) mainVideo.pause();
+                };
+                const expandVideo = () => {
+                    videoWrapper.style.display = 'block';
+                    videoToggleText.innerText = 'Minimize';
+                    statusIndicator.classList.remove('bg-zinc-600');
+                    statusIndicator.classList.add('bg-red-500', 'animate-pulse');
+                    localStorage.setItem('vw_ms10_intro_seen', 'true');
+                };
+
+                if (hasSeenVideo) minimizeVideo(); else expandVideo();
+
+                if (mainVideo) {
+                    mainVideo.addEventListener('ended', () => {
+                        minimizeVideo();
+                        document.getElementById('protocol-01')?.scrollIntoView({ behavior: 'smooth' });
+                    });
+                }
+                videoToggleBtn.addEventListener('click', () => {
+                    if (videoWrapper.style.display === 'none') expandVideo(); else minimizeVideo();
+                });
+            }
+
+            const AUDIO_DURATION = 12; 
             
             /* -- Procedural Canvas Generation -- */
             function drawVisuals() {
@@ -463,7 +502,7 @@
                             env = (noteIdx16 % 2 === 0) ? 1 : 0.05; 
                             if (!isWet) env = 0.8; 
                             if (type === 'envtrack') env = (noteIdx16 % 2 === 0) ? Math.pow(1 - notePhase16, 1.5) : 0.05; 
-                        } else if (type === 'noise' || type === 'trignoise') {
+                        } else if (type === 'noise' || type === 'noiseburst') {
                             let kickPhase = (tPhase * 24) % 1; 
                             env = Math.max(0, 1 - kickPhase * 4); 
                         }
@@ -529,10 +568,10 @@
                             isNote = ((noteIdx16 % 2) === 0);
                             if (!isWet) isNote = true;
                             if (type === 'envtrack' && isNote) intensity = Math.pow(1 - notePhase16, 1.5);
-                        } else if (type === 'noise' || type === 'trignoise') {
+                        } else if (type === 'noise' || type === 'noiseburst') {
                             intensity = Math.max(0, 1 - kickPhase * 4) + 0.1;
                             if (isWet && kickPhase < 0.1) {
-                                ctx.fillStyle = `rgba(239, 68, 68, ${type==='trignoise'?0.8:0.4})`;
+                                ctx.fillStyle = `rgba(239, 68, 68, ${type==='noiseburst'?0.8:0.4})`;
                                 ctx.fillRect(ml + i, 0, 2, h - mb);
                             }
                         } else if (type === 'filter' || type === 'pwm') {
@@ -702,23 +741,32 @@
                     filter.type = 'lowpass';
                     filter.Q.value = isWet ? 12 : 1;
 
-                    if (isWet && type === 'pwm') {
-                        // Audio-Rate PWM
-                        let rmOsc = currentCtx.createOscillator();
-                        let rmGain = currentCtx.createGain();
-                        rmOsc.type = 'square';
-                        rmOsc.frequency.value = 80; 
-                        rmGain.gain.value = 0; 
-                        rmOsc.connect(rmGain.gain);
-                        rmOsc.start(t0);
-                        rmOsc.stop(t0 + AUDIO_DURATION);
-                        currentNodes.push(rmOsc, rmGain);
+                    const dist = currentCtx.createWaveShaper();
 
-                        filter.connect(rmGain);
-                        rmGain.connect(masterGain);
-                        filter.frequency.value = 4000;
-                    } else if (isWet && type === 'filter') {
-                        // Standard LFO Mod
+                    if (isWet && type === 'pwm') {
+                        // Audio-Rate PWM Simulation
+                        dist.curve = makeDistortionCurve(400); 
+                        filter.Q.value = 1; 
+                        
+                        let amOsc = currentCtx.createOscillator();
+                        let amGain = currentCtx.createGain();
+                        amOsc.type = 'sawtooth';
+                        amOsc.frequency.value = 80; 
+                        amGain.gain.value = 0.8; 
+                        amOsc.connect(amGain.gain);
+                        amOsc.start(t0);
+                        amOsc.stop(t0 + AUDIO_DURATION);
+                        currentNodes.push(amOsc);
+
+                        dist.connect(amGain);
+                        amGain.connect(masterGain);
+                        currentNodes.push(dist, amGain);
+                    } else {
+                        filter.connect(masterGain);
+                        currentNodes.push(filter);
+                    }
+
+                    if (isWet && type === 'filter') {
                         const lfo = currentCtx.createOscillator();
                         lfo.type = 'sine';
                         lfo.frequency.value = 0.5;
@@ -729,11 +777,9 @@
                         lfoGain.connect(filter.frequency);
                         lfo.start(t0);
                         lfo.stop(t0 + AUDIO_DURATION);
-                        filter.connect(masterGain);
                         currentNodes.push(lfo, lfoGain);
-                    } else {
+                    } else if (!isWet || type === 'pwm') {
                         filter.frequency.value = 3000;
-                        filter.connect(masterGain);
                     }
 
                     freqs.forEach(f => {
@@ -752,7 +798,13 @@
 
                         osc.connect(env);
                         osc2.connect(env);
-                        env.connect(filter);
+                        
+                        if (isWet && type === 'pwm') {
+                            env.connect(filter);
+                            filter.connect(dist);
+                        } else {
+                            env.connect(filter);
+                        }
                         
                         osc.start(t0);
                         osc2.start(t0);
@@ -762,7 +814,6 @@
                     });
                 }
                 else if (type === 'gate' || type === 'envtrack') {
-                    // Sequence Line
                     const filter = currentCtx.createBiquadFilter();
                     filter.type = 'lowpass';
                     filter.connect(masterGain);
@@ -801,7 +852,7 @@
                         currentNodes.push(osc, env, filter);
                     }
                 }
-                else if (type === 'noise' || type === 'trignoise') {
+                else if (type === 'noise' || type === 'noiseburst') {
                     const bufferSize = currentCtx.sampleRate * AUDIO_DURATION;
                     const noiseBuffer = currentCtx.createBuffer(1, bufferSize, currentCtx.sampleRate);
                     const output = noiseBuffer.getChannelData(0);
@@ -832,11 +883,11 @@
                             let noiseEnv = currentCtx.createGain();
                             noiseEnv.gain.setValueAtTime(0.001, t);
                             noiseEnv.gain.linearRampToValueAtTime(0.8, t + 0.01);
-                            noiseEnv.gain.exponentialRampToValueAtTime(0.001, type === 'trignoise' ? 0.08 : 0.1);
+                            noiseEnv.gain.exponentialRampToValueAtTime(0.001, type === 'noiseburst' ? 0.08 : 0.1);
 
                             let filter = currentCtx.createBiquadFilter();
                             filter.type = 'highpass';
-                            filter.frequency.value = type === 'trignoise' ? 2000 : 1000;
+                            filter.frequency.value = type === 'noiseburst' ? 2000 : 1000;
 
                             noiseSrc.connect(noiseEnv);
                             noiseEnv.connect(filter);
