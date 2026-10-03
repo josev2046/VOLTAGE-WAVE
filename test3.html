@@ -248,7 +248,9 @@
             const b = wet ? '#301010' : '#222';
             const k = wet ? 'text-red-500' : 'text-zinc-400';
             const ph = wet ? 'bg-red-400 shadow-[0_0_5px_red]' : 'bg-zinc-300 shadow-[0_0_5px_white]';
-            const btnCls = wet ? 'bg-[#250a0a] hover:bg-[#3a0f0f] text-red-600 border border-[#4a1515]' : 'bg-[#1a1a1c] hover:bg-[#2a2a2c] text-zinc-400 border border-[#333]';
+            const btnCls = wet 
+                ? 'bg-[#250a0a] hover:bg-[#3a0f0f] text-red-600 border border-[#4a1515]' 
+                : 'bg-[#1a1a1c] hover:bg-[#2a2a2c] text-zinc-400 border border-[#333]';
             const timerCls = wet ? 'text-red-900' : 'text-zinc-500';
             const labelCls = wet ? 'text-red-700' : '';
             const borderCls = wet ? 'border-red-900/30' : 'border-zinc-800';
@@ -305,13 +307,15 @@
                             The following protocols step outside the scope of Book One's pure re-amping focus. These are hybrid synthesis techniques: blending external digital audio with the MS-10's internal oscillator, or using audio-rate signals to break the filter. Highly destructive, unpredictable, and perfect for industrial sound design.
                         </p>
                     </div>
-                </section>`;
+                </section>
+                `;
             }
             
             htmlContent += `
             <section id="${p.id}" class="py-20 border-b border-zinc-800 ${i % 2 !== 0 ? 'bg-zinc-900' : 'bg-[#0a0a0c]'} scroll-mt-16 relative z-10">
              <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div class="flex flex-col lg:flex-row gap-12">
+                <!-- Left: Info & Schematic -->
                 <div class="lg:w-1/3 flex-shrink-0 flex flex-col reveal">
                   <div class="flex items-center gap-3 mb-2">
                     <span class="text-red-500 font-mono font-bold text-xl">${p.n}.</span>
@@ -323,6 +327,8 @@
                   </div>
                   <p class="text-zinc-400 text-sm leading-relaxed mb-4"><strong>Engineer Notes:</strong> ${p.notes}</p>
                 </div>
+                
+                <!-- Right: Visuals & Audio -->
                 <div class="lg:w-2/3 flex-shrink-0 reveal delay-100">
                   <div class="w-full bg-[#0a0a0c] border border-zinc-800 rounded mb-8 overflow-hidden">
                     <div class="bg-zinc-900/50 border-b border-zinc-800 px-4 py-2 font-mono text-[10px] text-zinc-400 tracking-widest uppercase flex items-center justify-between">
@@ -344,6 +350,7 @@
         });
         document.getElementById('protocols').innerHTML = htmlContent;
 
+        // Render Jump Navigation
         document.getElementById('jump').innerHTML = P.map(p => `
         <a href="#${p.id}" class="flex items-center gap-2 bg-zinc-900/60 border border-zinc-800 rounded-md px-3 py-2 text-[10px] text-zinc-400 hover:text-red-400 hover:border-red-500/40 hover:bg-red-500/5 transition-all relative z-10 group">
           <span class="text-zinc-600 group-hover:text-red-500/60">${p.n}</span> ${p.title}
@@ -434,7 +441,9 @@
                         ctx.fillText(f, ml - 5, y);
                         ctx.fillRect(ml - 3, y, 3, 1);
                     });
-                    for(let i = ml; i < w; i += w/12) { ctx.fillRect(i, h - mb, 1, 3); }
+                    for(let i = ml; i < w; i += w/12) {
+                        ctx.fillRect(i, h - mb, 1, 3);
+                    }
                     
                     ctx.save();
                     ctx.beginPath();
@@ -569,6 +578,7 @@
                 masterGain.connect(currentCtx.destination);
                 currentNodes.push(masterGain);
 
+                // --- SOUND LOGIC ---
                 if (type === 'sat' || type === 'fm') {
                     const filter = currentCtx.createBiquadFilter();
                     const dist = currentCtx.createWaveShaper();
