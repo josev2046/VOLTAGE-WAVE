@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest" onerror="this.onerror=null;var f=document.createElement('script');f.src='https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js';f.onload=function(){window.refreshIcons&&window.refreshIcons()};document.head.appendChild(f);"></script>
     
     <script>
         tailwind.config = {
@@ -39,7 +38,10 @@
     </script>
     
     <style>
-        body { background-color: #050505; color: #d4d4d8; }
+        body {
+            background-color: #050505;
+            color: #d4d4d8;
+        }
         
         .scanlines::before {
             content: " ";
@@ -54,62 +56,69 @@
         }
 
         .glow-text { text-shadow: 0 0 10px rgba(220, 38, 38, 0.5); }
-        .hardware-card { transition: all 0.3s ease; }
-        .hardware-card:hover { transform: translateY(-5px); border-color: #ef4444; box-shadow: 0 10px 30px -10px rgba(220, 38, 38, 0.2); }
 
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #09090b; }
         ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #dc2626; }
 
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
         .reveal.active { opacity: 1; transform: translateY(0); }
-        
+
         .bg-synth-grid {
             background-image: linear-gradient(to right, rgba(220, 38, 38, 0.07) 1px, transparent 1px),
                               linear-gradient(to bottom, rgba(220, 38, 38, 0.07) 1px, transparent 1px);
             background-size: 40px 40px;
         }
-        @keyframes pan-grid { 0% { background-position: 0px 0px; } 100% { background-position: 40px 40px; } }
-        .animate-pan-grid { animation: pan-grid 3s linear infinite; }
+        
         @keyframes analog-glitch {
             0% { transform: translate(0) }
-            20% { transform: translate(-2px, 1px); color: #fbbf24; text-shadow: 2px 0 #ef4444; }
+            20% { transform: translate(-2px, 1px); color: #ef4444; text-shadow: 2px 0 #dc2626; }
             40% { transform: translate(-1px, -1px) }
-            60% { transform: translate(2px, 1px); text-shadow: -2px 0 #ef4444; }
+            60% { transform: translate(2px, 1px); text-shadow: -2px 0 #dc2626; }
             80% { transform: translate(1px, -1px) }
             100% { transform: translate(0) }
         }
         .glitch-hover:hover { animation: analog-glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite; }
+
         .analysis-card { background-color: #0c0c0e; }
     </style>
 </head>
 <body class="antialiased relative selection:bg-red-500 selection:text-zinc-950">
-    <div class="scanlines fixed inset-0"></div>
+    <!-- ADDED pointer-events-none z-50 to prevent blocking clicks -->
+    <div class="scanlines fixed inset-0 pointer-events-none z-50"></div>
 
-    <nav class="fixed w-full z-40 top-0 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800">
+    <!-- NAVIGATION -->
+    <nav class="fixed w-full z-40 top-0 bg-[#050505]/90 backdrop-blur-md border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer glitch-hover">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" class="text-red-500 w-6 h-6">
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-3 cursor-pointer glitch-hover">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-red-500 w-6 h-6">
                         <path d="M2 12h4v-7h6v14h6v-7h4"/>
                     </svg>
-                    <span class="font-mono font-bold text-white tracking-widest">VOLTAGE & WAVE</span>
-                </div>
-                <div class="hidden md:flex space-x-8 font-mono text-sm items-center">
-                    <a href="index.html#books" class="text-zinc-400 hover:text-red-500 transition-colors">BOOKS</a>
-                    <a href="index.html#services" class="text-zinc-400 hover:text-red-500 transition-colors">SERVICES</a>
-                    <a href="index.html#submit" class="text-zinc-950 bg-red-500 hover:bg-red-400 px-4 py-1.5 font-bold transition-colors">SUBMIT STEMS</a>
+                    <span class="font-mono font-bold text-white tracking-widest hidden sm:block">VOLTAGE & WAVE</span>
+                </a>
+                <div class="flex space-x-8 font-mono text-sm items-center">
+                    <a href="index.html" class="text-zinc-400 hover:text-red-500 transition-colors flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                        RETURN
+                    </a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- HEADER & INTRO -->
+    <!-- HEADER / SPLIT LAYOUT -->
     <section class="relative pt-32 pb-20 overflow-hidden border-b border-zinc-800 bg-[#0a0a0c]">
         <div class="absolute inset-0 bg-synth-grid [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
+        
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row gap-12 lg:items-start">
             
+            <!-- Left Column: Title & Nav -->
             <div class="flex-1 reveal">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 font-mono text-xs mb-6">
                     <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
@@ -121,11 +130,14 @@
                 <p class="text-lg text-zinc-400 max-w-2xl font-light leading-relaxed mb-10">
                     Routing sterile digital stems through the Korg MS-10's External Signal processor transforms the synthesiser into a highly characterful outboard effects unit. Below are the core treatment protocols available.
                 </p>
+
                 <div class="mb-4 font-mono text-xs text-zinc-500 uppercase tracking-widest">Jump to Protocol:</div>
                 <nav id="jump" class="flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-widest max-w-2xl mb-8"></nav>
 
+                <!-- Collapsible Video Embed -->
                 <div class="w-full max-w-2xl mb-8">
                     <div class="analysis-card border border-[#222] p-4 rounded flex flex-col transition-all duration-300">
+                        <!-- Header & Toggle Bar -->
                         <div class="flex flex-wrap items-center justify-between gap-4">
                             <div class="flex items-center gap-2">
                                 <span id="video-status-indicator" class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
@@ -135,11 +147,14 @@
                                 <span id="video-toggle-text">Minimize</span>
                             </button>
                         </div>
+                        
+                        <!-- Collapsible Content -->
                         <div id="video-player-wrapper" class="mt-4">
                             <div class="relative bg-black border border-zinc-800 w-full flex justify-center overflow-hidden rounded-sm aspect-video">
                                 <video src="video_1.mp4" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110 pointer-events-none"></video>
                                 <video id="main-video" src="video_1.mp4" controls class="absolute inset-0 w-full h-full object-contain z-10"></video>
                             </div>
+                            
                             <div class="mt-4 border-t border-zinc-800 pt-4">
                                 <p class="text-zinc-400 text-sm font-sans leading-relaxed italic border-l-2 border-zinc-700 pl-4">
                                     "I'm trying to convey the whole point of trying this Voltage & Wave re-amping approach... how different a stem may sound from taking the signal as is, as a digital signal in and out, versus running that through the crying circuits of the Korg MS-10."
@@ -150,33 +165,46 @@
                 </div>
             </div>
 
+            <!-- Right Column: Operator Notes & Errata -->
             <div class="lg:w-[420px] flex-shrink-0 flex flex-col gap-4 relative z-20 reveal delay-100">
+                
+                <!-- Errata Card -->
                 <div class="bg-zinc-900/80 backdrop-blur-md border border-red-500/20 rounded-xl p-5 shadow-lg relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-1 h-full bg-red-500/50"></div>
                     <h3 class="text-red-400 font-mono uppercase tracking-widest text-xs mb-3 flex items-center gap-2">
-                        <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
                         1st Edition: Errata & Updates
                     </h3>
                     <p class="text-xs text-zinc-400 leading-relaxed mb-4 italic">
                         Studio gremlins infiltrated the proofreading phase. Please review these physical hardware and patch routing adjustments:
                     </p>
                     <ul class="space-y-3 text-xs text-zinc-300 font-sans leading-relaxed">
-                        <li><strong class="text-white">1. Silencing the VCO:</strong> Select Rectangle (Pulse) and turn PW/PWM fully clockwise to mute the internal drone.</li>
-                        <li><strong class="text-white">2. Input Location:</strong> Use the <span class="font-mono text-[10px] bg-zinc-800/80 px-1 py-0.5 rounded">EXT SIGNAL IN</span> jack on the front right patch panel.</li>
-                        <li><strong class="text-white">3. S-Trigger:</strong> Route MIDI through the Kenton's S-Trigger output into <span class="font-mono text-[10px] bg-zinc-800/80 px-1 py-0.5 rounded">TRIG IN</span>.</li>
-                        <li><strong class="text-white">4. Headroom:</strong> Patch directly from your interface line output via a TS cable.</li>
+                        <li>
+                            <strong class="text-white">1. Silencing the VCO:</strong> Select Rectangle (Pulse) and turn PW/PWM fully clockwise to mute the internal drone.
+                        </li>
+                        <li>
+                            <strong class="text-white">2. Input Location:</strong> Use the <span class="font-mono text-[10px] bg-zinc-800/80 px-1 py-0.5 rounded">EXT SIGNAL IN</span> jack on the front right patch panel.
+                        </li>
+                        <li>
+                            <strong class="text-white">3. S-Trigger:</strong> Route MIDI through the Kenton's S-Trigger output into <span class="font-mono text-[10px] bg-zinc-800/80 px-1 py-0.5 rounded">TRIG IN</span>.
+                        </li>
+                        <li>
+                            <strong class="text-white">4. Headroom:</strong> Patch directly from your interface line output via a TS cable (skip the re-amp box).
+                        </li>
                     </ul>
                 </div>
 
+                <!-- Web Audio Note Card -->
                 <div class="bg-zinc-900/80 backdrop-blur-md border border-red-500/20 rounded-xl p-5 shadow-lg">
                     <h3 class="text-red-400 font-mono uppercase tracking-widest text-xs mb-3 flex items-center gap-2">
-                        <i data-lucide="cpu" class="w-4 h-4"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.3 1.046A120.153 120.153 0 011.05 3.28a.75.75 0 00-.5 1.08l1.378 2.893a.75.75 0 001.077.29 118.847 118.847 0 008.204-4.57.75.75 0 00-.18-1.363l-1.32-.482a.75.75 0 00-.51-.044zm-6.2 6.643a.75.75 0 00-.63-.255 119.5 119.5 0 00-2.316.326.75.75 0 00-.582 1.079l1.455 3.197a.75.75 0 001.034.34 117.85 117.85 0 009.68-5.748.75.75 0 00-.166-1.353l-1.423-.518a.75.75 0 00-.53.003L4.103 7.689zM2.85 14.512a.75.75 0 00-.568.966l.847 3.39A.75.75 0 004 19.5a119.23 119.23 0 008.575-3.033.75.75 0 00.375-1.112l-1.611-3.22a.75.75 0 00-.916-.328 116.711 116.711 0 00-7.573 2.705z" clip-rule="evenodd" /></svg>
                         About these interactive demos
                     </h3>
                     <p class="text-xs text-zinc-300 leading-relaxed">
                         Audio, waveforms, and spectrograms are generated live in your browser. Rather than relying on heavy, static audio files of hardware captures, this streamlined approach uses Web Audio to ensure instant playback, crisp interactive visualizations, and a lightweight page design while clearly illustrating the mechanics of each protocol. In these demos, synth tones stand in for the DAW stems.
                     </p>
                 </div>
+
             </div>
         </div>
     </section>
@@ -185,24 +213,15 @@
     <main id="protocols"></main>
 
     <!-- FOOTER -->
-    <footer class="bg-zinc-950 border-t border-zinc-900 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-zinc-600 w-5 h-5">
-                    <path d="M2 12h4v-7h6v14h6v-7h4"/>
-                </svg>
-                <span class="font-mono text-zinc-600 text-xs tracking-widest">
-                    VOLTAGE & WAVE STUDIO | patch@voltageandwave.co.uk |
-                    <a href="https://www.amazon.co.uk/dp/B0HLQ2524M" target="_blank" rel="noopener" class="hover:text-red-500 transition-colors">KINDLE EDITION ON AMAZON UK</a>
-                </span>
-            </div>
-            <p class="text-zinc-600 text-xs font-mono">
-                &copy; <span id="year"></span> Analogue Operations. All rights reserved.
+    <footer class="py-8 border-t border-zinc-800 bg-[#050505]">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
+            <p class="font-mono text-[10px] text-zinc-600 uppercase tracking-widest leading-relaxed max-w-3xl mx-auto">
+                © Voltage & Wave // Hardware Capabilities Series
             </p>
         </div>
     </footer>
 
-    <!-- ENGINE & DATA -->
+    <!-- GENERATION & WEB AUDIO ENGINE -->
     <script>
         /* ---------- PROTOCOL DATA ---------- */
         const M1 = [['KORG MS-10','VCO + VCF + EG'],['PAN 02 → 4i4','DI to interface'],['HARDWARE RETURN','recorded in DAW']];
@@ -253,8 +272,8 @@
                 'Warning: Watch your monitors. Feedback loops escalate instantly. Start with Ext Level at zero.', false, M3),
                 
             mk('pwm','Audio-Rate Modulation','Audio-Rate PWM Mutilation','Component: PWM IN / VCO',
-                'Route the DAW stem into the PWM IN jack. Set the MS-10 VCO to the Pulse waveform and turn the PW/PWM knob to the center. Hold a MIDI note to open the VCA. The external audio\'s waveform physically alters the pulse width of the synthesiser\'s square wave at audio rates, turning the pitch into a screaming clone of the stem.',
-                [['DAW STEM','→ PWM IN'],['VCO (PULSE)','PW/PWM center'],['MIDI GATE','Hold to open VCA']],
+                'Route the DAW stem into the PWM IN jack. Set the MS-10 VCO to the Pulse waveform and turn the PW/PWM knob to the center. Weigh down a key on the keyboard (or send a sustained gate to TRIG IN) to hold the VCA open. The external audio\'s waveform physically alters the pulse width of the synthesiser\'s square wave at audio rates, turning the pitch into a screaming clone of the stem.',
+                [['DAW STEM','→ PWM IN'],['VCO (PULSE)','PW/PWM center'],['KEY / GATE','Hold to open VCA']],
                 ['Dry Stem', 'A clean vocal chop, pad, or digital synth line.', 'Clean structural ridges.'],
                 ['PWM Mutilation', 'A metallic, screeching clone of the stem mapped to the MS-10\'s pitch.', 'A dense wall of noise and extreme harmonic distortion.'],
                 'This replaces the stem with the MS-10 oscillator, using the stem solely as an audio-rate modulator.', false, M1),
@@ -314,8 +333,8 @@
                     </div>
                     <div class="mt-auto flex flex-row items-center border-t pt-4" style="border-color:${b}">
                         <button class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-sm transition-colors ${btnCls}" data-type="${p.type}" data-wet="${wet}">
-                            <i data-lucide="play" class="w-4 h-4 ml-0.5 icon-play"></i>
-                            <i data-lucide="square" class="w-3 h-3 icon-stop hidden"></i>
+                            <svg class="w-4 h-4 ml-0.5 icon-play" fill="currentColor" viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>
+                            <svg class="w-4 h-4 icon-stop hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
                         </button>
                         <div class="flex-1 flex items-center font-mono text-[10px] uppercase tracking-widest ml-4 ${timerCls}">
                             <span class="${labelCls}">${wet ? 'Hardware Return' : 'Digital Source'}</span>
@@ -330,7 +349,7 @@
                         <canvas class="w-full h-full absolute inset-0 spectrogram" data-wet="${wet}" data-type="${p.type}"></canvas>
                         <div class="playhead absolute top-0 bottom-0 w-[2px] ${ph} z-20" style="left: 0%; display: none;"></div>
                     </div>
-                    ${d[2] ? `<h3 class="font-mono text-sm font-bold ${k} uppercase tracking-widest mb-2">${wet ? 'Re-Amped Spectrogram' : 'Dry Spectrogram'}</h3><p class="text-zinc-500 text-xs font-sans leading-relaxed">${d[2]}</p>` : ''}
+                    ${d[2] ? `<p class="text-zinc-500 text-xs font-sans leading-relaxed mt-2">${d[2]}</p>` : ''}
                 </div>
             </div>`;
         }
@@ -378,9 +397,10 @@
                             <div class="w-full bg-[#0a0a0c] border border-zinc-800 rounded mb-8 overflow-hidden">
                                 <div class="bg-zinc-900/50 border-b border-zinc-800 px-4 py-2 font-mono text-[10px] text-zinc-400 tracking-widest uppercase flex items-center justify-between">
                                     <div class="flex items-center gap-2">
-                                        <i data-lucide="git-merge" class="w-3 h-3 text-red-500"></i>
-                                        <span>Routing Schematic // ${p.id.toUpperCase()}</span>
+                                        <svg class="w-3 h-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                                        <span>Routing Schematic // P-${p.n}</span>
                                     </div>
+                                    <span class="text-zinc-600">MS-10 / DAW</span>
                                 </div>
                                 <div class="p-4 overflow-x-auto">${schem(p)}</div>
                             </div>
@@ -404,8 +424,6 @@
 
         /* ---------- RUNTIME LOGIC ---------- */
         document.addEventListener("DOMContentLoaded", () => {
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-
             const reveals = document.querySelectorAll('.reveal');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
@@ -585,6 +603,7 @@
                             ctx.fillRect(ml + i, y + Math.random() * 2, 2, hrmSize);
                         }
                         
+                        // Specific visual additions
                         if (isWet && type === 'sat') {
                             let sy = (h - mb) * 0.4 + Math.sin(i * 0.05) * (h - mb) * 0.3;
                             ctx.fillStyle = '#ffffff'; ctx.fillRect(ml + i, sy, 2, 4);
@@ -722,23 +741,32 @@
                     filter.type = 'lowpass';
                     filter.Q.value = isWet ? 12 : 1;
 
-                    if (isWet && type === 'pwm') {
-                        // Audio-Rate PWM
-                        let rmOsc = currentCtx.createOscillator();
-                        let rmGain = currentCtx.createGain();
-                        rmOsc.type = 'square';
-                        rmOsc.frequency.value = 80; 
-                        rmGain.gain.value = 0; 
-                        rmOsc.connect(rmGain.gain);
-                        rmOsc.start(t0);
-                        rmOsc.stop(t0 + AUDIO_DURATION);
-                        currentNodes.push(rmOsc, rmGain);
+                    const dist = currentCtx.createWaveShaper();
 
-                        filter.connect(rmGain);
-                        rmGain.connect(masterGain);
-                        filter.frequency.value = 4000;
-                    } else if (isWet && type === 'filter') {
-                        // Standard LFO Mod
+                    if (isWet && type === 'pwm') {
+                        // Audio-Rate PWM Simulation
+                        dist.curve = makeDistortionCurve(400); 
+                        filter.Q.value = 1; 
+                        
+                        let amOsc = currentCtx.createOscillator();
+                        let amGain = currentCtx.createGain();
+                        amOsc.type = 'sawtooth';
+                        amOsc.frequency.value = 80; 
+                        amGain.gain.value = 0.8; 
+                        amOsc.connect(amGain.gain);
+                        amOsc.start(t0);
+                        amOsc.stop(t0 + AUDIO_DURATION);
+                        currentNodes.push(amOsc);
+
+                        dist.connect(amGain);
+                        amGain.connect(masterGain);
+                        currentNodes.push(dist, amGain);
+                    } else {
+                        filter.connect(masterGain);
+                        currentNodes.push(filter);
+                    }
+
+                    if (isWet && type === 'filter') {
                         const lfo = currentCtx.createOscillator();
                         lfo.type = 'sine';
                         lfo.frequency.value = 0.5;
@@ -749,11 +777,9 @@
                         lfoGain.connect(filter.frequency);
                         lfo.start(t0);
                         lfo.stop(t0 + AUDIO_DURATION);
-                        filter.connect(masterGain);
                         currentNodes.push(lfo, lfoGain);
-                    } else {
+                    } else if (!isWet || type === 'pwm') {
                         filter.frequency.value = 3000;
-                        filter.connect(masterGain);
                     }
 
                     freqs.forEach(f => {
@@ -772,7 +798,13 @@
 
                         osc.connect(env);
                         osc2.connect(env);
-                        env.connect(filter);
+                        
+                        if (isWet && type === 'pwm') {
+                            env.connect(filter);
+                            filter.connect(dist);
+                        } else {
+                            env.connect(filter);
+                        }
                         
                         osc.start(t0);
                         osc2.start(t0);
@@ -782,7 +814,6 @@
                     });
                 }
                 else if (type === 'gate' || type === 'envtrack') {
-                    // Sequence Line
                     const filter = currentCtx.createBiquadFilter();
                     filter.type = 'lowpass';
                     filter.connect(masterGain);
