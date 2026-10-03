@@ -74,8 +74,6 @@
                               linear-gradient(to bottom, rgba(220, 38, 38, 0.07) 1px, transparent 1px);
             background-size: 40px 40px;
         }
-
-        .analysis-card { background-color: #0c0c0e; }
         
         @keyframes analog-glitch {
             0% { transform: translate(0) }
@@ -86,6 +84,8 @@
             100% { transform: translate(0) }
         }
         .glitch-hover:hover { animation: analog-glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite; }
+
+        .analysis-card { background-color: #0c0c0e; }
     </style>
 </head>
 <body class="antialiased relative selection:bg-red-500 selection:text-zinc-950">
@@ -95,16 +95,18 @@
     <nav class="fixed w-full z-40 top-0 bg-[#050505]/90 backdrop-blur-md border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <a href="index.html" class="flex items-center gap-3 glitch-hover">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" class="text-red-500 w-6 h-6">
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-3 cursor-pointer glitch-hover">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-red-500 w-6 h-6">
                         <path d="M2 12h4v-7h6v14h6v-7h4"/>
                     </svg>
                     <span class="font-mono font-bold text-white tracking-widest hidden sm:block">VOLTAGE & WAVE</span>
                 </a>
-                <a href="index.html" class="font-mono text-sm text-zinc-400 hover:text-red-500 transition-colors flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-                    RETURN
-                </a>
+                <div class="flex space-x-8 font-mono text-sm items-center">
+                    <a href="index.html" class="text-zinc-400 hover:text-red-500 transition-colors flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                        RETURN
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
@@ -130,37 +132,11 @@
 
                 <div class="mb-4 font-mono text-xs text-zinc-500 uppercase tracking-widest">Jump to Protocol:</div>
                 <nav id="jump" class="flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-widest max-w-2xl mb-8"></nav>
-
-                <!-- Collapsible Video Embed -->
-                <div class="w-full max-w-2xl mb-8">
-                    <div class="analysis-card border border-[#222] p-4 rounded flex flex-col transition-all duration-300">
-                        <div class="flex flex-wrap items-center justify-between gap-4">
-                            <div class="flex items-center gap-2">
-                                <span id="video-status-indicator" class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                                <h3 class="font-mono text-sm font-bold text-zinc-300 uppercase tracking-widest">Introduction</h3>
-                            </div>
-                            <button id="video-toggle-btn" class="font-mono text-[10px] text-zinc-400 hover:text-red-500 transition-colors uppercase tracking-widest px-3 py-1.5 border border-zinc-800 rounded-sm hover:border-red-500/50 bg-zinc-900/50 flex items-center gap-2 cursor-pointer">
-                                <span id="video-toggle-text">Minimize</span>
-                            </button>
-                        </div>
-                        
-                        <div id="video-player-wrapper" class="mt-4">
-                            <div class="relative bg-black border border-zinc-800 w-full flex justify-center overflow-hidden rounded-sm aspect-video">
-                                <video src="video_1.mp4" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110 pointer-events-none"></video>
-                                <video id="main-video" src="video_1.mp4" controls class="absolute inset-0 w-full h-full object-contain z-10"></video>
-                            </div>
-                            <div class="mt-4 border-t border-zinc-800 pt-4">
-                                <p class="text-zinc-400 text-sm font-sans leading-relaxed italic border-l-2 border-zinc-700 pl-4">
-                                    "I'm trying to convey the whole point of trying this Voltage & Wave re-amping approach... how different a stem may sound from taking the signal as is, as a digital signal in and out, versus running that through the crying circuits of the Korg MS-10."
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Right Column: Operator Notes & Errata -->
             <div class="lg:w-[420px] flex-shrink-0 flex flex-col gap-4 relative z-20 reveal delay-100">
+                
                 <!-- Errata Card -->
                 <div class="bg-zinc-900/80 backdrop-blur-md border border-red-500/20 rounded-xl p-5 shadow-lg relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-1 h-full bg-red-500/50"></div>
@@ -189,6 +165,7 @@
                         Audio, waveforms, and spectrograms are generated live in your browser. Rather than relying on heavy, static audio files of hardware captures, this streamlined approach uses Web Audio to ensure instant playback, crisp interactive visualizations, and a lightweight page design while clearly illustrating the mechanics of each protocol. In these demos, synth tones stand in for the DAW stems.
                     </p>
                 </div>
+
             </div>
         </div>
     </section>
@@ -198,12 +175,14 @@
 
     <!-- FOOTER -->
     <footer class="py-8 border-t border-zinc-800 bg-[#050505]">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p class="font-mono text-[10px] text-zinc-600 uppercase tracking-widest leading-relaxed max-w-3xl mx-auto">© Voltage & Wave // Hardware Capabilities Series // Book One</p>
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
+            <p class="font-mono text-[10px] text-zinc-600 uppercase tracking-widest leading-relaxed max-w-3xl mx-auto">
+                © Voltage & Wave // Hardware Capabilities Series
+            </p>
         </div>
     </footer>
 
-    <!-- ENGINE & DATA -->
+    <!-- GENERATION & WEB AUDIO ENGINE -->
     <script>
         /* ---------- PROTOCOL DATA ---------- */
         const M1 = [['KORG MS-10','VCO + VCF + EG'],['PAN 02 → 4i4','DI to interface'],['HARDWARE RETURN','recorded in DAW']];
@@ -214,7 +193,7 @@
             cv: cv.map((c, i) => ({ t: c[0], s: c[1], x: 110 + i * 200, to: c[2] || 0 }))
         });
         
-        const P = [
+        const P_raw = [
             // Original 4 Protocols
             mk('sat','Re-Amping','Analogue Saturation & Overdrive','Component: VCA / Ext In',
                 'By driving a digital track aggressively into the MS-10\'s External Signal In, we force the VCA and Korg-35 filter circuitry into musical clipping. This breaks up the signal, instantly adding rich harmonic distortion, weight, and grit to thin basslines or sterile drum tracks.',
@@ -266,7 +245,7 @@
                 ['PWM Mutilation', 'A metallic, screeching clone of the stem mapped to the MS-10\'s pitch.', 'A dense wall of noise and extreme harmonic distortion.'],
                 'This replaces the stem with the MS-10 oscillator, using the stem solely as an audio-rate modulator.', false, M1),
                 
-            mk('ping','Hybrid Synthesis','Resonant Filter Pinging (808s)','Component: Korg-35 VCF',
+            mk('ping','Percussive Synthesis','Resonant Filter Pinging (808s)','Component: Korg-35 VCF',
                 'Transform digital clicks into massive, tuned analogue 808 kicks. Route a sharp audio transient into EXT SIGNAL IN. Turn the PEAK (resonance) knob to 10 so the Korg-35 filter self-oscillates. The digital transient "pings" the filter, causing it to ring out.',
                 [['DAW TRANSIENT','→ EXT IN'],['VCF PEAK','set to 10 (self-osc)'],['VCF CUTOFF','tunes drum pitch']],
                 ['Dry Transients', 'Short, weak digital clicks or rimshots.', 'Tiny, vertical bursts of noise with no low-end tail.'],
@@ -274,7 +253,14 @@
                 'The VCF Cutoff knob tunes the pitch of the drum. The Envelope Generator controls how the ping decays.', false, M2)
         ];
 
-        /* ---------- RENDERING LOGIC ---------- */
+        // Process array to inject 'n' and 'id' variables safely
+        const P = P_raw.map((p, i) => {
+            p.n = String(i + 1).padStart(2, '0');
+            p.id = 'protocol-' + p.n;
+            return p;
+        });
+
+        /* ---------- SCHEMATIC & COLUMN RENDERERS ---------- */
         function schem(p) {
             const box = (x, y, w, t, s, c) => `<g transform="translate(${x - w / 2},${y})"><rect width="${w}" height="50" fill="#18181b" stroke="${c}" stroke-width="${c === '#52525b' ? 1 : 2}"/><text x="${w / 2}" y="22" fill="${c === '#52525b' ? '#d4d4d8' : c}" font-family="monospace" font-size="11" font-weight="bold" text-anchor="middle">${t}</text><text x="${w / 2}" y="38" fill="#71717a" font-family="monospace" font-size="9" text-anchor="middle">${s}</text></g>`;
             const mx = i => 150 + i * 250, m = p.id, hot = p.main === M2 ? 1 : 0;
@@ -329,9 +315,10 @@
             </div>`;
         }
 
-        // Generate HTML Loop
+        // Generate HTML Output
         let htmlContent = '';
         P.forEach((p, i) => {
+            // Inject B-Sides header before protocol 05
             if (p.n === '05') {
                 htmlContent += `
                 <section class="py-24 bg-zinc-950 border-t border-zinc-800 reveal">
@@ -352,6 +339,7 @@
             <section id="${p.id}" class="py-20 border-b border-zinc-800 ${i % 2 !== 0 ? 'bg-zinc-900' : 'bg-[#0a0a0c]'} scroll-mt-16 relative z-10">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex flex-col lg:flex-row gap-12">
+                        <!-- Left Info -->
                         <div class="lg:w-1/3 flex-shrink-0 flex flex-col reveal">
                             <div class="flex items-center gap-3 mb-2">
                                 <span class="text-red-500 font-mono font-bold text-xl">${p.n}.</span>
@@ -365,6 +353,7 @@
                             <p class="text-sm text-zinc-400 border-l-2 border-red-500/60 pl-4 mt-auto hidden lg:block"><strong class="text-white block mb-1">What to check.</strong> ${p.check}</p>
                         </div>
                         
+                        <!-- Right Visuals -->
                         <div class="lg:w-2/3 flex-shrink-0 reveal delay-100">
                             <div class="w-full bg-[#0a0a0c] border border-zinc-800 rounded mb-8 overflow-hidden">
                                 <div class="bg-zinc-900/50 border-b border-zinc-800 px-4 py-2 font-mono text-[10px] text-zinc-400 tracking-widest uppercase flex items-center justify-between">
@@ -400,43 +389,6 @@
                 entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
             }, { threshold: 0.1 });
             reveals.forEach(reveal => observer.observe(reveal));
-
-            // Video Toggle Logic
-            const videoWrapper = document.getElementById('video-player-wrapper');
-            const videoToggleBtn = document.getElementById('video-toggle-btn');
-            const videoToggleText = document.getElementById('video-toggle-text');
-            const mainVideo = document.getElementById('main-video');
-            const statusIndicator = document.getElementById('video-status-indicator');
-
-            if (videoWrapper && videoToggleBtn) {
-                const hasSeenVideo = localStorage.getItem('vw_ms10_intro_seen');
-                const minimizeVideo = () => {
-                    videoWrapper.style.display = 'none';
-                    videoToggleText.innerText = "Engineer's Log";
-                    statusIndicator.classList.remove('bg-red-500', 'animate-pulse');
-                    statusIndicator.classList.add('bg-zinc-600');
-                    if (mainVideo) mainVideo.pause();
-                };
-                const expandVideo = () => {
-                    videoWrapper.style.display = 'block';
-                    videoToggleText.innerText = 'Minimize';
-                    statusIndicator.classList.remove('bg-zinc-600');
-                    statusIndicator.classList.add('bg-red-500', 'animate-pulse');
-                    localStorage.setItem('vw_ms10_intro_seen', 'true');
-                };
-
-                if (hasSeenVideo) minimizeVideo(); else expandVideo();
-
-                if (mainVideo) {
-                    mainVideo.addEventListener('ended', () => {
-                        minimizeVideo();
-                        document.getElementById('protocol-01')?.scrollIntoView({ behavior: 'smooth' });
-                    });
-                }
-                videoToggleBtn.addEventListener('click', () => {
-                    if (videoWrapper.style.display === 'none') expandVideo(); else minimizeVideo();
-                });
-            }
 
             const AUDIO_DURATION = 12; // 12 seconds
             
@@ -589,7 +541,6 @@
             setTimeout(drawVisuals, 100);
             window.addEventListener('resize', drawVisuals);
 
-            /* -- Web Audio API Logic -- */
             function makeDistortionCurve(amount) {
                 const k = typeof amount === 'number' ? amount : 50;
                 const n_samples = 44100;
@@ -602,7 +553,10 @@
                 return curve;
             }
 
-            let currentCtx = null, currentNodes = [], currentBtn = null, animationFrameId = null;
+            let currentCtx = null;
+            let currentNodes = [];
+            let currentBtn = null;
+            let animationFrameId = null;
 
             function stopAllAudio() {
                 if (currentCtx) {
@@ -614,7 +568,10 @@
                     currentCtx.close();
                     currentCtx = null;
                 }
-                if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null; }
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null;
+                }
                 document.querySelectorAll('.play-btn').forEach(b => {
                     b.dataset.playing = "false";
                     b.querySelector('.icon-play').classList.remove('hidden');
@@ -627,7 +584,11 @@
             }
 
             function playSound(btn, type, isWet) {
-                if (btn.dataset.playing === "true") { stopAllAudio(); return; }
+                if (btn.dataset.playing === "true") {
+                    stopAllAudio();
+                    return;
+                }
+                
                 stopAllAudio();
                 currentBtn = btn;
                 currentCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -637,6 +598,7 @@
                 masterGain.connect(currentCtx.destination);
                 currentNodes.push(masterGain);
 
+                // --- SOUND LOGIC ---
                 if (type === 'sat' || type === 'fm') {
                     const filter = currentCtx.createBiquadFilter();
                     const dist = currentCtx.createWaveShaper();
@@ -765,6 +727,7 @@
 
                         osc.connect(env);
                         osc2.connect(env);
+
                         if (isWet && type === 'pwm') {
                             env.connect(filter);
                             filter.connect(dist);
