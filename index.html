@@ -251,11 +251,15 @@
                     <div class="mt-10 pt-8 border-t border-zinc-800">
                         <h4 class="font-mono text-xs text-zinc-500 uppercase tracking-widest mb-4">The series</h4>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            
                             <!-- Book One -->
                             <div class="bg-zinc-900 border border-amber-500/30 p-5 rounded-sm flex flex-col">
-                                <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center justify-between mb-4">
                                     <span class="font-mono text-xs text-amber-500 uppercase tracking-widest">Book One</span>
                                     <span class="text-[10px] font-mono text-amber-500 border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 uppercase tracking-widest">Available</span>
+                                </div>
+                                <div class="mb-4 border border-zinc-800 aspect-[2/3] overflow-hidden">
+                                    <img src="book1-cover.jpg" alt="Korg MS-10 External Processing Cover" class="w-full h-full object-cover grayscale-[20%]">
                                 </div>
                                 <h5 class="text-white font-bold mb-1">Korg MS-10</h5>
                                 <p class="text-zinc-500 text-sm">External processing and analogue re-amping.</p>
@@ -263,12 +267,16 @@
                             
                             <!-- Book Two (Interactive Teaser) -->
                             <div class="bg-zinc-900 border border-zinc-800 p-5 rounded-sm flex flex-col group hover:border-amber-500/50 transition-colors">
-                                <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center justify-between mb-4">
                                     <span class="font-mono text-xs text-zinc-400 group-hover:text-amber-500 transition-colors uppercase tracking-widest">Book Two</span>
                                     <span class="text-[10px] font-mono text-amber-500 border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 uppercase tracking-widest animate-pulse">Teaser Live</span>
                                 </div>
+                                <a href="https://voltageandwave.co.uk/off_the_grid.html" class="block mb-4 border border-zinc-800 aspect-[2/3] overflow-hidden relative">
+                                    <div class="absolute inset-0 bg-amber-500/10 opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none"></div>
+                                    <img src="book2-cover.jpg" alt="Korg SQ-10 Off the Grid Cover Teaser" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500">
+                                </a>
                                 <h5 class="text-white font-bold mb-1">Korg SQ-10</h5>
-                                <p class="text-zinc-500 text-sm mb-5">Unquantised analogue step-sequencing and MIDI-to-CV translation.</p>
+                                <p class="text-zinc-500 text-sm mb-5 flex-grow">Unquantised analogue step-sequencing and MIDI-to-CV translation.</p>
                                 <a href="https://voltageandwave.co.uk/off_the_grid.html" class="mt-auto inline-flex items-center gap-2 border border-zinc-700 hover:border-amber-500/60 text-zinc-300 hover:text-amber-500 px-3 py-1.5 transition-colors bg-zinc-950/50 font-mono text-[10px] uppercase tracking-widest w-fit">
                                     <i data-lucide="audio-lines" class="w-3.5 h-3.5"></i> PREVIEW COMPANION SITE
                                 </a>
@@ -276,9 +284,12 @@
 
                             <!-- Book Three -->
                             <div class="bg-zinc-900 border border-zinc-800/60 p-5 rounded-sm opacity-70 flex flex-col">
-                                <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center justify-between mb-4">
                                     <span class="font-mono text-xs text-zinc-500 uppercase tracking-widest">Book Three</span>
                                     <span class="text-[10px] font-mono text-zinc-500 border border-zinc-800 px-2 py-0.5 uppercase tracking-widest">Planned</span>
+                                </div>
+                                <div class="mb-4 border border-zinc-800/50 border-dashed aspect-[2/3] flex items-center justify-center bg-zinc-950/50">
+                                    <i data-lucide="wrench" class="w-8 h-8 text-zinc-800"></i>
                                 </div>
                                 <h5 class="text-zinc-400 font-bold mb-1">Korg VC-10</h5>
                                 <p class="text-zinc-600 text-sm">Analogue vocoding, once the unit returns from the repair bench.</p>
