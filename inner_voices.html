@@ -63,9 +63,14 @@ const LQ={W:[290,610,2150,.7],Y:[260,2070,3020,.7],R:[310,1060,1380,.8],L:[360,1
 const FR={s:[6000,1.2,.5,0],sh:[3000,1.2,.55,0],f:[5000,.8,.2,0],th:[5500,.8,.15,0],z:[6000,1.2,.4,.5],dh:[4500,.8,.15,.4],h:[1500,.5,.3,0]};
 const PL={p:[800,0],t:[4200,0],k:[1800,0],b:[700,1],d:[3500,1],g:[1500,1],ch:[3200,0],j:[3200,1]};
 const Ph=(f0,r,s,vib)=>({f0,r,t0:.25,s,vib});
-const nbuf=c=>{if(!c._nb){const b=c.createBuffer(1,c.sampleRate,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;c._nb=b}return c._nb};
+// Seeded noise (mulberry32), one full clip long: every render is repeatable, so a reference and its
+// return share exactly the same noise, and the carrier never audibly loops.
+const nbuf=c=>{if(!c._nb){const b=c.createBuffer(1,c.sampleRate*DUR,c.sampleRate),d=b.getChannelData(0);let a=0x5eed1234;
+ for(let i=0;i<d.length;i++){a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;d[i]=((t^t>>>14)>>>0)/2147483648-1}c._nb=b}return c._nb};
 const noise=(c,t=0,d=DUR)=>{const n=c.createBufferSource();n.buffer=nbuf(c);n.loop=true;n.start(t);n.stop(t+d);return n};
 const filt=(c,type,f,q=1)=>{const b=c.createBiquadFilter();b.type=type;b.frequency.value=f;b.Q.value=q;return b};
+// A GainNode starts at 1, so the gain must be zeroed up front: otherwise any oscillator that runs from t=0
+// (the tschak body, the boing sine) leaks at full level until its own trigger time.
 const env=(c,t,a,d,r,pk)=>{const g=c.createGain();g.gain.value=0;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(pk,t+a);g.gain.setValueAtTime(pk,t+d);g.gain.linearRampToValueAtTime(0,t+d+r);return g};
 const GW=c=>c._gw||(c._gw=(()=>{const n=64,re=new Float32Array(n),im=new Float32Array(n);for(let k=1;k<n;k++)im[k]=1/Math.pow(k,1.2);return c.createPeriodicWave(re,im)})());
 const gl=(c,f)=>{const o=c.createOscillator();o.setPeriodicWave(GW(c));o.frequency.value=f;o.start(0);o.stop(DUR);return o};
@@ -74,49 +79,74 @@ const osc=(c,type,f,det=0)=>{const o=c.createOscillator();o.type=type;o.frequenc
 /* ===== MODULATORS: synthetic voice and drum kit ===== */
 // phrase notation: PHONEMES separated by spaces, ' = stressed vowel, | = pause, :n = duration override
 function layout(ph){
- const L=[];let lv=null;
+ const L=[];
  for(const raw of ph.s.split(' ')){
   let tk=raw,st=0,du=0;if(tk[0]=="'"){st=1;tk=tk.slice(1)}
   if(tk.includes(':')){const q=tk.split(':');tk=q[0];du=+q[1]}
-  const vd=du||(st?.2:.1);
-  if(tk=='|'){if(lv){lv.d*=1.3;lv=null}L.push({d:.14})}
-  else if(DP[tk]){L.push({d:vd*.55,F:VW[DP[tk][0]],v:1,nuc:1,st},{d:vd*.65,F:VW[DP[tk][1]],v:1,st});lv=L[L.length-1]}
-  else if(VW[tk]){L.push({d:vd,F:VW[tk],v:1,nuc:1,st});lv=L[L.length-1]}
+  const vd=du||(st?.2:.12);
+  if(tk=='|')L.push({d:.1});
+  else if(DP[tk])L.push({d:vd*.55,F:VW[DP[tk][0]],v:1,nuc:1,st},{d:vd*.65,F:VW[DP[tk][1]],v:1,st});
+  else if(VW[tk])L.push({d:vd,F:VW[tk],v:1,nuc:1,st});
   else if(LQ[tk]){const q=LQ[tk];L.push({d:du||.09,F:q.slice(0,3),v:q[3],st,nas:q[3]<.5})}
-  else if(FR[tk]){const q=FR[tk];L.push({d:du||(tk=='h'?.06:.09),n:q.slice(0,3),v:q[3],st,a:tk=='h'?.8:0})}
+  else if(FR[tk]){const q=FR[tk];L.push({d:du||(tk=='h'?.06:.09),n:q.slice(0,3),v:q[3],st})}
   else if(PL[tk]){const q=PL[tk];L.push({d:.05,v:q[1]*.2},{d:.012,n:[q[0],1,.9],v:q[1]*.2});
    if(tk=='ch'||tk=='j')L.push({d:.08,n:[3000,1.2,.55],v:q[1]*.3});else if(!q[1])L.push({d:.03,a:1})}}
- if(lv)lv.d*=1.3;
  const tot=L.reduce((a,x)=>a+x.d,0),r=Math.min(ph.r||1,(DUR-.15-ph.t0)/tot);let t=ph.t0;const vt=[];
  L.forEach(x=>{x.d*=r;x.t=t;t+=x.d;if(x.nuc)vt.push(x.t)});
  return{L,vt}}
 
-// vocal-tract model: glottal pulse + breath noise -> cascade of four formant resonances -> mic-ish low-pass
+// vocal-tract model: glottal pulse -> three parallel formant resonators, plus separate frication/burst noise -> mic-ish low-pass
 function speech(c,ph){
- // Phoneme-level formant synthesiser: glottal source + breath noise -> four parallel resonances that glide between
- // targets, a separate frication/burst path, and natural prosody (declination, stress accents, final fall, jitter/shimmer).
- const {L}=layout(ph),out=c.createGain(),voiced=c.createGain(),asp=c.createGain(),fr=filt(c,'bandpass',4000,1.1),frg=c.createGain(),lfo=osc(c,'sine',ph.vib?6:5.2),o=gl(c,ph.f0),pd=c.createGain();
- out.gain.value=.2;voiced.gain.value=0;asp.gain.value=0;frg.gain.value=0;pd.gain.value=ph.f0*(ph.vib||.004);
- lfo.connect(pd);pd.connect(o.frequency);o.connect(voiced);noise(c).connect(asp);noise(c).connect(fr);fr.connect(frg);frg.connect(out);
- const FB=[[600,6,1.25],[1500,8,.9],[2600,10,.5],[3500,12,.22]];
- const R=FB.map(v=>{const b=filt(c,'bandpass',v[0],v[1]),g=c.createGain();g.gain.value=v[2];voiced.connect(b);asp.connect(b);b.connect(g);g.connect(out);return{b,g}});
- const stp=(p,from,to,t,tr)=>{p.setValueAtTime(from,t);p.linearRampToValueAtTime(to,t+Math.max(.008,tr));return to};
- let vL=0,aL=0,fL=0,pitch=ph.f0*1.1,ff=4000,mF=FB.map(v=>v[0]),mG=FB.map(v=>v[2]);
- const T=Math.max(.1,L[L.length-1].t+L[L.length-1].d-ph.t0);
- const nextF=i=>{for(let j=i+1;j<L.length;j++)if(L[j].F)return L[j].F};
- L.forEach((x,i)=>{
-  const tr=Math.min(x.v>.3?.05:.015,Math.max(.008,x.d*.45)),pr=(x.t-ph.t0)/T,pk=(x.st?1:.72)*(1-.18*pr)*(1+Math.sin(x.t*57)*.05);
-  vL=stp(voiced.gain,vL,(x.v||0)*pk,x.t,tr);
-  aL=stp(asp.gain,aL,x.a?1.2:(x.v>.3?.05*pk:0),x.t,x.a?.01:tr);
-  const F=x.F||(x.a?nextF(i):null);               // aspiration is shaped by the vowel that follows
-  if(F){F.forEach((f,j)=>mF[j]=stp(R[j].b.frequency,mF[j],f,x.t,x.a?.025:tr));
-   (x.nas?[1.05,.24,.12,.06]:[1.25,.9,.5,.22]).forEach((g,j)=>mG[j]=stp(R[j].g.gain,mG[j],g,x.t,tr))}
-  if(x.F&&x.v>.3)pitch=stp(o.frequency,pitch,ph.f0*(1.12-.3*pr)*(x.st?1.08:1)*(pr>.85?.94:1)*(1+Math.sin(x.t*91)*.01),x.t,tr*1.5);
-  if(x.n){ff=stp(fr.frequency,ff,x.n[0],x.t,tr);fL=stp(frg.gain,fL,x.n[2],x.t,tr)}else fL=stp(frg.gain,fL,0,x.t,tr)});
- const te=L[L.length-1].t+L[L.length-1].d;stp(voiced.gain,vL,0,te,.04);stp(asp.gain,aL,0,te,.04);stp(frg.gain,fL,0,te,.03);  // release at phrase end
- const hp=filt(c,'highpass',90,.7),lp=filt(c,'lowpass',9000,.7);out.connect(hp);hp.connect(lp);
- const final=c.createGain();final.gain.value=.85;lp.connect(final);
- return final}
+  // Compact phoneme-level source model. This is a synthetic voice, not a recording:
+  // a harmonic glottal source feeds parallel formant resonators; frication and
+  // stop bursts are added separately so consonants survive the vocoder analysis.
+  const {L}=layout(ph),out=c.createGain(),voiced=c.createGain(),fric=noise(c),
+        fr=filt(c,'bandpass',4000,1.1),frg=c.createGain(),lfo=osc(c,'sine',ph.vib?6:5.2),o=gl(c,ph.f0);
+  out.gain.value=.2; voiced.gain.value=0; frg.gain.value=0;
+  const pitchDepth=c.createGain();pitchDepth.gain.value=ph.f0*(ph.vib||.0025);
+  lfo.connect(pitchDepth);pitchDepth.connect(o.frequency);
+  // Three parallel resonances are a much closer vocal-tract approximation than
+  // cascading peaking EQs, which unrealistically suppresses the source spectrum.
+  const formants=[
+    {f:600,q:5,g:1.25},
+    {f:1500,q:7,g:.9},
+    {f:2600,q:9,g:.48}
+  ];
+  o.connect(voiced);
+  const resonators=formants.map(v=>{const b=filt(c,'bandpass',v.f,v.q),g=c.createGain();g.gain.value=v.g;voiced.connect(b);b.connect(g);g.connect(out);return {b,g,base:v}});
+  // Breath/frication is kept on a separate path rather than mixed into the
+  // voiced source, preserving /s/, /sh/, /f/ and plosive release energy.
+  fric.connect(fr);fr.connect(frg);frg.connect(out);
+  const stp=(param,from,to,t,tr)=>{param.setValueAtTime(from,t);param.linearRampToValueAtTime(to,t+Math.max(.008,tr));return to};
+  let vLevel=0,fLevel=0,pitch=ph.f0,ff=4000,formantNow=formants.map(x=>x.f);
+  const T=Math.max(.1,L[L.length-1].t+L[L.length-1].d-ph.t0);
+  L.forEach(x=>{
+    const tr=Math.min(x.v>.3?.025:.012,Math.max(.008,x.d*.3)),pk=x.st?1:.72,pr=(x.t-ph.t0)/T;
+    vLevel=stp(voiced.gain,vLevel,(x.v||0)*pk,x.t,tr);
+    // Vowels and sonorants set the vocal-tract resonances; nasal sounds reduce
+    // the upper resonances, giving them a darker, more nasal character.
+    if(x.F){
+      // glide from the previous target (formantNow) to the new one; setting the old value and ramping to the same
+      // new value, as before, made every formant jump instantly
+      const gt=Math.min(.06,x.d*.5);
+      x.F.forEach((f,j)=>{const fp=resonators[j].b.frequency;fp.setValueAtTime(formantNow[j],x.t);fp.linearRampToValueAtTime(f,x.t+gt);formantNow[j]=f});
+      const gains=x.nas?[1.05,.24,.12]:[1.25,.9,.48];
+      gains.forEach((g,j)=>resonators[j].g.gain.setTargetAtTime(g,x.t,.012));
+      pitch=stp(o.frequency,pitch,ph.f0*(1+.018*Math.sin(pr*6.28)),x.t,tr*1.5);
+    }
+    if(x.n){ff=stp(fr.frequency,ff,x.n[0],x.t,tr);fLevel=stp(frg.gain,fLevel,x.n[2],x.t,tr)}
+    else if(x.a){fLevel=stp(frg.gain,fLevel,1.0,x.t,.008)}
+    else {fLevel=stp(frg.gain,fLevel,(x.v||0)*.035,x.t,tr)}
+  });
+  // Release at the end of the phrase. Without this the final sound (a vowel, the /s/ in "robots", the burst after a
+  // final /t/ or /k/) is held at full level until the 4 s clip ends, so the stem is never silent.
+  {const last=L[L.length-1],tEnd=last.t+last.d;stp(voiced.gain,vLevel,0,tEnd,.05);stp(frg.gain,fLevel,0,tEnd,.03)}
+  // The model has no natural language coarticulation or breath planning; this
+  // small output filter removes brittle extremes without hiding consonants.
+  const hp=filt(c,'highpass',90,.7),lp=filt(c,'lowpass',6800,.7);out.connect(hp);hp.connect(lp);
+  const final=c.createGain();final.gain.value=.85;lp.connect(final);
+  return final;
+}
 
 function drums(c){ // beatboxed kit: every hit carries a vowel colour so the pad can "speak" it
  const out=c.createGain();out.gain.value=.5;const st=.125;
@@ -131,7 +161,7 @@ function drums(c){ // beatboxed kit: every hit carries a vowel colour so the pad
  return out}
 
 /* ===== VOCODER: bands -> envelope followers -> carrier VCAs ===== */
-function vocode(c,mod,car,{nz=.35,lp=25}={}){
+function vocode(c,mod,car,{nz=0,lp=25}={}){
  // AV-20-informed signal path: 20 fixed centre frequencies, cascaded
  // analysis/synthesis band-pass filters, full-wave envelope detection,
  // ~25 Hz smoothing, envelope gain and a soft non-negative VCA control.
@@ -143,6 +173,10 @@ function vocode(c,mod,car,{nz=.35,lp=25}={}){
  const pre=filt(c,'highshelf',3000,.7);pre.gain.value=8;
  const micComp=c.createDynamicsCompressor();micComp.threshold.value=-24;micComp.ratio.value=8;micComp.attack.value=.005;
  mod.connect(pre);pre.connect(micComp);
+ // Input Sig Bal: nz is how far the carrier is turned from KBD towards NOISE (0 = keyboard/external only, as in
+ // V-01, V-03 and V-09). It was accepted but never used before.
+ if(nz>0){const mix=c.createGain(),ka=c.createGain(),na=c.createGain();ka.gain.value=1-nz;na.gain.value=nz*.5;
+  car.connect(ka);noise(c).connect(na);ka.connect(mix);na.connect(mix);car=mix}
  const abs=new Float32Array(4097),clamp=new Float32Array(4097);
  for(let j=0;j<abs.length;j++){const x=2*j/(abs.length-1)-1;abs[j]=Math.abs(x);clamp[j]=x<=0?0:Math.tanh(1.5*x)}
  const bp=f=>filt(c,'bandpass',Math.min(f,SR*.46),5);
@@ -164,112 +198,113 @@ const FM9=[41,48,51,55,56,65],DM9=[38,45,48,52,53,62];
 const pad=(c,sh=0,det=[0],ch=FM9)=>{const out=c.createGain();ch.forEach(m=>det.forEach(d=>{[['sawtooth',1,.075],['square',1,.045],['square',.5,.035]].forEach(([ty,mul,lev])=>{const g=c.createGain();g.gain.value=lev;osc(c,ty,midi(m+sh)*mul,d).connect(g);g.connect(out)})}));return out};
 const plain=c=>osc(c,'sawtooth',midi(41));
 const sawF=c=>{const f=filt(c,'lowpass',200,12);f.frequency.setValueAtTime(200,0);f.frequency.exponentialRampToValueAtTime(6000,DUR);osc(c,'sawtooth',midi(41)).connect(f);return f};
-const arp=(c,ph,on)=>{const out=c.createGain(),S=[0,7,12,15,19,12,7,3];
+// SQ-10 lane: a three-step figure, one step per syllable. Steps are in semitones at 0.25 V each (Section 07), so the
+// largest step here is +4 semitones = 1.0 V = 400 cents: the full travel of a ±1 V lane, well inside the VC-10's ±3 V limit.
+// (The old figure climbed to +19 semitones, which would need 4.75 V.)
+const arp=(c,ph,on)=>{const out=c.createGain(),S=[0,4,2];
  [41,48,56].forEach(m=>{const g=c.createGain(),o=osc(c,'sawtooth',midi(m));g.gain.value=.3;
-  if(on)layout(ph).vt.forEach((t,i)=>o.frequency.setValueAtTime(midi(m+S[i%8]),t-.02));
+  if(on)layout(ph).vt.forEach((t,i)=>o.frequency.setValueAtTime(midi(m+S[i%S.length]),t-.02));
   o.connect(g);g.connect(out)});return out};
 const ens=(c,on)=>{const out=c.createGain();
  (on?[-30,0,30]:[0]).forEach((d,vi)=>{let LG;
   if(on){const l=osc(c,'sine',6+vi*.15);LG=c.createGain();LG.gain.value=45;l.connect(LG)}
   [53,60,63,67].forEach(m=>{const g=c.createGain(),o=osc(c,'sawtooth',midi(m),d);g.gain.value=.2;if(on)LG.connect(o.detune);o.connect(g);g.connect(out)})});
  return out};
-const gate=on=>c=>{const p=pad(c,0,[-8,8],DM9);if(!on)return p;const g=c.createGain(),st=60/128/4;
- for(let t=0;t<DUR;t+=st){g.gain.setValueAtTime(1,t);g.gain.setTargetAtTime(0,t+st*.45,.012)}p.connect(g);return g};
-const sweep=(c,n)=>{const f=filt(c,'lowpass',6000,8);f.frequency.setValueAtTime(6000,0);f.frequency.exponentialRampToValueAtTime(50,DUR*.9);
- const g=c.createGain();g.gain.setValueAtTime(1,DUR*.7);g.gain.linearRampToValueAtTime(0,DUR*.95);n.connect(f);f.connect(g);return g};
+// V-09 carrier: a sustained Dm9 pad stem from the DAW with a slow filter movement (book p. 36-37: "mono, sustained and
+// harmonically rich", "the pad's slow filter movement visible underneath"). A 0.4 Hz LFO swings the low-pass between
+// about 1.2 and 5.2 kHz, so the pad never goes dull enough to be muffled.
+const dawPad=c=>{const f=filt(c,'lowpass',3200,1.5),l=osc(c,'sine',.4),lg=c.createGain();lg.gain.value=2000;l.connect(lg);lg.connect(f.frequency);
+ pad(c,0,[-8,8],DM9).connect(f);return f};
+// V-08: the MS-10 cutoff sweeps down and back up, so upper harmonics fall away and then return (book p. 35)
+const sweep=(c,n)=>{const f=filt(c,'lowpass',6000,8);f.frequency.setValueAtTime(6000,0);
+ f.frequency.exponentialRampToValueAtTime(180,DUR*.5);f.frequency.exponentialRampToValueAtTime(6000,DUR*.95);n.connect(f);return f};
 const band=(c,r)=>{let n=pad(c,{low:-12,mid:0,high:24,full:0}[r],r=='full'?[-8,8]:[0]);const [a,b]={low:[0,350],mid:[300,2500],high:[4000,0],full:[0,0]}[r];
  if(b)for(let k=0;k<2;k++){const f=filt(c,'lowpass',b,.7);n.connect(f);n=f}
  if(a)for(let k=0;k<2;k++){const f=filt(c,'highpass',a,.7);n.connect(f);n=f}return n};
 
 /* ===== PROTOCOLS: each with its own phrase and setting ===== */
-const M1=[['DAW STEM','Modulator Input'],['VC-10 KEYBOARD','Carrier Source'],['HARDWARE RETURN','recorded in DAW']];
-const M2=[['DAW STEM','Modulator Input'],['NOISE GEN','Carrier Source'],['HARDWARE RETURN','recorded in DAW']];
-const M3=[['DAW STEM','Modulator Input'],['MS-10 OUT','Carrier Source'],['HARDWARE RETURN','recorded in DAW']];
-const M4=[['DRUM STEM','Modulator Input'],['PAD CARRIER','Carrier Source'],['HARDWARE RETURN','recorded in DAW']];
-const M5=[['SQ-10 CH A','Pitch CV Input'],['VC-10 KEYS','Carrier Source'],['HARDWARE RETURN','recorded in DAW']];
-const M6=[['DAW STEM','Modulator Input'],['ENSEMBLE','Chorus & Pitch'],['HARDWARE RETURN','recorded in DAW']];
-const M7=[['VC-10 RETURN','Track A'],['DRY STEM','Track B'],['DAW BLEND','Track A + B']];
-const M8=[['VC-10 OUT','Modulator Input'],['MS-10 FILTER','Ext Signal In'],['HARDWARE RETURN','recorded in DAW']];
-const M9=[['SPEECH STEM','Modulator Input'],['PAD CARRIER','Carrier Source'],['HARDWARE RETURN','recorded in DAW']];
 const D={dry:1},PB=Ph(150,1,"s 'IY k W AH n s ER | s 'IY k W AH n s ER | s 'IY k W AH n s | IH t");
 const P=[
 {g:'Voice',title:'Speech over Keys',chip:'DAW Stem / Mic Input / Keyboard Carrier',say:'Operator, stand by',demo:'Fm9 speech choir',dl:'DRY STEM SPEECH',rl:'VC-10 RETURN CHORD VOICED',
  ph:Ph(104,1.7,"'AO p AH R 'EY t AH | s t 'AE n d | b 'AY"),
  notes:'A spoken or sung stem should drive a chord played on the VC-10 keyboard. The voice articulates the chord. Demo: a fixed, lush Fm9 shaped by the syllables.',
- rc:'The digital source is a robotic formant model, not a human. You hear raw vowel resonances and consonant bursts.',
- exp:'The static chord acts as the vocal cords. Its harmonic lines stay fixed in pitch while their brightness is "mouthed" by the speech envelope.',
+ rc:'The unmodified voice: vowel formants and consonant bursts.',exp:'The chord’s harmonic lines stay fixed in pitch while their brightness follows the speech. Silence in the stem is silence in the return.',
  check:'Compare the return’s syllable timing to the dry stem. They should line up closely. A return that sounds while the stem is quiet means a leak.',bench:'Mic Input −50 dB to 0 dB reference level is unmeasured. Check pad attenuation needed.',
- ref:D,ret:{car:c=>pad(c)},main:M1,cv:[['DAW STEM','→ Mic Input (Modulator)'],['VC-10 KEYS','Held Chord (Carrier)'],['FINAL OUT','→ Interface']]},
-{g:'Voice',title:'Noise Carrier: Whisper and Consonants',chip:'Noise Carrier / Input Sig Bal',say:'Shh… system check, fresh shock',demo:'Pitchless whisper',dl:'KEYBOARD CARRIER',rl:'VC-10 RETURN NOISE CARRIER',
+ ref:D,ret:{car:c=>pad(c)}},
+{g:'Voice',title:'Noise Carrier: Whisper and Consonants',chip:'DAW Stem / Mic Input / Noise Carrier',say:'Shh… system check, fresh shock',demo:'Pitchless whisper',rl:'VC-10 RETURN NOISE CARRIER',
  ph:Ph(120,1.3,"sh:.4 | s 'IH s t AH M | ch 'EH k | f R 'EH sh | sh 'AO k"),
  notes:'Noise is the only carrier. Pitch is lost, giving breathy speech with natural consonants. Demo: a fricative-heavy phrase, with no stable musical pitch.',
- rc:'The same phrase through the held chord, for comparison.',
- exp:'Because broadband noise has no pitch, the return is a harsh, pitchless whisper. The modulator\'s consonant bursts act as volume triggers for the noise.',
+ exp:'Broadband energy replaces the chord lines. Pitch is gone, and the consonant bursts stand out.',
  check:'If harmonic lines are visible in the return, Input Sig Bal is not fully clockwise.',bench:'Noise colour is unmeasured.',
- ref:D,ret:{car:c=>noise(c),nz:0},main:M2,cv:[['DAW STEM','→ Mic Input (Modulator)'],['NOISE GEN','Carrier Source'],['FINAL OUT','→ Interface']]},
-{g:'Carrier',title:'MS-10 as Carrier',chip:'MS-10 Signal Out / Ext Signal Input',say:'We are the robots',demo:'MS-10 saw & filter',dl:'SAW, FILTER OPEN',rl:'VC-10 RETURN MS-10 CARRIER',
+ ref:D,ret:{car:c=>noise(c)}},
+{g:'Carrier',title:'MS-10 as Carrier',chip:'MS-10 Signal Out / Ext Signal Input',say:'We are the robots',demo:'MS-10 saw & filter',rl:'VC-10 RETURN MS-10 CARRIER',
  ph:Ph(95,1.8,"W 'IY | 'AA R | dh AH | R 'OW b 'AO t s"),
  notes:'The MS-10 oscillator and filter act as the voice carrier. Demo: one sawtooth through a resonant low-pass that sweeps open across the sentence.',
- rc:'A single static sawtooth: speech with no filter movement.',
- exp:'The syllables carve shapes out of the MS-10\'s raw sawtooth. As the MS-10\'s filter opens, higher frequencies become available for the vocoder to articulate.',
+ exp:'A single saw-rich pitch whose upper harmonics brighten across the phrase, shaped underneath by the speech.',
  check:'Meter peak at or below 0 dB with Ext Sig Level. If the return is quiet, confirm the MS-10 VCA is open.',bench:'Korg’s text also says noise can be added in this setup but does not say how.',
- ref:D,ret:{car:sawF},main:M3,cv:[['MS-10 OUT','→ Ext Signal Input (Carrier)'],['DAW STEM','→ Mic Input (Modulator)'],['FINAL OUT','→ Interface']]},
+ ref:D,ret:{car:sawF}},
 {g:'Carrier',title:'Talking Drums',chip:'DAW Drum Stem / Mic Input / Pad Carrier',say:'Boom, tschak, ts, boing',demo:'Beatboxed kit; full, low, mid and high pad',dl:'DRY STEM VOCAL KIT',rl:'VC-10 RETURN PAD ARTICULATED',opts:['full','low','mid','high'],
  ph:'D',
  notes:'A drum bus should articulate a pad, so the rhythm appears to speak. Demo: the kit is vocal percussion (boom kick, tschak snare, ts hat, boing tom), so the full pad appears to say it. Low, mid and high band-limit the pad to hear which hit each register answers.',
- rc:'The source is a synthetic analog beatbox shaped with subtle vowel formants (boom, tschak).',
- exp:'You are no longer hearing drums. The drum hits act as invisible volume knobs for a static synth pad. Kicks open low pad bands; hats open high pad bands, creating rhythmic breathing.',
+ rc:'The dry vocal kit: boom, tschak, ts, boing. Pick a pad register above.',exp:'Pad energy appears only on the hits and falls quiet between them, so the pad seems to say “boom, tschak”.',
  check:'Between hits the return should fall quiet. If it does not, look for hat or noise bleed on the stem.',bench:'Meter response to fast transients is unmeasured, so set level by the clean return.',
- ref:D,ret:{car:(c,o)=>band(c,o||'full'),nz:.2},main:M4,cv:[['DRUM STEM','→ Mic Input (Modulator)'],['VC-10 KEYS','Held Chord (Carrier)'],['FINAL OUT','→ Interface']]},
-{g:'Pitch',title:'Sequenced Vocoder',chip:'SQ-10 Channel A / Ext Pitch Control',say:'Sequencer, sequencer, sequence it',demo:'SQ-10 syllable arpeggio',dl:'HELD CHORD',rl:'VC-10 RETURN PITCH STEPPED',
+ // Input Sig Bal "slightly towards NOISE" (book p. 26, variant A) applies to the full pad; the band-limited registers stay noise-free so they isolate the pad
+ ref:D,ret:{car:(c,o)=>band(c,o||'full'),nz:o=>(o||'full')=='full'?.2:0}},
+{g:'Pitch',title:'Sequenced Vocoder',chip:'SQ-10 Channel A / Ext Pitch Control',say:'Sequencer, sequencer, sequence it',demo:'SQ-10 three-step figure',rl:'VC-10 RETURN PITCH STEPPED',
  ph:PB,
- notes:'The SQ-10 moves the vocoder’s pitch step by step, locked to the syllables. A sequence tuned for 1 V/oct will sound too narrow.',
- rc:'The same fast syllables on a chord that never moves.',
- exp:'The synthetic voice stays exactly the same, but the carrier chord jumps in sequenced pitches. The syllables now follow a rigid melodic staircase.',
+ notes:'The SQ-10 moves the vocoder’s pitch step by step, locked to the syllables. A sequence tuned for 1 V/oct will sound too narrow. Demo: a three-step figure of 0, +4 and +2 semitones (0, 1.0 and 0.5 V), repeated once per word.',
+ exp:'Harmonic lines move together in a staircase while their brightness still follows the speech.',
  check:'Check each step against a tuner. Intervals should land at 400 cents per volt.',bench:'Does Ext Pitch Control scale the voltage before or after the ±3 V limit?',
- ref:D,ret:{car:c=>arp(c,PB,true)},main:M5,cv:[['SQ-10 CH A','→ Ext Pitch Control'],['VC-10 KEYS','Held Chord (Carrier)'],['FINAL OUT','→ Interface']]},
-{g:'Pitch',title:'Ensemble and Accent Bend',chip:'Ensemble / Accent Bend / Tune',say:'Ah… oh… oo… ah (sung)',demo:'Three voices, 6 Hz wobble',dl:'ENSEMBLE OFF',rl:'VC-10 RETURN ENSEMBLE ON',
+ ref:D,ret:{car:c=>arp(c,PB,true)}},
+{g:'Pitch',title:'Ensemble and Accent Bend',chip:'Ensemble / Accent Bend / Tune',say:'Ah… oh… oo… ah (sung)',demo:'Three voices, 6 Hz wobble',rl:'VC-10 RETURN ENSEMBLE ON',
  ph:Ph(190,1,"AA:.75 | OW:.75 | UW:.75 | AA:.75",.03),
+
  notes:'A single voice becomes a small choir. Demo: long sung vowels on a four-note chord, through three detuned voices with an exaggerated 6 Hz wobble.',
- rc:'The same sung vowels with Ensemble off.',
- exp:'The previously static chord is thickened by the Ensemble chorus, creating detuned beating. This mimics the natural instability of a choir.',
+ exp:'Each harmonic line broadens into a close cluster, and slow beating appears in the waveform.',
  check:'If the clusters are wide enough to hear as out of tune, back off Accent Bend and Ensemble.',bench:'What Accent Bend actually does is unconfirmed.',
- ref:D,ret:{car:c=>ens(c,true)},main:M6,cv:[['DAW STEM','→ Mic Input (Modulator)'],['VC-10 KEYS','Played Notes (Carrier)'],['FINAL OUT','→ Interface']]},
-{g:'Print',title:'Blend and Print',chip:'VC-10 Return / DAW Dry Stem',say:'Pick it up, keep it tight',demo:'Dry voice + Fm9 return',dl:'DRY STEM ONLY',rl:'BLEND 60 / 40',
+ ref:D,ret:{car:c=>ens(c,true)}},
+{g:'Print',title:'Blend and Print',chip:'VC-10 Return / DAW Dry Stem',say:'Pick it up, keep it tight',demo:'Dry voice + Fm9 return',dl:'DRY STEM + RETURN OVERLAID',rl:'BLEND (60 / 40)',
  ph:Ph(112,1.3,"p 'IH k IH t | 'AH p | k 'IY p IH t | t 'AY t"),
+
  notes:'The vocoded return should sit under or over the original voice. Demo: crisp consonants from the dry voice, with the Fm9 body behind them.',
- rc:'Articulate, but thin: only the dry robotic voice.',
- exp:'Onsets line up. The robotic formant synth provides crisp consonants, while the vocoded chord provides a lush, sustained harmonic body behind it.',
+ rc:'The dry stem (cyan) and the VC-10 return (purple) laid over each other at full level, before any blending. Onsets line up.',exp:'Onsets line up. The blend keeps the dry transient with the vocoded body behind it.',
  check:'Misaligned onsets mean a latency offset. Slice and align.',bench:'',
- ref:D,ret:{car:c=>pad(c),blend:.6},main:M7,cv:[['VC-10 RETURN','Track A'],['DAW STEM','Track B'],['DAW MIX','Track A + B']]},
-{g:'Print',title:'VC-10 into the MS-10 Filter',chip:'VC-10 Final Out / MS-10 Ext Signal In',say:'Going, going, gone',demo:'Master sweep to silence',dl:'DIRECT RETURN',rl:'THROUGH THE MS-10 FILTER',
- ph:Ph(100,2.1,"g 'OW IH NG | g 'OW IH NG | g 'AO N"),
- notes:'The vocoded return is shaped by the Korg-35 filter in the MS-10. Demo: a descending low-pass sweep across the whole return that closes to silence.',
- rc:'The Fm9 return straight from the VC-10.',
- exp:'The fully vocoded phrase is fed through a master low-pass filter. You hear the words become muffled and disappear as the MS-10 filter closes over them.',
+ ref:{overlay:1,car:c=>pad(c)},ret:{car:c=>pad(c),blend:.6}},
+{g:'Print',title:'VC-10 into the MS-10 Filter',chip:'VC-10 Final Out / MS-10 Ext Signal In',say:'Close down, open up',demo:'Cutoff sweep down and back up',dl:'DIRECT RETURN',rl:'THROUGH THE MS-10 FILTER',
+ ph:Ph(100,2.1,"k l 'OW z | d 'AW n | 'OW p AH n | 'AH p"),
+ notes:'The vocoded return is shaped by the Korg-35 filter in the MS-10. Demo: a low-pass cutoff that sweeps down and back up across the whole return.',
+ rc:'The Fm9 return straight from the VC-10.',exp:'The return’s brightness follows the MS-10 cutoff sweep: upper harmonics fall away and then return.',
  check:'Check the VC-10 Final Out level through the pad and watch for distortion at the MS-10 input.',bench:'VC-10 Final Out peak level and source impedance are unmeasured.',
- ref:{car:c=>pad(c)},ret:{car:c=>pad(c),post:sweep},main:M8,cv:[['VC-10 OUT','→ MS-10 Ext Signal In'],['MS-10 LPF','Korg-35 Filter'],['MS-10 OUT','→ Interface']]},
-{g:'Carrier',title:'DAW Stem as Carrier',chip:'DAW Carrier Stem / Ext Signal Input',say:'Dance, dance, tonight',demo:'Sixteenth-note trance gate',dl:'PAD, UNGATED',rl:'VC-10 RETURN DAW GATED CARRIER',
+ ref:{car:c=>pad(c)},ret:{car:c=>pad(c),post:sweep}},
+{g:'Carrier',title:'DAW Stem as Carrier',chip:'DAW Carrier Stem / Ext Signal Input',say:'Dance, dance, tonight',demo:'Sustained Dm9 pad, slow filter movement',rl:'VC-10 RETURN DAW PAD CARRIER',
  ph:Ph(135,2.0,"d 'AE n s | d 'AE n s | t AH n 'AY t"),
- notes:'A synth, guitar or pad stem from the DAW is the carrier. Demo: a Dm9 pad gated in tight sixteenths at 128 BPM before it reaches the VC-10.',
- rc:'The same Dm9 pad, ungated.',
- exp:'The carrier itself is rhythmically stuttering. The voice tries to speak through it, but the words are chopped into sixteenth-note blocks by the carrier\'s own rhythm.',
- check:'If upper harmonics are missing from the return, the carrier is too dull.',bench:'',
- ref:D,ret:{car:gate(true)},main:M9,cv:[['CARRIER STEM','→ Ext Signal Input'],['SPEECH STEM','→ Mic Input (Modulator)'],['FINAL OUT','→ Interface']]}
+ notes:'A synth, guitar or pad stem from the DAW is the carrier. Demo: a sustained Dm9 pad whose filter opens and closes slowly before the pad reaches the VC-10.',
+ exp:'The pad’s own harmonic lines stay in place while their brightness follows the speech, with the pad’s slow filter movement visible underneath.',
+ check:'The loudest pad passage should peak at 0 dB with Meter Select to the left. If upper harmonics are missing from the return, the carrier is too dull.',bench:'',
+ ref:D,ret:{car:dawPad}}
 ].map((p,i)=>(p.n='0'+(i+1),p.id='v-'+p.n,p));
 
+// Reference panels that play the unprocessed speech stem (as the book's figures label them) get their caption here;
+// V-04 (drums), V-07 (overlay) and V-08 (direct return) carry their own captions above.
 P.forEach(p=>{if(p.ref===D&&p.ph!='D'&&p.n!='07'){p.dl='DRY STEM SPEECH';p.rc='The unmodified voice, as the mic would hear it: “'+p.say+'”.'}});
 /* ===== RENDER (offline) ===== */
 const norm=d=>{let m=0;for(const v of d)m=Math.max(m,Math.abs(v));if(m)for(let i=0;i<d.length;i++)d[i]*=.85/m;return d};
+const LAY=new WeakMap();   // overlay clip -> [dry stem, vocoded return], so the waveform can draw both
 async function renderSpec(p,s,o){
+ if(s.overlay){ // V-07 reference: dry stem and unblended return summed at equal level
+  const dry=await renderSpec(p,D),ret=await renderSpec(p,{car:s.car}),d=new Float32Array(dry.length);
+  for(let i=0;i<d.length;i++)d[i]=.5*(dry[i]+ret[i]);
+  norm(d);LAY.set(d,[dry,ret]);return d}
  const c=new OfflineAudioContext(1,SR*DUR,SR),m=p.ph=='D'?drums(c):speech(c,p.ph);let n=m;
- if(!s.dry){n=vocode(c,m,s.car(c,o),{nz:s.nz??.35,lp:p.ph=='D'?120:40});if(s.post)n=s.post(c,n)}
+ if(!s.dry){const nz=typeof s.nz=='function'?s.nz(o):s.nz??0;
+  n=vocode(c,m,s.car(c,o),{nz,lp:p.ph=='D'?120:40});if(s.post)n=s.post(c,n)}
  n.connect(c.destination);
  const d=norm((await c.startRendering()).getChannelData(0));
- if(s.blend){const dr=await renderSpec(p,D);for(let i=0;i<d.length;i++)d[i]=s.blend*dr[i]+(1-s.blend)*d[i]}
+ // blend = dry share (60 / 40 = 60% dry stem, 40% return); renormalise so it plays as loud as the dry reference
+ if(s.blend){const dr=await renderSpec(p,D);for(let i=0;i<d.length;i++)d[i]=s.blend*dr[i]+(1-s.blend)*d[i];norm(d)}
  return d}
 const cache={},opts={},FRM=new WeakMap();
-const get=(p,s,o)=>cache[p.n+s+(o||'')]||=renderSpec(p,p[s],o);
+const get=(p,s,o)=>cache[p.n+s+(s=='ret'&&o||'')]||=renderSpec(p,p[s],o);   // only the return depends on the pad register
 
 /* ===== ANALYSIS DISPLAY ===== */
 const FN=2048,HOP=256,TC=new Float32Array(FN/2),TS=new Float32Array(FN/2),HW=new Float32Array(FN);
@@ -282,9 +317,11 @@ function frames(d){if(FRM.has(d))return FRM.get(d);const F=[];let M=1e-9;
  for(let s=0;s+FN<=d.length;s+=HOP){const re=new Float32Array(FN),im=new Float32Array(FN);for(let i=0;i<FN;i++)re[i]=d[s+i]*HW[i];fft(re,im);const m=new Float32Array(FN/2);for(let i=0;i<FN/2;i++){m[i]=Math.hypot(re[i],im[i]);if(m[i]>M)M=m[i]}F.push(m)}
  const r={F,M};FRM.set(d,r);return r}
 function size(cv){const r=cv.parentElement.getBoundingClientRect(),d=devicePixelRatio||1,W=r.width||300,H=r.height||150;cv.width=W*d;cv.height=H*d;const c=cv.getContext('2d');c.scale(d,d);return[c,W,H]}
-function wave(cv,d,w){const[c,W,H]=size(cv),mid=H/2;c.fillStyle='#000';c.fillRect(0,0,W,H);c.fillStyle=w?'#8b5cf6':'#00bcd4';
- const k=d.length/W;for(let x=0;x<W;x++){let lo=0,hi=0;for(let i=x*k|0;i<(x+1)*k;i++){const v=d[i];if(v<lo)lo=v;if(v>hi)hi=v}c.fillRect(x,mid-hi*mid*.9,1,Math.max(1,(hi-lo)*mid*.9))}}
-
+function wave(cv,d,w){const[c,W,H]=size(cv),mid=H/2,L=LAY.get(d);c.fillStyle='#000';c.fillRect(0,0,W,H);
+ const k=d.length/W,trace=(s,col,al)=>{c.globalAlpha=al;c.fillStyle=col;
+  for(let x=0;x<W;x++){let lo=0,hi=0;for(let i=x*k|0;i<(x+1)*k;i++){const v=s[i];if(v<lo)lo=v;if(v>hi)hi=v}c.fillRect(x,mid-hi*mid*.9,1,Math.max(1,(hi-lo)*mid*.9))}
+  c.globalAlpha=1};
+ if(L){trace(L[1],'#8b5cf6',.85);trace(L[0],'#00bcd4',.65)}else trace(d,w?'#8b5cf6':'#00bcd4',1)}
 function spec(cv,d,w){
  const[c,W,H]=size(cv),pw=W-ML,ph=H-MB,{F,M}=frames(d);
  const r=w?139:0, g=w?92:188, b=w?246:212; // Base colors (purple / cyan)
@@ -341,19 +378,64 @@ async function paint(p){
   col.querySelector('.play-btn').disabled=false;col.querySelector('.timer').textContent='0:00'}}
 
 /* ===== MARKUP ===== */
+// Routing schematics follow the patch blocks in the book. Each is one VC-10 (or MS-10) block with three input rows:
+// modulator (Mic Input), carrier (keyboard / noise / Ext Signal Input) and pitch (Ext Pitch Control).
+// Purple row = what this protocol changes. Dim row = not patched. Cyan = dry stem, purple = audio, dashed cyan = control voltage.
+const R=(t,s,o={})=>({t,s,...o}),
+ MIC=R('MIC INPUT','modulator',{cab:1}),KBD=R('KEYBOARD','held chord · carrier'),NOP=R('EXT PITCH CONTROL','not patched · knob at 0',{ghost:1}),
+ EXT=R('EXT SIGNAL INPUT','carrier · 3 Vp-p max',{cab:1,hot:1}),
+ STEM=(t,s)=>[[t,s,'stem'],['PAD','attenuate','pad']],
+ SPEECH=STEM('DAW STEM','speech · modulator'),VC='VC-10 VOCODER';
+const NET={
+ '01':{dev:VC,rows:[MIC,{...KBD,hot:1},NOP],ch:[SPEECH],
+  alt:'DAW stem through a pad into the VC-10 Mic Input. The VC-10 keyboard, a held chord, is the carrier. VC-10 Final Out to the interface and the hardware return.'},
+ '02':{dev:VC,rows:[MIC,R('NOISE GENERATOR','carrier · Input Sig Bal',{hot:1}),NOP],ch:[SPEECH],
+  alt:'DAW stem through a pad into the VC-10 Mic Input. The noise generator, set with Input Sig Bal, is the carrier. VC-10 Final Out to the interface and the hardware return.'},
+ '03':{dev:VC,rows:[MIC,EXT,NOP],ch:[SPEECH,[['MS-10 SIGNAL OUT','carrier','gear']]],
+  alt:'MS-10 Signal Out into the VC-10 Ext Signal Input as the carrier. DAW stem through a pad into the Mic Input. VC-10 Final Out to the interface and the hardware return.'},
+ '04':{dev:VC,rows:[{...MIC,s:'drum bus · modulator',hot:1},R('KEYBOARD (A)','held chord · or Ext Signal (B)'),NOP],ch:[STEM('DAW DRUM STEM','drums · modulator'),[['MS-10 DRONE','variant B','opt','opt']]],
+  alt:'DAW drum stem through a pad into the VC-10 Mic Input. Carrier: VC-10 keys, variant A, or an MS-10 drone into Ext Signal, variant B. VC-10 Final Out to the interface and the hardware return.'},
+ '05':{dev:VC,rows:[MIC,KBD,R('EXT PITCH CONTROL','1/3 oct per V · ±3 V',{cab:1,hot:1})],ch:[SPEECH,null,[['SQ-10 CH A','voltage out · ±1 V','gear','cv']]],
+  alt:'SQ-10 Channel A voltage out into the VC-10 Ext Pitch Control. DAW stem through a pad into the Mic Input. The VC-10 keys, a held chord, are the carrier. Final Out to the interface and the hardware return.'},
+ '06':{dev:VC,rows:[MIC,R('KEYS → ENSEMBLE','chorus · Accent Bend · Tune',{hot:1}),NOP],ch:[SPEECH],
+  alt:'DAW stem through a pad into the VC-10 Mic Input. VC-10 keys through Ensemble to Final Out, with Accent Bend and Tune. Final Out to the interface and the hardware return.'},
+ '08':{dev:'MS-10 SYNTHESISER',rows:[R('EXT SIGNAL IN','3 Vp-p max',{cab:1}),R('KORG-35 CUTOFF','swept down and up',{hot:1}),R('VCA → SIGNAL OUT','')],
+  ch:[[['VC-10 FINAL OUT','vocoded return','gear'],['PAD','as measured (M2)','pad']]],out:2,outLabel:'SIGNAL OUT',
+  alt:'VC-10 Final Out through a pad into the MS-10 Ext Signal In. MS-10 Korg-35 cutoff, then VCA, then Signal Out to the interface and the hardware return.'},
+ '09':{dev:VC,rows:[MIC,EXT,NOP],ch:[STEM('SPEECH STEM','speech · modulator'),[['CARRIER STEM','2nd interface output','stem']]],
+  alt:'Carrier stem from a second interface output into the VC-10 Ext Signal Input. Speech stem through a pad into the Mic Input. Final Out to the interface and the hardware return.'},
+ '07':{blend:1,alt:'VC-10 return, from V-01 or V-02, onto DAW track A. Dry stem onto DAW track B. Track A plus track B blended in the DAW.'}
+};
 function schem(p){
- const box=(x,y,w,t,s,c)=>`<g transform="translate(${x-w/2},${y})"><rect width="${w}" height="50" fill="#18181b" stroke="${c}" stroke-width="${c==='#52525b'?1:2}"/><text x="${w/2}" y="22" fill="${c==='#52525b'?'#d4d4d8':c}" font-family="monospace" font-size="11" font-weight="bold" text-anchor="middle">${t}</text><text x="${w/2}" y="38" fill="#71717a" font-family="monospace" font-size="9" text-anchor="middle">${s}</text></g>`;
- const mx=i=>150+i*250,m=p.id,hot=p.main===M2?1:0;
- let o=`<defs><marker id="r${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8b5cf6"/></marker><marker id="c${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00bcd4"/></marker></defs>`;
- p.cv.forEach((c,i)=>{const to=({'03':[1,0,2],'09':[1,0,2]}[p.n]||[0,1,2])[i],x=mx(to);o+=`<path d="M${x} 70V123" fill="none" stroke="#00bcd4" stroke-width="2" stroke-dasharray="4" marker-end="url(#c${m})"/>`+box(x,20,170,c[0],c[1],'#00bcd4')});
- p.main.forEach((b,i)=>{o+=box(mx(i),125,170,b[0],b[1],i===hot?'#8b5cf6':'#52525b');if(i<2)o+=`<path d="M${mx(i)+85} 150H${mx(i+1)-85}" stroke="#8b5cf6" stroke-width="2" marker-end="url(#r${m})"/>`});
- return`<svg viewBox="0 0 800 190" class="w-full min-w-[600px] h-auto" xmlns="http://www.w3.org/2000/svg">${o}</svg>`}
+ const N=NET[p.n],m=p.id,A='#8b5cf6',C='#00bcd4',
+  K={stem:[C,C,'#18181b',0,2],gear:['#52525b','#d4d4d8','#18181b',0,1],pad:['#52525b','#d4d4d8','#18181b',0,1],opt:['#71717a','#a1a1aa','#18181b',1,1],
+     hot:[A,'#a78bfa','rgba(139,92,246,.14)',0,2],ghost:['#3f3f46','#52525b','none',0,1],ret:[A,'#a78bfa','#18181b',0,2]},
+  box=(x,y,w,t,s,k)=>{const[st,tc,fl,da,sw]=K[k];return`<rect x="${x}" y="${y}" width="${w}" height="52" fill="${fl}" stroke="${st}" stroke-width="${sw}"${da?' stroke-dasharray="4 3"':''}/><text x="${x+w/2}" y="${y+(s?23:31)}" fill="${tc}" font-family="monospace" font-size="11" font-weight="bold" text-anchor="middle">${t}</text>${s?`<text x="${x+w/2}" y="${y+39}" fill="${k=='ghost'?'#3f3f46':'#71717a'}" font-family="monospace" font-size="9" text-anchor="middle">${s}</text>`:''}`},
+  cab=(d,k='audio')=>`<path d="${d}" fill="none" stroke="${k=='cv'?C:k=='opt'?'#71717a':A}" stroke-width="2"${k=='audio'?'':' stroke-dasharray="4 3"'} marker-end="url(#${k=='cv'?'c':k=='opt'?'o':'r'}${m})"/>`,
+  defs=`<defs>${[['r',A],['c',C],['o','#71717a']].map(([i,f])=>`<marker id="${i}${m}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="${f}"/></marker>`).join('')}</defs>`,
+  wrap=b=>`<svg viewBox="0 0 800 224" class="w-full min-w-[600px] h-auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${N.alt}">${defs}${b}</svg>`;
+ let o='';
+ if(N.blend){ // V-07 is all DAW: two tracks into a blend
+  o+=box(40,36,150,'VC-10 RETURN','V-01 or V-02, printed','ret')+cab('M190 62H250')+box(250,36,130,'DAW TRACK A','return · aligned','gear')
+   +box(40,136,150,'DRY STEM','kept beside the return','stem')+cab('M190 162H250')+box(250,136,130,'DAW TRACK B','dry · aligned','gear')
+   +cab('M380 62H425V104H470')+cab('M380 162H425V120H470')+box(470,86,230,'BLEND (IN THE DAW)','A + B · dry 60 / return 40','hot');
+  return wrap(o)}
+ const DX=280,DW=210,ry=i=>28+i*64,oi=N.out??1,oy=ry(oi)+26;
+ o+=`<rect x="${DX}" y="4" width="${DW}" height="216" fill="#0d0d10" stroke="#3f3f46"/><text x="${DX+10}" y="17" fill="#71717a" font-family="monospace" font-size="9" letter-spacing="1">${N.dev}</text>`;
+ N.rows.forEach((r,i)=>{o+=box(DX+10,ry(i),190,r.t,r.s,r.hot?'hot':r.ghost?'ghost':'gear');
+  if(r.cab)o+=`<circle cx="${DX+10}" cy="${ry(i)+26}" r="3.5" fill="#09090b" stroke="${r.t.startsWith('EXT PITCH')?C:A}" stroke-width="2"/>`});
+ (N.ch||[]).forEach((c,i)=>{if(!c)return;const y=ry(i),cy=y+26,k=c[0][3]||'audio',e=DX+6;
+  o+=box(6,y,128,c[0][0],c[0][1],c[0][2]);
+  if(c[1]){o+=cab(`M134 ${cy}H162`)+box(162,y,76,c[1][0],c[1][1],c[1][2])+cab(`M238 ${cy}H${e}`,k)}else o+=cab(`M134 ${cy}H${e}`,k)});
+ o+=cab(`M${DX+DW} ${oy}H548`)+`<text x="${(DX+DW+548)/2}" y="${oy-7}" fill="#71717a" font-family="monospace" font-size="8" text-anchor="middle">${N.outLabel||'FINAL OUT'}</text>`
+  +box(548,oy-26,88,'INTERFACE','line in · mono','gear')+cab(`M636 ${oy}H664`)+box(664,oy-26,130,'HARDWARE RETURN','recorded in DAW','ret');
+ return wrap(o)}
 
 function col(p,w){
  const b=w?'#2e1065':'#222',k=w?'text-purple-500':'text-zinc-400',ph=w?'bg-purple-400 shadow-[0_0_5px_#a78bfa]':'bg-zinc-300 shadow-[0_0_5px_white]',lb=w?p.rl:p.dl;
- const cv=(c,l,x)=>`<canvas style="position:absolute;inset:0;width:100%;height:100%" class="${c} pointer-events-none"></canvas><div class="playhead absolute top-0 bottom-0 w-[2px] ${ph} z-20 pointer-events-none hidden" data-c="${c}" style="left:0"></div><div class="absolute top-2 left-2 text-[9px] font-mono text-zinc-400 z-10 bg-black/50 px-1 pointer-events-none">${l}</div>`;
- return`<div data-side="${w?'ret':'ref'}" class="flex flex-col gap-4">
- <div class="bg-[#0c0c0e] border p-4 rounded flex flex-col" style="border-color:${b}">
+ const cv=(c,l)=>`<canvas style="position:absolute;inset:0;width:100%;height:100%" class="${c} pointer-events-none"></canvas><div class="playhead absolute top-0 bottom-0 w-[2px] ${ph} z-20 pointer-events-none hidden" data-c="${c}" style="left:0"></div><div class="absolute top-2 left-2 text-[9px] font-mono text-zinc-400 z-10 bg-black/50 px-1 pointer-events-none">${l}</div>`;
+ return`<div data-side="${w?'ret':'ref'}" class="flex flex-col gap-4 h-full">
+ <div class="bg-[#0c0c0e] border p-4 rounded flex flex-col flex-1" style="border-color:${b}">
   <div class="relative bg-black border w-full mb-4 overflow-hidden rounded" style="border-color:${b};height:120px">${cv('waveform',lb)}</div>
   <h3 class="font-mono text-sm font-bold ${k} uppercase tracking-widest mb-2">${w?'Hardware Return':'Reference'}</h3>
   <p class="text-xs text-zinc-500 leading-relaxed mb-6">${w?p.exp:p.rc}</p>
