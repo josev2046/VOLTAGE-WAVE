@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VC-10 TREATMENTS // Voices in the Machine</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif'],mono:['JetBrains Mono','monospace']},colors:{purple:{400:'#a78bfa',500:'#8b5cf6',600:'#7c3aed',900:'#4c1d95',950:'#2e1065'},zinc:{850:'#202022',900:'#18181b',950:'#09090b'}}}}}
+</script>
+<style>
+body{background:#050505;color:#d4d4d8}
+.scanlines::before{content:" ";display:block;position:absolute;inset:0;background:linear-gradient(rgba(18,16,16,0) 50%,rgba(0,0,0,.25) 50%),linear-gradient(90deg,rgba(139,92,246,.04),rgba(139,92,246,.02),rgba(124,58,237,.04));z-index:50;background-size:100% 2px,3px 100%;pointer-events:none;opacity:.3}
+.glow-text{text-shadow:0 0 10px rgba(139,92,246,.5)}
+.bg-synth-grid{background-image:linear-gradient(to right,rgba(139,92,246,.07) 1px,transparent 1px),linear-gradient(to bottom,rgba(139,92,246,.07) 1px,transparent 1px);background-size:40px 40px}
+.opt.on{background:#4c1d95;color:#fff;border-color:#8b5cf6}
+</style>
+</head>
+<body class="antialiased relative selection:bg-purple-500 selection:text-zinc-950">
+<div class="scanlines fixed inset-0 pointer-events-none z-50"></div>
+<nav class="fixed w-full z-40 top-0 bg-[#050505]/90 backdrop-blur-md border-b border-zinc-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="flex justify-between items-center h-16">
+<a href="index.html" class="flex items-center gap-3">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" class="text-purple-500 w-6 h-6"><path d="M2 12h4v-7h6v14h6v-7h4"/></svg>
+<span class="font-mono font-bold text-white tracking-widest hidden sm:block">VOICES IN THE MACHINE</span></a>
+<a href="index.html" class="font-mono text-sm text-zinc-400 hover:text-purple-500 transition-colors">← RETURN</a>
+</div></div></nav>
+
+<section class="relative pt-32 pb-20 overflow-hidden border-b border-zinc-800 bg-[#0a0a0c]">
+<div class="absolute inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row gap-12 lg:items-start">
+<div class="flex-1">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-500 font-mono text-xs mb-6"><span class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>HARDWARE VOCODING // VC-10 // BOOK THREE</div>
+<h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight mb-6 uppercase">Voices in the <span class="text-purple-500 glow-text">Machine</span></h1>
+<p class="text-lg text-zinc-400 font-light mb-10 leading-relaxed max-w-2xl">The Korg VC-10 makes a keyboard appear to speak by imposing the mic's tonal character onto a carrier. Below, all nine protocols from the book across four groups (Voice, Carrier, Pitch, and Print). Each has its own spoken phrase and musical setting, so every example shows what that protocol does and nothing else.</p>
+<div class="mb-4 font-mono text-xs text-zinc-500 uppercase tracking-widest">Jump to Protocol:</div>
+<nav id="jump" class="flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-widest max-w-2xl"></nav>
+</div>
+<div class="lg:w-[420px] flex-shrink-0 flex flex-col gap-4 relative z-20">
+<div class="bg-zinc-900/80 backdrop-blur-md border border-amber-500/20 rounded-xl p-5 shadow-lg">
+<h3 class="text-amber-400 font-mono uppercase tracking-widest text-xs mb-3">Read this first: Experiment</h3>
+<p class="text-sm text-zinc-300 leading-relaxed">This is a 1978 analogue vocoder. Where you see a <span class="font-mono text-amber-400 text-[10px] uppercase bg-amber-500/10 px-1 py-0.5 rounded border border-amber-500/20">Confirm on bench</span> flag, your own unit takes over. Try the patch, listen, and check with a tuner or scope.</p></div>
+<div class="bg-zinc-900/80 backdrop-blur-md border border-purple-500/20 rounded-xl p-5 shadow-lg">
+<h3 class="text-purple-400 font-mono uppercase tracking-widest text-xs mb-3">About these interactive demos</h3>
+<p class="text-sm text-zinc-300 leading-relaxed">Each clip is rendered in your browser through a browser-rendered 20-band channel-vocoder approximation informed by the AV-20 signal path: cascaded analysis and carrier filters, full-wave envelope detection, smoothing, and band-wise gain control. The carrier examples use a saw/square/sub-octave keyboard mix where appropriate; the noise-carrier example uses broadband noise. Waveforms and spectrograms are measured from the audio you hear. The voice is a phoneme-level formant synthesiser: deliberately synthetic, with separate voiced, fricative and stop-burst paths. It is not a human recording or a full speech synthesiser. Treatments are exaggerated for orientation. <br><br><strong class="text-purple-400">Understanding the physics:</strong> The modulator (voice or drums) acts purely as a set of invisible, multi-band volume knobs for the carrier (synth or noise). When listening to the Hardware Return, you are hearing the continuous carrier being rhythmically sculpted and unmuted by the modulator.</p></div>
+</div></div></section>
+
+<main id="protocols"></main>
+<footer class="py-8 border-t border-zinc-800 bg-[#050505]"><div class="max-w-5xl mx-auto px-4 text-center">
+<p class="font-mono text-[10px] text-zinc-600 uppercase tracking-widest">© Voltage & Wave // Hardware Capabilities Series</p></div></footer>
+
+<script>
+/* ===== CONSTANTS ===== */
+const SR=48000,DUR=4,NB=20,ML=38,MB=16;
+const midi=m=>440*Math.pow(2,(m-69)/12);
+// phoneme tables: vowels [F1,F2,F3]; liquids/nasals [F1,F2,F3,voicing]; fricatives [freq,Q,amp,voicing]; plosives [burst freq,voiced]
+const VW={AA:[730,1090,2440],AE:[660,1720,2410],AH:[600,1200,2400],AO:[570,840,2410],EH:[530,1840,2480],IY:[270,2290,3010],IH:[390,1990,2550],UW:[300,870,2240],ER:[490,1350,1690]};
+const DP={EY:['EH','IY'],AY:['AA','IY'],OW:['AO','UW'],AW:['AA','UW']};
+const LQ={W:[290,610,2150,.7],Y:[260,2070,3020,.7],R:[310,1060,1380,.8],L:[360,1300,2800,.75],M:[250,1100,2200,.4],N:[250,1500,2500,.4],NG:[250,2000,2400,.4]};
+const FR={s:[6000,1.2,.5,0],sh:[3000,1.2,.55,0],f:[5000,.8,.2,0],th:[5500,.8,.15,0],z:[6000,1.2,.4,.5],dh:[4500,.8,.15,.4],h:[1500,.5,.3,0]};
+const PL={p:[800,0],t:[4200,0],k:[1800,0],b:[700,1],d:[3500,1],g:[1500,1],ch:[3200,0],j:[3200,1]};
+const Ph=(f0,r,s,vib)=>({f0,r,t0:.25,s,vib});
+const nbuf=c=>{if(!c._nb){const b=c.createBuffer(1,c.sampleRate,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;c._nb=b}return c._nb};
+const noise=(c,t=0,d=DUR)=>{const n=c.createBufferSource();n.buffer=nbuf(c);n.loop=true;n.start(t);n.stop(t+d);return n};
+const filt=(c,type,f,q=1)=>{const b=c.createBiquadFilter();b.type=type;b.frequency.value=f;b.Q.value=q;return b};
+const env=(c,t,a,d,r,pk)=>{const g=c.createGain();g.gain.value=0;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(pk,t+a);g.gain.setValueAtTime(pk,t+d);g.gain.linearRampToValueAtTime(0,t+d+r);return g};
+const GW=c=>c._gw||(c._gw=(()=>{const n=64,re=new Float32Array(n),im=new Float32Array(n);for(let k=1;k<n;k++)im[k]=1/Math.pow(k,1.2);return c.createPeriodicWave(re,im)})());
+const gl=(c,f)=>{const o=c.createOscillator();o.setPeriodicWave(GW(c));o.frequency.value=f;o.start(0);o.stop(DUR);return o};
+const osc=(c,type,f,det=0)=>{const o=c.createOscillator();o.type=type;o.frequency.value=f;o.detune.value=det;o.start(0);o.stop(DUR);return o};
+
+/* ===== MODULATORS: synthetic voice and drum kit ===== */
+// phrase notation: PHONEMES separated by spaces, ' = stressed vowel, | = pause, :n = duration override
+function layout(ph){
+ const L=[];let lv=null;
+ for(const raw of ph.s.split(' ')){
+  let tk=raw,st=0,du=0;if(tk[0]=="'"){st=1;tk=tk.slice(1)}
+  if(tk.includes(':')){const q=tk.split(':');tk=q[0];du=+q[1]}
+  const vd=du||(st?.2:.1);
+  if(tk=='|'){if(lv){lv.d*=1.3;lv=null}L.push({d:.14})}
+  else if(DP[tk]){L.push({d:vd*.55,F:VW[DP[tk][0]],v:1,nuc:1,st},{d:vd*.65,F:VW[DP[tk][1]],v:1,st});lv=L[L.length-1]}
+  else if(VW[tk]){L.push({d:vd,F:VW[tk],v:1,nuc:1,st});lv=L[L.length-1]}
+  else if(LQ[tk]){const q=LQ[tk];L.push({d:du||.09,F:q.slice(0,3),v:q[3],st,nas:q[3]<.5})}
+  else if(FR[tk]){const q=FR[tk];L.push({d:du||(tk=='h'?.06:.09),n:q.slice(0,3),v:q[3],st,a:tk=='h'?.8:0})}
+  else if(PL[tk]){const q=PL[tk];L.push({d:.05,v:q[1]*.2},{d:.012,n:[q[0],1,.9],v:q[1]*.2});
+   if(tk=='ch'||tk=='j')L.push({d:.08,n:[3000,1.2,.55],v:q[1]*.3});else if(!q[1])L.push({d:.03,a:1})}}
+ if(lv)lv.d*=1.3;
+ const tot=L.reduce((a,x)=>a+x.d,0),r=Math.min(ph.r||1,(DUR-.15-ph.t0)/tot);let t=ph.t0;const vt=[];
+ L.forEach(x=>{x.d*=r;x.t=t;t+=x.d;if(x.nuc)vt.push(x.t)});
+ return{L,vt}}
+
+// vocal-tract model: glottal pulse + breath noise -> cascade of four formant resonances -> mic-ish low-pass
+function speech(c,ph){
+ // Phoneme-level formant synthesiser: glottal source + breath noise -> four parallel resonances that glide between
+ // targets, a separate frication/burst path, and natural prosody (declination, stress accents, final fall, jitter/shimmer).
+ const {L}=layout(ph),out=c.createGain(),voiced=c.createGain(),asp=c.createGain(),fr=filt(c,'bandpass',4000,1.1),frg=c.createGain(),lfo=osc(c,'sine',ph.vib?6:5.2),o=gl(c,ph.f0),pd=c.createGain();
+ out.gain.value=.2;voiced.gain.value=0;asp.gain.value=0;frg.gain.value=0;pd.gain.value=ph.f0*(ph.vib||.004);
+ lfo.connect(pd);pd.connect(o.frequency);o.connect(voiced);noise(c).connect(asp);noise(c).connect(fr);fr.connect(frg);frg.connect(out);
+ const FB=[[600,6,1.25],[1500,8,.9],[2600,10,.5],[3500,12,.22]];
+ const R=FB.map(v=>{const b=filt(c,'bandpass',v[0],v[1]),g=c.createGain();g.gain.value=v[2];voiced.connect(b);asp.connect(b);b.connect(g);g.connect(out);return{b,g}});
+ const stp=(p,from,to,t,tr)=>{p.setValueAtTime(from,t);p.linearRampToValueAtTime(to,t+Math.max(.008,tr));return to};
+ let vL=0,aL=0,fL=0,pitch=ph.f0*1.1,ff=4000,mF=FB.map(v=>v[0]),mG=FB.map(v=>v[2]);
+ const T=Math.max(.1,L[L.length-1].t+L[L.length-1].d-ph.t0);
+ const nextF=i=>{for(let j=i+1;j<L.length;j++)if(L[j].F)return L[j].F};
+ L.forEach((x,i)=>{
+  const tr=Math.min(x.v>.3?.05:.015,Math.max(.008,x.d*.45)),pr=(x.t-ph.t0)/T,pk=(x.st?1:.72)*(1-.18*pr)*(1+Math.sin(x.t*57)*.05);
+  vL=stp(voiced.gain,vL,(x.v||0)*pk,x.t,tr);
+  aL=stp(asp.gain,aL,x.a?1.2:(x.v>.3?.05*pk:0),x.t,x.a?.01:tr);
+  const F=x.F||(x.a?nextF(i):null);               // aspiration is shaped by the vowel that follows
+  if(F){F.forEach((f,j)=>mF[j]=stp(R[j].b.frequency,mF[j],f,x.t,x.a?.025:tr));
+   (x.nas?[1.05,.24,.12,.06]:[1.25,.9,.5,.22]).forEach((g,j)=>mG[j]=stp(R[j].g.gain,mG[j],g,x.t,tr))}
+  if(x.F&&x.v>.3)pitch=stp(o.frequency,pitch,ph.f0*(1.12-.3*pr)*(x.st?1.08:1)*(pr>.85?.94:1)*(1+Math.sin(x.t*91)*.01),x.t,tr*1.5);
+  if(x.n){ff=stp(fr.frequency,ff,x.n[0],x.t,tr);fL=stp(frg.gain,fL,x.n[2],x.t,tr)}else fL=stp(frg.gain,fL,0,x.t,tr)});
+ const te=L[L.length-1].t+L[L.length-1].d;stp(voiced.gain,vL,0,te,.04);stp(asp.gain,aL,0,te,.04);stp(frg.gain,fL,0,te,.03);  // release at phrase end
+ const hp=filt(c,'highpass',90,.7),lp=filt(c,'lowpass',9000,.7);out.connect(hp);hp.connect(lp);
+ const final=c.createGain();final.gain.value=.85;lp.connect(final);
+ return final}
+
+function drums(c){ // beatboxed kit: every hit carries a vowel colour so the pad can "speak" it
+ const out=c.createGain();out.gain.value=.5;const st=.125;
+ const vox=(t,d,f0,F,a,f1)=>{const o=c.createOscillator();o.setPeriodicWave(GW(c));o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f1||f0,t+d);o.start(t);o.stop(t+d+.1);
+  const g=env(c,t,.008,d,.08,a);F.forEach((f,j)=>{const b=filt(c,'bandpass',f,6),k=c.createGain();k.gain.value=[1,.7,.4][j];o.connect(b);b.connect(k);k.connect(g)});g.connect(out)};
+ const boom=t=>{const o=c.createOscillator();o.type='triangle';o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(45,t+.15);o.start(t);o.stop(t+.35);o.connect(env(c,t,.002,.08,.2,.8)).connect(out);vox(t,.22,75,VW.UW,1.2,45)};   // "boom"
+ const tschak=t=>{const n=noise(c,t,.25),f=filt(c,'bandpass',2600,.8);n.connect(f);f.connect(env(c,t,.002,.06,.1,.9)).connect(out);osc(c,'triangle',190).connect(env(c,t,.002,.04,.08,.4)).connect(out);vox(t,.12,170,VW.AE,.9,130)}; // "tschak"
+ const ts=(t,op)=>{const n=noise(c,t,.2),f=filt(c,'highpass',7000);n.connect(f);f.connect(env(c,t,.001,op?.1:.02,op?.08:.03,.35)).connect(out)};  // "ts"
+ const boing=t=>{const o=osc(c,'sine',200);o.frequency.setValueAtTime(180,t);o.frequency.exponentialRampToValueAtTime(520,t+.25);o.connect(env(c,t,.005,.2,.1,.5)).connect(out);vox(t,.28,160,[500,900,2400],.9,420)}; // "boing"
+ [0,6,10,16,22,26].forEach(k=>boom(k*st));[4,12,20,28].forEach(k=>tschak(k*st));[14,30].forEach(k=>boing(k*st));
+ for(let k=0;k<32;k+=2)if(k%8!=4)ts(k*st,k%16==14);
+ return out}
+
+/* ===== VOCODER: bands -> envelope followers -> carrier VCAs ===== */
+function vocode(c,mod,car,{nz=.35,lp=25}={}){
+ // AV-20-informed signal path: 20 fixed centre frequencies, cascaded
+ // analysis/synthesis band-pass filters, full-wave envelope detection,
+ // ~25 Hz smoothing, envelope gain and a soft non-negative VCA control.
+ // This is a browser approximation, not a circuit-level VC-10 emulation.
+ const CENTRES=[80,110,150,200,270,360,480,640,850,1100,1450,1900,2500,3300,4300,5600,7300,9500,12000,15000];
+ const out=c.createGain();
+ // Match the emulator's mic front end: +8 dB high-shelf pre-emphasis at 3 kHz
+ // and a gentle compressor before the analysis filter bank.
+ const pre=filt(c,'highshelf',3000,.7);pre.gain.value=8;
+ const micComp=c.createDynamicsCompressor();micComp.threshold.value=-24;micComp.ratio.value=8;micComp.attack.value=.005;
+ mod.connect(pre);pre.connect(micComp);
+ const abs=new Float32Array(4097),clamp=new Float32Array(4097);
+ for(let j=0;j<abs.length;j++){const x=2*j/(abs.length-1)-1;abs[j]=Math.abs(x);clamp[j]=x<=0?0:Math.tanh(1.5*x)}
+ const bp=f=>filt(c,'bandpass',Math.min(f,SR*.46),5);
+ for(const centre of CENTRES){
+  const f=Math.min(centre,SR*.46);
+  const a1=bp(f),a2=bp(f);micComp.connect(a1);a1.connect(a2);
+  const rect=c.createWaveShaper();rect.curve=abs;a2.connect(rect);
+  const envLP=filt(c,'lowpass',lp,.7);rect.connect(envLP);
+  const boost=c.createGain();boost.gain.value=26;envLP.connect(boost);
+  const shape=c.createWaveShaper();shape.curve=clamp;boost.connect(shape);
+  const s1=bp(f),s2=bp(f);car.connect(s1);s1.connect(s2);
+  const vca=c.createGain();vca.gain.value=0;s2.connect(vca);shape.connect(vca.gain);vca.connect(out);
+ }
+ return out;
+}
+
+/* ===== CARRIERS ===== */
+const FM9=[41,48,51,55,56,65],DM9=[38,45,48,52,53,62];
+const pad=(c,sh=0,det=[0],ch=FM9)=>{const out=c.createGain();ch.forEach(m=>det.forEach(d=>{[['sawtooth',1,.075],['square',1,.045],['square',.5,.035]].forEach(([ty,mul,lev])=>{const g=c.createGain();g.gain.value=lev;osc(c,ty,midi(m+sh)*mul,d).connect(g);g.connect(out)})}));return out};
+const plain=c=>osc(c,'sawtooth',midi(41));
+const sawF=c=>{const f=filt(c,'lowpass',200,12);f.frequency.setValueAtTime(200,0);f.frequency.exponentialRampToValueAtTime(6000,DUR);osc(c,'sawtooth',midi(41)).connect(f);return f};
+const arp=(c,ph,on)=>{const out=c.createGain(),S=[0,7,12,15,19,12,7,3];
+ [41,48,56].forEach(m=>{const g=c.createGain(),o=osc(c,'sawtooth',midi(m));g.gain.value=.3;
+  if(on)layout(ph).vt.forEach((t,i)=>o.frequency.setValueAtTime(midi(m+S[i%8]),t-.02));
+  o.connect(g);g.connect(out)});return out};
+const ens=(c,on)=>{const out=c.createGain();
+ (on?[-30,0,30]:[0]).forEach((d,vi)=>{let LG;
+  if(on){const l=osc(c,'sine',6+vi*.15);LG=c.createGain();LG.gain.value=45;l.connect(LG)}
+  [53,60,63,67].forEach(m=>{const g=c.createGain(),o=osc(c,'sawtooth',midi(m),d);g.gain.value=.2;if(on)LG.connect(o.detune);o.connect(g);g.connect(out)})});
+ return out};
+const gate=on=>c=>{const p=pad(c,0,[-8,8],DM9);if(!on)return p;const g=c.createGain(),st=60/128/4;
+ for(let t=0;t<DUR;t+=st){g.gain.setValueAtTime(1,t);g.gain.setTargetAtTime(0,t+st*.45,.012)}p.connect(g);return g};
+const sweep=(c,n)=>{const f=filt(c,'lowpass',6000,8);f.frequency.setValueAtTime(6000,0);f.frequency.exponentialRampToValueAtTime(50,DUR*.9);
+ const g=c.createGain();g.gain.setValueAtTime(1,DUR*.7);g.gain.linearRampToValueAtTime(0,DUR*.95);n.connect(f);f.connect(g);return g};
+const band=(c,r)=>{let n=pad(c,{low:-12,mid:0,high:24,full:0}[r],r=='full'?[-8,8]:[0]);const [a,b]={low:[0,350],mid:[300,2500],high:[4000,0],full:[0,0]}[r];
+ if(b)for(let k=0;k<2;k++){const f=filt(c,'lowpass',b,.7);n.connect(f);n=f}
+ if(a)for(let k=0;k<2;k++){const f=filt(c,'highpass',a,.7);n.connect(f);n=f}return n};
+
+/* ===== PROTOCOLS: each with its own phrase and setting ===== */
+const M1=[['DAW STEM','Modulator Input'],['VC-10 KEYBOARD','Carrier Source'],['HARDWARE RETURN','recorded in DAW']];
+const M2=[['DAW STEM','Modulator Input'],['NOISE GEN','Carrier Source'],['HARDWARE RETURN','recorded in DAW']];
+const M3=[['DAW STEM','Modulator Input'],['MS-10 OUT','Carrier Source'],['HARDWARE RETURN','recorded in DAW']];
+const M4=[['DRUM STEM','Modulator Input'],['PAD CARRIER','Carrier Source'],['HARDWARE RETURN','recorded in DAW']];
+const M5=[['SQ-10 CH A','Pitch CV Input'],['VC-10 KEYS','Carrier Source'],['HARDWARE RETURN','recorded in DAW']];
+const M6=[['DAW STEM','Modulator Input'],['ENSEMBLE','Chorus & Pitch'],['HARDWARE RETURN','recorded in DAW']];
+const M7=[['VC-10 RETURN','Track A'],['DRY STEM','Track B'],['DAW BLEND','Track A + B']];
+const M8=[['VC-10 OUT','Modulator Input'],['MS-10 FILTER','Ext Signal In'],['HARDWARE RETURN','recorded in DAW']];
+const M9=[['SPEECH STEM','Modulator Input'],['PAD CARRIER','Carrier Source'],['HARDWARE RETURN','recorded in DAW']];
+const D={dry:1},PB=Ph(150,1,"s 'IY k W AH n s ER | s 'IY k W AH n s ER | s 'IY k W AH n s | IH t");
+const P=[
+{g:'Voice',title:'Speech over Keys',chip:'DAW Stem / Mic Input / Keyboard Carrier',say:'Operator, stand by',demo:'Fm9 speech choir',dl:'DRY STEM SPEECH',rl:'VC-10 RETURN CHORD VOICED',
+ ph:Ph(104,1.7,"'AO p AH R 'EY t AH | s t 'AE n d | b 'AY"),
+ notes:'A spoken or sung stem should drive a chord played on the VC-10 keyboard. The voice articulates the chord. Demo: a fixed, lush Fm9 shaped by the syllables.',
+ rc:'The digital source is a robotic formant model, not a human. You hear raw vowel resonances and consonant bursts.',
+ exp:'The static chord acts as the vocal cords. Its harmonic lines stay fixed in pitch while their brightness is "mouthed" by the speech envelope.',
+ check:'Compare the return’s syllable timing to the dry stem. They should line up closely. A return that sounds while the stem is quiet means a leak.',bench:'Mic Input −50 dB to 0 dB reference level is unmeasured. Check pad attenuation needed.',
+ ref:D,ret:{car:c=>pad(c)},main:M1,cv:[['DAW STEM','→ Mic Input (Modulator)'],['VC-10 KEYS','Held Chord (Carrier)'],['FINAL OUT','→ Interface']]},
+{g:'Voice',title:'Noise Carrier: Whisper and Consonants',chip:'Noise Carrier / Input Sig Bal',say:'Shh… system check, fresh shock',demo:'Pitchless whisper',dl:'KEYBOARD CARRIER',rl:'VC-10 RETURN NOISE CARRIER',
+ ph:Ph(120,1.3,"sh:.4 | s 'IH s t AH M | ch 'EH k | f R 'EH sh | sh 'AO k"),
+ notes:'Noise is the only carrier. Pitch is lost, giving breathy speech with natural consonants. Demo: a fricative-heavy phrase, with no stable musical pitch.',
+ rc:'The same phrase through the held chord, for comparison.',
+ exp:'Because broadband noise has no pitch, the return is a harsh, pitchless whisper. The modulator\'s consonant bursts act as volume triggers for the noise.',
+ check:'If harmonic lines are visible in the return, Input Sig Bal is not fully clockwise.',bench:'Noise colour is unmeasured.',
+ ref:D,ret:{car:c=>noise(c),nz:0},main:M2,cv:[['DAW STEM','→ Mic Input (Modulator)'],['NOISE GEN','Carrier Source'],['FINAL OUT','→ Interface']]},
+{g:'Carrier',title:'MS-10 as Carrier',chip:'MS-10 Signal Out / Ext Signal Input',say:'We are the robots',demo:'MS-10 saw & filter',dl:'SAW, FILTER OPEN',rl:'VC-10 RETURN MS-10 CARRIER',
+ ph:Ph(95,1.8,"W 'IY | 'AA R | dh AH | R 'OW b 'AO t s"),
+ notes:'The MS-10 oscillator and filter act as the voice carrier. Demo: one sawtooth through a resonant low-pass that sweeps open across the sentence.',
+ rc:'A single static sawtooth: speech with no filter movement.',
+ exp:'The syllables carve shapes out of the MS-10\'s raw sawtooth. As the MS-10\'s filter opens, higher frequencies become available for the vocoder to articulate.',
+ check:'Meter peak at or below 0 dB with Ext Sig Level. If the return is quiet, confirm the MS-10 VCA is open.',bench:'Korg’s text also says noise can be added in this setup but does not say how.',
+ ref:D,ret:{car:sawF},main:M3,cv:[['MS-10 OUT','→ Ext Signal Input (Carrier)'],['DAW STEM','→ Mic Input (Modulator)'],['FINAL OUT','→ Interface']]},
+{g:'Carrier',title:'Talking Drums',chip:'DAW Drum Stem / Mic Input / Pad Carrier',say:'Boom, tschak, ts, boing',demo:'Beatboxed kit; full, low, mid and high pad',dl:'DRY STEM VOCAL KIT',rl:'VC-10 RETURN PAD ARTICULATED',opts:['full','low','mid','high'],
+ ph:'D',
+ notes:'A drum bus should articulate a pad, so the rhythm appears to speak. Demo: the kit is vocal percussion (boom kick, tschak snare, ts hat, boing tom), so the full pad appears to say it. Low, mid and high band-limit the pad to hear which hit each register answers.',
+ rc:'The source is a synthetic analog beatbox shaped with subtle vowel formants (boom, tschak).',
+ exp:'You are no longer hearing drums. The drum hits act as invisible volume knobs for a static synth pad. Kicks open low pad bands; hats open high pad bands, creating rhythmic breathing.',
+ check:'Between hits the return should fall quiet. If it does not, look for hat or noise bleed on the stem.',bench:'Meter response to fast transients is unmeasured, so set level by the clean return.',
+ ref:D,ret:{car:(c,o)=>band(c,o||'full'),nz:.2},main:M4,cv:[['DRUM STEM','→ Mic Input (Modulator)'],['VC-10 KEYS','Held Chord (Carrier)'],['FINAL OUT','→ Interface']]},
+{g:'Pitch',title:'Sequenced Vocoder',chip:'SQ-10 Channel A / Ext Pitch Control',say:'Sequencer, sequencer, sequence it',demo:'SQ-10 syllable arpeggio',dl:'HELD CHORD',rl:'VC-10 RETURN PITCH STEPPED',
+ ph:PB,
+ notes:'The SQ-10 moves the vocoder’s pitch step by step, locked to the syllables. A sequence tuned for 1 V/oct will sound too narrow.',
+ rc:'The same fast syllables on a chord that never moves.',
+ exp:'The synthetic voice stays exactly the same, but the carrier chord jumps in sequenced pitches. The syllables now follow a rigid melodic staircase.',
+ check:'Check each step against a tuner. Intervals should land at 400 cents per volt.',bench:'Does Ext Pitch Control scale the voltage before or after the ±3 V limit?',
+ ref:D,ret:{car:c=>arp(c,PB,true)},main:M5,cv:[['SQ-10 CH A','→ Ext Pitch Control'],['VC-10 KEYS','Held Chord (Carrier)'],['FINAL OUT','→ Interface']]},
+{g:'Pitch',title:'Ensemble and Accent Bend',chip:'Ensemble / Accent Bend / Tune',say:'Ah… oh… oo… ah (sung)',demo:'Three voices, 6 Hz wobble',dl:'ENSEMBLE OFF',rl:'VC-10 RETURN ENSEMBLE ON',
+ ph:Ph(190,1,"AA:.75 | OW:.75 | UW:.75 | AA:.75",.03),
+ notes:'A single voice becomes a small choir. Demo: long sung vowels on a four-note chord, through three detuned voices with an exaggerated 6 Hz wobble.',
+ rc:'The same sung vowels with Ensemble off.',
+ exp:'The previously static chord is thickened by the Ensemble chorus, creating detuned beating. This mimics the natural instability of a choir.',
+ check:'If the clusters are wide enough to hear as out of tune, back off Accent Bend and Ensemble.',bench:'What Accent Bend actually does is unconfirmed.',
+ ref:D,ret:{car:c=>ens(c,true)},main:M6,cv:[['DAW STEM','→ Mic Input (Modulator)'],['VC-10 KEYS','Played Notes (Carrier)'],['FINAL OUT','→ Interface']]},
+{g:'Print',title:'Blend and Print',chip:'VC-10 Return / DAW Dry Stem',say:'Pick it up, keep it tight',demo:'Dry voice + Fm9 return',dl:'DRY STEM ONLY',rl:'BLEND 60 / 40',
+ ph:Ph(112,1.3,"p 'IH k IH t | 'AH p | k 'IY p IH t | t 'AY t"),
+ notes:'The vocoded return should sit under or over the original voice. Demo: crisp consonants from the dry voice, with the Fm9 body behind them.',
+ rc:'Articulate, but thin: only the dry robotic voice.',
+ exp:'Onsets line up. The robotic formant synth provides crisp consonants, while the vocoded chord provides a lush, sustained harmonic body behind it.',
+ check:'Misaligned onsets mean a latency offset. Slice and align.',bench:'',
+ ref:D,ret:{car:c=>pad(c),blend:.6},main:M7,cv:[['VC-10 RETURN','Track A'],['DAW STEM','Track B'],['DAW MIX','Track A + B']]},
+{g:'Print',title:'VC-10 into the MS-10 Filter',chip:'VC-10 Final Out / MS-10 Ext Signal In',say:'Going, going, gone',demo:'Master sweep to silence',dl:'DIRECT RETURN',rl:'THROUGH THE MS-10 FILTER',
+ ph:Ph(100,2.1,"g 'OW IH NG | g 'OW IH NG | g 'AO N"),
+ notes:'The vocoded return is shaped by the Korg-35 filter in the MS-10. Demo: a descending low-pass sweep across the whole return that closes to silence.',
+ rc:'The Fm9 return straight from the VC-10.',
+ exp:'The fully vocoded phrase is fed through a master low-pass filter. You hear the words become muffled and disappear as the MS-10 filter closes over them.',
+ check:'Check the VC-10 Final Out level through the pad and watch for distortion at the MS-10 input.',bench:'VC-10 Final Out peak level and source impedance are unmeasured.',
+ ref:{car:c=>pad(c)},ret:{car:c=>pad(c),post:sweep},main:M8,cv:[['VC-10 OUT','→ MS-10 Ext Signal In'],['MS-10 LPF','Korg-35 Filter'],['MS-10 OUT','→ Interface']]},
+{g:'Carrier',title:'DAW Stem as Carrier',chip:'DAW Carrier Stem / Ext Signal Input',say:'Dance, dance, tonight',demo:'Sixteenth-note trance gate',dl:'PAD, UNGATED',rl:'VC-10 RETURN DAW GATED CARRIER',
+ ph:Ph(135,2.0,"d 'AE n s | d 'AE n s | t AH n 'AY t"),
+ notes:'A synth, guitar or pad stem from the DAW is the carrier. Demo: a Dm9 pad gated in tight sixteenths at 128 BPM before it reaches the VC-10.',
+ rc:'The same Dm9 pad, ungated.',
+ exp:'The carrier itself is rhythmically stuttering. The voice tries to speak through it, but the words are chopped into sixteenth-note blocks by the carrier\'s own rhythm.',
+ check:'If upper harmonics are missing from the return, the carrier is too dull.',bench:'',
+ ref:D,ret:{car:gate(true)},main:M9,cv:[['CARRIER STEM','→ Ext Signal Input'],['SPEECH STEM','→ Mic Input (Modulator)'],['FINAL OUT','→ Interface']]}
+].map((p,i)=>(p.n='0'+(i+1),p.id='v-'+p.n,p));
+
+P.forEach(p=>{if(p.ref===D&&p.ph!='D'&&p.n!='07'){p.dl='DRY STEM SPEECH';p.rc='The unmodified voice, as the mic would hear it: “'+p.say+'”.'}});
+/* ===== RENDER (offline) ===== */
+const norm=d=>{let m=0;for(const v of d)m=Math.max(m,Math.abs(v));if(m)for(let i=0;i<d.length;i++)d[i]*=.85/m;return d};
+async function renderSpec(p,s,o){
+ const c=new OfflineAudioContext(1,SR*DUR,SR),m=p.ph=='D'?drums(c):speech(c,p.ph);let n=m;
+ if(!s.dry){n=vocode(c,m,s.car(c,o),{nz:s.nz??.35,lp:p.ph=='D'?120:40});if(s.post)n=s.post(c,n)}
+ n.connect(c.destination);
+ const d=norm((await c.startRendering()).getChannelData(0));
+ if(s.blend){const dr=await renderSpec(p,D);for(let i=0;i<d.length;i++)d[i]=s.blend*dr[i]+(1-s.blend)*d[i]}
+ return d}
+const cache={},opts={},FRM=new WeakMap();
+const get=(p,s,o)=>cache[p.n+s+(o||'')]||=renderSpec(p,p[s],o);
+
+/* ===== ANALYSIS DISPLAY ===== */
+const FN=2048,HOP=256,TC=new Float32Array(FN/2),TS=new Float32Array(FN/2),HW=new Float32Array(FN);
+for(let k=0;k<FN/2;k++){TC[k]=Math.cos(-2*Math.PI*k/FN);TS[k]=Math.sin(-2*Math.PI*k/FN)}
+for(let i=0;i<FN;i++)HW[i]=.5-.5*Math.cos(2*Math.PI*i/FN);
+function fft(re,im){const n=re.length;
+ for(let i=1,j=0;i<n;i++){let b=n>>1;for(;j&b;b>>=1)j^=b;j^=b;if(i<j){[re[i],re[j]]=[re[j],re[i]];[im[i],im[j]]=[im[j],im[i]]}}
+ for(let l=2;l<=n;l<<=1)for(let i=0;i<n;i+=l)for(let k=0;k<l/2;k++){const w=k*(n/l),x=i+k,y=x+l/2,tr=re[y]*TC[w]-im[y]*TS[w],ti=re[y]*TS[w]+im[y]*TC[w];re[y]=re[x]-tr;im[y]=im[x]-ti;re[x]+=tr;im[x]+=ti}}
+function frames(d){if(FRM.has(d))return FRM.get(d);const F=[];let M=1e-9;
+ for(let s=0;s+FN<=d.length;s+=HOP){const re=new Float32Array(FN),im=new Float32Array(FN);for(let i=0;i<FN;i++)re[i]=d[s+i]*HW[i];fft(re,im);const m=new Float32Array(FN/2);for(let i=0;i<FN/2;i++){m[i]=Math.hypot(re[i],im[i]);if(m[i]>M)M=m[i]}F.push(m)}
+ const r={F,M};FRM.set(d,r);return r}
+function size(cv){const r=cv.parentElement.getBoundingClientRect(),d=devicePixelRatio||1,W=r.width||300,H=r.height||150;cv.width=W*d;cv.height=H*d;const c=cv.getContext('2d');c.scale(d,d);return[c,W,H]}
+function wave(cv,d,w){const[c,W,H]=size(cv),mid=H/2;c.fillStyle='#000';c.fillRect(0,0,W,H);c.fillStyle=w?'#8b5cf6':'#00bcd4';
+ const k=d.length/W;for(let x=0;x<W;x++){let lo=0,hi=0;for(let i=x*k|0;i<(x+1)*k;i++){const v=d[i];if(v<lo)lo=v;if(v>hi)hi=v}c.fillRect(x,mid-hi*mid*.9,1,Math.max(1,(hi-lo)*mid*.9))}}
+
+function spec(cv,d,w){
+ const[c,W,H]=size(cv),pw=W-ML,ph=H-MB,{F,M}=frames(d);
+ const r=w?139:0, g=w?92:188, b=w?246:212; // Base colors (purple / cyan)
+ c.fillStyle='#000';c.fillRect(0,0,W,H);
+ 
+ const bands=20, bandH=ph/bands;
+ c.lineWidth=1.5;
+
+ // Draw 20 stylized wavy bands matching the book's aesthetic
+ for(let i=0;i<bands;i++){
+  // Map 20 bands logarithmically across the FFT bins
+  const binStart=Math.floor(Math.pow(100,i/bands)*80/(SR/FN));
+  const binEnd=Math.floor(Math.pow(100,(i+1)/bands)*80/(SR/FN));
+  
+  c.beginPath();
+  for(let x=0;x<pw;x++){
+   const fIdx=Math.min(F.length-1,x/pw*F.length|0);
+   let eng=0, cBin=Math.max(1,binStart);
+   // Accumulate energy for this specific filter band
+   for(let j=cBin;j<Math.max(cBin+1,binEnd);j++) eng+=F[fIdx][j]||0;
+   
+   // Normalize and scale the energy to control the "wave" amplitude
+   const v=Math.min(1,Math.max(0,(20*Math.log10(eng/M+1e-9)+50)/40));
+   const waveAmp=v>.4?(v-.4)/.6*bandH*.45:0; 
+   
+   // Calculate the wavy line
+   const yPos = ph - (i*bandH + bandH/2) + Math.sin(x*0.8)*waveAmp;
+   
+   if(x===0) c.moveTo(ML+x, yPos);
+   else c.lineTo(ML+x, yPos);
+  }
+  // Apply a glowing gradient stroke simulating the book's stylized look
+  const grad = c.createLinearGradient(ML, 0, W, 0);
+  grad.addColorStop(0, `rgba(${r},${g},${b},0.1)`);
+  grad.addColorStop(0.5, `rgba(${r},${g},${b},0.8)`);
+  grad.addColorStop(1, `rgba(${r},${g},${b},0.1)`);
+  c.strokeStyle = grad;
+  c.stroke();
+ }
+
+ // Keep the original axis rendering
+ const y=f=>ph*(1-Math.log(f/80)/Math.log(100));
+ c.font='9px monospace';c.fillStyle='#555';c.textAlign='right';c.textBaseline='middle';
+ [110,220,440,880,1760,3520].forEach(f=>{c.fillText(f+'Hz',ML-5,y(f));c.fillRect(ML-3,y(f),3,1)});
+ c.textAlign='center';c.textBaseline='top';
+ for(let s=0;s<=DUR;s++){const x=ML+s/DUR*pw;c.fillRect(Math.min(x,W-1),ph,1,3);c.fillText(s+'s',Math.min(x,W-8),ph+4)}
+}
+
+async function paint(p){
+ const el=document.getElementById(p.id);el.querySelectorAll('.timer').forEach(t=>t.textContent='…');
+ for(const s of['ref','ret']){
+  const d=await get(p,s,opts[p.n]),col=el.querySelector(`[data-side=${s}]`);
+  wave(col.querySelector('.waveform'),d,s=='ret');spec(col.querySelector('.spectrogram'),d,s=='ret');
+  col.querySelector('.play-btn').disabled=false;col.querySelector('.timer').textContent='0:00'}}
+
+/* ===== MARKUP ===== */
+function schem(p){
+ const box=(x,y,w,t,s,c)=>`<g transform="translate(${x-w/2},${y})"><rect width="${w}" height="50" fill="#18181b" stroke="${c}" stroke-width="${c==='#52525b'?1:2}"/><text x="${w/2}" y="22" fill="${c==='#52525b'?'#d4d4d8':c}" font-family="monospace" font-size="11" font-weight="bold" text-anchor="middle">${t}</text><text x="${w/2}" y="38" fill="#71717a" font-family="monospace" font-size="9" text-anchor="middle">${s}</text></g>`;
+ const mx=i=>150+i*250,m=p.id,hot=p.main===M2?1:0;
+ let o=`<defs><marker id="r${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8b5cf6"/></marker><marker id="c${m}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00bcd4"/></marker></defs>`;
+ p.cv.forEach((c,i)=>{const to=({'03':[1,0,2],'09':[1,0,2]}[p.n]||[0,1,2])[i],x=mx(to);o+=`<path d="M${x} 70V123" fill="none" stroke="#00bcd4" stroke-width="2" stroke-dasharray="4" marker-end="url(#c${m})"/>`+box(x,20,170,c[0],c[1],'#00bcd4')});
+ p.main.forEach((b,i)=>{o+=box(mx(i),125,170,b[0],b[1],i===hot?'#8b5cf6':'#52525b');if(i<2)o+=`<path d="M${mx(i)+85} 150H${mx(i+1)-85}" stroke="#8b5cf6" stroke-width="2" marker-end="url(#r${m})"/>`});
+ return`<svg viewBox="0 0 800 190" class="w-full min-w-[600px] h-auto" xmlns="http://www.w3.org/2000/svg">${o}</svg>`}
+
+function col(p,w){
+ const b=w?'#2e1065':'#222',k=w?'text-purple-500':'text-zinc-400',ph=w?'bg-purple-400 shadow-[0_0_5px_#a78bfa]':'bg-zinc-300 shadow-[0_0_5px_white]',lb=w?p.rl:p.dl;
+ const cv=(c,l,x)=>`<canvas style="position:absolute;inset:0;width:100%;height:100%" class="${c} pointer-events-none"></canvas><div class="playhead absolute top-0 bottom-0 w-[2px] ${ph} z-20 pointer-events-none hidden" data-c="${c}" style="left:0"></div><div class="absolute top-2 left-2 text-[9px] font-mono text-zinc-400 z-10 bg-black/50 px-1 pointer-events-none">${l}</div>`;
+ return`<div data-side="${w?'ret':'ref'}" class="flex flex-col gap-4">
+ <div class="bg-[#0c0c0e] border p-4 rounded flex flex-col" style="border-color:${b}">
+  <div class="relative bg-black border w-full mb-4 overflow-hidden rounded" style="border-color:${b};height:120px">${cv('waveform',lb)}</div>
+  <h3 class="font-mono text-sm font-bold ${k} uppercase tracking-widest mb-2">${w?'Hardware Return':'Reference'}</h3>
+  <p class="text-xs text-zinc-500 leading-relaxed mb-6">${w?p.exp:p.rc}</p>
+  <div class="mt-auto flex items-center border-t pt-4" style="border-color:${b}">
+   <button aria-label="Play or stop" disabled class="play-btn w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-sm border disabled:opacity-30 transition-colors ${w?'border-purple-900/50 bg-purple-950/20 text-purple-500 hover:bg-purple-900/40':'border-zinc-700 bg-zinc-800/30 text-zinc-300 hover:bg-zinc-700/50'}">▶</button>
+   <div class="flex-1 flex items-center font-mono text-[10px] text-zinc-500 uppercase tracking-widest ml-4"><span>${w?'Hardware Return':'Digital Source'}</span><div class="flex-1 border-b mx-3" style="border-color:${b}"></div><span class="timer w-8 text-right">…</span></div></div></div>
+ <div class="bg-[#0c0c0e] border p-4 rounded" style="border-color:${b}"><div class="relative bg-black border w-full overflow-hidden rounded" style="border-color:${b};height:192px">${cv('spectrogram',(w?'HARDWARE':'REFERENCE')+' SPECTROGRAM')}</div></div></div>`}
+
+document.getElementById('protocols').innerHTML=P.map((p,i)=>`
+<section id="${p.id}" class="py-20 border-b border-zinc-800 ${i%2?'bg-zinc-900':'bg-[#0a0a0c]'} scroll-mt-16 relative z-10"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="flex flex-col lg:flex-row gap-12">
+ <div class="lg:w-1/3 flex-shrink-0 flex flex-col">
+  <div class="flex items-center gap-3 mb-2"><span class="text-purple-500 font-mono font-bold text-xl">V-${p.n}</span><h2 class="text-2xl font-bold text-white uppercase tracking-wide">${p.title}</h2></div>
+  <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest mb-6">
+   <span class="border border-zinc-700 bg-zinc-800/50 text-zinc-400 px-2 py-1 rounded">${p.g}</span>
+   <span class="border border-purple-500/30 bg-purple-500/10 text-purple-400 px-2 py-1 rounded">${p.chip}</span>
+   ${p.bench?'<span class="border border-amber-500/40 bg-amber-500/10 text-amber-400 px-2 py-1 rounded">Confirm on bench</span>':''}</div>
+  <p class="text-zinc-400 text-sm leading-relaxed mb-4"><strong>Engineer notes:</strong> ${p.notes}</p>
+  <p class="text-sm text-zinc-300 mb-4 font-mono"><span class="text-purple-400">DEMO //</span> ${p.demo}<br><span class="text-zinc-500">PHRASE //</span> “${p.say}”</p>
+  ${p.bench?`<p class="text-amber-500/80 text-xs mb-8 border-l-2 border-amber-500/50 pl-3">${p.bench}</p>`:''}
+  <div class="mt-auto"><p class="text-sm text-zinc-400 border-l-2 border-purple-500/60 pl-4"><strong class="text-white block mb-1">What to check.</strong> ${p.check}</p></div></div>
+ <div class="lg:w-2/3 min-w-0">
+  <div class="w-full bg-[#0a0a0c] border border-zinc-800 rounded mb-8 overflow-hidden">
+   <div class="bg-zinc-900/50 border-b border-zinc-800 px-4 py-2 font-mono text-[10px] text-zinc-400 tracking-widest uppercase flex justify-between"><span>Routing schematic // V-${p.n}</span><span class="text-zinc-600">VC-10 / MS-10</span></div>
+   <div class="p-4 overflow-x-auto">${schem(p)}</div></div>
+  ${p.opts?`<div class="flex items-center gap-2 mb-4 font-mono text-[11px] uppercase tracking-widest text-zinc-500">Pad register ${p.opts.map(o=>`<button data-opt="${o}" class="opt border border-zinc-700 text-zinc-300 px-3 py-1 rounded ${o=='full'?'on':''}">${o}</button>`).join('')}</div>`:''}
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">${col(p,false)}${col(p,true)}</div></div></div></div></section>`).join('');
+document.getElementById('jump').innerHTML=P.map(p=>`<a href="#${p.id}" class="flex items-center gap-2 bg-zinc-900/60 border border-zinc-800 rounded-md px-3 py-2 text-[10px] text-zinc-400 hover:text-purple-400 hover:border-purple-500/40 hover:bg-purple-500/5 transition-all relative z-10 group"><span class="text-zinc-600 group-hover:text-purple-500/60">V-${p.n}</span> ${p.title.split(':')[0]}</a>`).join('');
+
+/* ===== PLAYBACK ===== */
+let AC=null,src=null,raf=0;
+function stop(){try{src&&src.stop()}catch{}src=null;cancelAnimationFrame(raf);
+ document.querySelectorAll('.play-btn').forEach(b=>{delete b.dataset.on;b.textContent='▶'});
+ document.querySelectorAll('.playhead').forEach(x=>x.classList.add('hidden'));
+ document.querySelectorAll('.timer').forEach(t=>{if(t.textContent!='…')t.textContent='0:00'})}
+async function play(b){
+ const was=b.dataset.on;stop();if(was)return;
+ AC=AC||new(window.AudioContext||window.webkitAudioContext)();AC.resume();
+ const cl=b.closest('[data-side]'),p=P.find(x=>x.id==b.closest('section').id),d=await get(p,cl.dataset.side,opts[p.n]);
+ const buf=AC.createBuffer(1,d.length,SR);buf.copyToChannel(d,0);
+ src=AC.createBufferSource();src.buffer=buf;src.connect(AC.destination);const t0=AC.currentTime+.05;src.start(t0);
+ b.dataset.on=1;b.textContent='■';const heads=[...cl.querySelectorAll('.playhead')],tm=cl.querySelector('.timer');heads.forEach(h=>h.classList.remove('hidden'));
+ (function tick(){const el=Math.max(0,AC.currentTime-t0);if(el>=DUR||!b.dataset.on){stop();return}
+  tm.textContent='0:0'+Math.floor(el);heads.forEach(h=>h.style.left=h.dataset.c=='spectrogram'?`calc(${ML}px + (100% - ${ML}px) * ${el/DUR})`:`${el/DUR*100}%`);raf=requestAnimationFrame(tick)})()}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('.play-btn');if(b&&!b.disabled)return play(b);
+ const o=e.target.closest('[data-opt]');
+ if(o){stop();const p=P.find(x=>x.id==o.closest('section').id);opts[p.n]=o.dataset.opt;o.parentElement.querySelectorAll('.opt').forEach(x=>x.classList.toggle('on',x==o));paint(p)}});
+
+/* ===== BOOT ===== */
+const paintAll=async()=>{for(const p of P){await paint(p);await new Promise(r=>setTimeout(r,0))}};
+paintAll();let rz;window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(paintAll,300)});
+</script>
+</body>
+</html>
