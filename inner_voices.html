@@ -23,9 +23,9 @@ body{background:#050505;color:#d4d4d8}
 <div class="scanlines fixed inset-0 pointer-events-none z-50"></div>
 <nav class="fixed w-full z-40 top-0 bg-[#050505]/90 backdrop-blur-md border-b border-zinc-800">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="flex justify-between items-center h-16">
-<a href="index.html" class="flex items-center gap-3">
+<a href="index.html" class="flex items-center gap-3" aria-label="Home">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" class="text-purple-500 w-6 h-6"><path d="M2 12h4v-7h6v14h6v-7h4"/></svg>
-<span class="font-mono font-bold text-white tracking-widest hidden sm:block">VOICES IN THE MACHINE</span></a>
+</a>
 <a href="index.html" class="font-mono text-sm text-zinc-400 hover:text-purple-500 transition-colors">← RETURN</a>
 </div></div></nav>
 
@@ -45,7 +45,7 @@ body{background:#050505;color:#d4d4d8}
 <p class="text-sm text-zinc-300 leading-relaxed">You are messing with a quirky 1978 analogue machine. Where you see a <span class="font-mono text-amber-400 text-[10px] uppercase bg-amber-500/10 px-1 py-0.5 rounded border border-amber-500/20">Confirm on bench</span> flag, your own unit takes over. Try the patch, listen, and check with a tuner or scope.</p></div>
 <div class="bg-zinc-900/80 backdrop-blur-md border border-purple-500/20 rounded-xl p-5 shadow-lg">
 <h3 class="text-purple-400 font-mono uppercase tracking-widest text-xs mb-3">About these interactive demos</h3>
-<p class="text-sm text-zinc-300 leading-relaxed">Each clip is rendered in your browser through a browser-rendered 20-band channel-vocoder approximation informed by the <a href="https://github.com/josev2046/Analogue-Vocoder-Emulator" target="_blank" class="text-purple-400 hover:text-purple-300 underline underline-offset-4 decoration-purple-500/30 transition-colors">AV-20</a> signal path: cascaded analysis and carrier filters, full-wave envelope detection, smoothing, and band-wise gain control. The carrier examples use a saw/square/sub-octave keyboard mix where appropriate; the noise-carrier example uses broadband noise. Waveforms and spectrograms are measured from the audio you hear. The voice is a phoneme-level formant synthesiser: deliberately synthetic, with separate voiced, fricative and stop-burst paths. It is not a human recording or a full speech synthesiser. Treatments are exaggerated for orientation. <br><br><strong class="text-purple-400">Understanding the physics:</strong> The modulator (voice or drums) acts purely as a set of invisible, multi-band volume knobs for the carrier (synth or noise). When listening to the Hardware Return, you are hearing the continuous carrier being rhythmically sculpted and unmuted by the modulator.</p></div>
+<p class="text-sm text-zinc-300 leading-relaxed">Each clip is rendered in your browser through a browser-rendered 20-band channel-vocoder approximation informed by the <a href="https://github.com/josev2046/Analogue-Vocoder-Emulator" target="_blank" class="text-purple-400 hover:text-purple-300 underline underline-offset-4 decoration-purple-500/30 transition-colors">AV-20</a> signal path: cascaded analysis and carrier filters, full-wave envelope detection, smoothing, and band-wise gain control. The carrier examples use a saw/square/sub-octave keyboard mix where appropriate; the noise-carrier example uses broadband noise. Waveforms are measured from the audio you hear. Each spectrogram is a faint measured spectrogram under 20 band traces whose brightness follows each band's measured level; the ripple on the dry stems is stylised, as in the book's figures. The voice is a phoneme-level formant synthesiser: deliberately synthetic, with separate voiced, fricative and stop-burst paths. It is not a human recording or a full speech synthesiser. Treatments are exaggerated for orientation. <br><br><strong class="text-purple-400">Understanding the physics:</strong> The modulator (voice or drums) acts purely as a set of invisible, multi-band volume knobs for the carrier (synth or noise). When listening to the Hardware Return, you are hearing the continuous carrier being rhythmically sculpted and unmuted by the modulator.</p></div>
 </div></div></section>
 
 <main id="protocols"></main>
@@ -77,32 +77,37 @@ const gl=(c,f)=>{const o=c.createOscillator();o.setPeriodicWave(GW(c));o.frequen
 const osc=(c,type,f,det=0)=>{const o=c.createOscillator();o.type=type;o.frequency.value=f;o.detune.value=det;o.start(0);o.stop(DUR);return o};
 
 /* ===== MODULATORS: synthetic voice and drum kit ===== */
-// phrase notation: PHONEMES separated by spaces, ' = stressed vowel, | = pause, :n = duration override
+// phrase notation: PHONEMES separated by spaces, ' = stressed vowel, | = pause, :n = duration override.
+// Vowels, diphthongs and fricatives/plosives are case-sensitive (AO, s, ch); liquids and nasals may be written
+// either way (R or r, N or n, L or l), so every consonant in a phrase is voiced.
 function layout(ph){
- const L=[];
+ const L=[];let lv=null;
  for(const raw of ph.s.split(' ')){
   let tk=raw,st=0,du=0;if(tk[0]=="'"){st=1;tk=tk.slice(1)}
   if(tk.includes(':')){const q=tk.split(':');tk=q[0];du=+q[1]}
-  const vd=du||(st?.2:.12);
-  if(tk=='|')L.push({d:.1});
-  else if(DP[tk])L.push({d:vd*.55,F:VW[DP[tk][0]],v:1,nuc:1,st},{d:vd*.65,F:VW[DP[tk][1]],v:1,st});
-  else if(VW[tk])L.push({d:vd,F:VW[tk],v:1,nuc:1,st});
+  if(!VW[tk]&&!DP[tk]&&!FR[tk]&&!PL[tk]&&LQ[tk.toUpperCase()])tk=tk.toUpperCase();   // lowercase n, l, m, w, r, y were silently dropped
+  const vd=du||(st?.2:.1);
+  if(tk=='|'){if(lv){lv.d*=1.3;lv=null}L.push({d:.14})}   // phrase-final lengthening
+  else if(DP[tk]){L.push({d:vd*.55,F:VW[DP[tk][0]],v:1,nuc:1,st},{d:vd*.65,F:VW[DP[tk][1]],v:1,st});lv=L[L.length-1]}
+  else if(VW[tk]){L.push({d:vd,F:VW[tk],v:1,nuc:1,st});lv=L[L.length-1]}
   else if(LQ[tk]){const q=LQ[tk];L.push({d:du||.09,F:q.slice(0,3),v:q[3],st,nas:q[3]<.5})}
-  else if(FR[tk]){const q=FR[tk];L.push({d:du||(tk=='h'?.06:.09),n:q.slice(0,3),v:q[3],st})}
+  else if(FR[tk]){const q=FR[tk];L.push({d:du||(tk=='h'?.06:.09),n:q.slice(0,3),v:q[3],st,a:tk=='h'?.8:0})}
   else if(PL[tk]){const q=PL[tk];L.push({d:.05,v:q[1]*.2},{d:.012,n:[q[0],1,.9],v:q[1]*.2});
    if(tk=='ch'||tk=='j')L.push({d:.08,n:[3000,1.2,.55],v:q[1]*.3});else if(!q[1])L.push({d:.03,a:1})}}
+ if(lv)lv.d*=1.3;
  const tot=L.reduce((a,x)=>a+x.d,0),r=Math.min(ph.r||1,(DUR-.15-ph.t0)/tot);let t=ph.t0;const vt=[];
  L.forEach(x=>{x.d*=r;x.t=t;t+=x.d;if(x.nuc)vt.push(x.t)});
  return{L,vt}}
 
-// vocal-tract model: glottal pulse -> three parallel formant resonators, plus separate frication/burst noise -> mic-ish low-pass
+// vocal-tract model: glottal pulse -> parallel formant resonators (gliding between targets), plus separate
+// frication/burst noise, breath noise through the same resonators, and spoken-phrase intonation -> mic-ish filter
 function speech(c,ph){
   // Compact phoneme-level source model. This is a synthetic voice, not a recording:
   // a harmonic glottal source feeds parallel formant resonators; frication and
   // stop bursts are added separately so consonants survive the vocoder analysis.
-  const {L}=layout(ph),out=c.createGain(),voiced=c.createGain(),fric=noise(c),
+  const {L}=layout(ph),out=c.createGain(),voiced=c.createGain(),asp=c.createGain(),fric=noise(c),
         fr=filt(c,'bandpass',4000,1.1),frg=c.createGain(),lfo=osc(c,'sine',ph.vib?6:5.2),o=gl(c,ph.f0);
-  out.gain.value=.2; voiced.gain.value=0; frg.gain.value=0;
+  out.gain.value=.2; voiced.gain.value=0; asp.gain.value=0; frg.gain.value=0;
   const pitchDepth=c.createGain();pitchDepth.gain.value=ph.f0*(ph.vib||.0025);
   lfo.connect(pitchDepth);pitchDepth.connect(o.frequency);
   // Three parallel resonances are a much closer vocal-tract approximation than
@@ -113,37 +118,46 @@ function speech(c,ph){
     {f:2600,q:9,g:.48}
   ];
   o.connect(voiced);
-  const resonators=formants.map(v=>{const b=filt(c,'bandpass',v.f,v.q),g=c.createGain();g.gain.value=v.g;voiced.connect(b);b.connect(g);g.connect(out);return {b,g,base:v}});
-  // Breath/frication is kept on a separate path rather than mixed into the
-  // voiced source, preserving /s/, /sh/, /f/ and plosive release energy.
-  fric.connect(fr);fr.connect(frg);frg.connect(out);
+  // breath noise (aspiration) enters the same resonators as the voice, so /h/ and the release after p, t, k
+  // take the colour of the vowel that follows
+  const resonators=formants.map(v=>{const b=filt(c,'bandpass',v.f,v.q),g=c.createGain();g.gain.value=v.g;voiced.connect(b);asp.connect(b);b.connect(g);g.connect(out);return {b,g,base:v}});
+  // Frication and stop bursts stay on a separate path so /s/, /sh/, /f/ survive.
+  fric.connect(fr);fr.connect(frg);frg.connect(out);fric.connect(asp);
   const stp=(param,from,to,t,tr)=>{param.setValueAtTime(from,t);param.linearRampToValueAtTime(to,t+Math.max(.008,tr));return to};
-  let vLevel=0,fLevel=0,pitch=ph.f0,ff=4000,formantNow=formants.map(x=>x.f);
+  let vLevel=0,aLevel=0,fLevel=0,pitch=ph.f0*1.1,ff=4000,formantNow=formants.map(x=>x.f);
   const T=Math.max(.1,L[L.length-1].t+L[L.length-1].d-ph.t0);
-  L.forEach(x=>{
-    const tr=Math.min(x.v>.3?.025:.012,Math.max(.008,x.d*.3)),pk=x.st?1:.72,pr=(x.t-ph.t0)/T;
+  const nextF=i=>{for(let j=i+1;j<L.length;j++)if(L[j].F)return L[j].F};
+  L.forEach((x,i)=>{
+    const tr=Math.min(x.v>.3?.03:.012,Math.max(.008,x.d*.3)),pk=(x.st?1:.72)*(1-.15*(x.t-ph.t0)/T),pr=(x.t-ph.t0)/T;
     vLevel=stp(voiced.gain,vLevel,(x.v||0)*pk,x.t,tr);
+    aLevel=stp(asp.gain,aLevel,(x.a||0)*1.2+(x.v>.3?.05*pk:0),x.t,x.a?.01:tr);
     // Vowels and sonorants set the vocal-tract resonances; nasal sounds reduce
-    // the upper resonances, giving them a darker, more nasal character.
-    if(x.F){
-      // glide from the previous target (formantNow) to the new one; setting the old value and ramping to the same
-      // new value, as before, made every formant jump instantly
+    // the upper resonances, giving them a darker, more nasal character. Breath
+    // segments glide to the following vowel's resonances.
+    const F=x.F||(x.a?nextF(i):null);
+    if(F){
+      // glide from the previous target (formantNow) to the new one, rather than jumping
       const gt=Math.min(.06,x.d*.5);
-      x.F.forEach((f,j)=>{const fp=resonators[j].b.frequency;fp.setValueAtTime(formantNow[j],x.t);fp.linearRampToValueAtTime(f,x.t+gt);formantNow[j]=f});
-      const gains=x.nas?[1.05,.24,.12]:[1.25,.9,.48];
-      gains.forEach((g,j)=>resonators[j].g.gain.setTargetAtTime(g,x.t,.012));
-      pitch=stp(o.frequency,pitch,ph.f0*(1+.018*Math.sin(pr*6.28)),x.t,tr*1.5);
+      F.forEach((f,j)=>{const fp=resonators[j].b.frequency;fp.setValueAtTime(formantNow[j],x.t);fp.linearRampToValueAtTime(f,x.t+gt);formantNow[j]=f});
+      if(x.F){
+        const gains=x.nas?[1.05,.24,.12]:[1.25,.9,.48];
+        gains.forEach((g,j)=>resonators[j].g.gain.setTargetAtTime(g,x.t,.012));
+        // spoken phrases: pitch starts high, declines, lifts on stressed syllables and falls at the end, with a little
+        // jitter. Sung phrases (vib set) stay on a steady note.
+        const contour=ph.vib?1:(1.12-.3*pr)*(x.st?1.08:1)*(pr>.85?.94:1);
+        pitch=stp(o.frequency,pitch,ph.f0*contour*(1+Math.sin(x.t*91)*.01),x.t,tr*1.5);
+      }
     }
     if(x.n){ff=stp(fr.frequency,ff,x.n[0],x.t,tr);fLevel=stp(frg.gain,fLevel,x.n[2],x.t,tr)}
-    else if(x.a){fLevel=stp(frg.gain,fLevel,1.0,x.t,.008)}
-    else {fLevel=stp(frg.gain,fLevel,(x.v||0)*.035,x.t,tr)}
+    else if(x.a){fLevel=stp(frg.gain,fLevel,.5,x.t,.008)}
+    else {fLevel=stp(frg.gain,fLevel,0,x.t,tr)}
   });
   // Release at the end of the phrase. Without this the final sound (a vowel, the /s/ in "robots", the burst after a
   // final /t/ or /k/) is held at full level until the 4 s clip ends, so the stem is never silent.
-  {const last=L[L.length-1],tEnd=last.t+last.d;stp(voiced.gain,vLevel,0,tEnd,.05);stp(frg.gain,fLevel,0,tEnd,.03)}
-  // The model has no natural language coarticulation or breath planning; this
-  // small output filter removes brittle extremes without hiding consonants.
-  const hp=filt(c,'highpass',90,.7),lp=filt(c,'lowpass',6800,.7);out.connect(hp);hp.connect(lp);
+  {const last=L[L.length-1],tEnd=last.t+last.d;stp(voiced.gain,vLevel,0,tEnd,.05);stp(asp.gain,aLevel,0,tEnd,.05);stp(frg.gain,fLevel,0,tEnd,.03)}
+  // This small output filter removes brittle extremes without hiding consonants. The 12 kHz ceiling lets
+  // sibilance reach the top analysis bands (9.5 and 12 kHz).
+  const hp=filt(c,'highpass',90,.7),lp=filt(c,'lowpass',12000,.7);out.connect(hp);hp.connect(lp);
   const final=c.createGain();final.gain.value=.85;lp.connect(final);
   return final;
 }
@@ -164,7 +178,8 @@ function drums(c){ // beatboxed kit: every hit carries a vowel colour so the pad
 function vocode(c,mod,car,{nz=0,lp=25}={}){
  // AV-20-informed signal path: 20 fixed centre frequencies, cascaded
  // analysis/synthesis band-pass filters, full-wave envelope detection,
- // ~25 Hz smoothing, envelope gain and a soft non-negative VCA control.
+ // envelope smoothing (lp: 25 Hz default, 40 Hz for speech and 120 Hz for drums as set in renderSpec),
+ // envelope gain and a soft non-negative VCA control.
  // This is a browser approximation, not a circuit-level VC-10 emulation.
  const CENTRES=[80,110,150,200,270,360,480,640,850,1100,1450,1900,2500,3300,4300,5600,7300,9500,12000,15000];
  const out=c.createGain();
@@ -174,7 +189,7 @@ function vocode(c,mod,car,{nz=0,lp=25}={}){
  const micComp=c.createDynamicsCompressor();micComp.threshold.value=-24;micComp.ratio.value=8;micComp.attack.value=.005;
  mod.connect(pre);pre.connect(micComp);
  // Input Sig Bal: nz is how far the carrier is turned from KBD towards NOISE (0 = keyboard/external only, as in
- // V-01, V-03 and V-09). It was accepted but never used before.
+ // V-01, V-03 and V-09).
  if(nz>0){const mix=c.createGain(),ka=c.createGain(),na=c.createGain();ka.gain.value=1-nz;na.gain.value=nz*.5;
   car.connect(ka);noise(c).connect(na);ka.connect(mix);na.connect(mix);car=mix}
  const abs=new Float32Array(4097),clamp=new Float32Array(4097);
@@ -200,7 +215,6 @@ const plain=c=>osc(c,'sawtooth',midi(41));
 const sawF=c=>{const f=filt(c,'lowpass',200,12);f.frequency.setValueAtTime(200,0);f.frequency.exponentialRampToValueAtTime(6000,DUR);osc(c,'sawtooth',midi(41)).connect(f);return f};
 // SQ-10 lane: a three-step figure, one step per syllable. Steps are in semitones at 0.25 V each (Section 07), so the
 // largest step here is +4 semitones = 1.0 V = 400 cents: the full travel of a ±1 V lane, well inside the VC-10's ±3 V limit.
-// (The old figure climbed to +19 semitones, which would need 4.75 V.)
 const arp=(c,ph,on)=>{const out=c.createGain(),S=[0,4,2];
  [41,48,56].forEach(m=>{const g=c.createGain(),o=osc(c,'sawtooth',midi(m));g.gain.value=.3;
   if(on)layout(ph).vt.forEach((t,i)=>o.frequency.setValueAtTime(midi(m+S[i%S.length]),t-.02));
@@ -322,47 +336,30 @@ function wave(cv,d,w){const[c,W,H]=size(cv),mid=H/2,L=LAY.get(d);c.fillStyle='#0
   for(let x=0;x<W;x++){let lo=0,hi=0;for(let i=x*k|0;i<(x+1)*k;i++){const v=s[i];if(v<lo)lo=v;if(v>hi)hi=v}c.fillRect(x,mid-hi*mid*.9,1,Math.max(1,(hi-lo)*mid*.9))}
   c.globalAlpha=1};
  if(L){trace(L[1],'#8b5cf6',.85);trace(L[0],'#00bcd4',.65)}else trace(d,w?'#8b5cf6':'#00bcd4',1)}
+// Spectrogram: a faint, genuinely measured spectrogram underneath, with 20 band traces on top in the book's style.
+// Each trace's brightness and thickness is that band's measured level (mean bin magnitude, so wide high bands do not
+// read louder than narrow low ones). Only the dry stems ripple, a stylised stand-in for voice pitch movement; a
+// vocoder return is a fixed carrier, so its traces stay level.
 function spec(cv,d,w){
- const[c,W,H]=size(cv),pw=W-ML,ph=H-MB,{F,M}=frames(d);
- const r=w?139:0, g=w?92:188, b=w?246:212; // Base colors (purple / cyan)
+ const[c,W,H]=size(cv),pw=W-ML,ph=H-MB,{F,M}=frames(d),r=w?139:0,g=w?92:188,b=w?246:212;
  c.fillStyle='#000';c.fillRect(0,0,W,H);
- 
- const bands=20, bandH=ph/bands;
- c.lineWidth=1.5;
-
- // Draw 20 stylized wavy bands matching the book's aesthetic
+ const off=document.createElement('canvas');off.width=pw|0;off.height=ph|0;
+ const oc=off.getContext('2d'),img=oc.createImageData(off.width,off.height);
+ for(let y=0;y<off.height;y++){const bn=Math.round(80*Math.pow(100,1-y/off.height)/(SR/FN));
+  for(let x=0;x<off.width;x++){const m=F[Math.min(F.length-1,x/off.width*F.length|0)],a=Math.max(m[bn-1]||0,m[bn],m[bn+1]||0),
+   v=Math.min(1,Math.max(0,(20*Math.log10(a/M+1e-9)+50)/50)),t=v*v*.55,k=(y*off.width+x)*4;
+   img.data[k]=r*t;img.data[k+1]=g*t;img.data[k+2]=b*t;img.data[k+3]=255}}
+ oc.putImageData(img,0,0);c.drawImage(off,ML,0,pw,ph);
+ const bands=20,bandH=ph/bands;
  for(let i=0;i<bands;i++){
-  // Map 20 bands logarithmically across the FFT bins
-  const binStart=Math.floor(Math.pow(100,i/bands)*80/(SR/FN));
-  const binEnd=Math.floor(Math.pow(100,(i+1)/bands)*80/(SR/FN));
-  
-  c.beginPath();
-  for(let x=0;x<pw;x++){
-   const fIdx=Math.min(F.length-1,x/pw*F.length|0);
-   let eng=0, cBin=Math.max(1,binStart);
-   // Accumulate energy for this specific filter band
-   for(let j=cBin;j<Math.max(cBin+1,binEnd);j++) eng+=F[fIdx][j]||0;
-   
-   // Normalize and scale the energy to control the "wave" amplitude
-   const v=Math.min(1,Math.max(0,(20*Math.log10(eng/M+1e-9)+50)/40));
-   const waveAmp=v>.4?(v-.4)/.6*bandH*.45:0; 
-   
-   // Calculate the wavy line
-   const yPos = ph - (i*bandH + bandH/2) + Math.sin(x*0.8)*waveAmp;
-   
-   if(x===0) c.moveTo(ML+x, yPos);
-   else c.lineTo(ML+x, yPos);
-  }
-  // Apply a glowing gradient stroke simulating the book's stylized look
-  const grad = c.createLinearGradient(ML, 0, W, 0);
-  grad.addColorStop(0, `rgba(${r},${g},${b},0.1)`);
-  grad.addColorStop(0.5, `rgba(${r},${g},${b},0.8)`);
-  grad.addColorStop(1, `rgba(${r},${g},${b},0.1)`);
-  c.strokeStyle = grad;
-  c.stroke();
- }
-
- // Keep the original axis rendering
+  const b0=Math.max(1,Math.round(Math.pow(100,i/bands)*80/(SR/FN))),b1=Math.max(b0+1,Math.round(Math.pow(100,(i+1)/bands)*80/(SR/FN))),yc=ph-(i+.5)*bandH;
+  for(let x=0;x<pw;x+=2){
+   const m=F[Math.min(F.length-1,x/pw*F.length|0)];let s=0;for(let j=b0;j<b1;j++)s+=m[j]||0;
+   const v=Math.min(1,Math.max(0,(20*Math.log10(s/(b1-b0)/M+1e-9)+62)/45));
+   if(v<.12)continue;
+   const yy=yc+(w?0:Math.sin(x*.35+i*.9)*v*bandH*.4);
+   c.globalAlpha=Math.min(1,v*1.1);c.fillStyle=`rgb(${r},${g},${b})`;c.fillRect(ML+x,yy-1,2,1+v*2.2)}}
+ c.globalAlpha=1;
  const y=f=>ph*(1-Math.log(f/80)/Math.log(100));
  c.font='9px monospace';c.fillStyle='#555';c.textAlign='right';c.textBaseline='middle';
  [110,220,440,880,1760,3520].forEach(f=>{c.fillText(f+'Hz',ML-5,y(f));c.fillRect(ML-3,y(f),3,1)});
@@ -409,7 +406,7 @@ const NET={
 function schem(p){
  const N=NET[p.n],m=p.id,A='#8b5cf6',C='#00bcd4',
   K={stem:[C,C,'#18181b',0,2],gear:['#52525b','#d4d4d8','#18181b',0,1],pad:['#52525b','#d4d4d8','#18181b',0,1],opt:['#71717a','#a1a1aa','#18181b',1,1],
-     hot:[A,'#a78bfa','rgba(139,92,246,.14)',0,2],ghost:['#3f3f46','#52525b','none',0,1],ret:[A,'#a78bfa','#18181b',0,2]},
+      hot:[A,'#a78bfa','rgba(139,92,246,.14)',0,2],ghost:['#3f3f46','#52525b','none',0,1],ret:[A,'#a78bfa','#18181b',0,2]},
   box=(x,y,w,t,s,k)=>{const[st,tc,fl,da,sw]=K[k];return`<rect x="${x}" y="${y}" width="${w}" height="52" fill="${fl}" stroke="${st}" stroke-width="${sw}"${da?' stroke-dasharray="4 3"':''}/><text x="${x+w/2}" y="${y+(s?23:31)}" fill="${tc}" font-family="monospace" font-size="11" font-weight="bold" text-anchor="middle">${t}</text>${s?`<text x="${x+w/2}" y="${y+39}" fill="${k=='ghost'?'#3f3f46':'#71717a'}" font-family="monospace" font-size="9" text-anchor="middle">${s}</text>`:''}`},
   cab=(d,k='audio')=>`<path d="${d}" fill="none" stroke="${k=='cv'?C:k=='opt'?'#71717a':A}" stroke-width="2"${k=='audio'?'':' stroke-dasharray="4 3"'} marker-end="url(#${k=='cv'?'c':k=='opt'?'o':'r'}${m})"/>`,
   defs=`<defs>${[['r',A],['c',C],['o','#71717a']].map(([i,f])=>`<marker id="${i}${m}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="${f}"/></marker>`).join('')}</defs>`,
