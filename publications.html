@@ -1,1 +1,627 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOLTAGE & WAVE // Hardware Capabilities Series</title>
+    <meta name="description" content="The Hardware Capabilities Series by José Velázquez, MA. Authentic engineering manuals for analogue re-amping, unquantised step-sequencing, and hardware vocoding.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Voltage & Wave // Hardware Capabilities Series">
+    <meta property="og:description" content="An engineer's manuals for analogue re-amping, unquantised step-sequencing, and MIDI-to-CV translation. Now on Amazon UK and Reverb.">
+    <meta property="og:image" content="https://voltageandwave.co.uk/book3-cover.jpg">
+    <meta property="og:url" content="https://voltageandwave.co.uk/publications.html">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <!-- Schema for Omnibus Expanded (Upcoming) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Book",
+      "name": "Omnibus Expanded: Voltage, Sequence & Speech (Vols 01–03)",
+      "author": { "@type": "Person", "name": "José Velázquez, MA" },
+      "publisher": { "@type": "Organization", "name": "Voltage & Wave" },
+      "bookFormat": "https://schema.org/Hardcover",
+      "inLanguage": "en-GB",
+      "bookEdition": "Expanded Omnibus Edition",
+      "url": "https://voltageandwave.co.uk/"
+    }
+    </script>
 
+    <!-- Schema for Book Three (Upcoming) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Book",
+      "name": "03 Korg VC-10 — Voces Ex Machina",
+      "author": { "@type": "Person", "name": "José Velázquez, MA" },
+      "publisher": { "@type": "Organization", "name": "Voltage & Wave" },
+      "bookFormat": "https://schema.org/EBook",
+      "inLanguage": "en-GB",
+      "image": "https://voltageandwave.co.uk/book4-cover.png",
+      "url": "https://voltageandwave.co.uk/voces_ex_machina.html"
+    }
+    </script>
+
+    <!-- Schema for Omnibus -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Book",
+      "name": "Omnibus: Analogue Re-Amping & CV Sequencing (Vols 01–02)",
+      "author": { "@type": "Person", "name": "José Velázquez, MA" },
+      "publisher": { "@type": "Organization", "name": "Voltage & Wave" },
+      "isbn": "9798160617909",
+      "bookFormat": "https://schema.org/Hardcover",
+      "inLanguage": "en-GB",
+      "bookEdition": "Omnibus Edition",
+      "datePublished": "2026-10-09",
+      "image": "https://voltageandwave.co.uk/book3-cover.jpg",
+      "url": "https://www.amazon.co.uk/dp/B0HMG35T7V/"
+    }
+    </script>
+
+    <!-- Schema for Book One -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Book",
+      "name": "01 Korg MS-10 — External Processing",
+      "author": { "@type": "Person", "name": "José Velázquez, MA" },
+      "publisher": { "@type": "Organization", "name": "Voltage & Wave" },
+      "isbn": "9798177567976",
+      "bookFormat": "https://schema.org/EBook",
+      "numberOfPages": 32,
+      "inLanguage": "en-GB",
+      "datePublished": "2026-09-27",
+      "image": "https://voltageandwave.co.uk/book1-cover.jpg",
+      "url": "https://www.amazon.co.uk/dp/B0HLQ2524M"
+    }
+    </script>
+
+    <!-- Schema for Book Two -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Book",
+      "name": "02 Korg SQ-10 — Off The Grid",
+      "author": { "@type": "Person", "name": "José Velázquez, MA" },
+      "publisher": { "@type": "Organization", "name": "Voltage & Wave" },
+      "isbn": "9798160223087",
+      "bookFormat": "https://schema.org/EBook",
+      "inLanguage": "en-GB",
+      "datePublished": "2026-10-01",
+      "image": "https://voltageandwave.co.uk/book2-cover.jpg",
+      "url": "https://www.amazon.co.uk/dp/B0HM1BCGCZ"
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest" onerror="this.onerror=null;var f=document.createElement('script');f.src='https://cdn.jsdelivr.net/npm/lucidelatest/dist/umd/lucide.min.js';f.onload=function(){window.refreshIcons&&window.refreshIcons()};document.head.appendChild(f);"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        amber: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                        zinc: {
+                            850: '#202022',
+                            900: '#18181b',
+                            950: '#09090b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #09090b;
+            color: #d4d4d8;
+        }
+        
+        .scanlines::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(245, 158, 11, 0.04), rgba(245, 158, 11, 0.02), rgba(217, 119, 6, 0.04));
+            z-index: 50;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .glow-text {
+            text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #09090b; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .bg-synth-grid {
+            background-image: linear-gradient(to right, rgba(245, 158, 11, 0.07) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(245, 158, 11, 0.07) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        @keyframes pan-grid {
+            0% { background-position: 0px 0px; }
+            100% { background-position: 40px 40px; }
+        }
+        .animate-pan-grid {
+            animation: pan-grid 3s linear infinite;
+        }
+
+        @keyframes analog-glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 1px); color: #fbbf24; text-shadow: 2px 0 #f59e0b; }
+            40% { transform: translate(-1px, -1px) }
+            60% { transform: translate(2px, 1px); text-shadow: -2px 0 #f59e0b; }
+            80% { transform: translate(1px, -1px) }
+            100% { transform: translate(0) }
+        }
+        .glitch-hover:hover {
+            animation: analog-glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+        }
+    </style>
+</head>
+<body class="antialiased relative selection:bg-amber-500 selection:text-zinc-950">
+    <div class="scanlines fixed inset-0"></div>
+
+    <nav class="fixed w-full z-40 top-0 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-3 cursor-pointer glitch-hover">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-amber-500 w-6 h-6">
+                        <path d="M2 12h4v-7h6v14h6v-7h4"/>
+                    </svg>
+                    <span class="font-mono font-bold text-white tracking-widest">VOLTAGE & WAVE</span>
+                </a>
+                <div class="hidden md:flex space-x-8 font-mono text-sm items-center">
+                    <a href="https://reverb.com/uk/shop/voltageandwave" target="_blank" class="text-zinc-400 hover:text-amber-500 transition-colors flex items-center gap-2">
+                        REVERB SHOP <i data-lucide="external-link" class="w-3 h-3"></i>
+                    </a>
+                    <a href="index.html" class="text-zinc-950 bg-amber-500 hover:bg-amber-400 px-4 py-1.5 font-bold transition-colors hover:shadow-[0_0_15px_rgba(245,158,11,0.4)] flex items-center gap-2">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> RETURN TO STUDIO
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- PUBLICATIONS HERO SECTION -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden border-b border-zinc-800 bg-zinc-900">
+        <div class="absolute inset-0 bg-synth-grid animate-pan-grid [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-zinc-800/20 via-zinc-900/80 to-zinc-950 -z-10"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 reveal">
+            <div class="max-w-3xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-500 font-mono text-xs mb-6">
+                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                    HARDWARE CAPABILITIES SERIES
+                </div>
+                
+                <h1 class="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white tracking-tight mb-6 uppercase">
+                    The Engineering <br>
+                    <span class="text-amber-500 glow-text">Library</span>
+                </h1>
+                <p class="text-lg sm:text-xl text-zinc-400 mb-10 max-w-2xl font-light">
+                    The complete operational protocols for analogue re-amping, unquantised step-sequencing, and hardware vocoding. No plugins. No presets. Just pure voltage.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 font-mono">
+                    <a href="#catalog" class="inline-flex justify-center items-center gap-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 px-8 py-4 font-bold transition-all hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]">
+                        VIEW ALL VOLUMES <i data-lucide="arrow-down" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FULL CATALOG SECTION -->
+    <section id="catalog" class="py-24 bg-zinc-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- PUBLICATIONS TECHNICAL HEADER -->
+            <div class="relative mb-20 reveal">
+                <div class="absolute -top-12 -left-4 text-[8rem] font-extrabold text-zinc-800/20 uppercase tracking-tighter select-none -z-10 blur-[2px] hidden md:block">
+                    MANUALS
+                </div>
+                
+                <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 border-b-2 border-zinc-800 pb-8">
+                    <div class="max-w-3xl">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="relative flex h-2.5 w-2.5">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+                            </span>
+                            <span class="font-mono text-[10px] text-amber-500 uppercase tracking-widest border border-amber-500/30 bg-amber-500/10 px-2 py-1 shadow-[0_0_10px_rgba(245,158,11,0.2)]">
+                                Primary Documentation
+                            </span>
+                        </div>
+                        <h2 class="text-4xl sm:text-5xl font-black text-white uppercase tracking-tight mb-4">
+                            Hardware Capabilities <span class="text-zinc-600">Series</span>
+                        </h2>
+                        <p class="text-zinc-400 text-lg font-light leading-relaxed">
+                            The complete engineering library. Repeatable, step-by-step procedures for analogue re-amping, unquantised sequencing, and hardware vocoding.
+                        </p>
+                    </div>
+                    
+                    <!-- Tech-spec metadata block -->
+                    <div class="font-mono text-xs uppercase tracking-widest border-l-2 border-amber-500 bg-zinc-900/60 p-5 rounded-sm shadow-xl shrink-0 lg:min-w-[320px]">
+                        <div class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-3">
+                            <div class="text-zinc-500 border-b border-zinc-800/50 pb-2">Domain</div>
+                            <div class="text-zinc-300 font-bold text-right border-b border-zinc-800/50 pb-2">Analogue Signal Flow</div>
+                            
+                            <div class="text-zinc-500 border-b border-zinc-800/50 pb-2">Volumes</div>
+                            <div class="text-zinc-300 font-bold text-right border-b border-zinc-800/50 pb-2">03 Primary Manuals</div>
+                            
+                            <div class="text-zinc-500 pt-1">Collections</div>
+                            <div class="text-amber-500 font-bold text-right pt-1">02 Omnibus Editions</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TIER 1: THE CORE VOLUMES -->
+            <div class="mb-6 reveal">
+                <h4 class="font-mono text-xs text-zinc-500 uppercase tracking-widest mb-6 text-center">The Core Volumes</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+                    <!-- Book 1 -->
+                    <div class="bg-zinc-900 border border-zinc-800/80 p-5 rounded-sm flex flex-col hover:border-amber-500/30 transition-colors shadow-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="font-mono text-[10px] text-zinc-400 uppercase tracking-widest">Book 01</span>
+                            <span class="text-[9px] font-mono text-amber-500 border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 uppercase tracking-widest">Available</span>
+                        </div>
+                        <h5 class="text-zinc-200 font-bold text-sm mb-2">01 Korg MS-10</h5>
+                        <p class="text-zinc-500 text-xs mb-6">Analogue re-amping.</p>
+                        <a href="#book1-details" class="mt-auto text-[10px] font-mono text-zinc-400 hover:text-amber-500 transition-colors uppercase tracking-widest flex items-center gap-1">
+                            View Details <i data-lucide="arrow-down" class="w-3 h-3"></i>
+                        </a>
+                    </div>
+                    
+                    <!-- Book 2 -->
+                    <div class="bg-zinc-900 border border-zinc-800/80 p-5 rounded-sm flex flex-col hover:border-amber-500/30 transition-colors shadow-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="font-mono text-[10px] text-zinc-400 uppercase tracking-widest">Book 02</span>
+                            <span class="text-[9px] font-mono text-amber-500 border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 uppercase tracking-widest">Available</span>
+                        </div>
+                        <h5 class="text-zinc-200 font-bold text-sm mb-2">02 Korg SQ-10</h5>
+                        <p class="text-zinc-500 text-xs mb-6">Unquantised sequencing.</p>
+                        <a href="#book2-details" class="mt-auto text-[10px] font-mono text-zinc-400 hover:text-amber-500 transition-colors uppercase tracking-widest flex items-center gap-1">
+                            View Details <i data-lucide="arrow-down" class="w-3 h-3"></i>
+                        </a>
+                    </div>
+
+                    <!-- Book 3 -->
+                    <div class="bg-zinc-900 border border-zinc-800/80 p-5 rounded-sm flex flex-col hover:border-amber-500/30 transition-colors shadow-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="font-mono text-[10px] text-zinc-400 uppercase tracking-widest">Book 03</span>
+                            <span class="text-[9px] font-mono text-zinc-400 border border-zinc-700 bg-zinc-800/50 px-1.5 py-0.5 uppercase tracking-widest">Coming Soon</span>
+                        </div>
+                        <h5 class="text-zinc-200 font-bold text-sm mb-2">03 Korg VC-10</h5>
+                        <p class="text-zinc-500 text-xs mb-6">Hardware vocoding.</p>
+                        <a href="#book3-details" class="mt-auto text-[10px] font-mono text-zinc-400 hover:text-amber-500 transition-colors uppercase tracking-widest flex items-center gap-1">
+                            View Details <i data-lucide="arrow-down" class="w-3 h-3"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TIER 2: THE COLLECTIONS -->
+            <div class="mb-24 reveal">
+                <h4 class="font-mono text-xs text-zinc-500 uppercase tracking-widest mb-6 text-center mt-12">The Collections</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+                    <!-- Omnibus (1-2) -->
+                    <div class="bg-zinc-900 border border-amber-500/30 p-5 rounded-sm flex flex-col hover:border-amber-500/60 transition-colors shadow-[0_0_15px_rgba(245,158,11,0.1)]">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="font-mono text-[10px] text-zinc-400 uppercase tracking-widest">Omnibus</span>
+                            <span class="text-[9px] font-mono text-amber-500 border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 uppercase tracking-widest">Available</span>
+                        </div>
+                        <h5 class="text-zinc-200 font-bold text-sm mb-2">Analogue Re-Amping & CV Sequencing</h5>
+                        <p class="text-zinc-500 text-xs mb-6">Vols 01–02.</p>
+                        <a href="#omnibus-details" class="mt-auto text-[10px] font-mono text-zinc-400 hover:text-amber-500 transition-colors uppercase tracking-widest flex items-center gap-1">
+                            View Details <i data-lucide="arrow-down" class="w-3 h-3"></i>
+                        </a>
+                    </div>
+
+                    <!-- Omnibus Expanded (1-3) -->
+                    <div class="bg-zinc-900 border border-zinc-800/80 p-5 rounded-sm flex flex-col hover:border-amber-500/30 transition-colors shadow-lg opacity-75">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="font-font text-[10px] text-zinc-400 uppercase tracking-widest">Expanded Edition</span>
+                            <span class="text-[9px] font-mono text-zinc-500 border border-zinc-700 bg-zinc-950 px-1.5 py-0.5 uppercase tracking-widest">Planned</span>
+                        </div>
+                        <h5 class="text-zinc-400 font-bold text-sm mb-2">Voltage, Sequence & Speech</h5>
+                        <p class="text-zinc-600 text-xs mb-6">Vols 01–03.</p>
+                        <a href="#omnibus-expanded-details" class="mt-auto text-[10px] font-mono text-zinc-500 hover:text-amber-500 transition-colors uppercase tracking-widest flex items-center gap-1">
+                            View Roadmap <i data-lucide="arrow-down" class="w-3 h-3"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DEEP DIVES (REVERSE CHRONOLOGICAL) -->
+            
+            <!-- 1. OMNIBUS EXPANDED (ROADMAP) -->
+            <div id="omnibus-expanded-details" class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center mb-24 reveal scroll-mt-24">
+                <div class="lg:col-span-3">
+                    <div class="group block relative max-w-[14rem] mx-auto">
+                        <div class="absolute -inset-6 bg-amber-500/5 blur-3xl rounded-full -z-10 transition-all"></div>
+                        <img src="https://placehold.co/1093x1650/18181b/f59e0b?text=Omnibus+Expanded" alt="Placeholder cover of Omnibus Expanded" loading="lazy" class="w-full h-auto border border-zinc-800 shadow-2xl shadow-black opacity-60 mix-blend-luminosity">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="bg-zinc-950/90 text-amber-500 font-mono text-[10px] uppercase tracking-widest px-3 py-1 border border-amber-500/50 backdrop-blur-sm">IN DEVELOPMENT</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:col-span-9">
+                    <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest mb-4">
+                        <span class="border border-amber-500/30 bg-amber-500/10 text-amber-500 px-2 py-1">Omnibus Expanded</span>
+                        <span class="border border-zinc-700 text-zinc-500 px-2 py-1">Roadmap</span>
+                    </div>
+                    <h3 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">Omnibus Expanded: Voltage, Sequence & Speech</h3>
+                    <p class="text-amber-500 font-mono text-sm mb-5">THE COMPLETE CAPSTONE EDITION (VOLS 01–03)</p>
+                    
+                    <p class="text-zinc-400 leading-relaxed mb-6 max-w-2xl">
+                        The ultimate physical reference manual. This planned edition will combine Book 01 (MS-10), Book 02 (SQ-10), and Book 03 (VC-10) into a single, comprehensive master volume covering the entire Voltage & Wave hardware ecosystem.
+                    </p>
+                    
+                    <dl class="grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono text-xs mb-6 max-w-2xl border-y border-zinc-800 py-4">
+                        <div><dt class="text-zinc-600 uppercase tracking-widest mb-1">Author</dt><dd class="text-zinc-300">José Velázquez</dd></div>
+                        <div><dt class="text-zinc-600 uppercase tracking-widest mb-1">Published</dt><dd class="text-zinc-300">TBD</dd></div>
+                        <div class="col-span-2"><dt class="text-zinc-600 uppercase tracking-widest mb-1">Status</dt><dd class="text-zinc-300">In Active Development</dd></div>
+                    </dl>
+                    <div class="flex flex-col sm:flex-row gap-4 font-mono">
+                        <div class="inline-flex justify-center items-center gap-2 border border-zinc-800 text-zinc-500 px-6 py-3 bg-zinc-900/50 cursor-not-allowed">
+                            <i data-lucide="lock" class="w-4 h-4"></i> AWAITING BOOK 03 COMPLETION
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-zinc-800/80 my-16 max-w-5xl mx-auto">
+            
+            <!-- 2. BOOK 03 (VC-10) -->
+            <div id="book3-details" class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center mb-24 reveal scroll-mt-24">
+                <div class="lg:col-span-9 lg:order-1 order-2">
+                    <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest mb-4">
+                        <span class="border border-amber-500/30 bg-amber-500/10 text-amber-500 px-2 py-1">Book 03</span>
+                        <span class="border border-zinc-700 text-zinc-500 px-2 py-1">Coming Soon</span>
+                    </div>
+                    <h3 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">03 Korg VC-10 — Voces Ex Machina</h3>
+                    <p class="text-amber-500 font-mono text-sm mb-5">AN ENGINEER’S MANUAL FOR HARDWARE VOCODING</p>
+                    
+                    <p class="text-zinc-400 leading-relaxed mb-6 max-w-2xl">
+                        Two signals. One voice. A vocoder needs two things: something to say, and something to say it with. The VC-10 splits the job: the voice decides what is said; the carrier decides what it sounds like. This is the working engineer’s manual for putting both through the hardware and getting them back.
+                    </p>
+                    
+                    <p class="text-zinc-500 font-mono text-[11px] font-bold tracking-widest mb-3">I N S I D E</p>
+                    <ul class="space-y-2 text-sm text-zinc-400 mb-6 max-w-2xl">
+                        <li class="flex gap-3"><span class="text-amber-500 mt-0.5">■</span> Nine protocols in four groups: voice, carrier, pitch and print</li>
+                        <li class="flex gap-3"><span class="text-amber-500 mt-0.5">■</span> Whisper, talking drums, MS-10 and DAW-stem carriers, ensemble and SQ-10 pitch CV</li>
+                        <li class="flex gap-3"><span class="text-amber-500 mt-0.5">■</span> Gain staging, level arithmetic and bench procedures to measure your own unit</li>
+                        <li class="flex gap-3"><span class="text-amber-500 mt-0.5">■</span> Two worked sessions, a patch matrix and session logs</li>
+                    </ul>
+                    
+                    <dl class="grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono text-xs mb-6 max-w-2xl border-y border-zinc-800 py-4">
+                        <div><dt class="text-zinc-600 uppercase tracking-widest mb-1">Author</dt><dd class="text-zinc-300">José Velázquez</dd></div>
+                        <div><dt class="text-zinc-600 uppercase tracking-widest mb-1">Published</dt><dd class="text-zinc-300">TBD</dd></div>
+                        <div class="col-span-2"><dt class="text-zinc-600 uppercase tracking-widest mb-1">Format</dt><dd class="text-zinc-300">Hardware Capabilities Series</dd></div>
+                    </dl>
+                    <div class="flex flex-col sm:flex-row gap-4 font-mono">
+                        <a href="https://voltageandwave.co.uk/voces_ex_machina.html" target="_blank" rel="noopener" class="inline-flex justify-center items-center gap-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 px-6 py-3 font-bold transition-all hover:shadow-[0_0_15px_rgba(245,158,11,0.4)]">
+                            <i data-lucide="layout-template" class="w-4 h-4"></i> PREVIEW COMPANION SITE
+                        </a>
+                    </div>
+                </div>
+                <div class="lg:col-span-3 lg:order-2 order-1">
+                    <a href="https://voltageandwave.co.uk/voces_ex_machina.html" target="_blank" rel="noopener" class="group block relative max-w-[14rem] mx-auto" aria-label="View Book Three Companion Site">
+                        <div class="absolute -inset-6 bg-amber-500/5 blur-3xl rounded-full -z-10 group-hover:bg-amber-500/15 transition-all"></div>
+                        <img src="book4-cover.png" alt="Front cover of Korg VC-10 Voces Ex Machina" loading="lazy" class="w-full h-auto border border-zinc-800 shadow-2xl shadow-black transition-transform duration-500 group-hover:-translate-y-2 group-hover:border-amber-500/50">
+                    </a>
+                </div>
+            </div>
+
+            <hr class="border-zinc-800/80 my-16 max-w-5xl mx-auto">
+            
+            <!-- 3. OMNIBUS (01-02) -->
+            <div id="omnibus-details" class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center mb-24 reveal scroll-mt-24">
+                <div class="lg:col-span-3">
+                    <a href="https://www.amazon.co.uk/dp/B0HMG35T7V/" target="_blank" rel="noopener" class="group block relative max-w-[14rem] mx-auto" aria-label="View Omnibus Edition on Amazon UK">
+                        <div class="absolute -inset-6 bg-amber-500/5 blur-3xl rounded-full -z-10 group-hover:bg-amber-500/15 transition-all"></div>
+                        <img src="book3-cover.jpg" alt="Front cover of Omnibus: Analogue Re-Amping & CV Sequencing" loading="lazy" class="w-full h-auto border border-amber-500/30 shadow-2xl shadow-black transition-transform duration-500 group-hover:-translate-y-2 group-hover:border-amber-500">
+                    </a>
+                </div>
+                
+                <div class="lg:col-span-9">
+                    <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest mb-4">
+                        <span class="border border-amber-500/30 bg-amber-500/10 text-amber-500 px-2 py-1">Omnibus Edition</span>
+                        <span class="border border-zinc-700 text-zinc-500 px-2 py-1">New Release</span>
+                    </div>
+                    <h3 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">Omnibus: Analogue Re-Amping & CV Sequencing</h3>
+                    <p class="text-amber-500 font-mono text-sm mb-5">THE COMPLETE VOLTAGE & WAVE STUDIO MANUAL FOR THE KORG MS-10 AND SQ-10</p>
+                    
+                    <p class="text-zinc-400 leading-relaxed mb-6 max-w-2xl">
+                        Two instruments, one working method. Combines Book 01 and Book 02 into a single studio manual. 
+                    </p>
+                    
+                    <p class="text-zinc-500 font-mono text-[11px] font-bold tracking-widest mb-3">I N S I D E</p>
+                    <ul class="space-y-2 text-sm text-zinc-400 mb-6 max-w-2xl">
+                        <li class="flex gap-3"><span class="text-amber-500 mt-0.5">■</span> Sixteen protocols across two books: four re-amping treatments and twelve sequencing procedures</li>
+                        <li class="flex gap-3"><span class="text-amber-500 mt-0.5">■</span> Saturation, Korg-35 filter dynamics, VCA chopping, microtonal scales, warped time and polymeter</li>
+                        <li class="flex gap-3"><span class="text-amber-500 mt-0.5">■</span> Stem preparation, a CV primer and bench procedures to measure your own unit</li>
+                        <li class="flex gap-3"><span class="text-amber-500 mt-0.5">■</span> Three worked sessions, panel maps, a patch matrix, tuning tables and session logs</li>
+                    </ul>
+                    
+                    <dl class="grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono text-xs mb-6 max-w-2xl border-y border-zinc-800 py-4">
+                        <div><dt class="text-zinc-600 uppercase tracking-widest mb-1">Author</dt><dd class="text-zinc-300">José Velázquez</dd></div>
+                        <div><dt class="text-zinc-600 uppercase tracking-widest mb-1">Published</dt><dd class="text-zinc-300">October 2026</dd></div>
+                        <div class="col-span-2"><dt class="text-zinc-600 uppercase tracking-widest mb-1">ISBN</dt><dd class="text-zinc-300">9798160617909</dd></div>
+                    </dl>
+                    <div class="flex flex-col sm:flex-row gap-4 font-mono">
+                        <a href="https://www.amazon.co.uk/dp/B0HMG35T7V/" target="_blank" rel="noopener" class="inline-flex justify-center items-center gap-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 px-6 py-3 font-bold transition-all hover:shadow-[0_0_15px_rgba(245,158,11,0.4)]">
+                            BUY ON AMAZON <i data-lucide="external-link" class="w-4 h-4"></i>
+                        </a>
+                        <a href="https://reverb.com/uk/shop/voltageandwave" target="_blank" rel="noopener" class="inline-flex justify-center items-center gap-2 border border-zinc-700 hover:border-amber-500/60 text-white px-6 py-3 transition-colors bg-zinc-900/50">
+                            SHOP ON REVERB <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-zinc-800/80 my-16 max-w-5xl mx-auto">
+
+            <!-- 4. BOOK 02 (SQ-10) -->
+            <div id="book2-details" class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center mb-24 reveal scroll-mt-24">
+                <div class="lg:col-span-9 lg:order-1 order-2">
+                    <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest mb-4">
+                        <span class="border border-amber-500/30 bg-amber-500/10 text-amber-500 px-2 py-1">Book 02</span>
+                        <span class="border border-zinc-700 text-zinc-500 px-2 py-1">Available Now</span>
+                    </div>
+                    <h3 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">02 Korg SQ-10 — Off The Grid</h3>
+                    <p class="text-amber-500 font-mono text-sm mb-5">UNQUANTISED STEP-SEQUENCING & MIDI-TO-CV TRANSLATION</p>
+                    
+                    <p class="text-zinc-400 leading-relaxed mb-6 max-w-2xl">
+                        The Korg SQ-10 makes no sound. At every step it sends three control voltages, and what a synthesiser does with them is up to you. Set pitch by ear and it lands between the notes a MIDI grid allows. Patch a channel into the clock and the beat pushes and pulls. Drive the filter step by step, or run a DAW stem through the MS-10 while the sequencer moves it. This is the working engineer’s manual for all of it: twelve repeatable procedures, each laid out as an open spread, with the patch on the left, the listening check on the right and a QR code to hear it.
+                    </p>
+                    
+                    <p class="text-zinc-500 font-mono text-[11px] font-bold tracking-widest mb-3">I N S I D E</p>
+                    <ul class="space-y-2 text-sm text-zinc-400 mb-6 max-w-2xl">
+                        <li class="flex gap-3"><span class="text-amber-500 mt-0.5">■</span> Twelve protocols in four groups: pitch, time, timbre and hybrid stem work</li>
+                        <li class="flex gap-3"><span class="text-amber-500 mt-0.5">■</span> Microtonal scales, glides, warped time, polymeter and 24-step phrases</li>
+                        <li class="flex gap-3"><span class="text-amber-500 mt-0.5">■</span> Bench procedures to measure your own unit’s voltages, clock and latency</li>
+                        <li class="flex gap-3"><span class="text-amber-500 mt-0.5">■</span> Three worked sessions, a patch matrix, tuning tables and session logs</li>
+                    </ul>
+                    
+                    <dl class="grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono text-xs mb-6 max-w-2xl border-y border-zinc-800 py-4">
+                        <div><dt class="text-zinc-600 uppercase tracking-widest mb-1">Author</dt><dd class="text-zinc-300">José Velázquez</dd></div>
+                        <div><dt class="text-zinc-600 uppercase tracking-widest mb-1">Published</dt><dd class="text-zinc-300">October 2026</dd></div>
+                        <div class="col-span-2"><dt class="text-zinc-600 uppercase tracking-widest mb-1">ISBN</dt><dd class="text-zinc-300">9798160223087</dd></div>
+                    </dl>
+                    <div class="flex flex-col sm:flex-row gap-4 font-mono">
+                        <a href="https://www.amazon.co.uk/dp/B0HM1BCGCZ" target="_blank" rel="noopener" class="inline-flex justify-center items-center gap-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 px-6 py-3 font-bold transition-all hover:shadow-[0_0_15px_rgba(245,158,11,0.4)]">
+                            BUY ON AMAZON <i data-lucide="external-link" class="w-4 h-4"></i>
+                        </a>
+                        <a href="https://voltageandwave.co.uk/off_the_grid.html" class="inline-flex justify-center items-center gap-2 border border-zinc-800 hover:border-zinc-600 text-zinc-400 px-6 py-3 transition-colors bg-transparent">
+                            <i data-lucide="layout-template" class="w-4 h-4"></i> SITE
+                        </a>
+                    </div>
+                </div>
+                <div class="lg:col-span-3 lg:order-2 order-1">
+                    <a href="https://www.amazon.co.uk/dp/B0HM1BCGCZ" target="_blank" rel="noopener" class="group block relative max-w-[14rem] mx-auto" aria-label="View Book Two Kindle Edition on Amazon UK">
+                        <div class="absolute -inset-6 bg-amber-500/5 blur-3xl rounded-full -z-10 group-hover:bg-amber-500/15 transition-all"></div>
+                        <img src="book2-cover.jpg" alt="Front cover of Korg SQ-10 External Processing" loading="lazy" class="w-full h-auto border border-zinc-800 shadow-2xl shadow-black transition-transform duration-500 group-hover:-translate-y-2 group-hover:border-amber-500/50">
+                    </a>
+                </div>
+            </div>
+
+            <hr class="border-zinc-800/80 my-16 max-w-5xl mx-auto">
+
+            <!-- 5. BOOK 01 (MS-10) -->
+            <div id="book1-details" class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center mb-12 reveal scroll-mt-24">
+                <div class="lg:col-span-3">
+                    <a href="https://www.amazon.co.uk/dp/B0HLQ2524M" target="_blank" rel="noopener" class="group block relative max-w-[14rem] mx-auto" aria-label="View Book One Kindle Edition on Amazon UK">
+                        <div class="absolute -inset-6 bg-amber-500/5 blur-3xl rounded-full -z-10 group-hover:bg-amber-500/15 transition-all"></div>
+                        <img src="book1-cover.jpg" alt="Front cover of Korg MS-10 External Processing" loading="lazy" width="1093" height="1650" class="w-full h-auto border border-zinc-800 shadow-2xl shadow-black transition-transform duration-500 group-hover:-translate-y-2 group-hover:border-amber-500/50">
+                    </a>
+                </div>
+
+                <div class="lg:col-span-9">
+                    <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest mb-4">
+                        <span class="border border-amber-500/30 bg-amber-500/10 text-amber-500 px-2 py-1">Book 01</span>
+                        <span class="border border-zinc-700 text-zinc-500 px-2 py-1">Available Now</span>
+                    </div>
+                    <h3 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">01 Korg MS-10 — External Processing</h3>
+                    <p class="text-amber-500 font-mono text-sm mb-5">AN ENGINEER'S MANUAL FOR ANALOGUE RE-AMPING</p>
+                    <p class="text-zinc-400 leading-relaxed mb-6 max-w-2xl">
+                        Digital in. Analogue character out. Route clean digital stems through the Korg MS-10's analogue signal path (VCA, Korg-35 filter, envelope generator, modulation generator and patchbay) and get them back saturated, moving, gated or snapped. A working engineer's manual: repeatable procedures, not one-off recipes.
+                    </p>
+                    <p class="text-zinc-500 font-mono text-[11px] font-bold tracking-widest mb-3">I N S I D E</p>
+                    <ul class="space-y-2 text-sm text-zinc-400 mb-6 max-w-2xl">
+                        <li class="flex gap-3"><span class="text-amber-500 mt-0.5">■</span> Four step-by-step treatment protocols: saturation, filter dynamics, VCA gating, transient reshaping</li>
+                        <li class="flex gap-3"><span class="text-amber-500 mt-0.5">■</span> Routing schematics with waveform and spectrogram references for every treatment</li>
+                        <li class="flex gap-3"><span class="text-amber-500 mt-0.5">■</span> Stem preparation specifications, gain staging and the full hybrid studio signal path</li>
+                    </ul>
+                    <dl class="grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono text-xs mb-6 max-w-2xl border-y border-zinc-800 py-4">
+                        <div><dt class="text-zinc-600 uppercase tracking-widest mb-1">Author</dt><dd class="text-zinc-300">José Velázquez</dd></div>
+                        <div><dt class="text-zinc-600 uppercase tracking-widest mb-1">Published</dt><dd class="text-zinc-300">September 2026</dd></div>
+                        <div class="col-span-2"><dt class="text-zinc-600 uppercase tracking-widest mb-1">ISBN</dt><dd class="text-zinc-300">9798177567976</dd></div>
+                    </dl>
+                    <div class="flex flex-col sm:flex-row gap-4 font-mono">
+                        <a href="https://www.amazon.co.uk/dp/B0HLQ2524M" target="_blank" rel="noopener" class="inline-flex justify-center items-center gap-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 px-6 py-3 font-bold transition-all hover:shadow-[0_0_15px_rgba(245,158,11,0.4)]">
+                            BUY ON AMAZON <i data-lucide="external-link" class="w-4 h-4"></i>
+                        </a>
+                        <a href="analogue_grinder.html" class="inline-flex justify-center items-center gap-2 border border-zinc-800 hover:border-zinc-600 text-zinc-400 px-6 py-3 transition-colors bg-transparent">
+                            <i data-lucide="audio-lines" class="w-4 h-4"></i> AUDIO
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER (bg-zinc-950) -->
+    <footer class="bg-zinc-950 py-12 border-t border-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3 flex-wrap justify-center md:justify-start">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-zinc-600 w-5 h-5">
+                    <path d="M2 12h4v-7h6v14h6v-7h4"/>
+                </svg>
+                <span class="font-mono text-zinc-600 text-xs tracking-widest text-center md:text-left">
+                    VOLTAGE & WAVE STUDIO | patch@voltageandwave.co.uk |
+                    <a href="index.html" class="hover:text-amber-500 transition-colors">MAIN SITE</a> |
+                    <a href="https://reverb.com/uk/shop/voltageandwave" target="_blank" rel="noopener" class="hover:text-amber-500 transition-colors">REVERB SHOP</a>
+                </span>
+            </div>
+            <p class="text-zinc-600 text-xs font-mono text-center">
+                © <span id="year"></span> Analogue Operations. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Icons are decorative: never let a blocked CDN break the rest of the page.
+        function refreshIcons() { if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons(); }
+        window.refreshIcons = refreshIcons;
+        refreshIcons();
+        window.addEventListener('load', refreshIcons);
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Scroll reveals
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); 
+                }
+            });
+        }, { root: null, threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+        revealElements.forEach(el => revealObserver.observe(el));
+    </script>
+</body>
+</html>
