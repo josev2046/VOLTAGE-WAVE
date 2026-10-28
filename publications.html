@@ -1,35 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>VOLTAGE & WAVE // Hardware Capabilities Series</title>
     <meta name="description" content="The Hardware Capabilities Series by José Velázquez, MA. Authentic engineering manuals for analogue re-amping, unquantised step-sequencing, and hardware vocoding.">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Voltage & Wave // Hardware Capabilities Series">
-    <meta property="og:description" content="An engineer's manuals for analogue re-amping, unquantised step-sequencing, and MIDI-to-CV translation.">
-    <meta property="og:image" content="https://voltageandwave.co.uk/book3-cover.jpg">
-    <meta property="og:url" content="https://voltageandwave.co.uk/publications.html">
-    <meta name="twitter:card" content="summary_large_image">
     
-    <!-- Schema for Omnibus Expanded -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Book",
-      "name": "Omnibus Expanded: Voltage, Sequence & Speech (Vols 01–03)",
-      "author": { "@type": "Person", "name": "José Velázquez, MA" },
-      "publisher": { "@type": "Organization", "name": "Voltage & Wave" },
-      "isbn": "9798165763465",
-      "bookFormat": "https://schema.org/Hardcover",
-      "inLanguage": "en-GB",
-      "bookEdition": "Expanded Omnibus Edition",
-      "datePublished": "2026-10-28",
-      "image": "https://voltageandwave.co.uk/book5-cover.png",
-      "url": "https://www.amazon.co.uk/dp/B0HPK17CKW"
-    }
-    </script>
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -57,7 +33,8 @@
         body {
             background-color: #09090b;
             color: #d4d4d8;
-            overflow: hidden;
+            overflow: hidden; /* Lock body scrolling, rely on the container */
+            overscroll-behavior-x: none; /* Prevent iOS swipe-to-go-back interference */
         }
         
         .scanlines::before {
@@ -85,27 +62,34 @@
         .tech-border::before { content: ''; position: absolute; top: 0; left: 0; width: 8px; height: 8px; border-top: 1px solid #f59e0b; border-left: 1px solid #f59e0b; }
         .tech-border::after { content: ''; position: absolute; bottom: 0; right: 0; width: 8px; height: 8px; border-bottom: 1px solid #f59e0b; border-right: 1px solid #f59e0b; }
 
-        /* Professional Tracker Nav Styles */
-        .nav-link { position: relative; color: #71717a; transition: color 0.3s; }
+        /* Desktop Tracker Nav */
+        .nav-link { position: relative; color: #71717a; transition: color 0.3s; cursor: pointer; background: transparent; border: none; padding: 0; font-family: inherit; font-size: inherit; text-transform: inherit; }
         .nav-link:hover { color: #d4d4d8; }
         .nav-link.active { color: #f59e0b; font-weight: 700; }
         .nav-link.active::after {
             content: ''; position: absolute; bottom: -6px; left: 0; width: 100%; height: 2px; background-color: #f59e0b;
         }
+
+        /* Mobile Dots */
+        .mobile-dot { width: 8px; height: 8px; border-radius: 50%; background-color: #3f3f46; transition: all 0.3s; padding: 0; border: none; cursor: pointer; }
+        .mobile-dot.active { background-color: #f59e0b; transform: scale(1.3); }
+        
+        /* Ensures internal scroll areas don't clash with fixed navs */
+        .panel-content { height: 100%; overflow-y: auto; padding-top: 5rem; padding-bottom: 6rem; display: flex; align-items: center; }
     </style>
 </head>
 <body class="antialiased relative selection:bg-amber-500 selection:text-zinc-950">
-    <div class="scanlines fixed inset-0"></div>
+    <div class="scanlines fixed inset-0 pointer-events-none"></div>
 
     <!-- FIXED TOP NAV -->
     <nav class="fixed w-full z-40 top-0 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800/80">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-14 sm:h-16">
                 <a href="index.html" class="flex-shrink-0 flex items-center gap-3 cursor-pointer group">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-amber-500 w-5 h-5 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-amber-500 w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform">
                         <path d="M2 12h4v-7h6v14h6v-7h4"/>
                     </svg>
-                    <span class="font-mono font-bold text-white tracking-widest text-sm">VOLTAGE & WAVE</span>
+                    <span class="font-mono font-bold text-white tracking-widest text-xs sm:text-sm">VOLTAGE & WAVE</span>
                 </a>
                 <div class="hidden md:flex space-x-8 font-mono text-xs tracking-widest items-center">
                     <a href="https://reverb.com/uk/shop/voltageandwave" target="_blank" class="text-zinc-400 hover:text-white transition-colors flex items-center gap-2">
@@ -120,66 +104,60 @@
     </nav>
 
     <!-- HORIZONTAL SCROLL CONTAINER -->
-    <main id="horizontal-container" class="flex overflow-x-auto h-screen w-screen snap-x snap-mandatory scroll-smooth hide-scrollbar relative z-10 pb-16">
+    <main id="horizontal-container" class="flex overflow-x-auto h-[100dvh] w-screen snap-x snap-mandatory hide-scrollbar relative z-10">
         
         <!-- PANEL 01: OVERVIEW -->
-        <section id="panel-1" class="w-screen h-screen flex-shrink-0 snap-center flex items-center justify-center relative overflow-y-auto pt-16 pb-20">
+        <section id="panel-1" class="w-screen h-[100dvh] flex-shrink-0 snap-center relative">
             <div class="absolute inset-0 bg-synth-grid [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10 opacity-50"></div>
-            
-            <div class="max-w-7xl w-full mx-auto px-6 lg:px-8 flex flex-col xl:flex-row items-center gap-16 reveal">
-                <!-- Header -->
-                <div class="flex-1 text-left">
-                    <h1 class="text-5xl sm:text-6xl font-extrabold text-white tracking-tighter mb-4 uppercase leading-none">
-                        The Library
-                    </h1>
-                    <p class="text-lg text-zinc-400 mb-10 max-w-xl font-light leading-relaxed">
-                        The complete operational protocols for analogue re-amping, unquantised step-sequencing, and hardware vocoding. No plugins. No presets. Just pure voltage.
-                    </p>
-                    
-                    <div class="font-mono text-[11px] uppercase tracking-widest border-l-2 border-amber-500 bg-zinc-950 p-6 rounded-sm max-w-sm tech-border">
-                        <div class="grid grid-cols-[auto_1fr] gap-x-8 gap-y-4">
-                            <div class="text-zinc-500 border-b border-zinc-800/60 pb-2">Category</div>
-                            <div class="text-zinc-200 text-right border-b border-zinc-800/60 pb-2">Analogue Operations</div>
-                            <div class="text-zinc-500 border-b border-zinc-800/60 pb-2">Collections</div>
-                            <div class="text-zinc-200 text-right border-b border-zinc-800/60 pb-2">02 Volumes</div>
-                            <div class="text-zinc-500 pt-1">Primary Manuals</div>
-                            <div class="text-zinc-200 text-right pt-1">03 Volumes</div>
+            <div class="panel-content px-6 lg:px-8 max-w-7xl mx-auto">
+                <div class="w-full flex flex-col xl:flex-row items-center gap-12 lg:gap-16 reveal">
+                    <div class="flex-1 text-left w-full mt-4 xl:mt-0">
+                        <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tighter mb-4 uppercase leading-none">
+                            The Library
+                        </h1>
+                        <p class="text-base sm:text-lg text-zinc-400 mb-8 max-w-xl font-light leading-relaxed">
+                            The complete operational protocols for analogue re-amping, unquantised step-sequencing, and hardware vocoding.
+                        </p>
+                        
+                        <div class="font-mono text-[10px] uppercase tracking-widest border-l-2 border-amber-500 bg-zinc-950 p-5 rounded-sm max-w-sm tech-border mb-4 xl:mb-0">
+                            <div class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-3">
+                                <div class="text-zinc-500 border-b border-zinc-800/60 pb-2">Domain</div>
+                                <div class="text-zinc-200 text-right border-b border-zinc-800/60 pb-2">Analogue Ops</div>
+                                <div class="text-zinc-500 border-b border-zinc-800/60 pb-2">Collections</div>
+                                <div class="text-zinc-200 text-right border-b border-zinc-800/60 pb-2">02 Volumes</div>
+                                <div class="text-zinc-500 pt-1">Manuals</div>
+                                <div class="text-zinc-200 text-right pt-1">03 Volumes</div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Grouped Matrix Directory -->
-                <div class="flex-1 w-full flex flex-col gap-8">
-                    <!-- Collections Group -->
-                    <div>
-                        <h4 class="font-mono text-[10px] text-amber-500 uppercase tracking-widest mb-3 border-b border-zinc-800 pb-2">The Collections</h4>
-                        <div class="grid grid-cols-2 gap-4">
-                            <a href="#panel-2" class="bg-zinc-900/50 border border-zinc-800/80 p-5 flex flex-col hardware-card">
-                                <h5 class="text-zinc-100 font-bold text-sm mb-1">Omnibus Expanded</h5>
-                                <p class="text-zinc-500 text-xs">Vols 01–03</p>
-                            </a>
-                            <a href="#panel-3" class="bg-zinc-900/50 border border-zinc-800/80 p-5 flex flex-col hardware-card">
-                                <h5 class="text-zinc-100 font-bold text-sm mb-1">Omnibus Standard</h5>
-                                <p class="text-zinc-500 text-xs">Vols 01–02</p>
-                            </a>
+                    <div class="flex-1 w-full flex flex-col gap-6">
+                        <div>
+                            <h4 class="font-mono text-[10px] text-amber-500 uppercase tracking-widest mb-3 border-b border-zinc-800 pb-2">The Collections</h4>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button onclick="scrollToPanel('panel-2')" class="text-left bg-zinc-900/50 border border-zinc-800/80 p-4 hardware-card w-full">
+                                    <h5 class="text-zinc-100 font-bold text-xs sm:text-sm mb-1">Omnibus Expanded</h5>
+                                    <p class="text-zinc-500 text-[10px] sm:text-xs">Vols 01–03</p>
+                                </button>
+                                <button onclick="scrollToPanel('panel-3')" class="text-left bg-zinc-900/50 border border-zinc-800/80 p-4 hardware-card w-full">
+                                    <h5 class="text-zinc-100 font-bold text-xs sm:text-sm mb-1">Omnibus Standard</h5>
+                                    <p class="text-zinc-500 text-[10px] sm:text-xs">Vols 01–02</p>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <!-- Manuals Group -->
-                    <div>
-                        <h4 class="font-mono text-[10px] text-amber-500 uppercase tracking-widest mb-3 border-b border-zinc-800 pb-2">Primary Manuals</h4>
-                        <div class="grid grid-cols-2 gap-4">
-                            <a href="#panel-4" class="bg-zinc-900/50 border border-zinc-800/80 p-5 flex flex-col hardware-card col-span-2 sm:col-span-1">
-                                <h5 class="text-zinc-100 font-bold text-sm mb-1">03: VC-10</h5>
-                                <p class="text-zinc-500 text-xs">Voces Ex Machina</p>
-                            </a>
-                            <a href="#panel-5" class="bg-zinc-900/50 border border-zinc-800/80 p-5 flex flex-col hardware-card">
-                                <h5 class="text-zinc-100 font-bold text-sm mb-1">02: SQ-10</h5>
-                                <p class="text-zinc-500 text-xs">Off The Grid</p>
-                            </a>
-                            <a href="#panel-6" class="bg-zinc-900/50 border border-zinc-800/80 p-5 flex flex-col hardware-card">
-                                <h5 class="text-zinc-100 font-bold text-sm mb-1">01: MS-10</h5>
-                                <p class="text-zinc-500 text-xs">External Processing</p>
-                            </a>
+                        <div>
+                            <h4 class="font-mono text-[10px] text-amber-500 uppercase tracking-widest mb-3 border-b border-zinc-800 pb-2">Primary Manuals</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <button onclick="scrollToPanel('panel-4')" class="text-left bg-zinc-900/50 border border-zinc-800/80 p-4 hardware-card w-full">
+                                    <h5 class="text-zinc-100 font-bold text-xs sm:text-sm mb-1">03: VC-10</h5>
+                                </button>
+                                <button onclick="scrollToPanel('panel-5')" class="text-left bg-zinc-900/50 border border-zinc-800/80 p-4 hardware-card w-full">
+                                    <h5 class="text-zinc-100 font-bold text-xs sm:text-sm mb-1">02: SQ-10</h5>
+                                </button>
+                                <button onclick="scrollToPanel('panel-6')" class="text-left bg-zinc-900/50 border border-zinc-800/80 p-4 hardware-card w-full">
+                                    <h5 class="text-zinc-100 font-bold text-xs sm:text-sm mb-1">01: MS-10</h5>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -187,24 +165,24 @@
         </section>
 
         <!-- PANEL 02: OMNIBUS EXPANDED -->
-        <section id="panel-2" class="w-screen h-screen flex-shrink-0 snap-center flex items-center justify-center overflow-y-auto py-24 border-l border-zinc-900">
-            <div class="max-w-7xl w-full mx-auto px-6 lg:px-8">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center reveal">
-                    <div class="lg:col-span-5">
-                        <img src="book5-cover.png" alt="Omnibus Expanded" loading="lazy" class="w-full h-auto max-w-[18rem] mx-auto border border-zinc-800 shadow-2xl rounded-sm">
+        <section id="panel-2" class="w-screen h-[100dvh] flex-shrink-0 snap-center border-l border-zinc-900 relative">
+            <div class="panel-content px-6 lg:px-8 max-w-7xl mx-auto">
+                <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center reveal">
+                    <div class="lg:col-span-5 flex justify-center">
+                        <img src="book5-cover.png" alt="Omnibus Expanded" loading="lazy" class="w-full h-auto max-w-[12rem] sm:max-w-[16rem] border border-zinc-800 shadow-2xl rounded-sm">
                     </div>
                     <div class="lg:col-span-7">
-                        <div class="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-4 border-l-2 border-amber-500 pl-3">The Collections</div>
-                        <h3 class="text-4xl sm:text-5xl font-black text-white tracking-tight mb-2">Voltage, Sequence & Speech</h3>
-                        <p class="text-amber-500 font-mono text-sm tracking-wide mb-6">OMNIBUS EXPANDED EDITION (VOLS 01–03)</p>
-                        <p class="text-zinc-400 text-base leading-relaxed mb-8 max-w-2xl">
-                            The complete physical reference manual. This capstone edition consolidates Book 01 (MS-10), Book 02 (SQ-10), and Book 03 (VC-10) into a single master volume covering the entire Voltage & Wave hardware ecosystem.
+                        <div class="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-3 border-l-2 border-amber-500 pl-3">The Collections</div>
+                        <h3 class="text-3xl sm:text-5xl font-black text-white tracking-tight mb-2">Voltage, Sequence & Speech</h3>
+                        <p class="text-amber-500 font-mono text-xs sm:text-sm tracking-wide mb-4">OMNIBUS EXPANDED EDITION (VOLS 01–03)</p>
+                        <p class="text-zinc-400 text-sm sm:text-base leading-relaxed mb-6 max-w-2xl">
+                            The complete physical reference manual. This capstone edition consolidates Book 01, Book 02, and Book 03 into a single master volume covering the entire ecosystem.
                         </p>
-                        <dl class="grid grid-cols-2 gap-y-2 font-mono text-[11px] mb-8 max-w-sm text-zinc-400">
+                        <dl class="grid grid-cols-2 gap-y-2 font-mono text-[10px] sm:text-[11px] mb-6 max-w-sm text-zinc-400">
                             <dt class="text-zinc-600">ISBN</dt><dd class="text-zinc-200">9798165763465</dd>
-                            <dt class="text-zinc-600">Published</dt><dd class="text-zinc-200">October 2026</dd>
+                            <dt class="text-zinc-600">Published</dt><dd class="text-zinc-200">Oct 2026</dd>
                         </dl>
-                        <a href="https://www.amazon.co.uk/dp/B0HPK17CKW" target="_blank" class="inline-block bg-white hover:bg-zinc-200 text-zinc-950 font-mono text-xs font-bold px-8 py-3.5 rounded-sm transition-colors tracking-widest">
+                        <a href="https://www.amazon.co.uk/dp/B0HPK17CKW" target="_blank" class="inline-block bg-white hover:bg-zinc-200 text-zinc-950 font-mono text-[10px] sm:text-xs font-bold px-6 py-3 rounded-sm transition-colors tracking-widest text-center">
                             PURCHASE ON AMAZON
                         </a>
                     </div>
@@ -213,24 +191,24 @@
         </section>
 
         <!-- PANEL 03: OMNIBUS STANDARD -->
-        <section id="panel-3" class="w-screen h-screen flex-shrink-0 snap-center flex items-center justify-center overflow-y-auto py-24 border-l border-zinc-900">
-            <div class="max-w-7xl w-full mx-auto px-6 lg:px-8">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center reveal">
-                    <div class="lg:col-span-5">
-                        <img src="book3-cover.jpg" alt="Omnibus 1-2" loading="lazy" class="w-full h-auto max-w-[18rem] mx-auto border border-zinc-800 shadow-2xl rounded-sm">
+        <section id="panel-3" class="w-screen h-[100dvh] flex-shrink-0 snap-center border-l border-zinc-900 relative">
+            <div class="panel-content px-6 lg:px-8 max-w-7xl mx-auto">
+                <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center reveal">
+                    <div class="lg:col-span-5 flex justify-center">
+                        <img src="book3-cover.jpg" alt="Omnibus 1-2" loading="lazy" class="w-full h-auto max-w-[12rem] sm:max-w-[16rem] border border-zinc-800 shadow-2xl rounded-sm">
                     </div>
                     <div class="lg:col-span-7">
-                        <div class="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-4 border-l-2 border-amber-500 pl-3">The Collections</div>
-                        <h3 class="text-4xl sm:text-5xl font-black text-white tracking-tight mb-2">Re-Amping & CV Sequencing</h3>
-                        <p class="text-amber-500 font-mono text-sm tracking-wide mb-6">OMNIBUS STANDARD EDITION (VOLS 01–02)</p>
-                        <p class="text-zinc-400 text-base leading-relaxed mb-8 max-w-2xl">
-                            Two instruments, one working method. Combines Book 01 and Book 02 into a single studio manual featuring sixteen protocols across the Korg MS-10 and SQ-10 hardware units.
+                        <div class="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-3 border-l-2 border-amber-500 pl-3">The Collections</div>
+                        <h3 class="text-3xl sm:text-5xl font-black text-white tracking-tight mb-2">Re-Amping & CV Sequencing</h3>
+                        <p class="text-amber-500 font-mono text-xs sm:text-sm tracking-wide mb-4">OMNIBUS STANDARD EDITION (VOLS 01–02)</p>
+                        <p class="text-zinc-400 text-sm sm:text-base leading-relaxed mb-6 max-w-2xl">
+                            Two instruments, one working method. Combines Book 01 and Book 02 into a single studio manual featuring sixteen protocols across both hardware units.
                         </p>
-                        <dl class="grid grid-cols-2 gap-y-2 font-mono text-[11px] mb-8 max-w-sm text-zinc-400">
+                        <dl class="grid grid-cols-2 gap-y-2 font-mono text-[10px] sm:text-[11px] mb-6 max-w-sm text-zinc-400">
                             <dt class="text-zinc-600">ISBN</dt><dd class="text-zinc-200">9798160617909</dd>
-                            <dt class="text-zinc-600">Published</dt><dd class="text-zinc-200">October 2026</dd>
+                            <dt class="text-zinc-600">Published</dt><dd class="text-zinc-200">Oct 2026</dd>
                         </dl>
-                        <a href="https://www.amazon.co.uk/dp/B0HMG35T7V/" target="_blank" class="inline-block bg-white hover:bg-zinc-200 text-zinc-950 font-mono text-xs font-bold px-8 py-3.5 rounded-sm transition-colors tracking-widest">
+                        <a href="https://www.amazon.co.uk/dp/B0HMG35T7V/" target="_blank" class="inline-block bg-white hover:bg-zinc-200 text-zinc-950 font-mono text-[10px] sm:text-xs font-bold px-6 py-3 rounded-sm transition-colors tracking-widest text-center">
                             PURCHASE ON AMAZON
                         </a>
                     </div>
@@ -239,154 +217,146 @@
         </section>
 
         <!-- PANEL 04: BOOK 03 (VC-10) -->
-        <section id="panel-4" class="w-screen h-screen flex-shrink-0 snap-center flex items-center justify-center overflow-y-auto py-24 border-l border-zinc-900 bg-zinc-950/40">
-            <div class="max-w-7xl w-full mx-auto px-6 lg:px-8">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center reveal">
+        <section id="panel-4" class="w-screen h-[100dvh] flex-shrink-0 snap-center border-l border-zinc-900 bg-zinc-950/40 relative">
+            <div class="panel-content px-6 lg:px-8 max-w-7xl mx-auto">
+                <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center reveal">
                     <div class="lg:col-span-7 lg:order-1 order-2">
-                        <div class="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-4 border-l-2 border-zinc-600 pl-3">Primary Manuals</div>
-                        <h3 class="text-4xl sm:text-5xl font-black text-white tracking-tight mb-2">03 Korg VC-10</h3>
-                        <p class="text-zinc-300 font-mono text-sm tracking-wide mb-6">VOCES EX MACHINA: HARDWARE VOCODING</p>
-                        <p class="text-zinc-400 text-base leading-relaxed mb-6 max-w-2xl">
-                            Two signals. One voice. The VC-10 splits the job: the voice decides what is said; the carrier decides what it sounds like. Nine dedicated protocols covering voice, carrier, pitch, and print.
+                        <div class="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-3 border-l-2 border-zinc-600 pl-3">Primary Manuals</div>
+                        <h3 class="text-3xl sm:text-5xl font-black text-white tracking-tight mb-2">03 Korg VC-10</h3>
+                        <p class="text-zinc-300 font-mono text-xs sm:text-sm tracking-wide mb-4">VOCES EX MACHINA: HARDWARE VOCODING</p>
+                        <p class="text-zinc-400 text-sm sm:text-base leading-relaxed mb-6 max-w-2xl">
+                            Two signals. One voice. The VC-10 splits the job: the voice decides what is said; the carrier decides what it sounds like. Nine dedicated protocols.
                         </p>
-                        <dl class="grid grid-cols-2 gap-y-2 font-mono text-[11px] mb-8 max-w-sm text-zinc-400">
-                            <dt class="text-zinc-600">ISBN</dt><dd class="text-zinc-200">9798165429125</dd>
-                        </dl>
-                        <div class="flex gap-4 font-mono text-xs tracking-widest">
-                            <a href="https://www.amazon.co.uk/dp/B0HPBMTJNZ" target="_blank" class="bg-zinc-800 hover:bg-zinc-700 text-white px-8 py-3.5 transition-colors rounded-sm">
+                        <div class="flex flex-wrap gap-3 font-mono text-[10px] sm:text-xs tracking-widest">
+                            <a href="https://www.amazon.co.uk/dp/B0HPBMTJNZ" target="_blank" class="bg-zinc-800 hover:bg-zinc-700 text-white px-6 py-3 rounded-sm text-center">
                                 AMAZON
                             </a>
-                            <a href="https://voltageandwave.co.uk/voces_ex_machina.html" class="border border-zinc-700 hover:border-zinc-500 text-zinc-300 px-8 py-3.5 rounded-sm transition-colors">
+                            <a href="https://voltageandwave.co.uk/voces_ex_machina.html" class="border border-zinc-700 hover:border-zinc-500 text-zinc-300 px-6 py-3 rounded-sm text-center">
                                 SPECS & DATA
                             </a>
                         </div>
                     </div>
-                    <div class="lg:col-span-5 lg:order-2 order-1">
-                        <img src="book4-cover.jpg" alt="Book 3" loading="lazy" class="w-full h-auto max-w-[18rem] mx-auto border border-zinc-800 shadow-2xl rounded-sm">
+                    <div class="lg:col-span-5 lg:order-2 order-1 flex justify-center">
+                        <img src="book4-cover.jpg" alt="Book 3" loading="lazy" class="w-full h-auto max-w-[12rem] sm:max-w-[16rem] border border-zinc-800 shadow-2xl rounded-sm">
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- PANEL 05: BOOK 02 (SQ-10) -->
-        <section id="panel-5" class="w-screen h-screen flex-shrink-0 snap-center flex items-center justify-center overflow-y-auto py-24 border-l border-zinc-900 bg-zinc-950/40">
-            <div class="max-w-7xl w-full mx-auto px-6 lg:px-8">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center reveal">
+        <section id="panel-5" class="w-screen h-[100dvh] flex-shrink-0 snap-center border-l border-zinc-900 bg-zinc-950/40 relative">
+            <div class="panel-content px-6 lg:px-8 max-w-7xl mx-auto">
+                <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center reveal">
                     <div class="lg:col-span-7 lg:order-1 order-2">
-                        <div class="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-4 border-l-2 border-zinc-600 pl-3">Primary Manuals</div>
-                        <h3 class="text-4xl sm:text-5xl font-black text-white tracking-tight mb-2">02 Korg SQ-10</h3>
-                        <p class="text-zinc-300 font-mono text-sm tracking-wide mb-6">OFF THE GRID: UNQUANTISED SEQUENCING</p>
-                        <p class="text-zinc-400 text-base leading-relaxed mb-6 max-w-2xl">
-                            The SQ-10 makes no sound. At every step it sends three control voltages. Set pitch by ear and land between the notes a MIDI grid allows. Twelve repeatable procedures laid out as an open spread.
+                        <div class="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-3 border-l-2 border-zinc-600 pl-3">Primary Manuals</div>
+                        <h3 class="text-3xl sm:text-5xl font-black text-white tracking-tight mb-2">02 Korg SQ-10</h3>
+                        <p class="text-zinc-300 font-mono text-xs sm:text-sm tracking-wide mb-4">OFF THE GRID: UNQUANTISED SEQUENCING</p>
+                        <p class="text-zinc-400 text-sm sm:text-base leading-relaxed mb-6 max-w-2xl">
+                            Set pitch by ear and land between the notes a MIDI grid allows. Twelve repeatable procedures laid out as an open spread.
                         </p>
-                        <dl class="grid grid-cols-2 gap-y-2 font-mono text-[11px] mb-8 max-w-sm text-zinc-400">
-                            <dt class="text-zinc-600">ISBN</dt><dd class="text-zinc-200">9798160223087</dd>
-                        </dl>
-                        <div class="flex gap-4 font-mono text-xs tracking-widest">
-                            <a href="https://www.amazon.co.uk/dp/B0HM1BCGCZ" target="_blank" class="bg-zinc-800 hover:bg-zinc-700 text-white px-8 py-3.5 transition-colors rounded-sm">
+                        <div class="flex flex-wrap gap-3 font-mono text-[10px] sm:text-xs tracking-widest">
+                            <a href="https://www.amazon.co.uk/dp/B0HM1BCGCZ" target="_blank" class="bg-zinc-800 hover:bg-zinc-700 text-white px-6 py-3 rounded-sm text-center">
                                 AMAZON
                             </a>
-                            <a href="https://voltageandwave.co.uk/off_the_grid.html" class="border border-zinc-700 hover:border-zinc-500 text-zinc-300 px-8 py-3.5 rounded-sm transition-colors">
+                            <a href="https://voltageandwave.co.uk/off_the_grid.html" class="border border-zinc-700 hover:border-zinc-500 text-zinc-300 px-6 py-3 rounded-sm text-center">
                                 SPECS & DATA
                             </a>
                         </div>
                     </div>
-                    <div class="lg:col-span-5 lg:order-2 order-1">
-                        <img src="book2-cover.jpg" alt="Book 2" loading="lazy" class="w-full h-auto max-w-[18rem] mx-auto border border-zinc-800 shadow-2xl rounded-sm">
+                    <div class="lg:col-span-5 lg:order-2 order-1 flex justify-center">
+                        <img src="book2-cover.jpg" alt="Book 2" loading="lazy" class="w-full h-auto max-w-[12rem] sm:max-w-[16rem] border border-zinc-800 shadow-2xl rounded-sm">
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- PANEL 06: BOOK 01 (MS-10) -->
-        <section id="panel-6" class="w-screen h-screen flex-shrink-0 snap-center flex items-center justify-center overflow-y-auto py-24 border-l border-zinc-900 bg-zinc-950/40">
-            <div class="max-w-7xl w-full mx-auto px-6 lg:px-8">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center reveal">
+        <section id="panel-6" class="w-screen h-[100dvh] flex-shrink-0 snap-center border-l border-zinc-900 bg-zinc-950/40 relative">
+            <div class="panel-content px-6 lg:px-8 max-w-7xl mx-auto">
+                <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center reveal">
                     <div class="lg:col-span-7 lg:order-1 order-2">
-                        <div class="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-4 border-l-2 border-zinc-600 pl-3">Primary Manuals</div>
-                        <h3 class="text-4xl sm:text-5xl font-black text-white tracking-tight mb-2">01 Korg MS-10</h3>
-                        <p class="text-zinc-300 font-mono text-sm tracking-wide mb-6">EXTERNAL PROCESSING: ANALOGUE RE-AMPING</p>
-                        <p class="text-zinc-400 text-base leading-relaxed mb-6 max-w-2xl">
-                            Digital in. Analogue character out. Route clean digital stems through the Korg MS-10's analogue signal path and get them back saturated, moving, gated or snapped.
+                        <div class="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-3 border-l-2 border-zinc-600 pl-3">Primary Manuals</div>
+                        <h3 class="text-3xl sm:text-5xl font-black text-white tracking-tight mb-2">01 Korg MS-10</h3>
+                        <p class="text-zinc-300 font-mono text-xs sm:text-sm tracking-wide mb-4">EXTERNAL PROCESSING: RE-AMPING</p>
+                        <p class="text-zinc-400 text-sm sm:text-base leading-relaxed mb-6 max-w-2xl">
+                            Route clean digital stems through the Korg MS-10's analogue signal path and get them back saturated, moving, gated or snapped.
                         </p>
-                        <dl class="grid grid-cols-2 gap-y-2 font-mono text-[11px] mb-8 max-w-sm text-zinc-400">
-                            <dt class="text-zinc-600">ISBN</dt><dd class="text-zinc-200">9798177567976</dd>
-                        </dl>
-                        <div class="flex gap-4 font-mono text-xs tracking-widest">
-                            <a href="https://www.amazon.co.uk/dp/B0HLQ2524M" target="_blank" class="bg-zinc-800 hover:bg-zinc-700 text-white px-8 py-3.5 transition-colors rounded-sm">
+                        <div class="flex flex-wrap gap-3 font-mono text-[10px] sm:text-xs tracking-widest">
+                            <a href="https://www.amazon.co.uk/dp/B0HLQ2524M" target="_blank" class="bg-zinc-800 hover:bg-zinc-700 text-white px-6 py-3 rounded-sm text-center">
                                 AMAZON
                             </a>
-                            <a href="analogue_grinder.html" class="border border-zinc-700 hover:border-zinc-500 text-zinc-300 px-8 py-3.5 rounded-sm transition-colors">
+                            <a href="analogue_grinder.html" class="border border-zinc-700 hover:border-zinc-500 text-zinc-300 px-6 py-3 rounded-sm text-center">
                                 AUDIO DEMOS
                             </a>
                         </div>
                     </div>
-                    <div class="lg:col-span-5 lg:order-2 order-1">
-                        <img src="book1-cover.jpg" alt="Book 1" loading="lazy" class="w-full h-auto max-w-[18rem] mx-auto border border-zinc-800 shadow-2xl rounded-sm">
+                    <div class="lg:col-span-5 lg:order-2 order-1 flex justify-center">
+                        <img src="book1-cover.jpg" alt="Book 1" loading="lazy" class="w-full h-auto max-w-[12rem] sm:max-w-[16rem] border border-zinc-800 shadow-2xl rounded-sm">
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- PANEL 07: FOOTER -->
-        <section id="panel-7" class="w-screen h-screen flex-shrink-0 snap-center flex items-center justify-center border-l border-zinc-900 bg-zinc-950 relative">
-            <div class="text-center font-mono text-zinc-500 tracking-widest flex flex-col gap-6 items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-zinc-800 w-12 h-12 mb-4">
-                    <path d="M2 12h4v-7h6v14h6v-7h4"/>
-                </svg>
-                <div class="text-xs text-zinc-400">
-                    VOLTAGE & WAVE STUDIO <br><br>
-                    patch@voltageandwave.co.uk
+        <section id="panel-7" class="w-screen h-[100dvh] flex-shrink-0 snap-center border-l border-zinc-900 bg-zinc-950 relative">
+            <div class="panel-content px-6 lg:px-8 max-w-7xl mx-auto flex-col justify-center">
+                <div class="text-center font-mono text-zinc-500 tracking-widest flex flex-col items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-zinc-800 w-10 h-10 mb-6">
+                        <path d="M2 12h4v-7h6v14h6v-7h4"/>
+                    </svg>
+                    <div class="text-[10px] sm:text-xs text-zinc-400 leading-relaxed mb-6">
+                        VOLTAGE & WAVE STUDIO <br><br>
+                        patch@voltageandwave.co.uk
+                    </div>
+                    <div class="flex gap-4 text-[10px] font-bold text-zinc-500">
+                        <a href="index.html" class="hover:text-white transition-colors">MAIN SITE</a>
+                        <span>|</span>
+                        <a href="https://reverb.com/uk/shop/voltageandwave" class="hover:text-white transition-colors">REVERB SHOP</a>
+                    </div>
+                    <p class="text-[10px] mt-12 text-zinc-600">
+                        © <span id="year"></span> ANALOGUE OPERATIONS.
+                    </p>
                 </div>
-                <div class="flex gap-4 text-[10px] mt-4 font-bold text-zinc-500">
-                    <a href="index.html" class="hover:text-white transition-colors">MAIN SITE</a>
-                    <span>|</span>
-                    <a href="https://reverb.com/uk/shop/voltageandwave" class="hover:text-white transition-colors">REVERB SHOP</a>
-                </div>
-                <p class="text-[10px] mt-8 text-zinc-600">
-                    © <span id="year"></span> ANALOGUE OPERATIONS.
-                </p>
             </div>
         </section>
 
     </main>
 
-    <!-- PROFESSIONAL TRACKER NAVIGATION -->
-    <nav class="fixed bottom-0 w-full bg-zinc-950/95 backdrop-blur border-t border-zinc-900 z-50 py-3 hidden md:block">
+    <!-- DESKTOP TRACKER NAV (Hidden on Mobile) -->
+    <nav class="fixed bottom-0 w-full bg-zinc-950/95 backdrop-blur border-t border-zinc-900 z-50 py-4 hidden md:block">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="flex items-center gap-8 font-mono text-[10px] tracking-widest uppercase">
-                <!-- Overview -->
-                <a href="#panel-1" class="nav-link">00 Directory</a>
+                <button onclick="scrollToPanel('panel-1')" data-target="panel-1" class="nav-link">00 Directory</button>
                 
-                <!-- Collections Group -->
                 <div class="flex items-center gap-6 border-l border-zinc-800 pl-8">
-                    <span class="text-zinc-600 font-bold">Collections:</span>
-                    <a href="#panel-2" class="nav-link">Expanded</a>
-                    <a href="#panel-3" class="nav-link">Standard</a>
+                    <span class="text-zinc-600 font-bold pointer-events-none">Collections:</span>
+                    <button onclick="scrollToPanel('panel-2')" data-target="panel-2" class="nav-link">Expanded</button>
+                    <button onclick="scrollToPanel('panel-3')" data-target="panel-3" class="nav-link">Standard</button>
                 </div>
 
-                <!-- Primary Manuals Group -->
                 <div class="flex items-center gap-6 border-l border-zinc-800 pl-8">
-                    <span class="text-zinc-600 font-bold">Manuals:</span>
-                    <a href="#panel-4" class="nav-link">03 VC-10</a>
-                    <a href="#panel-5" class="nav-link">02 SQ-10</a>
-                    <a href="#panel-6" class="nav-link">01 MS-10</a>
+                    <span class="text-zinc-600 font-bold pointer-events-none">Manuals:</span>
+                    <button onclick="scrollToPanel('panel-4')" data-target="panel-4" class="nav-link">03 VC-10</button>
+                    <button onclick="scrollToPanel('panel-5')" data-target="panel-5" class="nav-link">02 SQ-10</button>
+                    <button onclick="scrollToPanel('panel-6')" data-target="panel-6" class="nav-link">01 MS-10</button>
                 </div>
                 
-                <!-- End -->
                 <div class="flex-grow flex justify-end">
-                    <a href="#panel-7" class="nav-link">End</a>
+                    <button onclick="scrollToPanel('panel-7')" data-target="panel-7" class="nav-link">End</button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- MOBILE SIMPLE NAV (Visible only on small screens) -->
-    <nav class="fixed bottom-0 w-full bg-zinc-950/95 backdrop-blur border-t border-zinc-900 z-50 py-3 md:hidden flex justify-center gap-4 font-mono text-[10px] uppercase">
-        <a href="#panel-1" class="nav-link px-2">Dir</a>
-        <a href="#panel-2" class="nav-link px-2">Col</a>
-        <a href="#panel-4" class="nav-link px-2">Man</a>
-        <a href="#panel-7" class="nav-link px-2">End</a>
+    <!-- MOBILE PAGINATION DOTS (Hidden on Desktop) -->
+    <nav class="fixed bottom-6 w-full z-50 md:hidden flex justify-center gap-3">
+        <button onclick="scrollToPanel('panel-1')" data-target="panel-1" class="mobile-dot" aria-label="Overview"></button>
+        <button onclick="scrollToPanel('panel-2')" data-target="panel-2" class="mobile-dot" aria-label="Expanded"></button>
+        <button onclick="scrollToPanel('panel-3')" data-target="panel-3" class="mobile-dot" aria-label="Standard"></button>
+        <button onclick="scrollToPanel('panel-4')" data-target="panel-4" class="mobile-dot" aria-label="VC-10"></button>
+        <button onclick="scrollToPanel('panel-5')" data-target="panel-5" class="mobile-dot" aria-label="SQ-10"></button>
+        <button onclick="scrollToPanel('panel-6')" data-target="panel-6" class="mobile-dot" aria-label="MS-10"></button>
+        <button onclick="scrollToPanel('panel-7')" data-target="panel-7" class="mobile-dot" aria-label="End"></button>
     </nav>
 
     <script>
@@ -395,9 +365,20 @@
 
         const scrollContainer = document.getElementById('horizontal-container');
         const sections = document.querySelectorAll('section[id^="panel-"]');
-        const navLinks = document.querySelectorAll('.nav-link');
+        
+        // Navigation buttons
+        const desktopLinks = document.querySelectorAll('.nav-link');
+        const mobileDots = document.querySelectorAll('.mobile-dot');
 
-        // Translate vertical mouse wheel scrolling to horizontal scroll
+        // Smooth scroll via JS to prevent native CSS anchor diagonal jumps
+        window.scrollToPanel = function(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+            }
+        };
+
+        // Scrolljacking for vertical mouse wheels on desktop
         scrollContainer.addEventListener('wheel', (evt) => {
             if (Math.abs(evt.deltaY) > Math.abs(evt.deltaX)) {
                 evt.preventDefault();
@@ -408,10 +389,10 @@
             }
         }, { passive: false });
 
-        // Update Tracker Navigation active states
+        // Update nav active states and trigger reveals based on scroll position
         const observerOptions = {
             root: scrollContainer,
-            threshold: 0.5
+            threshold: 0.6 // Trigger when 60% of panel is visible
         };
 
         const observer = new IntersectionObserver((entries) => {
@@ -419,15 +400,17 @@
                 if (entry.isIntersecting) {
                     const id = entry.target.getAttribute('id');
                     
-                    // Update all nav links (desktop and mobile)
-                    navLinks.forEach(link => {
-                        link.classList.remove('active');
-                        if(link.getAttribute('href') === `#${id}`) {
-                            link.classList.add('active');
-                        }
+                    // Update Desktop Nav
+                    desktopLinks.forEach(link => {
+                        link.classList.toggle('active', link.getAttribute('data-target') === id);
                     });
 
-                    // Trigger reveal animations
+                    // Update Mobile Dots
+                    mobileDots.forEach(dot => {
+                        dot.classList.toggle('active', dot.getAttribute('data-target') === id);
+                    });
+
+                    // Trigger internal reveal animations
                     const reveals = entry.target.querySelectorAll('.reveal');
                     reveals.forEach(el => el.classList.add('active'));
                 }
