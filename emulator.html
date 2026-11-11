@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KORG MS-10 // Emulation & Settings</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -27,6 +27,9 @@ body { background: #050505; color: #d4d4d8; }
 }
 input[type=search]::-webkit-search-cancel-button { -webkit-appearance: none; }
 input[type=range] { accent-color: #fbbf24; }
+/* Patch cord tags */
+.tag { padding: .25rem .5rem; border: 1px solid rgba(245,158,11,.35); border-radius: .25rem; background: rgba(245,158,11,.1); color: #fbbf24; }
+.hint { color: #71717a; }
 /* SVG UI Styling */
 svg.ms { display: block; min-width: 760px; width: 100%; height: auto; touch-action: none; user-select: none; -webkit-user-select: none; }
 svg.ms text { font-family: 'JetBrains Mono', monospace; font-stretch: 90%; }
@@ -46,10 +49,10 @@ svg.ms text { font-family: 'JetBrains Mono', monospace; font-stretch: 90%; }
 <nav class="fixed w-full z-40 top-0 bg-[#050505]/90 backdrop-blur-md border-b border-zinc-800">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center h-16">
-      <a href="#" class="flex items-center gap-3" aria-label="Home">
+      <a href="index.html" class="flex items-center gap-3" aria-label="Home">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" class="text-amber-500 w-6 h-6"><path d="M2 12h4v-7h6v14h6v-7h4"/></svg>
       </a>
-      <a href="#" class="font-mono text-sm text-zinc-400 hover:text-amber-500 transition-colors">← RETURN</a>
+      <a href="index.html" class="font-mono text-sm text-zinc-400 hover:text-amber-500 transition-colors">← RETURN</a>
     </div>
   </div>
 </nav>
@@ -64,12 +67,12 @@ svg.ms text { font-family: 'JetBrains Mono', monospace; font-stretch: 90%; }
       </div>
       <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight mb-6 uppercase">MS-10 <span class="text-amber-500 glow-text">Web Audio</span></h1>
       <p class="text-lg text-zinc-400 font-light mb-8 leading-relaxed max-w-3xl">
-        Drag knobs, click switches, or play the keys directly on screen (or use keys A–;). Use ↑ and ↓ arrows for the modulation wheel. Includes all 30 classic factory patches and an interactive scope.
+        Drag knobs, click switches, or play the keys directly on screen (or use keys A–;). Use ↑ and ↓ arrows for the modulation wheel. Includes all 30 classic Setting Examples and an interactive scope.
       </p>
       
       <div class="bg-zinc-900/50 border border-amber-500/20 rounded-xl p-5 mb-2 max-w-4xl shadow-lg backdrop-blur-sm">
         <p class="text-sm text-zinc-300 font-light leading-relaxed mb-4">
-          This interactive emulator is an educational homage to my very first synthesizer and a love letter to the gritty, screaming sound of the original KORG-35 filter chip. While the routing and logic are functionally identical to the classic 1978 patch sheets, this native Web Audio API approximation will sound noticeably cleaner and tamer than the physical hardware. It lacks the subtle tuning drift of true analogue circuitry, the snappy capacitor-driven envelopes, and the raw analogue distortion of the original units. Audio-rate modulations may also exhibit mild digital aliasing. 
+          This interactive emulator is an educational homage to my very first synthesiser and a love letter to the gritty, screaming sound of the original KORG-35 filter chip. While the routing and logic are functionally identical to the classic 1978 patch sheets, this native Web Audio API approximation will sound noticeably cleaner and tamer than the physical hardware. It lacks the subtle tuning drift of true analogue circuitry, the snappy capacitor-driven envelopes, and the raw analogue distortion of the original units. Audio-rate modulations may also exhibit mild digital aliasing. 
         </p>
         <p class="text-sm text-zinc-300 font-light leading-relaxed mb-5">
           For a deep dive into the engineering, signal flows, and history of classic hardware like this, check out my publications at <a href="https://voltageandwave.co.uk/publications.html" target="_blank" class="text-amber-400 hover:text-amber-300 underline underline-offset-4 decoration-amber-500/30 transition-colors font-semibold">Voltage & Wave</a>.
@@ -160,30 +163,30 @@ const R=[
 [5,'Oboe','Instruments','Replicates a thick double-reed timbre. Drop the octave scale down for a convincing bassoon substitute.',[8,'q',0,7,0,null,1,0,6.5,4,0,7,'t',3.5,0,1,3,7,1]],
 [6,'Ocarina','Instruments','A darker, hollower tone than the flute, achieved by filtering a triangle wave down into a pure sine-like shape.',[4,'t',0,null,0,null,1,2,5.5,0,0,10,'t',3.5,0,1,2,10,1]],
 [7,'Violin','Instruments','A rich sawtooth wave providing even harmonics. Layer multiple recordings with slight filter variations to build a string ensemble.',[8,'s',0,null,2,null,1,0,7.5,4,0,0,'t',3.5,0,1.5,0,10,1]],
-[8,'Cello','Instruments','Designed for sweeping, slow melodies. Using the mod wheel to control FM and VCA simulates expressive bowing and vibrato.',[32,'s',0,null,3,null,0,1.5,5.5,7,0,0,'t',3.5,0,1.5,0,10,1],['WHL>FM','WHL>VCA'],'up'],
+[8,'Cello','Instruments','Designed for sweeping, slow melodies. Using the mod wheel to control FM and VCA simulates expressive bowing and vibrato. (The original pairs this with a foot pedal; here the wheel stands in. The booklet\u2019s prose also hints at an alternative FM setup, MG at 1 and EG/EXT at 0, if you fancy experimenting.)',[32,'s',0,null,3,null,0,1.5,5.5,7,0,0,'t',3.5,0,1.5,0,10,1],['WHL>FM','WHL>VCA'],'up'],
 [9,'Accordion','Instruments','Employs slow pulse-width modulation from the LFO to create a thick, detuned dual-reed effect.',[16,'q',0,6,0,null,0,0,7.5,3,0,0,'t',0,0,1,3,6.5,1],['MGT>PWM']],
 [10,'Electric Piano','Instruments','A softened pulse wave mimics a classic tine piano, with the modulation generator driving the filter for a subtle tremolo.',[8,'q',0,4,0,null,0,0,5,3,3,6,'t',3.5,0,0,1.5,3,1]],
 [11,'Clavinet','Instruments','Relies almost entirely on the raw VCO pulse shape. Adjust the pulse width carefully to capture that funky, string-plucked bite.',[16,'q',0,8,0,null,0,0,10,0,0,0,null,null,0,0,1,2,0]],
-[12,'Banjo','Instruments','A sharp, plucky transient forced into a harsh decay by the reverse envelope. Tweak the filter to simulate a shamisen.',[8,'q',0,7,0,null,0,0,7,2,0,3,null,null,0,0,1,0,1],['EGR>FC']],
+[12,'Banjo','Instruments','A sharp, plucky transient forced into a harsh decay by the reverse envelope. Tweak the filter to simulate a shamisen. (Note: the pluck lasts barely a heartbeat, so it lands closer to a rubber band than a porch banjo.)',[8,'q',0,7,0,null,0,0,7,2,0,3,null,null,0,0,1,0,1],['EGR>FC']],
 [13,'Electric Bass','Instruments','A foundational low-end patch. Use the filter controls to shape the precise character of the bassline.',[32,'s',0,null,0,null,0,0,4.5,7,0,6,null,null,0,0,1.5,3,1]],
 [14,'Timpani','Instruments','Blends pink noise with a low triangle wave via the patch panel to emulate the boom and skin-rattle of a kettle drum.',[32,'t',0,null,0,1,0,0,4.5,7,0,4,null,null,0,0,2,0,2],['PINK>EXT']],
-[15,'Cow-bell','Instruments','Pushes the filter into extreme self-oscillation to act as the primary sound source. Adjust the cutoff to tune the bell.',[0,'q',0,2,0,null,0,0,5,10,0,2,null,null,0,0,0,0,0],['WHL>FC'],'both'],
+[15,'Cow-bell','Instruments','Pushes the filter into extreme self-oscillation to act as the primary sound source. Adjust the cutoff to tune the bell. (Note: the emulated bell is a brief blip rather than a ring, so it\u2019s less \u201cmore cowbell\u201d and more \u201ca thimble being tapped\u201d.)',[0,'q',0,2,0,null,0,0,5,10,0,2,null,null,0,0,0,0,0],['WHL>FC'],'both'],
 [16,'Whistle','Instruments','Noise-driven pitch modulation creates an unsteady, breathy tone. Turn down the FM envelope for a purer whistle.',[4,'t',5,null,6,null,1,1,6,4,0,0,'t',3.5,0,2.5,3.5,3.5,1],['PINK>FM']],
-[17,'Synthesizer 1','Synth','A classic progressive rock lead featuring thick, sweeping pulse-width modulation driven by the LFO.',[32,'q',0,6,2,null,0,0,6.5,7.5,0,8,'t',.5,0,0,3,7,3],['MGT>PWM']],
-[18,'Synthesizer 2','Synth','A performance patch designed for pitch bending. Calibrate the FM depth so the mod wheel spans exactly one octave.',[16,'s',0,null,3,null,0,4.5,6.5,7,0,0,null,null,0,0,2,5,0],['WHL>FM'],'both'],
-[19,'Synthesizer 3','Synth','An auto-wah effect generated by routing the LFO to the filter cutoff, creating a rounded, sci-fi atmosphere.',[8,'q',0,6,0,null,0,0,4.5,7.5,4,7,'t',3,0,.5,2,3,2]],
-[20,'Synthesizer 4','Synth','A versatile, cutting lead tone reminiscent of vintage television themes. Experiment with the waveform and filter settings.',[16,'q',0,5,0,null,1,3,5.5,8,0,10,'t',4,0,1,1,7,1],['WHL>FM'],'both'],
+[17,'Synthesiser 1','Synth','A classic progressive rock lead featuring thick, sweeping pulse-width modulation driven by the LFO.',[32,'q',0,6,2,null,0,0,6.5,7.5,0,8,'t',.5,0,0,3,7,3],['MGT>PWM']],
+[18,'Synthesiser 2','Synth','A performance patch designed for pitch bending. Calibrate the FM depth so the mod wheel spans exactly one octave.',[16,'s',0,null,3,null,0,4.5,6.5,7,0,0,null,null,0,0,2,5,0],['WHL>FM'],'both'],
+[19,'Synthesiser 3','Synth','An auto-wah effect generated by routing the LFO to the filter cutoff, creating a rounded, sci-fi atmosphere.',[8,'q',0,5,0,null,0,0,4.5,7.5,4,7,'t',3,0,.5,2,3,2]],
+[20,'Synthesiser 4','Synth','A versatile, cutting lead tone reminiscent of vintage television themes. Experiment with the waveform and filter settings.',[16,'q',0,5,0,null,1,3,5.5,8,0,10,'t',4,0,1,1,7,1],['WHL>FM'],'both'],
 [21,'Falling Star','Sound effects','Uses the self-oscillating filter as the oscillator, with the envelope and LFO dragging the pitch downwards.',[0,'q',0,2,0,null,0,0,6,10,6,8,'q',5,7,0,5,0,0]],
 [22,'Machine Gun','Sound effects','The LFO rapidly triggers the self-oscillating filter. Adjust the modulation rate to change the firing speed.',[0,'q',0,2,0,null,0,0,4,10,10,0,'q',6,0,0,0,10,0]],
 [23,'Telephone Busy Tone','Sound effects','A single held key provides the pitch while the LFO square wave repeatedly triggers the envelope. Increase resonance for grit.',[4,'q',0,7,0,null,0,2,5,9,0,7,'t',1,0,0,0,10,0],['MGS>TRG'],'',[2]],
-[24,'Police Siren','Sound effects','A sawtooth LFO modulates the main oscillator pitch to create a continuous, rising and falling emergency wail.',[8,'q',0,5,0,null,5,0,5,5,0,0,'s',2,0,0,0,10,0],[],'',[11]],
-[25,'Dog Barking','Sound effects','The envelope simultaneously sweeps pitch and filter cutoff. Timing your keystrokes mimics the barks. (Note: Because this emulator is a clean digital approximation, this patch sounds more like a sad sci-fi laser than a canine!).',[8,'q',0,4,0,null,0,3,4,7.5,0,7,null,null,0,.5,3,0,1],[],'',[9,11]],
-[26,'Ghost','Sound effects','The reverse envelope creates a slow, eerie pitch bend while the LFO introduces a rapid, spectral vibrato.',[4,'q',0,5,0,null,2,2,5,6,0,5,'s',3,0,2,4,3,1.5],['EGR>FM']],
-[27,'Storm','Sound effects','A noise-based patch where holding a key swells the wind and rain. Use the mod wheel to control the overall volume.',[0,'n',0,null,0,null,0,0,5,8,0,5,null,null,6,5,6,10,6],['WHL>VCA'],'both'],
+[24,'Police Siren','Sound effects','A sawtooth LFO modulates the main oscillator pitch to create a continuous, rising and falling emergency wail. (Note: the wail only swings about four semitones here, so it\u2019s less \u201cpull over!\u201d and more \u201cexcuse me, officer\u201d.)',[8,'q',0,5,0,null,5,0,5,5,0,0,'s',2,0,0,0,10,0],[],'',[11]],
+[25,'Dog Barking','Sound effects','The envelope simultaneously sweeps pitch and filter cutoff. Timing your keystrokes mimics the barks. (Note: Because this emulator is a clean digital approximation, this patch sounds more like a sad sci-fi laser than a canine!).',[8,'q',0,7,0,null,0,3,4,7.5,0,7,null,null,0,.5,3,0,1],[],'',[9,11]],
+[26,'Ghost','Sound effects','The reverse envelope creates a slow, eerie pitch bend while the LFO introduces a rapid, spectral vibrato. (Note: the haunting is subtle in our version: more draughty corridor than haunted house.)',[4,'q',0,5,0,null,2,2,5,6,0,5,'s',3,0,2,4,3,1.5],['EGR>FM']],
+[27,'Storm','Sound effects','A noise-based patch where holding a key swells the wind and rain. Use the mod wheel to control the overall volume. (The wheel starts partway up, as in the booklet; pull it fully down and the weather is cancelled.)',[0,'n',0,null,0,null,0,0,5,8,0,5,null,null,6,5,6,10,6],['WHL>VCA'],'both'],
 [28,'Lightning','Sound effects','Combines white and pink noise, driving them hard through the filter to simulate a sharp, crackling thunderstrike.',[0,'n',0,null,0,6,0,0,5,8,2,8,'s',0,5,0,10,5,10],['PINK>EXT']],
-[29,'Wave on a Cliff','Sound effects','Purely noise-driven. Holding a key creates a swelling envelope that mimics a wave crashing against rocks.',[0,'n',0,null,0,2,0,0,6.5,0,0,9,null,null,7.5,7,1,3,1.5],['PINK>EXT','EGR>FC','WHL>VCA'],'both'],
-[30,'A Jet at an Airport','Sound effects','A rising and falling envelope simulates a passing turbine, while pink noise modulates the pulse width for exhaust rumble.',[4,'q',0,4,0,null,0,5,5,5,0,10,null,null,9,10,0,10,10],['PINK>PWM','WHL>VCA'],'both']
-].map(r=>({n:r[0],nm:r[1],cat:r[2],d:r[3],s:r[4],cab:r[5]||[],wh:r[6]||'',fg:r[7]||[]}));
+[29,'Wave Beating Against a Cliff','Sound effects','Purely noise-driven. Holding a key creates a swelling envelope that mimics a wave crashing against rocks. (Note: the wheel starts partway up, as in the booklet, and this one is far quieter than the original sea, so turn up the volume; it\u2019s a wave in a teacup. Pull the wheel fully down and the sea goes flat.)',[0,'n',0,null,0,2,0,0,6.5,0,0,9,null,null,7.5,7,1,3,1.5],['PINK>EXT','EGR>FC','WHL>VCA'],'both'],
+[30,'A Jet at an Airport','Sound effects','A rising and falling envelope simulates a passing turbine, while pink noise modulates the pulse width for exhaust rumble. (The wheel starts partway up, as in the booklet; with it fully down, the plane stays grounded.)',[4,'q',0,4,0,null,0,5,5,5,0,10,null,null,9,10,0,10,10],['PINK>PWM','WHL>VCA'],'both']
+].map(r=>({n:r[0],nm:r[1],cat:r[2],d:r[3],s:r[4],cab:r[5]||[],wh:r[6]||'',fg:r[7]||[],w0:({27:.4,29:.5,30:.3})[r[0]]||0}));
 
 /* ---------- state ---------- */
 const $=s=>document.querySelector(s);
@@ -345,7 +348,7 @@ const hl=()=>document.querySelectorAll('[data-s]').forEach(e=>e.classList.toggle
 
 /* ---------- audio engine ---------- */
 let ac,outG,an,V=null,nW,nP,vol=.7,dispT;
-const mapFc=v=>40*Math.pow(2,v*.9),mgHz=v=>.5*Math.pow(2,.93*(v||0)),tm=v=>v<=0?.003:.003*Math.pow(10,.36*v);
+const mapFc=v=>40*Math.pow(2,v*.9),mgHz=v=>.5*Math.pow(2,.93*(v||0)),tm=v=>v<=0?.003:.003*Math.pow(10,.36*v),dm=v=>Math.max(.06,tm(v));
 function init(){if(ac){ac.state==='suspended'&&ac.resume();return}
  ac=new (window.AudioContext||window.webkitAudioContext)();const cp=ac.createDynamicsCompressor();outG=ac.createGain();outG.gain.value=vol;
  an=ac.createAnalyser();an.fftSize=2048;an.smoothingTimeConstant=.7;cp.connect(outG);outG.connect(an);an.connect(ac.destination);ac.cp=cp;
@@ -372,23 +375,27 @@ function build(){const s=cur.s,v={all:[],tm:[]},N=(f,...a)=>ac[f](...a);
  const ex=jk('EXT');if(ex){v.gEx=G(0);S(ex).connect(v.gEx);v.gEx.connect(pre)}
  v.gFcM=G(0);v.mg.connect(v.gFcM);v.gFcM.connect(v.fb);const fcs=jk('FC','EG');v.gFcE=G(0);S(fcs).connect(v.gFcE);v.gFcE.connect(v.fb);v.fc=nzs(fcs);
  v.so=src('sine',500);v.so.detune.value=0;v.fb.connect(v.so.detune);v.sg=G(0);v.so.connect(v.sg);
- const vca=G(0);v.vcf.connect(vca);v.sg.connect(vca);const ge=G(.9);v.eg.connect(ge);ge.connect(vca.gain);
- const vs=jk('VCA');if(vs){const g=G(.9);S(vs).connect(g);g.connect(vca.gain)}
+ const vca=G(0);v.vcf.connect(vca);v.sg.connect(vca);
+ /* VCA control sum is clamped at zero so a negative wheel value silences instead of inverting.
+    Sum gain .5 + shaper curve [0,0,2] keeps positive values identical to the old direct sum. */
+ const vsum=G(.5),clip=N('createWaveShaper');clip.curve=new Float32Array([0,0,2]);vsum.connect(clip);clip.connect(vca.gain);
+ const ge=G(.9);v.eg.connect(ge);ge.connect(vsum);
+ const vs=jk('VCA');if(vs){const g=G(.9);S(vs).connect(g);g.connect(vsum)}
  v.out=G(1.1);vca.connect(v.out);v.out.connect(ac.cp);v.trg=cur.cab.some(c=>c.endsWith('>TRG'));v.nodes=[vca,v.out];v.v=vca;
  apply(v);return v}
 function apply(v=V){if(!v)return;const s=cur.s,t=ac.currentTime,st=(p,x)=>p.setTargetAtTime(x,t,.02);
  const hzf=mapFc(s[8]);st(v.vcf.frequency,hzf);st(v.vcf.Q,s[9]*2.4);st(v.so.frequency,hzf);
  const mf=mgHz(s[13]);[v.mg,v.mgT,v.mgS].forEach(o=>st(o.frequency,mf));
  v.osc&&st(v.osc.detune,s[2]*100);
- v.gFmM&&st(v.gFmM.gain,s[6]*40);v.gFmE&&st(v.gFmE.gain,s[7]*267*v.fm*(s[1]==='s'||1));
+ v.gFmM&&st(v.gFmM.gain,s[6]*40);v.gFmE&&st(v.gFmE.gain,s[7]*267*v.fm);
  st(v.gFcM.gain,s[10]*270);st(v.gFcE.gain,s[11]*540*v.fc);
  st(v.sg.gain,Math.max(0,Math.min(1,(s[9]-8)/2))*.4);
- v.pwc&&st(v.pwc.offset,(s[3]==null?0:s[3]/10*1.8-.9));v.gEx&&st(v.gEx.gain,(s[5]||0)/10*1.4);
+ v.pwc&&st(v.pwc.offset,(s[3]==null?0:s[3]/10*1.8-.9));v.gEx&&st(v.gEx.gain,2*Math.pow((s[5]||0)/10,.7));
  v.mgf=mf}
 function gOn(){const s=cur.s,o=V.eg.offset,t=ac.currentTime,a=tm(s[15]),h=tm(s[14]);
  o.cancelAndHoldAtTime?o.cancelAndHoldAtTime(t):o.cancelScheduledValues(t);o.setValueAtTime(o.value,t);
- o.linearRampToValueAtTime(1,t+a);o.setValueAtTime(1,t+a+(s[14]?h:0));o.setTargetAtTime(s[17]/10,t+a+(s[14]?h:0),tm(s[16])/3)}
-function gOff(){const o=V.eg.offset,t=ac.currentTime;o.cancelAndHoldAtTime?o.cancelAndHoldAtTime(t):o.cancelScheduledValues(t);o.setValueAtTime(o.value,t);o.setTargetAtTime(0,t,Math.max(.004,tm(cur.s[18])/3))}
+ o.linearRampToValueAtTime(1,t+a);o.setValueAtTime(1,t+a+(s[14]?h:0));o.setTargetAtTime(s[17]/10,t+a+(s[14]?h:0),dm(s[16])/3)}
+function gOff(){const o=V.eg.offset,t=ac.currentTime;o.cancelAndHoldAtTime?o.cancelAndHoldAtTime(t):o.cancelScheduledValues(t);o.setValueAtTime(o.value,t);o.setTargetAtTime(0,t,Math.max(.004,dm(cur.s[18])/3))}
 function pitch(sn,first){if(!V.osc)return;const f=hz(sn)*({32:.25,16:.5,8:1,4:2})[cur.s[0]],t=ac.currentTime;
  first||cur.s[4]===0?V.osc.frequency.setValueAtTime(f,t):V.osc.frequency.setTargetAtTime(f,t,.02*Math.pow(1.55,cur.s[4]))}
 function kill(v,fade=.05){if(!v)return;clearInterval(v.iv);const t=ac.currentTime;v.out.gain.cancelScheduledValues(t);v.out.gain.setTargetAtTime(0,t,fade/3);setTimeout(()=>{v.all.forEach(o=>{try{o.stop()}catch(e){}});v.out.disconnect()},fade*1000*4+60)}
@@ -396,7 +403,7 @@ function noteOn(sn){init();clearTimeout(dispT);const first=!V||!held.length;if(!
  held=held.filter(x=>x!==sn);held.push(sn);pitch(sn,first);
  if(V.trg){if(first){let ph=1;gOn();clearInterval(V.iv);V.iv=setInterval(()=>{ph^=1;ph?gOn():gOff()},500/V.mgf)}}else gOn();hl()}
 function noteOff(sn){held=held.filter(x=>x!==sn);hl();if(!V)return;if(held.length){pitch(held[held.length-1]);return}
- clearInterval(V.iv);gOff();const v=V;dispT=setTimeout(()=>{if(V===v&&!held.length){kill(v,.1);V=null}},tm(cur.s[18])*1500+400)}
+ clearInterval(V.iv);gOff();const v=V;dispT=setTimeout(()=>{if(V===v&&!held.length){kill(v,.1);V=null}},dm(cur.s[18])*1500+400)}
 function panic(){held=[];kill(V,.08);V=null;clearTimeout(dispT);hl()}
 
 /* ---------- scope ---------- */
@@ -419,7 +426,7 @@ function setWheel(val) {
   render();
 }
 function setPatch(i,keep){
- idx=i;base=R[i];cur=JSON.parse(JSON.stringify(base));edited=false;wheel=0;if(!keep)panic();
+ idx=i;base=R[i];cur=JSON.parse(JSON.stringify(base));edited=false;wheel=base.w0;if(!keep)panic();
  $('#num').textContent='Example '+String(base.n).padStart(2,'0')+' // '+base.cat;
  $('#nm').textContent=base.nm;
  $('#desc').textContent=base.d;
@@ -429,7 +436,7 @@ function setPatch(i,keep){
  render();lst()
 }
 function lst(){
- const L=$('#list');L.innerHTML='';
+ const L=$('#list'),top=L.scrollTop;L.innerHTML='';
  R.forEach((p,i)=>{
   if((cat!=='All'&&p.cat!==cat)||(qs&&!p.nm.toLowerCase().includes(qs)))return;
   const b=document.createElement('button');
@@ -438,7 +445,8 @@ function lst(){
                          : 'bg-transparent border-transparent text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200');
   b.innerHTML=`<span class="text-amber-400 mr-2 opacity-70">${String(p.n).padStart(2,'0')}</span>${p.nm}`;
   b.onclick=()=>setPatch(i);L.appendChild(b)
- })
+ });
+ L.scrollTop=top
 }
 ['All','Instruments','Synth','Sound effects'].forEach(c=>{
  const b=document.createElement('button');
@@ -496,7 +504,7 @@ box.addEventListener('pointermove',e=>{if(drag&&drag.k){const i=K[drag.k],lo=dra
   if(v!==cur.s[i]){cur.s[i]=v;touched();apply();render()}}
  else if(drag&&drag.w)moveW(e);
  else if(ptrKey!=null&&e.buttons){const k=e.target.closest&&e.target.closest('[data-s]')||document.elementFromPoint(e.clientX,e.clientY)?.closest?.('[data-s]');if(k&&+k.dataset.s!==ptrKey){const o=ptrKey;ptrKey=+k.dataset.s;noteOn(ptrKey);noteOff(o)}}});
-const up=()=>{if(drag&&drag.w){setWheel(0);}drag=null;if(ptrKey!=null){noteOff(ptrKey);ptrKey=null}};
+const up=()=>{if(drag&&drag.w){setWheel(base.w0);}drag=null;if(ptrKey!=null){noteOff(ptrKey);ptrKey=null}};
 box.addEventListener('pointerup',up);box.addEventListener('pointercancel',up);
 box.addEventListener('dblclick',e=>{const k=e.target.closest('[data-k]');if(k){cur.s[K[k.dataset.k]]=base.s[K[k.dataset.k]];apply();render()}});
 const KM={a:7,w:8,s:9,e:10,d:11,f:12,t:13,g:14,y:15,h:16,u:17,j:18,k:19,o:20,l:21,p:22,';':23};
@@ -512,7 +520,7 @@ addEventListener('keydown',e=>{
  
 addEventListener('keyup',e=>{
  if(e.code==='Space'){noteOff(auSn());return}
- if(e.key==='ArrowUp' || e.key==='ArrowDown'){setWheel(0);return}
+ if(e.key==='ArrowUp' || e.key==='ArrowDown'){setWheel(base.w0);return}
  const s=KM[e.key.toLowerCase()];if(s!=null)noteOff(s)});
  
 addEventListener('blur',panic);
