@@ -49,9 +49,7 @@ svg.ms text { font-family: 'JetBrains Mono', monospace; font-stretch: 90%; }
 <nav class="fixed w-full z-40 top-0 bg-[#050505]/90 backdrop-blur-md border-b border-zinc-800">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center h-16">
-      <a href="index.html" class="flex items-center gap-3" aria-label="Home">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" class="text-amber-500 w-6 h-6"><path d="M2 12h4v-7h6v14h6v-7h4"/></svg>
-      </a>
+      <div class="flex items-center gap-4"><button type="button" id="logo" class="flex items-center cursor-pointer" aria-label="MS-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" class="text-amber-500 w-6 h-6"><path d="M2 12h4v-7h6v14h6v-7h4"/></svg></button><span id="egg" class="hidden font-mono text-[10px] sm:text-xs text-amber-400 uppercase tracking-widest"></span></div>
       <a href="index.html" class="font-mono text-sm text-zinc-400 hover:text-amber-500 transition-colors">← RETURN</a>
     </div>
   </div>
@@ -355,7 +353,7 @@ function init(){if(ac){ac.state==='suspended'&&ac.resume();return}
  const L=ac.sampleRate*3;nW=ac.createBuffer(1,L,ac.sampleRate);nP=ac.createBuffer(1,L,ac.sampleRate);
  const w=nW.getChannelData(0),p=nP.getChannelData(0);let a=0,b=0,c=0,d=0,e=0,f=0,g=0;
  for(let i=0;i<L;i++){const x=Math.random()*2-1;w[i]=x;a=.99886*a+x*.0555179;b=.99332*b+x*.0750759;c=.969*c+x*.153852;d=.8665*d+x*.3104856;e=.55*e+x*.5329522;f=-.7616*f-x*.016898;p[i]=(a+b+c+d+e+f+g+x*.5362)*.12;g=x*.115926}}
-function build(){const s=cur.s,v={all:[],tm:[]},N=(f,...a)=>ac[f](...a);
+function build(P=cur){const s=P.s,v={all:[],tm:[],P},N=(f,...a)=>ac[f](...a);
  const src=(t,f)=>{const o=N('createOscillator');o.type=t;o.frequency.value=f;o.start();v.all.push(o);return o};
  const G=(g=1)=>{const n=N('createGain');n.gain.value=g;return n};
  const cs=()=>{const o=N('createConstantSource');o.offset.value=0;o.start();v.all.push(o);return o};
@@ -363,7 +361,7 @@ function build(){const s=cur.s,v={all:[],tm:[]},N=(f,...a)=>ac[f](...a);
  v.eg=cs();v.wh=cs();v.wh.offset.value=wheel;
  v.mg=src(({t:'triangle',s:'sawtooth',q:'square'})[s[12]]||'triangle',1);v.mgT=src('triangle',1);v.mgS=src('square',1);
  const memo={};const S=n=>memo[n]||(memo[n]=({EG:()=>v.eg,EGR:()=>{const g=G(-1);v.eg.connect(g);return g},WHL:()=>v.wh,MGT:()=>v.mgT,MGS:()=>v.mgS,PINK:()=>{const g=G(.3);nz(nP).connect(g);return g},WHT:()=>{const g=G(.2);nz(nW).connect(g);return g}})[n]());
- const jk=(d,def)=>{const c=cur.cab.find(c=>c.endsWith('>'+d));return c?c.split('>')[0]:def};
+ const jk=(d,def)=>{const c=P.cab.find(c=>c.endsWith('>'+d));return c?c.split('>')[0]:def};
  const nzs=n=>n==='PINK'||n==='WHT'?.5:1;
  v.vcf=N('createBiquadFilter');v.vcf.type='lowpass';const pre=G(.5);pre.connect(v.vcf);
  v.fb=G(1);v.fb.connect(v.vcf.detune);
@@ -381,9 +379,9 @@ function build(){const s=cur.s,v={all:[],tm:[]},N=(f,...a)=>ac[f](...a);
  const vsum=G(.5),clip=N('createWaveShaper');clip.curve=new Float32Array([0,0,2]);vsum.connect(clip);clip.connect(vca.gain);
  const ge=G(.9);v.eg.connect(ge);ge.connect(vsum);
  const vs=jk('VCA');if(vs){const g=G(.9);S(vs).connect(g);g.connect(vsum)}
- v.out=G(1.1);vca.connect(v.out);v.out.connect(ac.cp);v.trg=cur.cab.some(c=>c.endsWith('>TRG'));v.nodes=[vca,v.out];v.v=vca;
+ v.out=G(1.1);vca.connect(v.out);v.out.connect(ac.cp);v.trg=P.cab.some(c=>c.endsWith('>TRG'));v.nodes=[vca,v.out];v.v=vca;
  apply(v);return v}
-function apply(v=V){if(!v)return;const s=cur.s,t=ac.currentTime,st=(p,x)=>p.setTargetAtTime(x,t,.02);
+function apply(v=V){if(!v)return;const s=v.P.s,t=ac.currentTime,st=(p,x)=>p.setTargetAtTime(x,t,.02);
  const hzf=mapFc(s[8]);st(v.vcf.frequency,hzf);st(v.vcf.Q,s[9]*2.4);st(v.so.frequency,hzf);
  const mf=mgHz(s[13]);[v.mg,v.mgT,v.mgS].forEach(o=>st(o.frequency,mf));
  v.osc&&st(v.osc.detune,s[2]*100);
@@ -392,10 +390,12 @@ function apply(v=V){if(!v)return;const s=cur.s,t=ac.currentTime,st=(p,x)=>p.setT
  st(v.sg.gain,Math.max(0,Math.min(1,(s[9]-8)/2))*.4);
  v.pwc&&st(v.pwc.offset,(s[3]==null?0:s[3]/10*1.8-.9));v.gEx&&st(v.gEx.gain,2*Math.pow((s[5]||0)/10,.7));
  v.mgf=mf}
-function gOn(){const s=cur.s,o=V.eg.offset,t=ac.currentTime,a=tm(s[15]),h=tm(s[14]);
- o.cancelAndHoldAtTime?o.cancelAndHoldAtTime(t):o.cancelScheduledValues(t);o.setValueAtTime(o.value,t);
+const hold=(o,t,at,on)=>{if(o.cancelAndHoldAtTime){o.cancelAndHoldAtTime(t);if(at===undefined)o.setValueAtTime(o.value,t)}else{o.cancelScheduledValues(t);if(at===undefined)o.setValueAtTime(o.value,t);else if(on)o.setValueAtTime(0,t)}};
+/* gOn/gOff take an optional start time and voice so the easter-egg song can pre-schedule several voices */
+function gOn(at,v=V,s=v.P.s){const o=v.eg.offset,t=at===undefined?ac.currentTime:at,a=tm(s[15]),h=tm(s[14]);
+ hold(o,t,at,1);
  o.linearRampToValueAtTime(1,t+a);o.setValueAtTime(1,t+a+(s[14]?h:0));o.setTargetAtTime(s[17]/10,t+a+(s[14]?h:0),dm(s[16])/3)}
-function gOff(){const o=V.eg.offset,t=ac.currentTime;o.cancelAndHoldAtTime?o.cancelAndHoldAtTime(t):o.cancelScheduledValues(t);o.setValueAtTime(o.value,t);o.setTargetAtTime(0,t,Math.max(.004,dm(cur.s[18])/3))}
+function gOff(at,v=V){const o=v.eg.offset,t=at===undefined?ac.currentTime:at;hold(o,t,at,0);o.setTargetAtTime(0,t,Math.max(.004,dm(v.P.s[18])/3))}
 function pitch(sn,first){if(!V.osc)return;const f=hz(sn)*({32:.25,16:.5,8:1,4:2})[cur.s[0]],t=ac.currentTime;
  first||cur.s[4]===0?V.osc.frequency.setValueAtTime(f,t):V.osc.frequency.setTargetAtTime(f,t,.02*Math.pow(1.55,cur.s[4]))}
 function kill(v,fade=.05){if(!v)return;clearInterval(v.iv);const t=ac.currentTime;v.out.gain.cancelScheduledValues(t);v.out.gain.setTargetAtTime(0,t,fade/3);setTimeout(()=>{v.all.forEach(o=>{try{o.stop()}catch(e){}});v.out.disconnect()},fade*1000*4+60)}
@@ -405,6 +405,44 @@ function noteOn(sn){init();clearTimeout(dispT);const first=!V||!held.length;if(!
 function noteOff(sn){held=held.filter(x=>x!==sn);hl();if(!V)return;if(held.length){pitch(held[held.length-1]);return}
  clearInterval(V.iv);gOff();const v=V;dispT=setTimeout(()=>{if(V===v&&!held.length){kill(v,.1);V=null}},dm(cur.s[18])*1500+400)}
 function panic(){held=[];kill(V,.08);V=null;clearTimeout(dispT);hl()}
+
+/* ---------- easter egg: "Mono Maschine" (original tune, voiced entirely by the patches above) ---------- */
+function songStart(){
+ const all=[],w0=wheel;
+ const mk=(n,tw,g)=>{const P=JSON.parse(JSON.stringify(R[n-1]));Object.assign(P.s,tw);wheel=0;const v=build(P);wheel=w0;v.out.gain.value=1.1*g;all.push(v);return v};
+ const kick=mk(14,{},1),
+  snare=mk(28,{14:0,15:0,16:3.2,17:0,18:2.5,8:6,9:3,10:0,11:5,13:0},.75),
+  hat=mk(28,{14:0,15:0,16:1.4,17:0,18:1,8:8,9:0,10:0,11:3,5:0,13:0},.28),
+  bass=mk(13,{8:5},.95),lead=mk(20,{6:0},.4),flute=mk(4,{},.55),
+  pad=[0,1,2].map(()=>mk(7,{8:6.5,15:5,17:10,18:4,4:0},.17)),
+  gun=mk(22,{},.4),star=mk(21,{},.4);
+ const t0=ac.currentTime+.2,B=60/114,bar=4*B,fq=m=>440*Math.pow(2,(m-69)/12);
+ const hit=(v,t,d)=>{gOn(t,v);gOff(t+d,v)},nt=(v,t,d,m)=>{v.osc.frequency.setValueAtTime(fq(m),t);hit(v,t,d)};
+ const PROG=[{r:33,t:[57,60,64],a:[57,60,64,69,72]},{r:33,t:[57,60,64],a:[57,60,64,69,72]},
+  {r:29,t:[53,57,60],a:[53,57,60,65,69]},{r:29,t:[53,57,60],a:[53,57,60,65,69]},
+  {r:36,t:[55,60,64],a:[60,64,67,72,76]},{r:36,t:[55,60,64],a:[60,64,67,72,76]},
+  {r:31,t:[55,59,62],a:[55,59,62,67,71]},{r:31,t:[55,59,62],a:[55,59,62,67,71]}];
+ const AP=[0,2,1,3,0,2,1,3,0,2,1,3,0,2,4,3],BP=[0,0,12,0,0,0,12,0];
+ const MEL=[[[0,76,1.5],[1.5,72,.5],[2,76,1],[3,79,1]],[[0,81,1.5],[1.5,79,.5],[2,76,2]],
+  [[0,77,1.5],[1.5,72,.5],[2,77,1],[3,81,1]],[[0,84,1.5],[1.5,81,.5],[2,77,2]],
+  [[0,79,1.5],[1.5,76,.5],[2,79,1],[3,84,1]],[[0,83,1.5],[1.5,84,.5],[2,79,2]],
+  [[0,74,1],[1,79,1],[2,83,1],[3,86,1]],[[0,83,2],[2,79,1],[3,74,1]]];
+ for(let b=0;b<16;b++){const tb=t0+b*bar,c=PROG[b%8],drums=b<12||b>13,groove=b>=2&&drums;
+  for(let i=0;i<4;i++){const t=tb+i*B;
+   if(drums){kick.osc.frequency.setValueAtTime(150,t);kick.osc.frequency.setTargetAtTime(46,t,.025);hit(kick,t,.2)}
+   if(b>=4&&drums&&(i===1||i===3))hit(snare,t,.18);
+   if(groove)(b>=8?[.25,.5,.75]:[.5]).forEach(f=>hit(hat,t+f*B,.05))}
+  BP.forEach((o,j)=>nt(bass,tb+j*B/2,B*.42,c.r+o));
+  if(groove)AP.forEach((x,j)=>nt(lead,tb+j*B/4,B*.17,c.a[x]+(b>=8?12:0)));
+  if(b>=4)c.t.forEach((m,x)=>nt(pad[x],tb,bar*.97,m));
+  if(b>=8)MEL[b%8].forEach(([o,m,d])=>nt(flute,tb+o*B,d*B*.9,m));
+  if(b===7||b===11)hit(gun,tb+3*B,B*.95);
+  if(b===12)hit(star,tb,bar*1.4)}
+ const ts=t0+16*bar,c=PROG[0];
+ kick.osc.frequency.setValueAtTime(150,ts);kick.osc.frequency.setTargetAtTime(46,ts,.025);hit(kick,ts,.2);hit(snare,ts,.2);
+ nt(bass,ts,2,33);nt(lead,ts,1.2,69);nt(flute,ts,1.6,81);c.t.forEach((m,x)=>nt(pad[x],ts,2.2,m));
+ return {voices:all,dur:16*bar+3.4}}
+
 
 /* ---------- scope ---------- */
 const cv=$('#cv'),cx=cv.getContext('2d');
@@ -507,10 +545,18 @@ box.addEventListener('pointermove',e=>{if(drag&&drag.k){const i=K[drag.k],lo=dra
 const up=()=>{if(drag&&drag.w){setWheel(base.w0);}drag=null;if(ptrKey!=null){noteOff(ptrKey);ptrKey=null}};
 box.addEventListener('pointerup',up);box.addEventListener('pointercancel',up);
 box.addEventListener('dblclick',e=>{const k=e.target.closest('[data-k]');if(k){cur.s[K[k.dataset.k]]=base.s[K[k.dataset.k]];apply();render()}});
+
+/* ---------- easter egg trigger ---------- */
+let egg=null;
+function eggStop(){if(!egg)return;clearTimeout(egg.to);egg.voices.forEach(v=>kill(v,.08));egg=null;$('#logo svg').classList.remove('animate-pulse');$('#egg').classList.add('hidden')}
+function eggStart(){panic();init();const g=songStart();egg={voices:g.voices,to:setTimeout(eggStop,g.dur*1000+400)};
+ $('#logo svg').classList.add('animate-pulse');const e=$('#egg');e.textContent='♪ Mono Maschine · click the logo to stop';e.classList.remove('hidden')}
+$('#logo').onclick=()=>egg?eggStop():eggStart();
 const KM={a:7,w:8,s:9,e:10,d:11,f:12,t:13,g:14,y:15,h:16,u:17,j:18,k:19,o:20,l:21,p:22,';':23};
 
 addEventListener('keydown',e=>{
  if(e.repeat||e.metaKey||e.ctrlKey||e.target.tagName==='INPUT')return;
+ if(e.key==='Escape'){eggStop();return}
  if(e.code==='Space'){e.preventDefault();noteOn(auSn());return}
  if(e.key==='ArrowRight')return setPatch((idx+1)%30);
  if(e.key==='ArrowLeft')return setPatch((idx+29)%30);
