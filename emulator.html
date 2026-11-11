@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KORG MS-10 // Emulation & Settings</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif'],mono:['JetBrains Mono','monospace']},colors:{amber:{300:'#fcd34d',400:'#fbbf24',500:'#f59e0b',600:'#d97706',900:'#78350f',950:'#451a03'},zinc:{850:'#202022',900:'#18181b',950:'#09090b'}}}}};
+</script>
+<style>
+body { background: #050505; color: #d4d4d8; }
+.scanlines::before {
+  content: " "; display: block; position: absolute; inset: 0;
+  background: linear-gradient(rgba(18,16,16,0) 50%,rgba(0,0,0,.25) 50%),
+              linear-gradient(90deg,rgba(245,158,11,.04),rgba(245,158,11,.02),rgba(217,119,6,.04));
+  z-index: 50; background-size: 100% 2px,3px 100%; pointer-events: none; opacity: .3;
+}
+.glow-text { text-shadow: 0 0 12px rgba(245,158,11,.6); }
+.bg-synth-grid {
+  background-image: linear-gradient(to right,rgba(245,158,11,.07) 1px,transparent 1px),
+                    linear-gradient(to bottom,rgba(245,158,11,.07) 1px,transparent 1px);
+  background-size: 40px 40px;
+}
+input[type=search]::-webkit-search-cancel-button { -webkit-appearance: none; }
+input[type=range] { accent-color: #fbbf24; }
+/* SVG UI Styling */
+svg.ms { display: block; min-width: 760px; width: 100%; height: auto; touch-action: none; user-select: none; -webkit-user-select: none; }
+svg.ms text { font-family: 'JetBrains Mono', monospace; font-stretch: 90%; }
+[data-k], [data-sw] { cursor: ns-resize; }
+[data-sw] { cursor: pointer; }
+[data-k]:hover circle, [data-sw]:hover circle { fill: #fffbeb; }
+.edited [data-k] circle.ed { stroke: #f59e0b; }
+.cab { fill: none; stroke-linecap: round; }
+.kw { fill: #fff; stroke: #3f3f46; stroke-width: 1.2; cursor: pointer; }
+.kb { fill: #18181b; cursor: pointer; }
+.kw.on { fill: #fde68a; stroke: #f59e0b; }
+.kb.on { fill: #d97706; }
+</style>
+</head>
+<body class="antialiased relative selection:bg-amber-500 selection:text-zinc-950">
+<div class="scanlines fixed inset-0 pointer-events-none z-50"></div>
+<nav class="fixed w-full z-40 top-0 bg-[#050505]/90 backdrop-blur-md border-b border-zinc-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <a href="#" class="flex items-center gap-3" aria-label="Home">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" class="text-amber-500 w-6 h-6"><path d="M2 12h4v-7h6v14h6v-7h4"/></svg>
+      </a>
+      <a href="#" class="font-mono text-sm text-zinc-400 hover:text-amber-500 transition-colors">← RETURN</a>
+    </div>
+  </div>
+</nav>
+
+<section class="relative pt-32 pb-12 overflow-hidden border-b border-zinc-800 bg-[#0a0a0c]">
+  <div class="absolute inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row gap-12 lg:items-start">
+    <div class="flex-1">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-500 font-mono text-xs mb-6">
+        <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+        HARDWARE EMULATION // KORG MS-10
+      </div>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight mb-6 uppercase">MS-10 <span class="text-amber-500 glow-text">Web Audio</span></h1>
+      <p class="text-lg text-zinc-400 font-light mb-8 leading-relaxed max-w-3xl">
+        Drag knobs, click switches, or play the keys directly on screen (or use keys A–;). Use ↑ and ↓ arrows for the modulation wheel. Includes all 30 factory patches and an interactive scope.
+      </p>
+      
+      <div class="bg-zinc-900/50 border border-amber-500/20 rounded-xl p-5 mb-2 max-w-4xl shadow-lg backdrop-blur-sm">
+        <p class="text-sm text-zinc-300 font-light leading-relaxed mb-4">
+          This interactive emulator is an educational homage to my very first synthesizer and a love letter to the gritty, screaming sound of the original KORG-35 filter chip. While the routing and logic are functionally identical to the 1978 manual's Setting Examples, this native Web Audio API approximation will sound noticeably cleaner and tamer than the physical hardware. It lacks the subtle tuning drift of true analogue circuitry, the snappy capacitor-driven envelopes, and the raw analogue distortion of the original units. Audio-rate modulations may also exhibit mild digital aliasing. 
+        </p>
+        <p class="text-sm text-zinc-300 font-light leading-relaxed mb-5">
+          For a deep dive into the engineering, signal flows, and history of classic hardware like this, check out my publications at <a href="https://voltageandwave.co.uk/publications.html" target="_blank" class="text-amber-400 hover:text-amber-300 underline underline-offset-4 decoration-amber-500/30 transition-colors font-semibold">Voltage & Wave</a>.
+        </p>
+        <div class="border-t border-zinc-800 pt-4">
+          <p class="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">
+            Original manual contents and intellectual property remain the sole property of KORG Inc. This non-commercial emulation is neither affiliated with nor endorsed by KORG.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<main class="py-8 bg-[#050505]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 items-start relative z-20">
+      
+      <!-- Left Sidebar: Patch List & Categories - Layout Fixed -->
+      <aside class="flex flex-col lg:sticky lg:top-24 h-auto lg:h-[calc(100vh-8rem)]">
+        <div class="bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-xl p-4 shadow-lg flex flex-col h-full overflow-hidden">
+          <input id="q" type="search" placeholder="Search 30 patches" aria-label="Search patches" 
+                 class="w-full px-3 py-2 mb-4 bg-zinc-950 border border-zinc-800 rounded text-sm text-zinc-300 font-mono focus:outline-none focus:border-amber-500 transition-colors flex-shrink-0">
+          <div class="flex gap-2 flex-wrap mb-4 flex-shrink-0" id="chips"></div>
+          <!-- min-h-0 prevents the flex child from expanding past its container bounds -->
+          <div id="list" class="flex-1 min-h-0 overflow-y-auto flex flex-col gap-1 pr-2 pb-2"></div>
+        </div>
+      </aside>
+
+      <!-- Main Engine Area -->
+      <div class="flex flex-col gap-6 min-w-0">
+        
+        <!-- Top Controls / Info -->
+        <div class="bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-xl p-6 shadow-lg flex flex-col md:flex-row justify-between gap-6">
+          <div class="flex-1">
+            <div class="font-mono text-xs text-amber-400 uppercase tracking-widest mb-2" id="num"></div>
+            <h2 class="text-2xl font-bold text-white mb-2" id="nm"></h2>
+            <p class="text-sm text-zinc-400 leading-relaxed" id="desc"></p>
+            <div class="flex flex-wrap gap-2 mt-4" id="tags"></div>
+          </div>
+          
+          <div class="flex flex-col items-end gap-3 shrink-0">
+            <div class="flex gap-2">
+              <button class="w-10 h-10 flex items-center justify-center rounded border border-zinc-700 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition-colors" id="prev" aria-label="Previous patch">‹</button>
+              <button class="w-10 h-10 flex items-center justify-center rounded border border-zinc-700 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition-colors" id="next" aria-label="Next patch">›</button>
+              <button class="px-4 h-10 rounded border border-amber-500 bg-amber-600 text-zinc-950 font-mono text-xs font-bold uppercase tracking-wider hover:bg-amber-500 transition-colors select-none" id="aud">Hold to play</button>
+            </div>
+            <div class="flex items-center gap-3 text-xs font-mono text-zinc-500">
+              VOL <input type="range" id="vol" min="0" max="1" step=".01" value=".7" class="w-24">
+            </div>
+            <button class="px-3 py-1.5 rounded border border-zinc-700 bg-zinc-800 text-zinc-400 font-mono text-[10px] uppercase tracking-wider hover:bg-zinc-700 hover:text-white transition-colors disabled:opacity-30" id="reset" disabled>Reset Patch</button>
+            <div class="text-[10px] font-mono text-zinc-600 mt-1">SPACE = Audition</div>
+          </div>
+        </div>
+
+        <!-- SVG Synth Panel -->
+        <div class="bg-[#d4d4d8] rounded-xl overflow-x-auto border border-zinc-800 shadow-xl p-2 pb-0">
+          <div id="svgbox" class="min-w-[760px]"></div>
+        </div>
+
+        <!-- Scope -->
+        <div class="bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-xl p-5 shadow-lg">
+          <div class="flex justify-between items-center mb-3">
+            <span class="font-mono text-xs text-zinc-400 uppercase tracking-widest">Output Signal</span>
+            <div class="flex gap-2">
+              <button class="scope-chip px-3 py-1 text-[10px] font-mono uppercase tracking-wider rounded border transition-colors bg-amber-900/50 text-amber-400 border-amber-500" data-m="0">Scope</button>
+              <button class="scope-chip px-3 py-1 text-[10px] font-mono uppercase tracking-wider rounded border transition-colors bg-zinc-950 text-zinc-500 border-zinc-800 hover:bg-zinc-800" data-m="1">Spectrum</button>
+            </div>
+          </div>
+          <div class="relative h-[120px] bg-[#0e0c13] rounded-lg overflow-hidden border border-zinc-800">
+            <canvas id="cv" class="w-full h-full block"></canvas>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+/* [no, name, cat, desc, [scale,wave,pitch,pw,port,ext, fmMG,fmEG, fc,peak,fcMG,fcEG, mgWave,mgFreq, H,A,D,S,R], cables, wheel, fingers]
+   wave: t saw=s pulse=q noise=n.  Jacks: FM PWM EXT FC VCA | MGT MGS EGR TRG | PINK WHT WHL */
+const R=[
+[1,'Trumpet (A)','Instruments','Strong tonguing attack for marches and classical lines. Noise into VCO FM adds a breath.',[8,'s',0,null,0,null,1,1,5,3,0,10,'t',3.5,0,1,2,7,1],['WHT>FM']],
+[2,'Trumpet (B)','Instruments','Mood trumpet for ballads. Adjust the VCF to taste.',[8,'s',0,null,0,null,1,.5,6,2,0,8,'t',5,0,1,3,4,1],['WHT>FM']],
+[3,'Clarinet','Instruments','Rectangle wave for woodwinds. Switch scale to 32′, 16′ or 4′ for bass or E♭ clarinet.',[8,'q',0,7,0,null,1,1,6,2,0,8,'t',3.5,0,1,2,7,1],['WHT>FM']],
+[4,'Flute','Instruments','Round, clear triangle tone with an open VCF. Vary the EG for electric piano or xylophone.',[4,'t',0,null,0,null,1,1,6,2,3,8,'t',3.5,0,1,2,7,1],['WHT>FM']],
+[5,'Oboe','Instruments','Heavier double reed than the clarinet: try Dvořák’s New World theme. Lower the scale for bassoon.',[8,'q',0,7,0,null,1,0,6.5,4,0,7,'t',3.5,0,1,3,7,1]],
+[6,'Ocarina','Instruments','Darker than a flute: the VCF strips a triangle down to a near sine wave.',[4,'t',0,null,0,null,1,2,5.5,0,0,10,'t',3.5,0,1,2,10,1]],
+[7,'Violin','Instruments','Sawtooth with balanced harmonics. Overdub with slightly different fc for a string section.',[8,'s',0,null,2,null,1,0,7.5,4,0,0,'t',3.5,0,1.5,0,10,1]],
+[8,'Cello','Instruments','Slow melodies. Foot controller MS-01 (or the wheel) patched to FM and VCA gives bowing and delayed vibrato.',[32,'s',0,null,3,null,0,1.5,5.5,7,0,0,'t',3.5,0,1.5,0,10,1],['WHL>FM','WHL>VCA'],'up'],
+[9,'Accordion','Instruments','Slow PWM growl from the MG, like two voices in unison.',[16,'q',0,6,0,null,0,0,7.5,3,0,0,'t',0,0,1,3,6.5,1],['MGT>PWM']],
+[10,'Electric Piano','Instruments','Rectangle wave rounded by the VCF; MG on fcM adds tremolo.',[8,'q',0,4,0,null,0,0,5,3,3,6,'t',3.5,0,0,1.5,3,1]],
+[11,'Clavinet','Instruments','Tone from the VCO waveform alone. Fine-tune PW/PWM for realism.',[16,'q',0,8,0,null,0,0,10,0,0,0,null,null,0,0,1,2,0]],
+[12,'Banjo','Instruments','Rounded, then suddenly attenuated into a harsh decay via EG REV. Vary the VCF for samisen.',[8,'q',0,7,0,null,0,0,7,2,0,3,null,null,0,0,1,0,1],['EGR>FC']],
+[13,'Electric Bass','Instruments','Play bass patterns; trim the tone with the VCF knobs.',[32,'s',0,null,0,null,0,0,4.5,7,0,6,null,null,0,0,1.5,3,1]],
+[14,'Timpani','Instruments','Pink noise mixed with the triangle VCO through a patch cord.',[32,'t',0,null,0,1,0,0,4.5,7,0,4,null,null,0,0,2,0,2],['PINK>EXT']],
+[15,'Cow-bell','Instruments','VCF PEAK at 10 self-oscillates as the sound source. Nudge fc for other pitches.',[0,'q',0,2,0,null,0,0,5,10,0,2,null,null,0,0,0,0,0],['WHL>FC'],'both'],
+[16,'Whistle','Instruments','Noise modulating the VCO gives breath and an unsteady whistle. FM EG/EXT at 0 is clearer.',[4,'t',5,null,6,null,1,1,6,4,0,0,'t',3.5,0,2.5,3.5,3.5,1],['PINK>FM']],
+[17,'Synthesizer 1','Synth','The progressive-rock synth sound, with slow PWM from the MG.',[32,'q',0,6,2,null,0,0,6.5,7.5,0,8,'t',.5,0,0,3,7,3],['MGT>PWM']],
+[18,'Synthesizer 2','Synth','Wheel pitch bend: set FM EG/EXT so full-up is exactly one octave.',[16,'s',0,null,3,null,0,4.5,6.5,7,0,0,null,null,0,0,2,5,0],['WHL>FM'],'both'],
+[19,'Synthesizer 3','Synth','Automatic wow: MG modulating the VCF. Rounded tone for space effects.',[8,'q',0,6,0,null,0,0,4.5,7.5,4,7,'t',3,0,.5,2,3,2]],
+[20,'Synthesizer 4','Synth','Typical lead for rock and TV themes. Vary EG, VCF and waveform.',[16,'q',0,5,0,null,1,3,5.5,8,0,10,'t',4,0,1,1,7,1],['WHL>FM'],'both'],
+[21,'Falling Star','Sound effects','Self-oscillating filter as source; MG and EG sweep it down.',[0,'q',0,2,0,null,0,0,6,10,6,8,'q',5,7,0,5,0,0]],
+[22,'Machine Gun','Sound effects','MG snaps the self-oscillating filter. Sweep MG FREQ between 0 and 6.',[0,'q',0,2,0,null,0,0,4,10,10,0,'q',6,0,0,0,10,0]],
+[23,'Telephone Busy Tone','Sound effects','Play one key for pitch; the MG square wave triggers the EG. Raise PEAK for a gritty line.',[4,'q',0,7,0,null,0,2,5,9,0,7,'t',1,0,0,0,10,0],['MGS>TRG'],'',[2]],
+[24,'Police Siren','Sound effects','MG sawtooth modulates the VCO for a repeating wail.',[8,'q',0,5,0,null,5,0,5,5,0,0,'s',2,0,0,0,10,0],[],'',[11]],
+[25,'Dog Barking','Sound effects','The envelope varies pitch and tone together. Time the keys as barks.',[8,'q',0,4,0,null,0,3,4,7.5,0,7,null,null,0,.5,3,0,1],[],'',[9,11]],
+[26,'Ghost','Sound effects','EG REV slowly bends the pitch while the MG adds a fast cyclic wobble.',[4,'q',0,5,0,null,2,2,5,6,0,5,'s',3,0,2,4,3,1.5],['EGR>FM']],
+[27,'Storm','Sound effects','Play a key now and then and the wind and rain swell. The wheel feeds the VCA.',[0,'n',0,null,0,null,0,0,5,8,0,5,null,null,6,5,6,10,6],['WHL>VCA'],'both'],
+[28,'Lightning','Sound effects','Pink noise added to white noise, distorted by the VCF.',[0,'n',0,null,0,6,0,0,5,8,2,8,'s',0,5,0,10,5,10],['PINK>EXT']],
+[29,'Wave on a Cliff','Sound effects','Noise only, so no pitch. Play a key and hear the wave approach and strike the cliff.',[0,'n',0,null,0,2,0,0,6.5,0,0,9,null,null,7.5,7,1,3,1.5],['PINK>EXT','EGR>FC','WHL>VCA'],'both'],
+[30,'A Jet at an Airport','Sound effects','Strike a key lightly now and then. EG sends the pitch up and away, then back; pink noise drives PWM.',[4,'q',0,4,0,null,0,5,5,5,0,10,null,null,9,10,0,10,10],['PINK>PWM','WHL>VCA'],'both']
+].map(r=>({n:r[0],nm:r[1],cat:r[2],d:r[3],s:r[4],cab:r[5]||[],wh:r[6]||'',fg:r[7]||[]}));
+
+/* ---------- state ---------- */
+const $=s=>document.querySelector(s);
+let cat='All',qs='',cur,base,idx=0,wheel=0,held=[],edited=false,mode=0;
+const K={pt:2,pw:3,po:4,ex:5,fmM:6,fmE:7,fc:8,pk:9,fcM:10,fcE:11,mgF:13,H:14,A:15,D:16,S:17,R:18};
+const JN={FM:'VCO FM',PWM:'VCO PWM',EXT:'EXT SIG in',FC:'VCF fcM',VCA:'VCA',MGT:'MG ∧ out',MGS:'MG ⊓ out',EGR:'EG REV out',TRG:'TRIG in',PINK:'Pink noise',WHT:'White noise',WHL:'Control wheel'};
+
+// Precise updated layout coordinates matching schematic drawing
+const J={
+  FM:[540,277], PWM:[565,277], EXT:[610,277], FC:[635,277], VCA:[700,277],
+  MGT:[540,377], MGS:[565,377], EGR:[610,377], TRG:[775,352],
+  PINK:[540,437], WHT:[640,437], WHL:[690,437]
+};
+const WH=[0,2,4,6,7,9,11],NS=[];for(let i=0;i<19;i++)NS.push(WH[i%7]+12*Math.floor(i/7));
+const BL=[1,3,5,8,10,13,15,17,20,22,25,27,29];
+const KW=720/19,KX=130,hz=s=>87.307*Math.pow(2,s/12);
+
+/* ---------- chart renderer ---------- */
+const G={t:'M-9 5L0 -6L9 5',s:'M-8 6V-6L8 6',q:'M-9 4V-4H-3V4H3V-4H9',n:'M-9 0L-7 -5L-5 4L-3 -3L-1 5L1 -4L3 3L5 -5L7 2L9 -1'};
+const fv=(k,v)=>v==null?'':(k==='pt'&&v>0?'+'+v:''+v);
+function knob(x,y,lab,k,o={}){const v=cur.s[K[k]],p=o.ptr;
+ const ang=(v/10*270-135);let t=p?(v==null?'':`<line x1="0" y1="0" x2="0" y2="-17" stroke-width="2.4" transform="rotate(${ang})"/>`):`<text y="5" font-size="${fv(k,v).length>2?12:15}" text-anchor="middle" font-weight="600">${fv(k,v)}</text>`;
+ const ly=o.top?y-26:o.mid?y+25:y+27;
+ return `<g data-k="${k}" transform="translate(${x},${y})"><circle class="ed" r="17" fill="#fff" stroke="#18181b" stroke-width="1.6"/>${t}<text y="${ly-y}" font-size="9.5" text-anchor="middle">${lab}</text></g>`}
+function sw(x,y,lab,w,type,mid){let inner='',cl='';
+ if(type==='sc'){inner=cur.s[0]?`<text y="5" font-size="16" text-anchor="middle" font-weight="600">${cur.s[0]}′</text>`:''}
+ else{const g=G[w];inner=g?`<path d="${g}" fill="none" stroke="#18181b" stroke-width="1.8" transform="scale(1.1)"/>`:''}
+ return `<g data-sw="${w===undefined?'':type}" data-t="${type}" transform="translate(${x},${y})"><circle r="19" fill="#fff" stroke="#18181b" stroke-width="1.6"/>${inner}<text y="${mid?25:30}" font-size="9.5" text-anchor="middle">${lab}</text></g>`}
+function hexJ(id){const [x,y]=J[id],on=cur.cab.some(c=>c.split('>').includes(id));
+ return `<g transform="translate(${x},${y})"><polygon points="-8,-3.5 -3.5,-8 3.5,-8 8,-3.5 8,3.5 3.5,8 -3.5,8 -8,3.5" fill="#fff" stroke="#18181b" stroke-width="1.6"/>${on?'<circle r="4.2" fill="#18181b"/>':''}</g>`}
+function cable(a,b){const [x1,y1]=J[a],[x2,y2]=J[b];let d;
+ if(Math.abs(y2-y1)<30){const dr=34+Math.abs(x2-x1)*.25;d=`M${x1} ${y1}C${x1} ${y1+dr},${x2} ${y2+dr},${x2} ${y2}`}
+ else{const o=-(38+Math.abs(y2-y1)*.1);d=`M${x1} ${y1}C${x1+o} ${y1+(y2-y1)*.25},${x2+o} ${y2-(y2-y1)*.25},${x2} ${y2}`}
+ return `<path class="cab" d="${d}" stroke="#18181b" stroke-width="6"/><path class="cab" d="${d}" stroke="#f59e0b" stroke-width="3"/>`}
+const bx=(x,y,w,t)=>`<rect x="${x}" y="${y}" width="${w}" height="22" fill="#fff" stroke="#18181b" stroke-width="1.5"/><text x="${x+w/2}" y="${y+15}" font-size="10.5" text-anchor="middle">${t}</text>`;
+
+function render(){
+ const eg=[262,310,358,406,454];
+ const ln=(a,b,c,d)=>`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}"/>`;
+ const lna=(a,b,c,d)=>`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" marker-end="url(#ah)"/>`;
+ const ptha=(d)=>`<path d="${d}" marker-end="url(#ah)"/>`;
+
+ let h=`<svg class="ms${edited?' edited':''}" viewBox="52 178 806 500" xmlns="http://www.w3.org/2000/svg" stroke="#18181b" fill="none" stroke-width="1.6">
+ <defs>
+   <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+     <path d="M 0 1 L 9 5 L 0 9 z" fill="#18181b" stroke="none"/>
+   </marker>
+ </defs>
+ <!-- Main Background Panel -->
+ <rect x="60" y="185" width="790" height="315" fill="#f4f4f5"/>
+ 
+ <!-- Vertical / Horizontal dividers -->
+ ${ln(240,185,240,500)}${ln(325,185,325,500)}${ln(410,185,410,500)}${ln(490,185,490,500)}${ln(60,365,410,365)}${ln(240,350,240,365)}
+ 
+ <!-- Section Labels -->
+ <g fill="#18181b" stroke="none" font-size="9.5" text-anchor="middle">
+   <text x="150" y="199">VCO</text><text x="282" y="199">VCF</text><text x="367" y="199">VCA</text><text x="447" y="199">EG</text>
+   <text x="200" y="378">FM</text><text x="282" y="378">fcM</text><text x="365" y="378">MG</text><text x="105" y="376">PORT</text><text x="105" y="427">EXT SIG</text>
+   <text x="367" y="303">EG &amp; EXT</text>
+ </g>
+ 
+ <!-- VCA Triangle -->
+ <path d="M345 245V285L388 265Z" fill="#fff" stroke-width="1.8"/>
+ 
+ <!-- Knobs & Switches -->
+ ${sw(105,267,'SCALE',0,'sc')}${sw(195,267,'WAVEFORM',cur.s[1],'wv')}
+ ${knob(105,327,'PITCH','pt')}${knob(195,327,'PW/PWM','pw',{ptr:1})}${knob(282,267,'fc','fc')}${knob(282,327,'PEAK','pk')}
+ ${knob(105,402,'','po')}${knob(105,452,'','ex')}${knob(200,404,'MG','fmM',{mid:1})}${knob(200,452,'EG/EXT','fmE')}
+ ${knob(282,404,'MG','fcM',{mid:1})}${knob(282,452,'EG/EXT','fcE')}${sw(365,404,'WAVE FORM',cur.s[12],'mg',1)}${knob(365,452,'FREQ','mgF')}
+ ${['H','A','D','S','R'].map((k,i)=>knob(447,eg[i],['HOLD','ATTACK','DECAY','SUSTAIN','RELEASE'][i],k)).join('')}
+ 
+ <!-- Right side Patch Panel (Schematic) - Orthogonal and aligned -->
+ <g stroke-width="1.5">
+   ${bx(525, 222, 48, 'VCO')}
+   ${bx(597, 222, 48, 'VCF')}
+   ${bx(672, 222, 48, 'VCA')}
+   ${bx(533, 318, 40, 'MG')}
+   ${bx(602, 318, 40, 'EG')}
+   ${bx(700, 290, 40, 'KBD')}
+   ${bx(700, 338, 40, 'TRIG')}
+   ${bx(570, 426, 40, 'NG')}
+
+   <!-- Audio flow -->
+   ${lna(573, 233, 593, 233)}
+   ${lna(645, 233, 668, 233)}
+   ${lna(720, 233, 748, 233)}
+   <circle cx="780" cy="233" r="28" fill="#fff"/>
+   <text x="780" y="237" font-size="11" font-weight="600" text-anchor="middle" stroke="none">VOL</text>
+   ${lna(808, 233, 822, 233)}
+   <circle cx="826" cy="233" r="4" fill="#18181b"/>
+   <text x="835" y="237" font-size="8.5" stroke="none" fill="#18181b">SIG OUT</text>
+ </g>
+
+ <g stroke-width="1.2">
+   <!-- Internal control paths (Solid fine lines) -->
+   ${ptha('M 700 301 L 530 301 L 530 248')}
+   ${ptha('M 602 301 L 602 248')}
+   ${ptha('M 720 312 L 720 334')}
+   ${ptha('M 700 349 L 642 349 L 642 344')}
+   ${ptha('M 622 318 L 622 292 L 571 292 L 571 248')}
+   ${ptha('M 622 292 L 643 292 L 643 248')}
+   ${ptha('M 643 292 L 715 292 L 715 248')}
+   ${ptha('M 553 318 L 553 208 L 545 208 L 545 218')}
+   ${ptha('M 553 208 L 620 208 L 620 218')}
+ </g>
+
+ <g stroke-width="1.5">
+   <!-- Hex connector vertical drops -->
+   ${ln(540,277, 540,244)}
+   ${ln(565,277, 565,244)}
+   ${ln(610,277, 610,244)}
+   ${ln(635,277, 635,244)}
+   ${ln(700,277, 700,244)}
+   ${ln(540,377, 540,340)}
+   ${ln(565,377, 565,340)}
+   ${ln(610,377, 610,340)}
+   
+   <!-- Special angled drops and symbols -->
+   ${lna(771,352, 744,352)}
+   ${lna(544,437, 566,437)}
+   ${lna(636,437, 614,437)}
+   ${ln(694,437, 720,437)}
+   <path d="M722 441 Q 734 424 746 441 Z" fill="#fff" stroke="#18181b" stroke-width="1.5"/>
+   ${ln(495,463,850,463)}
+ </g>
+ 
+ <!-- Jacks & Cables -->
+ ${['FM','PWM','EXT','FC','VCA','MGT','MGS','EGR','TRG','PINK','WHT','WHL'].map(hexJ).join('')}
+ <circle cx="775" cy="293" r="8" fill="#fff"/><circle cx="775" cy="329" r="8" fill="#fff"/>
+ ${cur.cab.map(c=>{const [a,b]=c.split('>');return cable(a,b)}).join('')}`;
+ 
+ // wheel
+ const wy=587-wheel*58;
+ h+=`<g data-wh="1" style="cursor:ns-resize">
+   <rect x="62" y="503" width="64" height="167" fill="#27272a"/>
+   <rect x="87" y="512" width="14" height="148" fill="#18181b"/>
+   ${ln(80,587,108,587)}
+   <rect x="78" y="${wy-9}" width="32" height="18" fill="#52525b" stroke="none" rx="2"/>
+   ${ln(78,wy,110,wy)}
+   ${cur.wh?'<path d="M94 520l-7 12h14z" fill="#fff"/>':''}
+   ${cur.wh==='both'?'<path d="M94 652l-7 -12h14z" fill="#fff"/>':''}
+ </g>
+ <text x="94" y="685" font-size="10" text-anchor="middle" fill="#52525b" stroke="none">↑/↓ keys</text>`;
+ 
+ // keyboard
+ for(let i=0;i<19;i++)h+=`<rect class="kw" data-s="${NS[i]}" x="${KX+i*KW}" y="500" width="${KW}" height="170"/>`;
+ BL.forEach(s=>{const i=NS.indexOf(s-1);h+=`<rect class="kb" data-s="${s}" x="${KX+i*KW+KW-12}" y="500" width="24" height="102"/>`});
+ 
+ // Recommended finger dots
+ cur.fg.forEach(w=>{const x=KX+w*KW+KW/2;h+=`<g transform="translate(${x},635)" stroke-width="1.6"><rect x="-9" y="-16" width="18" height="30" rx="8" fill="#fff" stroke="#18181b"/><rect x="-5" y="-10" width="10" height="10" rx="4" fill="#18181b" stroke="none"/><path d="M-4 6h8" stroke="#18181b"/></g>`;if(cur.fg.length>1&&w===cur.fg[0])h+=`<text x="${x+KW/2+10}" y="640" font-size="12" font-weight="700" fill="#18181b" stroke="none" text-anchor="middle">OR</text>`});
+ 
+ // Final bounding rect
+ h+=`<rect x="60" y="500" width="790" height="170" fill="none" stroke-width="2"/></svg>`;
+ 
+ $('#svgbox').innerHTML=h;hl();
+ $('#tags').innerHTML=cur.cab.length?cur.cab.map(c=>{const [a,b]=c.split('>');return `<span class="tag font-mono text-[10px] uppercase tracking-wider">${JN[a]} → ${JN[b]}</span>`}).join(''):'<span class="hint font-mono text-[10px] uppercase tracking-wider">No patch cords for this setting</span>';
+}
+const hl=()=>document.querySelectorAll('[data-s]').forEach(e=>e.classList.toggle('on',held.includes(+e.dataset.s)));
+
+/* ---------- audio engine ---------- */
+let ac,outG,an,V=null,nW,nP,vol=.7,dispT;
+const mapFc=v=>40*Math.pow(2,v*.9),mgHz=v=>.5*Math.pow(2,.93*(v||0)),tm=v=>v<=0?.003:.003*Math.pow(10,.36*v);
+function init(){if(ac){ac.state==='suspended'&&ac.resume();return}
+ ac=new (window.AudioContext||window.webkitAudioContext)();const cp=ac.createDynamicsCompressor();outG=ac.createGain();outG.gain.value=vol;
+ an=ac.createAnalyser();an.fftSize=2048;an.smoothingTimeConstant=.7;cp.connect(outG);outG.connect(an);an.connect(ac.destination);ac.cp=cp;
+ const L=ac.sampleRate*3;nW=ac.createBuffer(1,L,ac.sampleRate);nP=ac.createBuffer(1,L,ac.sampleRate);
+ const w=nW.getChannelData(0),p=nP.getChannelData(0);let a=0,b=0,c=0,d=0,e=0,f=0,g=0;
+ for(let i=0;i<L;i++){const x=Math.random()*2-1;w[i]=x;a=.99886*a+x*.0555179;b=.99332*b+x*.0750759;c=.969*c+x*.153852;d=.8665*d+x*.3104856;e=.55*e+x*.5329522;f=-.7616*f-x*.016898;p[i]=(a+b+c+d+e+f+g+x*.5362)*.12;g=x*.115926}}
+function build(){const s=cur.s,v={all:[],tm:[]},N=(f,...a)=>ac[f](...a);
+ const src=(t,f)=>{const o=N('createOscillator');o.type=t;o.frequency.value=f;o.start();v.all.push(o);return o};
+ const G=(g=1)=>{const n=N('createGain');n.gain.value=g;return n};
+ const cs=()=>{const o=N('createConstantSource');o.offset.value=0;o.start();v.all.push(o);return o};
+ const nz=b=>{const o=N('createBufferSource');o.buffer=b;o.loop=true;o.start();v.all.push(o);return o};
+ v.eg=cs();v.wh=cs();v.wh.offset.value=wheel;
+ v.mg=src(({t:'triangle',s:'sawtooth',q:'square'})[s[12]]||'triangle',1);v.mgT=src('triangle',1);v.mgS=src('square',1);
+ const memo={};const S=n=>memo[n]||(memo[n]=({EG:()=>v.eg,EGR:()=>{const g=G(-1);v.eg.connect(g);return g},WHL:()=>v.wh,MGT:()=>v.mgT,MGS:()=>v.mgS,PINK:()=>{const g=G(.3);nz(nP).connect(g);return g},WHT:()=>{const g=G(.2);nz(nW).connect(g);return g}})[n]());
+ const jk=(d,def)=>{const c=cur.cab.find(c=>c.endsWith('>'+d));return c?c.split('>')[0]:def};
+ const nzs=n=>n==='PINK'||n==='WHT'?.5:1;
+ v.vcf=N('createBiquadFilter');v.vcf.type='lowpass';const pre=G(.5);pre.connect(v.vcf);
+ v.fb=G(1);v.fb.connect(v.vcf.detune);
+ if(s[1]==='n')S('WHT').connect(pre);
+ else if(s[0]){if(s[1]==='q'){v.osc=src('triangle',200);const m=G(1),ws=N('createWaveShaper'),c=new Float32Array(512);for(let i=0;i<512;i++)c[i]=i<256?-1:1;ws.curve=c;v.pwc=cs();v.osc.connect(m);v.pwc.connect(m);m.connect(ws);const q=G(.45);ws.connect(q);q.connect(pre);
+   const pm=jk('PWM');if(pm){v.gPwm=G(.8);S(pm).connect(v.gPwm);v.gPwm.connect(v.pwc.offset)}}
+  else{v.osc=src(s[1]==='s'?'sawtooth':'triangle',200);v.osc.connect(pre)}
+  v.gFmM=G(0);v.mg.connect(v.gFmM);v.gFmM.connect(v.osc.detune);const fs=jk('FM','EG');v.gFmE=G(0);S(fs).connect(v.gFmE);v.gFmE.connect(v.osc.detune);v.fm=nzs(fs)}
+ const ex=jk('EXT');if(ex){v.gEx=G(0);S(ex).connect(v.gEx);v.gEx.connect(pre)}
+ v.gFcM=G(0);v.mg.connect(v.gFcM);v.gFcM.connect(v.fb);const fcs=jk('FC','EG');v.gFcE=G(0);S(fcs).connect(v.gFcE);v.gFcE.connect(v.fb);v.fc=nzs(fcs);
+ v.so=src('sine',500);v.so.detune.value=0;v.fb.connect(v.so.detune);v.sg=G(0);v.so.connect(v.sg);
+ const vca=G(0);v.vcf.connect(vca);v.sg.connect(vca);const ge=G(.9);v.eg.connect(ge);ge.connect(vca.gain);
+ const vs=jk('VCA');if(vs){const g=G(.9);S(vs).connect(g);g.connect(vca.gain)}
+ v.out=G(1.1);vca.connect(v.out);v.out.connect(ac.cp);v.trg=cur.cab.some(c=>c.endsWith('>TRG'));v.nodes=[vca,v.out];v.v=vca;
+ apply(v);return v}
+function apply(v=V){if(!v)return;const s=cur.s,t=ac.currentTime,st=(p,x)=>p.setTargetAtTime(x,t,.02);
+ const hzf=mapFc(s[8]);st(v.vcf.frequency,hzf);st(v.vcf.Q,s[9]*2.4);st(v.so.frequency,hzf);
+ const mf=mgHz(s[13]);[v.mg,v.mgT,v.mgS].forEach(o=>st(o.frequency,mf));
+ v.osc&&st(v.osc.detune,s[2]*100);
+ v.gFmM&&st(v.gFmM.gain,s[6]*40);v.gFmE&&st(v.gFmE.gain,s[7]*267*v.fm*(s[1]==='s'||1));
+ st(v.gFcM.gain,s[10]*270);st(v.gFcE.gain,s[11]*540*v.fc);
+ st(v.sg.gain,Math.max(0,Math.min(1,(s[9]-8)/2))*.4);
+ v.pwc&&st(v.pwc.offset,(s[3]==null?0:s[3]/10*1.8-.9));v.gEx&&st(v.gEx.gain,(s[5]||0)/10*1.4);
+ v.mgf=mf}
+function gOn(){const s=cur.s,o=V.eg.offset,t=ac.currentTime,a=tm(s[15]),h=tm(s[14]);
+ o.cancelAndHoldAtTime?o.cancelAndHoldAtTime(t):o.cancelScheduledValues(t);o.setValueAtTime(o.value,t);
+ o.linearRampToValueAtTime(1,t+a);o.setValueAtTime(1,t+a+(s[14]?h:0));o.setTargetAtTime(s[17]/10,t+a+(s[14]?h:0),tm(s[16])/3)}
+function gOff(){const o=V.eg.offset,t=ac.currentTime;o.cancelAndHoldAtTime?o.cancelAndHoldAtTime(t):o.cancelScheduledValues(t);o.setValueAtTime(o.value,t);o.setTargetAtTime(0,t,Math.max(.004,tm(cur.s[18])/3))}
+function pitch(sn,first){if(!V.osc)return;const f=hz(sn)*({32:.25,16:.5,8:1,4:2})[cur.s[0]],t=ac.currentTime;
+ first||cur.s[4]===0?V.osc.frequency.setValueAtTime(f,t):V.osc.frequency.setTargetAtTime(f,t,.02*Math.pow(1.55,cur.s[4]))}
+function kill(v,fade=.05){if(!v)return;clearInterval(v.iv);const t=ac.currentTime;v.out.gain.cancelScheduledValues(t);v.out.gain.setTargetAtTime(0,t,fade/3);setTimeout(()=>{v.all.forEach(o=>{try{o.stop()}catch(e){}});v.out.disconnect()},fade*1000*4+60)}
+function noteOn(sn){init();clearTimeout(dispT);const first=!V||!held.length;if(!V)V=build();
+ held=held.filter(x=>x!==sn);held.push(sn);pitch(sn,first);
+ if(V.trg){if(first){let ph=1;gOn();clearInterval(V.iv);V.iv=setInterval(()=>{ph^=1;ph?gOn():gOff()},500/V.mgf)}}else gOn();hl()}
+function noteOff(sn){held=held.filter(x=>x!==sn);hl();if(!V)return;if(held.length){pitch(held[held.length-1]);return}
+ clearInterval(V.iv);gOff();const v=V;dispT=setTimeout(()=>{if(V===v&&!held.length){kill(v,.1);V=null}},tm(cur.s[18])*1500+400)}
+function panic(){held=[];kill(V,.08);V=null;clearTimeout(dispT);hl()}
+
+/* ---------- scope ---------- */
+const cv=$('#cv'),cx=cv.getContext('2d');
+function frame(){requestAnimationFrame(frame);const d=devicePixelRatio||1,w=cv.clientWidth*d,h=cv.clientHeight*d;if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h}
+ cx.fillStyle='#09090b';cx.fillRect(0,0,w,h);
+ cx.strokeStyle='rgba(251,191,36,.15)';cx.lineWidth=1;cx.beginPath();cx.moveTo(0,h/2);cx.lineTo(w,h/2);cx.stroke();
+ cx.strokeStyle='#fbbf24';cx.fillStyle='#fbbf24';cx.lineWidth=1.8*d;
+ if(!an){cx.beginPath();cx.moveTo(0,h/2);cx.lineTo(w,h/2);cx.stroke();return}
+ if(mode){const b=new Uint8Array(an.frequencyBinCount);an.getByteFrequencyData(b);const n=96;for(let i=0;i<n;i++){const k=Math.floor(Math.pow(b.length*.6,i/n)),v=b[k]/255;cx.fillRect(i*w/n+1,h-v*h,w/n-2,v*h)}return}
+ const b=new Float32Array(an.fftSize);an.getFloatTimeDomainData(b);let o=0;for(let i=1;i<b.length/2;i++)if(b[i-1]<0&&b[i]>=0){o=i;break}
+ cx.beginPath();for(let i=0;i<1024;i++){const x=i*w/1024,y=h/2-b[o+i]*h*.42;i?cx.lineTo(x,y):cx.moveTo(x,y)}cx.stroke()}
+frame();
+
+/* ---------- UI ---------- */
+function setWheel(val) {
+  wheel = Math.max(-1, Math.min(1, val));
+  if (cur.wh === 'up') wheel = Math.max(0, wheel);
+  V && V.wh.offset.setTargetAtTime(wheel, ac.currentTime, .02);
+  render();
+}
+function setPatch(i,keep){
+ idx=i;base=R[i];cur=JSON.parse(JSON.stringify(base));edited=false;wheel=0;if(!keep)panic();
+ $('#num').textContent='Example '+String(base.n).padStart(2,'0')+' // '+base.cat;
+ $('#nm').textContent=base.nm;
+ $('#desc').textContent=base.d;
+ $('#reset').disabled=true;
+ document.title='MS-10 // '+base.nm;
+ try { history.replaceState(null,'','#p'+base.n); } catch(e) {}
+ render();lst()
+}
+function lst(){
+ const L=$('#list');L.innerHTML='';
+ R.forEach((p,i)=>{
+  if((cat!=='All'&&p.cat!==cat)||(qs&&!p.nm.toLowerCase().includes(qs)))return;
+  const b=document.createElement('button');
+  b.className = 'w-full text-left px-3 py-2 rounded-md font-mono text-sm transition-colors border flex-shrink-0 ' + 
+                (i===idx ? 'bg-amber-900/40 border-amber-500/50 text-white shadow-[0_0_10px_rgba(245,158,11,0.15)]' 
+                         : 'bg-transparent border-transparent text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200');
+  b.innerHTML=`<span class="text-amber-400 mr-2 opacity-70">${String(p.n).padStart(2,'0')}</span>${p.nm}`;
+  b.onclick=()=>setPatch(i);L.appendChild(b)
+ })
+}
+['All','Instruments','Synth','Sound effects'].forEach(c=>{
+ const b=document.createElement('button');
+ b.className='px-3 py-1 rounded-full border text-[10px] uppercase font-mono tracking-wider transition-colors ' + 
+             (c==='All' ? 'bg-amber-600 border-amber-500 text-white' 
+                        : 'bg-zinc-900 border-zinc-700 text-zinc-400 hover:border-zinc-500');
+ b.textContent=c;
+ b.onclick=()=>{
+  cat=c;
+  document.querySelectorAll('#chips button').forEach(x=>{
+    const isSel = x===b;
+    x.className = 'px-3 py-1 rounded-full border text-[10px] uppercase font-mono tracking-wider transition-colors ' + 
+                  (isSel ? 'bg-amber-600 border-amber-500 text-white' 
+                         : 'bg-zinc-900 border-zinc-700 text-zinc-400 hover:border-zinc-500');
+  });
+  lst()
+ };
+ $('#chips').appendChild(b)
+});
+$('#q').oninput=e=>{qs=e.target.value.toLowerCase();lst()};
+$('#prev').onclick=()=>setPatch((idx+29)%30);$('#next').onclick=()=>setPatch((idx+1)%30);
+$('#vol').oninput=e=>{vol=+e.target.value;if(outG)outG.gain.value=vol};
+$('#reset').onclick=()=>{cur=JSON.parse(JSON.stringify(base));edited=false;$('#reset').disabled=true;if(V){const was=held.slice();panic();was.forEach(noteOn)}render()};
+
+document.querySelectorAll('.scope-chip').forEach(b=>b.onclick=()=>{
+  mode=+b.dataset.m;
+  document.querySelectorAll('.scope-chip').forEach(x=>{
+    const isSel = x===b;
+    x.className = 'scope-chip px-3 py-1 text-[10px] font-mono uppercase tracking-wider rounded border transition-colors ' + 
+                  (isSel ? 'bg-amber-900/50 text-amber-400 border-amber-500' 
+                         : 'bg-zinc-950 text-zinc-500 border-zinc-800 hover:bg-zinc-800');
+  })
+});
+
+const auSn=()=>base.fg.length?NS[cur.fg[0]]:NS[9];
+const A=$('#aud');
+A.onpointerdown=e=>{e.preventDefault();A.setPointerCapture(e.pointerId);noteOn(auSn())};
+A.onpointerup=A.onpointercancel=()=>noteOff(auSn());
+function touched(){if(!edited){edited=true;$('#reset').disabled=false}}
+function restart(){if(V){const was=held.slice();panic();was.forEach(noteOn)}}
+
+let drag=null,ptrKey=null;const box=$('#svgbox');
+box.addEventListener('pointerdown',e=>{const k=e.target.closest('[data-k]'),sw=e.target.closest('[data-sw]'),w=e.target.closest('[data-wh]'),key=e.target.closest('[data-s]');
+ if(k){const kk=k.dataset.k;drag={k:kk,y:e.clientY,v:cur.s[K[kk]]??0};box.setPointerCapture(e.pointerId)}
+ else if(sw){const t=sw.dataset.t;touched();
+  if(t==='sc'){const o=[0,32,16,8,4];cur.s[0]=o[(o.indexOf(cur.s[0])+1)%5]}
+  else if(t==='wv'){const o=['s','t','q','n'];cur.s[1]=o[(o.indexOf(cur.s[1])+1)%4]}
+  else{const o=[null,'t','s','q'];cur.s[12]=o[(o.indexOf(cur.s[12])+1)%4];if(cur.s[12]&&cur.s[13]==null)cur.s[13]=3}
+  restart();render()}
+ else if(w){drag={w:1,svg:box.querySelector('svg')};box.setPointerCapture(e.pointerId);moveW(e)}
+ else if(key){ptrKey=+key.dataset.s;noteOn(ptrKey);box.setPointerCapture(e.pointerId)}});
+function moveW(e){const sv=drag.svg,pt=sv.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const y=pt.matrixTransform(sv.getScreenCTM().inverse()).y;
+ setWheel((587-y)/58)}
+box.addEventListener('pointermove',e=>{if(drag&&drag.k){const i=K[drag.k],lo=drag.k==='pt'?-5:0,st=e.shiftKey?.1:.5;let v=drag.v+(drag.y-e.clientY)/(e.shiftKey?400:55)*10;v=Math.max(lo,Math.min(10,v));v=Math.round(v/st)*st;v=Math.round(v*10)/10;
+  if(v!==cur.s[i]){cur.s[i]=v;touched();apply();render()}}
+ else if(drag&&drag.w)moveW(e);
+ else if(ptrKey!=null&&e.buttons){const k=e.target.closest&&e.target.closest('[data-s]')||document.elementFromPoint(e.clientX,e.clientY)?.closest?.('[data-s]');if(k&&+k.dataset.s!==ptrKey){const o=ptrKey;ptrKey=+k.dataset.s;noteOn(ptrKey);noteOff(o)}}});
+const up=()=>{if(drag&&drag.w){setWheel(0);}drag=null;if(ptrKey!=null){noteOff(ptrKey);ptrKey=null}};
+box.addEventListener('pointerup',up);box.addEventListener('pointercancel',up);
+box.addEventListener('dblclick',e=>{const k=e.target.closest('[data-k]');if(k){cur.s[K[k.dataset.k]]=base.s[K[k.dataset.k]];apply();render()}});
+const KM={a:7,w:8,s:9,e:10,d:11,f:12,t:13,g:14,y:15,h:16,u:17,j:18,k:19,o:20,l:21,p:22,';':23};
+
+addEventListener('keydown',e=>{
+ if(e.repeat||e.metaKey||e.ctrlKey||e.target.tagName==='INPUT')return;
+ if(e.code==='Space'){e.preventDefault();noteOn(auSn());return}
+ if(e.key==='ArrowRight')return setPatch((idx+1)%30);
+ if(e.key==='ArrowLeft')return setPatch((idx+29)%30);
+ if(e.key==='ArrowUp'){e.preventDefault();setWheel(1);return}
+ if(e.key==='ArrowDown'){e.preventDefault();setWheel(-1);return}
+ const s=KM[e.key.toLowerCase()];if(s!=null)noteOn(s)});
+ 
+addEventListener('keyup',e=>{
+ if(e.code==='Space'){noteOff(auSn());return}
+ if(e.key==='ArrowUp' || e.key==='ArrowDown'){setWheel(0);return}
+ const s=KM[e.key.toLowerCase()];if(s!=null)noteOff(s)});
+ 
+addEventListener('blur',panic);
+const h0=parseInt((location.hash.match(/p(\d+)/)||[])[1]);setPatch(h0>=1&&h0<=30?h0-1:0);
+</script>
+</body>
+</html>
