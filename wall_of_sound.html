@@ -19,7 +19,6 @@ body { background: #050505; color: #d4d4d8; overflow-x: hidden; }
               linear-gradient(90deg,rgba(245,158,11,.04),rgba(245,158,11,.02),rgba(217,119,6,.04));
   z-index: 50; background-size: 100% 2px,3px 100%; pointer-events: none; opacity: .3;
 }
-.glow-text { text-shadow: 0 0 12px rgba(245,158,11,.6); }
 .bg-synth-grid {
   background-image: linear-gradient(to right,rgba(245,158,11,.07) 1px,transparent 1px),
                     linear-gradient(to bottom,rgba(245,158,11,.07) 1px,transparent 1px);
@@ -43,8 +42,8 @@ body { background: #050505; color: #d4d4d8; overflow-x: hidden; }
 .schematic-panel.playing {
   background: rgba(var(--ac), 0.2); 
   border-color: rgba(var(--ac), 0.9);
-  box-shadow: 0 0 40px rgba(var(--ac), 0.45);
-  transform: scale(1.03);
+  box-shadow: 0 0 50px rgba(var(--ac), 0.6);
+  transform: scale(1.02);
   z-index: 20;
 }
 .schematic-panel:not(.playing):hover {
@@ -88,7 +87,7 @@ body { background: #050505; color: #d4d4d8; overflow-x: hidden; }
 }
 .note-indicator.active { 
   opacity: 1; 
-  background: rgba(var(--ac), 0.4);
+  background: rgba(var(--ac), 0.5);
   color: #fff;
   transform: scale(1.05);
   box-shadow: 0 0 15px rgba(var(--ac), 0.8);
@@ -126,7 +125,7 @@ svg.ms text { font-family: 'JetBrains Mono', monospace; font-stretch: 90%; }
 }
 </style>
 </head>
-<body class="antialiased relative selection:bg-amber-500 selection:text-zinc-950">
+<body class="antialiased relative selection:bg-amber-500 selection:text-zinc-950 flex flex-col min-h-screen">
 <div class="scanlines fixed inset-0 pointer-events-none z-50"></div>
 
 <!-- Top Navigation & Controls -->
@@ -142,7 +141,7 @@ svg.ms text { font-family: 'JetBrains Mono', monospace; font-stretch: 90%; }
       
       <!-- Playback Controls -->
       <div class="flex items-center gap-3">
-        <button id="playBtn" class="px-4 py-1.5 rounded bg-amber-600 text-zinc-950 font-mono text-xs font-bold uppercase tracking-wider hover:bg-amber-500 transition-colors shadow-[0_0_10px_rgba(245,158,11,0.4)]">▶ Boot</button>
+        <button id="playBtn" class="px-4 py-1.5 rounded bg-amber-600 text-zinc-950 font-mono text-xs font-bold uppercase tracking-wider hover:bg-amber-500 transition-colors shadow-[0_0_10px_rgba(245,158,11,0.4)]">▶ Boot Sequence</button>
         <button id="stopBtn" class="px-4 py-1.5 rounded border border-zinc-700 bg-zinc-800 text-zinc-300 font-mono text-xs font-bold uppercase tracking-wider hover:bg-zinc-700 transition-colors disabled:opacity-30" disabled>■ Halt</button>
         <a href="index.html" class="font-mono text-xs text-zinc-400 hover:text-amber-500 transition-colors ml-4 border-l border-zinc-800 pl-4 hidden sm:block">← Back</a>
       </div>
@@ -152,14 +151,14 @@ svg.ms text { font-family: 'JetBrains Mono', monospace; font-stretch: 90%; }
 </nav>
 
 <!-- Main Workspace -->
-<main class="pt-24 pb-12 bg-[#050505] min-h-screen relative z-10">
+<main class="pt-24 pb-12 bg-[#050505] flex-1 relative z-10">
   <div class="absolute inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
-  <div class="px-4 sm:px-6 lg:px-8 w-full max-w-[100rem] mx-auto flex flex-col gap-8">
+  <div class="px-4 sm:px-6 lg:px-8 w-full max-w-[100rem] mx-auto flex flex-col gap-6">
     
-    <!-- TOP ROW: Mixer & Master Scope side-by-side -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch w-full">
+    <!-- TOP ROW: Compact Mixer & Master Scope side-by-side -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full items-start">
       
-      <!-- Mixer Desk -->
+      <!-- Compact Mixer Desk -->
       <div id="mixer-container" class="w-full">
         <!-- Generated via JS -->
       </div>
@@ -172,12 +171,13 @@ svg.ms text { font-family: 'JetBrains Mono', monospace; font-stretch: 90%; }
             Master Bus Scope
           </span>
           <div class="flex gap-2">
-            <button class="scope-chip on" data-m="0">Scope</button>
-            <button class="scope-chip" data-m="1">Spectrum</button>
+            <button class="scope-chip on" data-m="0">Wave</button>
+            <button class="scope-chip" data-m="1">Freq</button>
           </div>
         </div>
-        <div class="relative flex-1 bg-[#020617] rounded-b-lg overflow-hidden min-h-[220px]">
-          <canvas id="cv" class="w-full h-full block"></canvas>
+        <div class="relative flex-1 bg-[#061005] rounded-b-lg overflow-hidden border border-zinc-800">
+          <!-- Absolute positioning forces the canvas to strictly obey the parent grid height -->
+          <canvas id="cv" class="absolute inset-0 w-full h-full block"></canvas>
         </div>
       </div>
 
@@ -190,6 +190,12 @@ svg.ms text { font-family: 'JetBrains Mono', monospace; font-stretch: 90%; }
 
   </div>
 </main>
+
+<footer class="py-8 text-center border-t border-zinc-800 bg-[#050505] relative z-20">
+  <a href="https://voltageandwave.co.uk/emulator.html#p1" target="_blank" rel="noopener noreferrer" class="font-mono text-xs text-zinc-500 hover:text-amber-500 transition-colors uppercase tracking-widest">
+    Powered by Voltage & Wave Emulator
+  </a>
+</footer>
 
 <script>
 /* 
@@ -204,8 +210,8 @@ const KW=720/19,KX=130;
 // Neon/Pop color palette for individual tracks
 const PATCH_DATA = {
   kick:  { name: "Kick",         rgb: "255, 49, 49",  s: [32,'t',0,null,0,1,0,0,4.5,7,0,4,null,null,0,0,2,0,2], cab: ['PINK>EXT'] },
-  snare: { name: "Snare",        rgb: "249, 115, 22", s: [0,'n',0,null,0,6,0,0,6,3,0,5,'s',0,0,0,3.2,0,2.5], cab: ['PINK>EXT'] }, 
-  hat:   { name: "Hi-Hat",       rgb: "250, 204, 21", s: [0,'n',0,null,0,0,0,0,8,0,0,3,'s',0,0,0,1.4,0,1], cab: ['PINK>EXT'] }, 
+  snare: { name: "Snare",        rgb: "255, 147, 0",  s: [0,'n',0,null,0,6,0,0,6,3,0,5,'s',0,0,0,3.2,0,2.5], cab: ['PINK>EXT'] }, 
+  hat:   { name: "Hi-Hat",       rgb: "255, 230, 0",  s: [0,'n',0,null,0,0,0,0,8,0,0,3,'s',0,0,0,1.4,0,1], cab: ['PINK>EXT'] }, 
   bass:  { name: "Bass",         rgb: "0, 255, 135",  s: [32,'s',0,null,0,null,0,0,5,7,0,6,null,null,0,0,1.5,3,1], cab: [] },
   lead:  { name: "Lead Synth",   rgb: "0, 234, 255",  s: [16,'q',0,5,0,null,0,3,5.5,8,0,10,'t',4,0,1,1,7,1], cab: ['WHL>FM'] }, 
   flute: { name: "Flute / Pluck",rgb: "0, 102, 255",  s: [4,'t',0,null,0,null,1,1,6,2,3,8,'t',3.5,0,1,2,7,1], cab: ['WHT>FM'] },
@@ -268,7 +274,7 @@ function buildSchematicSVG(instId, patchData) {
       <path d="M 0 1 L 9 5 L 0 9 z" fill="#18181b" stroke="none"/>
     </marker>
   </defs>
-  <rect x="60" y="185" width="790" height="315" fill="#f4f4f5" rx="4" class="synth-bg"/>
+  <rect x="60" y="185" width="790" height="315" fill="#f4f4f5" rx="4"/>
   ${ln(240,185,240,500)}${ln(325,185,325,500)}${ln(410,185,410,500)}${ln(490,185,490,500)}${ln(60,365,410,365)}${ln(240,350,240,365)}
   <g fill="#18181b" stroke="none" font-size="9.5" text-anchor="middle">
     <text x="150" y="199">VCO</text><text x="282" y="199">VCF</text><text x="367" y="199">VCA</text><text x="447" y="199">EG</text>
@@ -332,45 +338,48 @@ function buildSchematicSVG(instId, patchData) {
   return h;
 }
 
+// Compact SVG for the Top Mixer
 function buildMixerSVG() {
-  let h = `<svg id="mixer_svg" class="ms" viewBox="52 178 806 322" xmlns="http://www.w3.org/2000/svg" stroke="#18181b" fill="none" stroke-width="1.6">
-    <rect x="60" y="185" width="790" height="315" fill="#f4f4f5" rx="4"/>
+  let h = `<svg id="mixer_svg" class="ms w-full h-full" viewBox="52 178 806 160" xmlns="http://www.w3.org/2000/svg" stroke="#18181b" fill="none" stroke-width="1.6">
+    <rect x="60" y="185" width="790" height="145" fill="#f4f4f5" rx="4"/>
     <line x1="60" y1="205" x2="850" y2="205" stroke="#18181b" stroke-width="1.5"/>
-    <line x1="720" y1="185" x2="720" y2="500" stroke="#18181b" stroke-width="2" stroke-dasharray="6 4"/>`;
+    <line x1="720" y1="185" x2="720" y2="330" stroke="#18181b" stroke-width="2" stroke-dasharray="6 4"/>`;
     
   MIX_CFG.forEach((c, i) => {
     const isMaster = c.id === 'master';
     const cx = isMaster ? 785 : 85 + i * 58;
     const rgbStr = isMaster ? c.rgb : PATCH_DATA[c.id].rgb;
     
-    h += `<line x1="${cx}" y1="230" x2="${cx}" y2="440" stroke="#18181b" stroke-width="4" stroke-linecap="round"/>`;
+    // Condensed 90px Fader Travel for space saving
+    h += `<line x1="${cx}" y1="215" x2="${cx}" y2="305" stroke="#18181b" stroke-width="4" stroke-linecap="round"/>`;
     for(let j=0; j<=4; j++) {
-      h += `<line x1="${cx-8}" y1="${230 + j*52.5}" x2="${cx-3}" y2="${230 + j*52.5}" stroke="#18181b" stroke-width="1"/>`;
+      h += `<line x1="${cx-8}" y1="${215 + j*22.5}" x2="${cx-3}" y2="${215 + j*22.5}" stroke="#18181b" stroke-width="1"/>`;
     }
-    const fy = 440 - (mixState[c.id] / c.max) * 210;
+    const fy = 305 - (mixState[c.id] / c.max) * 90;
 
     if (!isMaster) {
-      h += `<circle id="led_${c.id}" cx="${cx}" cy="218" r="4" fill="#3f3f46" stroke="none"/>`;
+      h += `<circle id="led_${c.id}" cx="${cx}" cy="215" r="4" fill="#3f3f46" stroke="none" transform="translate(0, -10)"/>`;
     }
 
     h += `<g data-fader="${c.id}" transform="translate(${cx},0)" style="cursor:ns-resize">
-      <rect x="-16" y="220" width="32" height="230" fill="transparent" stroke="none"/>
+      <rect x="-16" y="210" width="32" height="100" fill="transparent" stroke="none"/>
       <rect id="fader_${c.id}" x="-12" y="${fy - 10}" width="24" height="20" fill="#18181b" rx="3" stroke="none"/>
       <line id="fline_${c.id}" x1="-12" y1="${fy}" x2="12" y2="${fy}" stroke="rgb(${rgbStr})" stroke-width="2"/>
     </g>`;
-    h += `<text x="${cx}" y="475" font-size="10" font-weight="bold" fill="#18181b" stroke="none" text-anchor="middle" font-family="'JetBrains Mono', monospace">${c.name}</text>`;
+    h += `<text x="${cx}" y="322" font-size="10" font-weight="bold" fill="#18181b" stroke="none" text-anchor="middle" font-family="'JetBrains Mono', monospace">${c.name}</text>`;
   });
   
   h += `</svg>`;
   
   const wrap = document.createElement('div');
-  wrap.className = 'schematic-panel flex flex-col h-full justify-between'; 
+  wrap.className = 'schematic-panel flex flex-col h-full'; 
   wrap.style = `--ac: 245, 158, 11;`; 
   wrap.innerHTML = `
     <div class="flex justify-between items-center px-4 py-2 border-b border-zinc-800 bg-[#0a0a0c] rounded-t-lg mb-2">
       <div class="flex items-center gap-2">
         <span class="font-mono text-xs text-amber-500 font-bold uppercase tracking-widest">Live Mixing Console</span>
       </div>
+      <span id="mixer-timer" class="font-mono text-xs text-zinc-500">0:00</span>
     </div>
     ${h}
   `;
@@ -511,7 +520,7 @@ function generateSong() {
     v.osc.frequency.setValueAtTime(f, t);
     hit(id, t, d);
     
-    // Fold visual key perfectly into the 32-key board
+    // Fold visual key into 32-key board
     let visNote = m - 36;
     while(visNote > 28) visNote -= 12;
     while(visNote < 0) visNote += 12;
@@ -570,8 +579,8 @@ function uiLoop() {
   const mins = Math.floor(el / 60);
   const secs = Math.floor(el % 60).toString().padStart(2, '0');
   
-  const timerTexts = [document.getElementById('timer')];
-  timerTexts.forEach(e => { if(e) e.textContent = `${mins}:${secs}`; });
+  const timerEl = document.getElementById('mixer-timer');
+  if(timerEl) timerEl.textContent = `${mins}:${secs}`;
   
   while(uiEvents.length > 0 && uiEvents[0].time <= t) {
     const ev = uiEvents.shift();
@@ -617,13 +626,13 @@ function setPlaybackState(active) {
       b.classList.replace('text-zinc-950', 'text-zinc-600');
       b.classList.replace('bg-amber-600', 'bg-zinc-800');
       b.classList.replace('border-amber-500', 'border-zinc-700');
-      b.classList.remove('hover:bg-amber-500', 'shadow-[0_0_15px_rgba(245,158,11,0.4)]');
+      b.classList.remove('hover:bg-amber-500', 'shadow-[0_0_10px_rgba(245,158,11,0.4)]');
       b.disabled = true;
     } else {
       b.classList.replace('text-zinc-600', 'text-zinc-950');
       b.classList.replace('bg-zinc-800', 'bg-amber-600');
       b.classList.replace('border-zinc-700', 'border-amber-500');
-      b.classList.add('hover:bg-amber-500', 'shadow-[0_0_15px_rgba(245,158,11,0.4)]');
+      b.classList.add('hover:bg-amber-500', 'shadow-[0_0_10px_rgba(245,158,11,0.4)]');
       b.disabled = false;
     }
   });
@@ -676,7 +685,7 @@ function triggerPlay() {
   requestAnimationFrame(drawScope); 
 }
 
-// Global Click Delegation for Play/Stop
+// Global Click Delegation
 document.addEventListener('click', e => {
   const p = e.target.closest('#playBtn');
   const s = e.target.closest('#stopBtn');
@@ -704,12 +713,12 @@ document.body.addEventListener('pointermove', e => {
   if (faderDrag) {
     const cfg = MIX_CFG.find(c => c.id === faderDrag.id);
     const deltaY = faderDrag.y - e.clientY;
-    const sensitivity = cfg.max / 210; 
+    const sensitivity = cfg.max / 90; 
     let newV = faderDrag.v + deltaY * sensitivity;
     newV = Math.max(0, Math.min(cfg.max, newV));
     mixState[faderDrag.id] = newV;
     
-    const fy = 440 - (newV / cfg.max) * 180;
+    const fy = 305 - (newV / cfg.max) * 90;
     document.getElementById('fader_' + faderDrag.id).setAttribute('y', fy - 10);
     document.getElementById('fline_' + faderDrag.id).setAttribute('y1', fy);
     document.getElementById('fline_' + faderDrag.id).setAttribute('y2', fy);
@@ -747,12 +756,21 @@ function drawScope() {
     cv.height = h;
   }
   
-  cx.fillStyle = '#020617'; // Dark slate/black
+  cx.fillStyle = '#061005'; // Dark green CRT background
   cx.fillRect(0, 0, w, h);
   
-  // Center line
-  cx.strokeStyle = 'rgba(74, 222, 128, 0.15)';
+  // CRT Grid
+  cx.strokeStyle = 'rgba(74, 222, 128, 0.1)';
   cx.lineWidth = 1;
+  cx.beginPath();
+  for(let i=1; i<4; i++) {
+    cx.moveTo(0, h * i / 4); cx.lineTo(w, h * i / 4);
+    cx.moveTo(w * i / 4, 0); cx.lineTo(w * i / 4, h);
+  }
+  cx.stroke();
+
+  // Center line
+  cx.strokeStyle = 'rgba(74, 222, 128, 0.4)';
   cx.beginPath();
   cx.moveTo(0, h/2);
   cx.lineTo(w, h/2);
@@ -762,7 +780,9 @@ function drawScope() {
   
   cx.strokeStyle = '#4ade80'; // Neon Green
   cx.fillStyle = '#4ade80';
-  cx.lineWidth = 2.5 * d;
+  cx.lineWidth = 2 * d;
+  cx.shadowColor = '#4ade80';
+  cx.shadowBlur = 8; // Phosphor glow
   
   if (scopeMode === 1) { // Spectrum
     const b = new Uint8Array(an.frequencyBinCount);
@@ -783,11 +803,12 @@ function drawScope() {
     cx.beginPath();
     for (let i = 0; i < 1024; i++) {
       const x = i * w / 1024;
-      const y = h / 2 - b[offset + i] * h * 0.8; // Amplified visual
+      const y = h / 2 - b[offset + i] * h * 0.8; 
       i ? cx.lineTo(x, y) : cx.moveTo(x, y);
     }
     cx.stroke();
   }
+  cx.shadowBlur = 0; // Reset
 }
 </script>
 </body>
