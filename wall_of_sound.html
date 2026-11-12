@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wall of Sound // Live Emulation</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif'],mono:['JetBrains Mono','monospace']},colors:{amber:{300:'#fcd34d',400:'#fbbf24',500:'#f59e0b',600:'#d97706',900:'#78350f',950:'#451a03'},zinc:{850:'#202022',900:'#18181b',950:'#09090b'}}}}};
+</script>
+<style>
+body { background: #050505; color: #d4d4d8; overflow-x: hidden; }
+.scanlines::before {
+  content: " "; display: block; position: absolute; inset: 0;
+  background: linear-gradient(rgba(18,16,16,0) 50%,rgba(0,0,0,.25) 50%),
+              linear-gradient(90deg,rgba(245,158,11,.04),rgba(245,158,11,.02),rgba(217,119,6,.04));
+  z-index: 50; background-size: 100% 2px,3px 100%; pointer-events: none; opacity: .3;
+}
+.glow-text { text-shadow: 0 0 12px rgba(245,158,11,.6); }
+.bg-synth-grid {
+  background-image: linear-gradient(to right,rgba(245,158,11,.07) 1px,transparent 1px),
+                    linear-gradient(to bottom,rgba(245,158,11,.07) 1px,transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Base Panel Styling */
+.schematic-panel {
+  background: #d4d4d8;
+  border-radius: 0.75rem;
+  border: 1px solid #27272a;
+  box-shadow: 0 10px 20px -5px rgba(0,0,0,.8);
+  padding: 0.5rem;
+  position: relative;
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, box-shadow, background-color;
+  --ac: 245, 158, 11; /* Default Master Amber */
+}
+
+/* Dynamic Active State leveraging specific CSS variables per panel */
+.schematic-panel.playing {
+  background: rgba(var(--ac), 0.2); 
+  border-color: rgba(var(--ac), 0.9);
+  box-shadow: 0 0 40px rgba(var(--ac), 0.45);
+  transform: scale(1.03);
+  z-index: 20;
+}
+.schematic-panel:not(.playing):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 25px -5px rgba(var(--ac), 0.2);
+}
+
+.panel-label {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  background: rgba(9,9,11,0.85);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(var(--ac), 0.5);
+  color: rgb(var(--ac));
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 10;
+  box-shadow: 0 0 10px rgba(var(--ac), 0.1);
+}
+.note-indicator {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: rgba(var(--ac), 0.1);
+  border: 1px solid rgb(var(--ac));
+  color: rgb(var(--ac));
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  opacity: 0.15;
+  transition: opacity 0.05s, transform 0.05s;
+  z-index: 10;
+}
+.note-indicator.active { 
+  opacity: 1; 
+  background: rgba(var(--ac), 0.4);
+  color: #fff;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(var(--ac), 0.8);
+}
+
+/* Dynamic SVG Elements */
+svg.ms { display: block; width: 100%; height: auto; touch-action: none; user-select: none; -webkit-user-select: none; }
+svg.ms text { font-family: 'JetBrains Mono', monospace; font-stretch: 90%; }
+.cab { fill: none; stroke-linecap: round; }
+.kw { fill: #fff; stroke: #3f3f46; stroke-width: 1.2; transition: fill 0.05s; }
+.kb { fill: #18181b; transition: fill 0.05s; }
+.kw.on { fill: rgba(var(--ac), 0.35); stroke: rgb(var(--ac)); }
+.kb.on { fill: rgb(var(--ac)); }
+
+/* Scope Toggles */
+.scope-chip {
+  padding: 0.25rem 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 0.25rem;
+  border: 1px solid #27272a;
+  background: #09090b;
+  color: #71717a;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.scope-chip:hover { background: #18181b; color: #fff; }
+.scope-chip.on {
+  border-color: rgb(var(--ac));
+  background: rgba(var(--ac), 0.25);
+  color: rgb(var(--ac));
+  box-shadow: 0 0 10px rgba(var(--ac), 0.4);
+}
+</style>
+</head>
+<body class="antialiased relative selection:bg-amber-500 selection:text-zinc-950">
+<div class="scanlines fixed inset-0 pointer-events-none z-50"></div>
+
+<!-- Top Navigation & Controls -->
+<nav class="fixed w-full z-40 top-0 bg-[#050505]/90 backdrop-blur-md border-b border-zinc-800">
+  <div class="max-w-[100rem] mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      
+      <!-- Logo & Title -->
+      <div class="flex items-center gap-4">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" class="text-amber-500 w-6 h-6"><path d="M2 12h4v-7h6v14h6v-7h4"/></svg>
+        <span class="font-mono text-sm font-bold text-white tracking-widest uppercase hidden sm:block">Wall of <span class="text-amber-500">Sound</span></span>
+      </div>
+      
+      <!-- Playback Controls -->
+      <div class="flex items-center gap-3">
+        <button id="playBtn" class="px-4 py-1.5 rounded bg-amber-600 text-zinc-950 font-mono text-xs font-bold uppercase tracking-wider hover:bg-amber-500 transition-colors shadow-[0_0_10px_rgba(245,158,11,0.4)]">▶ Boot</button>
+        <button id="stopBtn" class="px-4 py-1.5 rounded border border-zinc-700 bg-zinc-800 text-zinc-300 font-mono text-xs font-bold uppercase tracking-wider hover:bg-zinc-700 transition-colors disabled:opacity-30" disabled>■ Halt</button>
+        <a href="index.html" class="font-mono text-xs text-zinc-400 hover:text-amber-500 transition-colors ml-4 border-l border-zinc-800 pl-4 hidden sm:block">← Back</a>
+      </div>
+
+    </div>
+  </div>
+</nav>
+
+<!-- Main Workspace -->
+<main class="pt-24 pb-12 bg-[#050505] min-h-screen relative z-10">
+  <div class="absolute inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
+  <div class="px-4 sm:px-6 lg:px-8 w-full max-w-[100rem] mx-auto flex flex-col gap-8">
+    
+    <!-- TOP ROW: Mixer & Master Scope side-by-side -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch w-full">
+      
+      <!-- Mixer Desk -->
+      <div id="mixer-container" class="w-full">
+        <!-- Generated via JS -->
+      </div>
+      
+      <!-- Master Bus Scope -->
+      <div class="schematic-panel w-full flex flex-col h-full" style="--ac: 74, 222, 128;">
+        <div class="flex justify-between items-center px-4 py-2 border-b border-zinc-800 bg-[#0a0a0c] rounded-t-lg mb-2">
+          <span class="font-mono text-xs text-green-400 font-bold uppercase tracking-widest flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+            Master Bus Scope
+          </span>
+          <div class="flex gap-2">
+            <button class="scope-chip on" data-m="0">Scope</button>
+            <button class="scope-chip" data-m="1">Spectrum</button>
+          </div>
+        </div>
+        <div class="relative flex-1 bg-[#020617] rounded-b-lg overflow-hidden min-h-[220px]">
+          <canvas id="cv" class="w-full h-full block"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SYNTH ROW: Grid of 11 Instruments -->
+    <div id="schematic-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <!-- Generated via JS -->
+    </div>
+
+  </div>
+</main>
+
+<script>
+/* 
+  Configuration Data & Constants
+*/
+const K={pt:2,pw:3,po:4,ex:5,fmM:6,fmE:7,fc:8,pk:9,fcM:10,fcE:11,mgF:13,H:14,A:15,D:16,S:17,R:18};
+const J={FM:[540,277], PWM:[565,277], EXT:[610,277], FC:[635,277], VCA:[700,277], MGT:[540,377], MGS:[565,377], EGR:[610,377], TRG:[775,352], PINK:[540,437], WHT:[640,437], WHL:[690,437]};
+const WH=[0,2,4,6,7,9,11],NS=[];for(let i=0;i<19;i++)NS.push(WH[i%7]+12*Math.floor(i/7));
+const BL=[1,3,5,8,10,13,15,17,20,22,25,27,29];
+const KW=720/19,KX=130;
+
+// Neon/Pop color palette for individual tracks
+const PATCH_DATA = {
+  kick:  { name: "Kick",         rgb: "255, 49, 49",  s: [32,'t',0,null,0,1,0,0,4.5,7,0,4,null,null,0,0,2,0,2], cab: ['PINK>EXT'] },
+  snare: { name: "Snare",        rgb: "249, 115, 22", s: [0,'n',0,null,0,6,0,0,6,3,0,5,'s',0,0,0,3.2,0,2.5], cab: ['PINK>EXT'] }, 
+  hat:   { name: "Hi-Hat",       rgb: "250, 204, 21", s: [0,'n',0,null,0,0,0,0,8,0,0,3,'s',0,0,0,1.4,0,1], cab: ['PINK>EXT'] }, 
+  bass:  { name: "Bass",         rgb: "0, 255, 135",  s: [32,'s',0,null,0,null,0,0,5,7,0,6,null,null,0,0,1.5,3,1], cab: [] },
+  lead:  { name: "Lead Synth",   rgb: "0, 234, 255",  s: [16,'q',0,5,0,null,0,3,5.5,8,0,10,'t',4,0,1,1,7,1], cab: ['WHL>FM'] }, 
+  flute: { name: "Flute / Pluck",rgb: "0, 102, 255",  s: [4,'t',0,null,0,null,1,1,6,2,3,8,'t',3.5,0,1,2,7,1], cab: ['WHT>FM'] },
+  pad1:  { name: "Pad (Voice 1)",rgb: "157, 0, 255",  s: [8,'s',0,null,0,null,1,0,6.5,4,0,0,'t',3.5,0,5,0,10,4], cab: [] },
+  pad2:  { name: "Pad (Voice 2)",rgb: "213, 0, 255",  s: [8,'s',0,null,0,null,1,0,6.5,4,0,0,'t',3.5,0,5,0,10,4], cab: [] },
+  pad3:  { name: "Pad (Voice 3)",rgb: "255, 0, 212",  s: [8,'s',0,null,0,null,1,0,6.5,4,0,0,'t',3.5,0,5,0,10,4], cab: [] },
+  gun:   { name: "Laser Sweep",  rgb: "255, 0, 85",   s: [0,'q',0,2,0,null,0,0,4,10,10,0,'q',6,0,0,0,10,0], cab: [] },
+  star:  { name: "Falling Star", rgb: "0, 255, 204",  s: [0,'q',0,2,0,null,0,0,6,10,6,8,'q',5,7,0,5,0,0], cab: [] }
+};
+
+// Mixer Configuration
+const MIX_CFG = [
+  {id: 'kick', name: 'KIK', def: 1.0, max: 2},
+  {id: 'snare', name: 'SNR', def: 0.75, max: 2},
+  {id: 'hat', name: 'HAT', def: 0.28, max: 1},
+  {id: 'bass', name: 'BAS', def: 0.95, max: 2},
+  {id: 'lead', name: 'LED', def: 0.4, max: 1},
+  {id: 'flute', name: 'FLU', def: 0.55, max: 1},
+  {id: 'pad1', name: 'PD1', def: 0.17, max: 0.5},
+  {id: 'pad2', name: 'PD2', def: 0.17, max: 0.5},
+  {id: 'pad3', name: 'PD3', def: 0.17, max: 0.5},
+  {id: 'gun', name: 'GUN', def: 0.4, max: 1},
+  {id: 'star', name: 'STR', def: 0.4, max: 1},
+  {id: 'master', name: 'MST', def: 0.8, max: 1.5, rgb: "74, 222, 128"} // Neon Green Master
+];
+
+let mixState = {};
+MIX_CFG.forEach(c => mixState[c.id] = c.def);
+
+/* ---------- Render SVG Engines ---------- */
+const G={t:'M-9 5L0 -6L9 5',s:'M-8 6V-6L8 6',q:'M-9 4V-4H-3V4H3V-4H9',n:'M-9 0L-7 -5L-5 4L-3 -3L-1 5L1 -4L3 3L5 -5L7 2L9 -1'};
+const fv=(k,v)=>v==null?'':(k==='pt'&&v>0?'+'+v:''+v);
+function knob(x,y,lab,k,s,o={}){const v=s[K[k]],p=o.ptr;
+ const ang=(v/10*270-135);let t=p?(v==null?'':`<line x1="0" y1="0" x2="0" y2="-17" stroke-width="2.4" transform="rotate(${ang})"/>`):`<text y="5" font-size="${fv(k,v).length>2?12:15}" text-anchor="middle" font-weight="600">${fv(k,v)}</text>`;
+ const ly=o.top?y-26:o.mid?y+25:y+27;
+ return `<g transform="translate(${x},${y})"><circle r="17" fill="#fff" stroke="#18181b" stroke-width="1.6"/>${t}<text y="${ly-y}" font-size="9.5" text-anchor="middle">${lab}</text></g>`}
+function sw(x,y,lab,w,type,s,mid){let inner='';
+ if(type==='sc'){inner=s[0]?`<text y="5" font-size="16" text-anchor="middle" font-weight="600">${s[0]}′</text>`:''}
+ else{const g=G[w];inner=g?`<path d="${g}" fill="none" stroke="#18181b" stroke-width="1.8" transform="scale(1.1)"/>`:''}
+ return `<g transform="translate(${x},${y})"><circle r="19" fill="#fff" stroke="#18181b" stroke-width="1.6"/>${inner}<text y="${mid?25:30}" font-size="9.5" text-anchor="middle">${lab}</text></g>`}
+function hexJ(id, cab){const [x,y]=J[id],on=cab.some(c=>c.split('>').includes(id));
+ return `<g transform="translate(${x},${y})"><polygon points="-8,-3.5 -3.5,-8 3.5,-8 8,-3.5 8,3.5 3.5,8 -3.5,8 -8,3.5" fill="#fff" stroke="#18181b" stroke-width="1.6"/>${on?'<circle r="4.2" fill="#18181b"/>':''}</g>`}
+function cable(a,b){const [x1,y1]=J[a],[x2,y2]=J[b];let d;
+ if(Math.abs(y2-y1)<30){const dr=34+Math.abs(x2-x1)*.25;d=`M${x1} ${y1}C${x1} ${y1+dr},${x2} ${y2+dr},${x2} ${y2}`}
+ else{const o=-(38+Math.abs(y2-y1)*.1);d=`M${x1} ${y1}C${x1+o} ${y1+(y2-y1)*.25},${x2+o} ${y2-(y2-y1)*.25},${x2} ${y2}`}
+ return `<path class="cab" d="${d}" stroke="#18181b" stroke-width="6" fill="none" stroke-linecap="round"/><path class="cab" d="${d}" stroke="rgb(var(--ac))" stroke-width="3" fill="none" stroke-linecap="round"/>`}
+const bx=(x,y,w,t)=>`<rect x="${x}" y="${y}" width="${w}" height="22" fill="#fff" stroke="#18181b" stroke-width="1.5"/><text x="${x+w/2}" y="${y+15}" font-size="10.5" text-anchor="middle">${t}</text>`;
+
+function buildSchematicSVG(instId, patchData) {
+  const s = patchData.s;
+  const cab = patchData.cab;
+  const eg=[262,310,358,406,454];
+  const ln=(a,b,c,d)=>`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}"/>`;
+  const lna=(a,b,c,d)=>`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" marker-end="url(#ah_${instId})"/>`;
+  const ptha=(d)=>`<path d="${d}" marker-end="url(#ah_${instId})"/>`;
+
+  let h=`<svg id="svg_${instId}" class="ms" viewBox="52 178 806 500" xmlns="http://www.w3.org/2000/svg" stroke="#18181b" fill="none" stroke-width="1.6">
+  <defs>
+    <marker id="ah_${instId}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#18181b" stroke="none"/>
+    </marker>
+  </defs>
+  <rect x="60" y="185" width="790" height="315" fill="#f4f4f5" rx="4" class="synth-bg"/>
+  ${ln(240,185,240,500)}${ln(325,185,325,500)}${ln(410,185,410,500)}${ln(490,185,490,500)}${ln(60,365,410,365)}${ln(240,350,240,365)}
+  <g fill="#18181b" stroke="none" font-size="9.5" text-anchor="middle">
+    <text x="150" y="199">VCO</text><text x="282" y="199">VCF</text><text x="367" y="199">VCA</text><text x="447" y="199">EG</text>
+    <text x="200" y="378">FM</text><text x="282" y="378">fcM</text><text x="365" y="378">MG</text><text x="105" y="376">PORT</text><text x="105" y="427">EXT SIG</text>
+    <text x="367" y="303">EG &amp; EXT</text>
+  </g>
+  <path d="M345 245V285L388 265Z" fill="#fff" stroke-width="1.8"/>
+  
+  ${sw(105,267,'SCALE',0,'sc',s)}${sw(195,267,'WAVEFORM',s[1],'wv',s)}
+  ${knob(105,327,'PITCH','pt',s)}${knob(195,327,'PW/PWM','pw',s,{ptr:1})}${knob(282,267,'fc','fc',s)}${knob(282,327,'PEAK','pk',s)}
+  ${knob(105,402,'','po',s)}${knob(105,452,'','ex',s)}${knob(200,404,'MG','fmM',s,{mid:1})}${knob(200,452,'EG/EXT','fmE',s)}
+  ${knob(282,404,'MG','fcM',s,{mid:1})}${knob(282,452,'EG/EXT','fcE',s)}${sw(365,404,'WAVE FORM',s[12],'mg',s,1)}${knob(365,452,'FREQ','mgF',s)}
+  ${['H','A','D','S','R'].map((k,i)=>knob(447,eg[i],['HOLD','ATTACK','DECAY','SUSTAIN','RELEASE'][i],k,s)).join('')}
+  
+  <g stroke-width="1.5">
+    ${bx(525, 222, 48, 'VCO')}${bx(597, 222, 48, 'VCF')}${bx(672, 222, 48, 'VCA')}
+    ${bx(533, 318, 40, 'MG')}${bx(602, 318, 40, 'EG')}${bx(700, 290, 40, 'KBD')}${bx(700, 338, 40, 'TRIG')}
+    ${bx(570, 426, 40, 'NG')}
+    ${lna(573, 233, 593, 233)}${lna(645, 233, 668, 233)}${lna(720, 233, 748, 233)}
+    <circle cx="780" cy="233" r="28" fill="#fff"/>
+    <text x="780" y="237" font-size="11" font-weight="600" text-anchor="middle" stroke="none">VOL</text>
+    ${lna(808, 233, 822, 233)}
+    <circle cx="826" cy="233" r="4" fill="#18181b"/>
+    <text x="835" y="237" font-size="8.5" stroke="none" fill="#18181b">SIG OUT</text>
+  </g>
+
+  <g stroke-width="1.2">
+    ${ptha('M 700 301 L 530 301 L 530 248')}${ptha('M 602 301 L 602 248')}${ptha('M 720 312 L 720 334')}
+    ${ptha('M 700 349 L 642 349 L 642 344')}${ptha('M 622 318 L 622 292 L 571 292 L 571 248')}
+    ${ptha('M 622 292 L 643 292 L 643 248')}${ptha('M 643 292 L 715 292 L 715 248')}
+    ${ptha('M 553 318 L 553 208 L 545 208 L 545 218')}${ptha('M 553 208 L 620 208 L 620 218')}
+  </g>
+
+  <g stroke-width="1.5">
+    ${ln(540,277, 540,244)}${ln(565,277, 565,244)}${ln(610,277, 610,244)}${ln(635,277, 635,244)}
+    ${ln(700,277, 700,244)}${ln(540,377, 540,340)}${ln(565,377, 565,340)}${ln(610,377, 610,340)}
+    ${lna(771,352, 744,352)}${lna(544,437, 566,437)}${lna(636,437, 614,437)}${ln(694,437, 720,437)}
+    <path d="M722 441 Q 734 424 746 441 Z" fill="#fff" stroke="#18181b" stroke-width="1.5"/>
+    ${ln(495,463,850,463)}
+  </g>
+  
+  ${['FM','PWM','EXT','FC','VCA','MGT','MGS','EGR','TRG','PINK','WHT','WHL'].map(id=>hexJ(id, cab)).join('')}
+  <circle cx="775" cy="293" r="8" fill="#fff"/><circle cx="775" cy="329" r="8" fill="#fff"/>
+  ${cab.map(c=>{const [a,b]=c.split('>');return cable(a,b)}).join('')}
+
+  <g>
+    <rect x="62" y="503" width="64" height="167" fill="#27272a"/>
+    <rect x="87" y="512" width="14" height="148" fill="#18181b"/>
+    ${ln(80,587,108,587)}
+    <!-- Mod wheel locked visually -->
+    <rect x="78" y="578" width="32" height="18" fill="#52525b" stroke="none" rx="2"/>
+    ${ln(78,587,110,587)}
+  </g>
+
+  <!-- Keyboard -->
+  ${NS.map((s_key, i) => `<rect id="kw_${instId}_${s_key}" class="kw" x="${KX+i*KW}" y="500" width="${KW}" height="170"/>`).join('')}
+  ${BL.map((s_key) => { const i = NS.indexOf(s_key-1); return `<rect id="kb_${instId}_${s_key}" class="kb" x="${KX+i*KW+KW-12}" y="500" width="24" height="102"/>`; }).join('')}
+  
+  <rect x="60" y="500" width="790" height="170" fill="none" stroke-width="2"/>
+  </svg>`;
+  return h;
+}
+
+function buildMixerSVG() {
+  let h = `<svg id="mixer_svg" class="ms" viewBox="52 178 806 322" xmlns="http://www.w3.org/2000/svg" stroke="#18181b" fill="none" stroke-width="1.6">
+    <rect x="60" y="185" width="790" height="315" fill="#f4f4f5" rx="4"/>
+    <line x1="60" y1="205" x2="850" y2="205" stroke="#18181b" stroke-width="1.5"/>
+    <line x1="720" y1="185" x2="720" y2="500" stroke="#18181b" stroke-width="2" stroke-dasharray="6 4"/>`;
+    
+  MIX_CFG.forEach((c, i) => {
+    const isMaster = c.id === 'master';
+    const cx = isMaster ? 785 : 85 + i * 58;
+    const rgbStr = isMaster ? c.rgb : PATCH_DATA[c.id].rgb;
+    
+    h += `<line x1="${cx}" y1="230" x2="${cx}" y2="440" stroke="#18181b" stroke-width="4" stroke-linecap="round"/>`;
+    for(let j=0; j<=4; j++) {
+      h += `<line x1="${cx-8}" y1="${230 + j*52.5}" x2="${cx-3}" y2="${230 + j*52.5}" stroke="#18181b" stroke-width="1"/>`;
+    }
+    const fy = 440 - (mixState[c.id] / c.max) * 210;
+
+    if (!isMaster) {
+      h += `<circle id="led_${c.id}" cx="${cx}" cy="218" r="4" fill="#3f3f46" stroke="none"/>`;
+    }
+
+    h += `<g data-fader="${c.id}" transform="translate(${cx},0)" style="cursor:ns-resize">
+      <rect x="-16" y="220" width="32" height="230" fill="transparent" stroke="none"/>
+      <rect id="fader_${c.id}" x="-12" y="${fy - 10}" width="24" height="20" fill="#18181b" rx="3" stroke="none"/>
+      <line id="fline_${c.id}" x1="-12" y1="${fy}" x2="12" y2="${fy}" stroke="rgb(${rgbStr})" stroke-width="2"/>
+    </g>`;
+    h += `<text x="${cx}" y="475" font-size="10" font-weight="bold" fill="#18181b" stroke="none" text-anchor="middle" font-family="'JetBrains Mono', monospace">${c.name}</text>`;
+  });
+  
+  h += `</svg>`;
+  
+  const wrap = document.createElement('div');
+  wrap.className = 'schematic-panel flex flex-col h-full justify-between'; 
+  wrap.style = `--ac: 245, 158, 11;`; 
+  wrap.innerHTML = `
+    <div class="flex justify-between items-center px-4 py-2 border-b border-zinc-800 bg-[#0a0a0c] rounded-t-lg mb-2">
+      <div class="flex items-center gap-2">
+        <span class="font-mono text-xs text-amber-500 font-bold uppercase tracking-widest">Live Mixing Console</span>
+      </div>
+    </div>
+    ${h}
+  `;
+  return wrap;
+}
+
+// Generate the Top Container (Mixer)
+const mixerContainer = document.getElementById('mixer-container');
+mixerContainer.appendChild(buildMixerSVG());
+
+// Generate the Grid (11 synths)
+const container = document.getElementById('schematic-container');
+Object.keys(PATCH_DATA).forEach(id => {
+  const data = PATCH_DATA[id];
+  const wrap = document.createElement('div');
+  wrap.id = `panel_${id}`;
+  wrap.className = 'schematic-panel';
+  wrap.style = `--ac: ${data.rgb};`; // Set specific color variable
+  wrap.innerHTML = `
+    <div class="panel-label" style="color: rgb(${data.rgb}); border-color: rgba(${data.rgb}, 0.5)">${data.name}</div>
+    <div id="ind_${id}" class="note-indicator" style="color: rgb(${data.rgb}); border-color: rgb(${data.rgb})">ACTIVE</div>
+    ${buildSchematicSVG(id, data)}
+  `;
+  container.appendChild(wrap);
+});
+
+/* ---------- Audio Engine & Playback Logic ---------- */
+let ac, outG, an, isPlaying = false, startTime = 0, raf;
+let nW, nP;
+const tracks = {}; 
+let scopeMode = 0; // 0: Scope, 1: Spectrum
+
+const mapFc=v=>40*Math.pow(2,v*.9),mgHz=v=>.5*Math.pow(2,.93*(v||0)),tm=v=>v<=0?.003:.003*Math.pow(10,.36*v),dm=v=>Math.max(.06,tm(v));
+
+function initAudio(){
+  if(ac) return;
+  ac=new (window.AudioContext||window.webkitAudioContext)();
+  const cp=ac.createDynamicsCompressor();
+  outG=ac.createGain();
+  outG.gain.value=mixState.master;
+  
+  an=ac.createAnalyser();
+  an.fftSize=2048;
+  an.smoothingTimeConstant=0.75;
+  
+  cp.connect(outG);
+  outG.connect(an);
+  an.connect(ac.destination);
+  ac.cp=cp;
+  
+  const L=ac.sampleRate*3;nW=ac.createBuffer(1,L,ac.sampleRate);nP=ac.createBuffer(1,L,ac.sampleRate);
+  const w=nW.getChannelData(0),p=nP.getChannelData(0);let a=0,b=0,c=0,d=0,e=0,f=0,g=0;
+  for(let i=0;i<L;i++){const x=Math.random()*2-1;w[i]=x;a=.99886*a+x*.0555179;b=.99332*b+x*.0750759;c=.969*c+x*.153852;d=.8665*d+x*.3104856;e=.55*e+x*.5329522;f=-.7616*f-x*.016898;p[i]=(a+b+c+d+e+f+g+x*.5362)*.12;g=x*.115926}
+}
+
+function buildVoice(id, pData){
+  const s=pData.s, v={all:[], tm:[], P: pData}, N=(f,...a)=>ac[f](...a);
+  const src=(t,f)=>{const o=N('createOscillator');o.type=t;o.frequency.value=f;o.start();v.all.push(o);return o};
+  const G=(g=1)=>{const n=N('createGain');n.gain.value=g;return n};
+  const cs=()=>{const o=N('createConstantSource');o.offset.value=0;o.start();v.all.push(o);return o};
+  const nz=b=>{const o=N('createBufferSource');o.buffer=b;o.loop=true;o.start();v.all.push(o);return o};
+  
+  v.eg=cs();v.wh=cs();
+  v.mg=src(({t:'triangle',s:'sawtooth',q:'square'})[s[12]]||'triangle',1);v.mgT=src('triangle',1);v.mgS=src('square',1);
+  
+  const memo={};const S=n=>memo[n]||(memo[n]=({EG:()=>v.eg,EGR:()=>{const g=G(-1);v.eg.connect(g);return g},WHL:()=>v.wh,MGT:()=>v.mgT,MGS:()=>v.mgS,PINK:()=>{const g=G(.3);nz(nP).connect(g);return g},WHT:()=>{const g=G(.2);nz(nW).connect(g);return g}})[n]());
+  const jk=(d,def)=>{const c=pData.cab.find(c=>c.endsWith('>'+d));return c?c.split('>')[0]:def};
+  const nzs=n=>n==='PINK'||n==='WHT'?.5:1;
+  
+  v.vcf=N('createBiquadFilter');v.vcf.type='lowpass';const pre=G(.5);pre.connect(v.vcf);
+  v.fb=G(1);v.fb.connect(v.vcf.detune);
+  
+  if(s[1]==='n') S('WHT').connect(pre);
+  else if(s[0]){
+    if(s[1]==='q'){v.osc=src('triangle',200);const m=G(1),ws=N('createWaveShaper'),c=new Float32Array(512);for(let i=0;i<512;i++)c[i]=i<256?-1:1;ws.curve=c;v.pwc=cs();v.osc.connect(m);v.pwc.connect(m);m.connect(ws);const q=G(.45);ws.connect(q);q.connect(pre);const pm=jk('PWM');if(pm){v.gPwm=G(.8);S(pm).connect(v.gPwm);v.gPwm.connect(v.pwc.offset)}}
+    else{v.osc=src(s[1]==='s'?'sawtooth':'triangle',200);v.osc.connect(pre)}
+    v.gFmM=G(0);v.mg.connect(v.gFmM);v.gFmM.connect(v.osc.detune);const fs=jk('FM','EG');v.gFmE=G(0);S(fs).connect(v.gFmE);v.gFmE.connect(v.osc.detune);v.fm=nzs(fs)
+  }
+  const ex=jk('EXT');if(ex){v.gEx=G(0);S(ex).connect(v.gEx);v.gEx.connect(pre)}
+  v.gFcM=G(0);v.mg.connect(v.gFcM);v.gFcM.connect(v.fb);const fcs=jk('FC','EG');v.gFcE=G(0);S(fcs).connect(v.gFcE);v.gFcE.connect(v.fb);v.fc=nzs(fcs);
+  v.so=src('sine',500);v.so.detune.value=0;v.fb.connect(v.so.detune);v.sg=G(0);v.so.connect(v.sg);
+  const vca=G(0);v.vcf.connect(vca);v.sg.connect(vca);
+  const vsum=G(.5),clip=N('createWaveShaper');clip.curve=new Float32Array([0,0,2]);vsum.connect(clip);clip.connect(vca.gain);
+  const ge=G(.9);v.eg.connect(ge);ge.connect(vsum);
+  const vs=jk('VCA');if(vs){const g=G(.9);S(vs).connect(g);g.connect(vsum)}
+  
+  v.out=G(mixState[id]); 
+  vca.connect(v.out);v.out.connect(ac.cp);
+  
+  const t=ac.currentTime,st=(p,x)=>p.setTargetAtTime(x,t,.02);
+  const hzf=mapFc(s[8]);st(v.vcf.frequency,hzf);st(v.vcf.Q,s[9]*2.4);st(v.so.frequency,hzf);
+  const mf=mgHz(s[13]);[v.mg,v.mgT,v.mgS].forEach(o=>st(o.frequency,mf));
+  v.osc&&st(v.osc.detune,s[2]*100);
+  v.gFmM&&st(v.gFmM.gain,s[6]*40);v.gFmE&&st(v.gFmE.gain,s[7]*267*v.fm);
+  st(v.gFcM.gain,s[10]*270);st(v.gFcE.gain,s[11]*540*v.fc);
+  st(v.sg.gain,Math.max(0,Math.min(1,(s[9]-8)/2))*.4);
+  v.pwc&&st(v.pwc.offset,(s[3]==null?0:s[3]/10*1.8-.9));v.gEx&&st(v.gEx.gain,2*Math.pow((s[5]||0)/10,.7));
+  
+  return v;
+}
+
+const hold=(o,t,on)=>{if(o.cancelAndHoldAtTime){o.cancelAndHoldAtTime(t);o.setValueAtTime(o.value,t)}else{o.cancelScheduledValues(t);if(on)o.setValueAtTime(0,t);else o.setValueAtTime(o.value,t)}};
+function schedOn(v, at) {
+  const s = v.P.s, o = v.eg.offset, a = tm(s[15]), h = tm(s[14]);
+  hold(o, at, 1);
+  o.linearRampToValueAtTime(1, at + a);
+  o.setValueAtTime(1, at + a + (s[14]?h:0));
+  o.setTargetAtTime(s[17]/10, at + a + (s[14]?h:0), dm(s[16])/3);
+}
+function schedOff(v, at) {
+  const o = v.eg.offset;
+  hold(o, at, 0);
+  o.setTargetAtTime(0, at, Math.max(.004, dm(v.P.s[18])/3));
+}
+
+let uiEvents = [];
+
+function generateSong() {
+  uiEvents = [];
+  Object.keys(PATCH_DATA).forEach(id => {
+    tracks[id] = buildVoice(id, PATCH_DATA[id]);
+  });
+  
+  const t0 = ac.currentTime + 0.5;
+  startTime = t0;
+  const B = 60/114, bar = 4*B, fq = m => 440*Math.pow(2,(m-69)/12);
+  
+  const hit = (id, t, d) => {
+    const v = tracks[id];
+    schedOn(v, t);
+    schedOff(v, t+d);
+    uiEvents.push({ time: t, id, type: 'on', note: null });
+    uiEvents.push({ time: t+d, id, type: 'off', note: null });
+  };
+  const nt = (id, t, d, m) => {
+    const v = tracks[id];
+    const f = fq(m) * ({32:.25, 16:.5, 8:1, 4:2})[v.P.s[0]];
+    v.osc.frequency.setValueAtTime(f, t);
+    hit(id, t, d);
+    
+    // Fold visual key perfectly into the 32-key board
+    let visNote = m - 36;
+    while(visNote > 28) visNote -= 12;
+    while(visNote < 0) visNote += 12;
+    
+    if([...NS, ...BL].includes(visNote)) {
+      uiEvents.push({ time: t, id, type: 'keyOn', note: visNote });
+      uiEvents.push({ time: t+d, id, type: 'keyOff', note: visNote });
+    }
+  };
+
+  const PROG=[{r:33,t:[57,60,64],a:[57,60,64,69,72]},{r:33,t:[57,60,64],a:[57,60,64,69,72]},
+              {r:29,t:[53,57,60],a:[53,57,60,65,69]},{r:29,t:[53,57,60],a:[53,57,60,65,69]},
+              {r:36,t:[55,60,64],a:[60,64,67,72,76]},{r:36,t:[55,60,64],a:[60,64,67,72,76]},
+              {r:31,t:[55,59,62],a:[55,59,62,67,71]},{r:31,t:[55,59,62],a:[55,59,62,67,71]}];
+  const AP=[0,2,1,3,0,2,1,3,0,2,1,3,0,2,4,3], BP=[0,0,12,0,0,0,12,0];
+  const MEL=[[[0,76,1.5],[1.5,72,.5],[2,76,1],[3,79,1]],[[0,81,1.5],[1.5,79,.5],[2,76,2]],
+             [[0,77,1.5],[1.5,72,.5],[2,77,1],[3,81,1]],[[0,84,1.5],[1.5,81,.5],[2,77,2]],
+             [[0,79,1.5],[1.5,76,.5],[2,79,1],[3,84,1]],[[0,83,1.5],[1.5,84,.5],[2,79,2]],
+             [[0,74,1],[1,79,1],[2,83,1],[3,86,1]],[[0,83,2],[2,79,1],[3,74,1]]];
+
+  for(let b=0; b<16; b++) {
+    const tb = t0 + b*bar, c = PROG[b%8], drums = b<12||b>13, groove = b>=2&&drums;
+    for(let i=0; i<4; i++) {
+      const t = tb + i*B;
+      if(drums) {
+        tracks.kick.osc.frequency.setValueAtTime(150, t);
+        tracks.kick.osc.frequency.setTargetAtTime(46, t, .025);
+        hit('kick', t, .2);
+      }
+      if(b>=4 && drums && (i===1||i===3)) hit('snare', t, .18);
+      if(groove) (b>=8 ? [.25,.5,.75] : [.5]).forEach(f => hit('hat', t + f*B, .05));
+    }
+    BP.forEach((o,j) => nt('bass', tb + j*B/2, B*.42, c.r+o));
+    if(groove) AP.forEach((x,j) => nt('lead', tb + j*B/4, B*.17, c.a[x] + (b>=8?12:0)));
+    if(b>=4) c.t.forEach((m,x) => nt('pad'+(x+1), tb, bar*.97, m));
+    if(b>=8) MEL[b%8].forEach(([o,m,d]) => nt('flute', tb + o*B, d*B*.9, m));
+    if(b===7||b===11) hit('gun', tb + 3*B, B*.95);
+    if(b===12) hit('star', tb, bar*1.4);
+  }
+  const ts = t0 + 16*bar, c = PROG[0];
+  tracks.kick.osc.frequency.setValueAtTime(150, ts);
+  tracks.kick.osc.frequency.setTargetAtTime(46, ts, .025);
+  hit('kick', ts, .2); hit('snare', ts, .2);
+  nt('bass', ts, 2, 33); nt('lead', ts, 1.2, 69); nt('flute', ts, 1.6, 81);
+  c.t.forEach((m,x) => nt('pad'+(x+1), ts, 2.2, m));
+
+  uiEvents.sort((a,b) => a.time - b.time);
+  return 16*bar + 3.4;
+}
+
+function uiLoop() {
+  if(!isPlaying) return;
+  const t = ac.currentTime;
+  
+  const el = Math.max(0, t - startTime);
+  const mins = Math.floor(el / 60);
+  const secs = Math.floor(el % 60).toString().padStart(2, '0');
+  
+  const timerTexts = [document.getElementById('timer')];
+  timerTexts.forEach(e => { if(e) e.textContent = `${mins}:${secs}`; });
+  
+  while(uiEvents.length > 0 && uiEvents[0].time <= t) {
+    const ev = uiEvents.shift();
+    
+    // Animate panels simultaneously
+    const led = document.getElementById(`led_${ev.id}`);
+    const ind = document.getElementById(`ind_${ev.id}`);
+    const panel = document.getElementById(`panel_${ev.id}`);
+    
+    if(ev.type === 'on') {
+      if(led) led.setAttribute('fill', `rgb(${PATCH_DATA[ev.id].rgb})`);
+      if(ind) ind.classList.add('active');
+      if(panel) panel.classList.add('playing');
+    }
+    if(ev.type === 'off') {
+      if(led) led.setAttribute('fill', '#3f3f46');
+      if(ind) ind.classList.remove('active');
+      if(panel) panel.classList.remove('playing');
+    }
+    
+    if(ev.type === 'keyOn' && ev.note !== null) {
+      const isBlack = BL.includes(ev.note);
+      const kEl = document.getElementById(`k${isBlack?'b':'w'}_${ev.id}_${ev.note}`);
+      if(kEl) kEl.classList.add('on');
+    }
+    if(ev.type === 'keyOff' && ev.note !== null) {
+      const isBlack = BL.includes(ev.note);
+      const kEl = document.getElementById(`k${isBlack?'b':'w'}_${ev.id}_${ev.note}`);
+      if(kEl) kEl.classList.remove('on');
+    }
+  }
+
+  if(uiEvents.length > 0) {
+    raf = requestAnimationFrame(uiLoop);
+  } else {
+    stopSong(); 
+  }
+}
+
+function setPlaybackState(active) {
+  document.querySelectorAll('#playBtn').forEach(b => {
+    if(active) {
+      b.classList.replace('text-zinc-950', 'text-zinc-600');
+      b.classList.replace('bg-amber-600', 'bg-zinc-800');
+      b.classList.replace('border-amber-500', 'border-zinc-700');
+      b.classList.remove('hover:bg-amber-500', 'shadow-[0_0_15px_rgba(245,158,11,0.4)]');
+      b.disabled = true;
+    } else {
+      b.classList.replace('text-zinc-600', 'text-zinc-950');
+      b.classList.replace('bg-zinc-800', 'bg-amber-600');
+      b.classList.replace('border-zinc-700', 'border-amber-500');
+      b.classList.add('hover:bg-amber-500', 'shadow-[0_0_15px_rgba(245,158,11,0.4)]');
+      b.disabled = false;
+    }
+  });
+
+  document.querySelectorAll('#stopBtn').forEach(b => {
+    if(active) {
+      b.classList.replace('text-zinc-300', 'text-zinc-950');
+      b.classList.replace('bg-zinc-800', 'bg-amber-600');
+      b.classList.replace('border-zinc-700', 'border-amber-500');
+      b.classList.add('hover:bg-amber-500');
+      b.disabled = false;
+    } else {
+      b.classList.replace('text-zinc-950', 'text-zinc-300');
+      b.classList.replace('bg-amber-600', 'bg-zinc-800');
+      b.classList.replace('border-amber-500', 'border-zinc-700');
+      b.classList.remove('hover:bg-amber-500');
+      b.disabled = true;
+    }
+  });
+}
+
+function stopSong() {
+  isPlaying = false;
+  cancelAnimationFrame(raf);
+  setPlaybackState(false);
+  document.querySelectorAll('.note-indicator').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.schematic-panel').forEach(el => el.classList.remove('playing'));
+  document.querySelectorAll('.kw.on, .kb.on').forEach(el => el.classList.remove('on'));
+  document.querySelectorAll('[id^=led_]').forEach(el => el.setAttribute('fill', '#3f3f46'));
+  
+  if(ac) {
+    Object.values(tracks).forEach(v => {
+      v.out.gain.cancelScheduledValues(ac.currentTime);
+      v.out.gain.setTargetAtTime(0, ac.currentTime, 0.05);
+      setTimeout(() => {
+        v.all.forEach(o=>{ try{o.stop()}catch(e){} });
+        v.out.disconnect();
+      }, 200);
+    });
+  }
+}
+
+function triggerPlay() {
+  initAudio();
+  ac.resume();
+  generateSong();
+  isPlaying = true;
+  setPlaybackState(true);
+  raf = requestAnimationFrame(uiLoop);
+  requestAnimationFrame(drawScope); 
+}
+
+// Global Click Delegation for Play/Stop
+document.addEventListener('click', e => {
+  const p = e.target.closest('#playBtn');
+  const s = e.target.closest('#stopBtn');
+  if (p && !p.disabled) triggerPlay();
+  if (s && !s.disabled) stopSong();
+  
+  const scopeChip = e.target.closest('.scope-chip');
+  if (scopeChip) {
+    scopeMode = +scopeChip.dataset.m;
+    document.querySelectorAll('.scope-chip').forEach(x => x.classList.toggle('on', x === scopeChip));
+  }
+});
+
+// Mixer Fader Drag Logic
+let faderDrag = null;
+document.body.addEventListener('pointerdown', e => {
+  const fader = e.target.closest('[data-fader]');
+  if (fader) {
+    const fid = fader.dataset.fader;
+    faderDrag = { id: fid, y: e.clientY, v: mixState[fid] };
+    fader.setPointerCapture(e.pointerId);
+  }
+});
+document.body.addEventListener('pointermove', e => {
+  if (faderDrag) {
+    const cfg = MIX_CFG.find(c => c.id === faderDrag.id);
+    const deltaY = faderDrag.y - e.clientY;
+    const sensitivity = cfg.max / 210; 
+    let newV = faderDrag.v + deltaY * sensitivity;
+    newV = Math.max(0, Math.min(cfg.max, newV));
+    mixState[faderDrag.id] = newV;
+    
+    const fy = 440 - (newV / cfg.max) * 180;
+    document.getElementById('fader_' + faderDrag.id).setAttribute('y', fy - 10);
+    document.getElementById('fline_' + faderDrag.id).setAttribute('y1', fy);
+    document.getElementById('fline_' + faderDrag.id).setAttribute('y2', fy);
+    
+    if (ac) {
+      if (faderDrag.id === 'master') {
+        if(outG) outG.gain.setTargetAtTime(newV, ac.currentTime, 0.05);
+      } else if (tracks[faderDrag.id] && tracks[faderDrag.id].out) {
+        tracks[faderDrag.id].out.gain.setTargetAtTime(newV, ac.currentTime, 0.05);
+      }
+    }
+  }
+});
+const endDrag = () => { faderDrag = null; };
+document.body.addEventListener('pointerup', endDrag);
+document.body.addEventListener('pointercancel', endDrag);
+
+/* ---------- Master Scope Engine ---------- */
+const cv = document.getElementById('cv');
+const cx = cv.getContext('2d');
+
+function drawScope() {
+  if(!isPlaying) {
+    cx.clearRect(0,0,cv.width,cv.height);
+    return;
+  }
+  requestAnimationFrame(drawScope);
+  
+  const d = window.devicePixelRatio || 1;
+  const w = cv.clientWidth * d;
+  const h = cv.clientHeight * d;
+  
+  if (cv.width !== w || cv.height !== h) {
+    cv.width = w;
+    cv.height = h;
+  }
+  
+  cx.fillStyle = '#020617'; // Dark slate/black
+  cx.fillRect(0, 0, w, h);
+  
+  // Center line
+  cx.strokeStyle = 'rgba(74, 222, 128, 0.15)';
+  cx.lineWidth = 1;
+  cx.beginPath();
+  cx.moveTo(0, h/2);
+  cx.lineTo(w, h/2);
+  cx.stroke();
+  
+  if(!an) return;
+  
+  cx.strokeStyle = '#4ade80'; // Neon Green
+  cx.fillStyle = '#4ade80';
+  cx.lineWidth = 2.5 * d;
+  
+  if (scopeMode === 1) { // Spectrum
+    const b = new Uint8Array(an.frequencyBinCount);
+    an.getByteFrequencyData(b);
+    const n = 120;
+    for (let i = 0; i < n; i++) {
+      const k = Math.floor(Math.pow(b.length * 0.6, i / n));
+      const v = b[k] / 255;
+      cx.fillRect(i * w / n + 1, h - v * h, w / n - 2, v * h);
+    }
+  } else { // Oscilloscope
+    const b = new Float32Array(an.fftSize);
+    an.getFloatTimeDomainData(b);
+    let offset = 0;
+    for (let i = 1; i < b.length / 2; i++) {
+      if (b[i - 1] < 0 && b[i] >= 0) { offset = i; break; }
+    }
+    cx.beginPath();
+    for (let i = 0; i < 1024; i++) {
+      const x = i * w / 1024;
+      const y = h / 2 - b[offset + i] * h * 0.8; // Amplified visual
+      i ? cx.lineTo(x, y) : cx.moveTo(x, y);
+    }
+    cx.stroke();
+  }
+}
+</script>
+</body>
+</html>
