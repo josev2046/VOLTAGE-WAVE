@@ -133,7 +133,7 @@
                 </span>
               </div>
               <p class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">
-                GUMMITWIST PROTOCOL // 126 BPM // C MIXOLYDIAN // 4/4
+                GUMMITWIST PROTOCOL // 126 BPM // C-CENTRED (MIXOLYDIAN / MINOR LIFT) // 4/4
               </p>
             </div>
           </a>
@@ -159,24 +159,27 @@
           </div>
         </div>
 
-        <!-- Transport & Manual A/B Controls -->
-        <div class="flex items-center gap-2 font-mono text-xs">
+        <!-- Transport & Separated Timing / Tuning A/B Controls -->
+        <div class="flex flex-wrap items-center gap-2 font-mono text-xs">
           <button id="playBtn" class="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-zinc-950 px-4 py-2 font-bold uppercase tracking-wider rounded-sm transition-all shadow-[0_0_15px_rgba(245,158,11,0.35)] cursor-pointer">
             <span id="playIcon">▶</span> <span id="playLabel">Play</span>
           </button>
           <button id="stopBtn" class="inline-flex items-center gap-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 px-3 py-2 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">
             ■ Stop
           </button>
-          <button id="topRecBtn" title="Arm & Record Master / Individual Stems (24-Bit WAV)" class="inline-flex items-center gap-1.5 bg-zinc-900 hover:bg-red-950/60 border border-red-500/50 text-red-400 px-3 py-2 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">
+          <button id="topRecBtn" title="Arm & Record Browser Master / Individual Stems (24-Bit WAV)" class="inline-flex items-center gap-1.5 bg-zinc-900 hover:bg-red-950/60 border border-red-500/50 text-red-400 px-3 py-2 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">
             <span id="topRecDot" class="w-2 h-2 rounded-full bg-red-500"></span> <span id="topRecLabel">Rec</span>
           </button>
-          <button id="offGridBtn" title="A/B Compare: Book II P-05 Warped Clock (÷2/V) + P-03 Just Intonation vs Rigid Book II P-12 Grid" class="px-2.5 py-2 border border-emerald-500/60 bg-emerald-500/15 text-emerald-400 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">
-            Off-Grid (P-05): On
+          <button id="timingModeBtn" title="A/B Compare: Programmed Off-Beat Timing Approximation (inspired by Book II P-05) vs Straight Quantised Timing" class="px-2.5 py-2 border border-emerald-500/60 bg-emerald-500/15 text-emerald-400 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">
+            Timing: Warped (P-05 Approx)
+          </button>
+          <button id="tuningModeBtn" title="A/B Compare: Book II P-03 / Appendix A Just-Intonation Cent Offsets vs Equal-Tempered 12-TET Tuning" class="px-2.5 py-2 border border-sky-500/60 bg-sky-500/15 text-sky-400 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">
+            Tuning: Just Int (P-03)
           </button>
           <button id="loopBtn" title="Toggle 32-Bar Loop" class="hidden sm:inline-block px-2.5 py-2 border border-amber-500/50 bg-amber-500/15 text-amber-400 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">
             Loop: On
           </button>
-          <a href="index.html" class="font-mono text-xs text-zinc-400 hover:text-amber-500 transition-colors ml-2 border-l border-zinc-800 pl-3 py-1.5 inline-flex items-center gap-1" title="Return to Voltage & Wave Homepage">
+          <a href="index.html" class="font-mono text-xs text-zinc-400 hover:text-amber-500 transition-colors ml-1 border-l border-zinc-800 pl-3 py-1.5 inline-flex items-center gap-1" title="Return to Voltage & Wave Homepage">
             ← Home
           </a>
         </div>
@@ -185,28 +188,36 @@
   </header>
 
   <!-- Main Workstation Body -->
-  <main class="pt-24 sm:pt-20 pb-12 flex-1 relative z-10">
+  <main class="pt-28 sm:pt-20 pb-12 flex-1 relative z-10">
     <div class="fixed inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
     <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-6 mt-4">
 
       <!-- 1. MANUAL PROTOCOL PATCH MATRIX & 32-BAR TIMELINE -->
       <section class="bg-zinc-900/90 border border-zinc-800 rounded-sm p-4 sm:p-5 shadow-2xl">
+        <!-- Explicit Browser Simulation Notice -->
+        <div class="mb-4 px-3 py-2 rounded-sm bg-zinc-950 border border-amber-500/30 flex items-start sm:items-center gap-2.5 font-mono text-[11px] text-zinc-300">
+          <span class="text-amber-400 font-bold uppercase shrink-0">[Software Showcase]</span>
+          <span>
+            This interactive showcase is an original 32-bar composition and browser-based software interpretation of techniques from the <span class="text-white font-semibold">Voltage &amp; Wave</span> books. It does not control, connect to, or measure original Korg hardware.
+          </span>
+        </div>
+
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-4 pb-3 border-b border-zinc-800">
           <div>
             <div class="flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
               <h1 class="font-mono text-xs sm:text-sm font-bold text-white uppercase tracking-widest">
-                Gummitwist Protocol // Voltage, Sequence & Speech Showcase (32 Bars)
+                Gummitwist Protocol // Software Interpretation of Voltage, Sequence &amp; Speech (32 Bars)
               </h1>
             </div>
             <p class="text-xs text-zinc-400 mt-1.5 leading-relaxed">
-              Demonstrating <span class="text-amber-400 font-mono">Book I (<button type="button" data-proto-bar="4" data-proto-part="part5" data-proto-note="Book I P-01 (p. 18, Bar 05): Overdriven Korg-35 & VCA saturation giving the Rubber Bass its harmonic punch" data-proto-patch="EXT SIGNAL IN (Level 8–10) → KORG-35 VCF (Cutoff: 10) & VCA → HARDWARE RETURN" data-proto-url="https://voltageandwave.co.uk/analogue_grinder.html#protocol-01" class="underline decoration-amber-500/50 hover:decoration-amber-400 hover:text-amber-200 hover:bg-amber-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-01 Overdrive</button>, <button type="button" data-proto-bar="4" data-proto-part="part1" data-proto-note="Book I P-02a (p. 20, Bar 05): Live manual Korg-35 Cutoff & Peak riding on syncopated Dada Lead leaps + turnaround zaps" data-proto-patch="KORG-35 VCF (Cutoff ~6.5, Peak ~7.0, Live Ride) → VCA → SIGNAL OUT" data-proto-url="https://voltageandwave.co.uk/analogue_grinder.html#protocol-02" class="underline decoration-amber-500/50 hover:decoration-amber-400 hover:text-amber-200 hover:bg-amber-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-02a Korg-35 Riding</button>, <button type="button" data-proto-bar="20" data-proto-part="part4" data-proto-note="Book I P-03 (p. 22, Bar 21): MG Rectangle/Square wave (0 to +5V) patched to INITIAL GAIN chops cold VC-10 string chords into 16th-note stabs" data-proto-patch="MOD GENERATOR (Square) → VCA INITIAL GAIN JACK | KORG-35 CUTOFF: 10" data-proto-url="https://voltageandwave.co.uk/analogue_grinder.html#protocol-03" class="underline decoration-amber-500/50 hover:decoration-amber-400 hover:text-amber-200 hover:bg-amber-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-03 VCA Chop</button>, <button type="button" data-proto-bar="0" data-proto-part="part6" data-proto-note="Book I P-04a/b (p. 24, Bar 01): EG-snapped kick transient (H:0 A:0 D:2 S:0) + VCO White/Pink noise through Korg-35 for snare & hats" data-proto-patch="EXT TRIG → EG (H:0 A:0 D:2 S:0) + VCO NOISE WAVE → KORG-35 VCF → VCA" data-proto-url="https://voltageandwave.co.uk/analogue_grinder.html#protocol-04" class="underline decoration-amber-500/50 hover:decoration-amber-400 hover:text-amber-200 hover:bg-amber-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-04a/b Snap & Noise</button>)</span>, <span class="text-emerald-400 font-mono">Book II (<button type="button" data-proto-bar="12" data-proto-part="part4" data-proto-offgrid="1" data-proto-note="Book II P-03 & Appendix A (pp. 48, 87, Bar 13): Just-Intonation cent trims (-13.7¢ maj 3rd, +2.0¢ 5th, +15.6¢ min 3rd) on the cold string ensemble" data-proto-patch="CH A (±5V) + CH B (±1V Cents) → ANALOG MIXER → VCO FREQ IN" data-proto-url="https://voltageandwave.co.uk/off_the_grid.html#p-03" class="underline decoration-emerald-500/50 hover:decoration-emerald-300 hover:bg-emerald-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-03 Just Intonation</button>, <button type="button" data-proto-bar="4" data-proto-part="part1" data-proto-note="Book II P-04 (p. 50, Bar 05): Portamento A raised gradually to glide wide Dada Lead octave leaps into continuous curves" data-proto-patch="SQ-10 CH A (PORTAMENTO A RAISED) → MS-10 VCO CV IN" data-proto-url="https://voltageandwave.co.uk/off_the_grid.html#p-04" class="underline decoration-emerald-500/50 hover:decoration-emerald-300 hover:bg-emerald-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-04 Portamento</button>, <button type="button" data-proto-bar="4" data-proto-part="part5" data-proto-offgrid="1" data-proto-note="Book II Sec. 11 & P-05 (pp. 52, 74, Bar 05): SQ-10 Channel C → CLOCK ÷2/V lags off-beat 16th steps for the drunken Gummitwist bass bounce" data-proto-patch="SQ-10 CH C OUT → CLOCK ÷2/V | CH A + CH B (JI) → MIXER → VCO CV IN" data-proto-url="https://voltageandwave.co.uk/off_the_grid.html#p-05" class="underline decoration-emerald-500/50 hover:decoration-emerald-300 hover:bg-emerald-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-05 Warped Time ÷2/V</button>, <button type="button" data-proto-bar="12" data-proto-part="part3" data-proto-note="Book II Sec. 13 & P-07 (pp. 56, 78, Bar 13): SQ-10 Trig Out 5 → RESET IN creates a 5-step polymeter sliding against 4/4" data-proto-patch="SQ-10 TRIG OUT 5 → RESET IN | CH A → VCO CV IN | MULT TRIG → EG TRIG IN" data-proto-url="https://voltageandwave.co.uk/off_the_grid.html#p-07" class="underline decoration-emerald-500/50 hover:decoration-emerald-300 hover:bg-emerald-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-07 5-Step Polymeter</button>, <button type="button" data-proto-bar="0" data-proto-part="part3" data-proto-note="Book II P-01 & P-08 (pp. 44, 58, Bar 01): 12-step Channel A arpeggio loop with Channel B (±1V) stepping Korg-35 cutoff per note" data-proto-patch="SQ-10 CH A → VCO CV IN | CH B (±1V) → MS-10 VCF CUTOFF JACK" data-proto-url="https://voltageandwave.co.uk/off_the_grid.html#p-08" class="underline decoration-emerald-500/50 hover:decoration-emerald-300 hover:bg-emerald-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-08 Stepped VCF</button>)</span> & <span class="text-orange-400 font-mono">Book III (<button type="button" data-proto-bar="12" data-proto-part="part2" data-proto-note="Book III V-02 (p. 112, Bar 13): Input Sig Bal blended toward Noise Generator for crisp robotic consonants on staccato syllables" data-proto-patch="MIC INPUT (Modulator) + NOISE GEN (Input Sig Bal) → VC-10 SIMULATOR" data-proto-url="https://voltageandwave.co.uk/voces_ex_machina.html#v-02" class="underline decoration-orange-500/50 hover:decoration-orange-300 hover:bg-orange-500/15 px-1 rounded-sm transition-colors cursor-pointer">V-02 Noise Consonants</button>, <button type="button" data-proto-bar="12" data-proto-part="part2" data-proto-note="Book III V-05 & Sec. 07 (pp. 105, 118, Bar 13): SQ-10 Channel A (±1V) steps VC-10 Ext Pitch Control at 1/3 oct/V (400¢/V, 0.25V/semi)" data-proto-patch="SQ-10 CH A (±1V) → VC-10 EXT PITCH CONTROL (400¢/V) | OUT BAL: SIMULATOR" data-proto-url="https://voltageandwave.co.uk/voces_ex_machina.html#v-05" class="underline decoration-orange-500/50 hover:decoration-orange-300 hover:bg-orange-500/15 px-1 rounded-sm transition-colors cursor-pointer">V-05 400¢/V Seq Vocoder</button>, <button type="button" data-proto-bar="12" data-proto-part="part4" data-proto-note="Book III V-06 (p. 120, Bar 13): VC-10 Ensemble chorus & Accent Bend turning 3-note chords into a stark synthetic choir" data-proto-patch="VC-10 KEYS → ENSEMBLE ON + ACCENT BEND LOW → FINAL OUT" data-proto-url="https://voltageandwave.co.uk/voces_ex_machina.html#v-06" class="underline decoration-orange-500/50 hover:decoration-orange-300 hover:bg-orange-500/15 px-1 rounded-sm transition-colors cursor-pointer">V-06 Ensemble</button>, <button type="button" data-proto-bar="12" data-proto-part="part2" data-proto-note="Book III V-08 (p. 124, Bar 13): VC-10 Final Out routed back into MS-10 Ext Signal In through the Korg-35 lowpass filter" data-proto-patch="VC-10 FINAL OUT → PAD → MS-10 EXT SIGNAL IN → KORG-35 VCF → SIGNAL OUT" data-proto-url="https://voltageandwave.co.uk/voces_ex_machina.html#v-08" class="underline decoration-orange-500/50 hover:decoration-orange-300 hover:bg-orange-500/15 px-1 rounded-sm transition-colors cursor-pointer">V-08 Korg-35 Chain</button>)</span>.
+              Inspired by <span class="text-amber-400 font-mono">Book I (<button type="button" data-proto-bar="4" data-proto-part="part5" data-proto-note="Book I P-01 (p. 18, Bar 05): Web Audio saturation inspired by driving the MS-10 Ext Signal In & Korg-35 circuitry." data-proto-patch="Hardware concept: EXT SIGNAL IN (Level 8–10) → KORG-35 VCF (Cutoff: 10) & VCA → HARDWARE RETURN" data-proto-url="https://voltageandwave.co.uk/analogue_grinder.html#protocol-01" class="underline decoration-amber-500/50 hover:decoration-amber-400 hover:text-amber-200 hover:bg-amber-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-01 Overdrive</button>, <button type="button" data-proto-bar="4" data-proto-part="part1" data-proto-note="Book I P-02a (p. 20, Bar 05): Automated cutoff/peak contour inspired by live manual Korg-35 riding on Dada Lead leaps + turnaround zaps." data-proto-patch="Hardware concept: KORG-35 VCF (Cutoff ~6.5, Peak ~7.0, Live Ride) → VCA → SIGNAL OUT" data-proto-url="https://voltageandwave.co.uk/analogue_grinder.html#protocol-02" class="underline decoration-amber-500/50 hover:decoration-amber-400 hover:text-amber-200 hover:bg-amber-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-02a Korg-35 Riding</button>, <button type="button" data-proto-bar="20" data-proto-part="part4" data-proto-note="Book I P-03 (p. 22, Bar 21): Software adaptation applying Book I's MG square-wave VCA chopping idea to a VC-10-style ensemble." data-proto-patch="Book I concept: MOD GENERATOR (Square) → VCA INITIAL GAIN | KORG-35 CUTOFF: 10" data-proto-url="https://voltageandwave.co.uk/analogue_grinder.html#protocol-03" class="underline decoration-amber-500/50 hover:decoration-amber-400 hover:text-amber-200 hover:bg-amber-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-03 VCA Chop (Adaptation)</button>, <button type="button" data-proto-bar="0" data-proto-part="part6" data-proto-note="Book I P-04a/b (p. 24, Bar 01): Synthesised transient-snapped kick and filtered noise snare/hats inspired by P-04." data-proto-patch="Hardware concept: EXT TRIG → EG (H:0 A:0 D:2 S:0) + VCO NOISE WAVE → KORG-35 VCF → VCA" data-proto-url="https://voltageandwave.co.uk/analogue_grinder.html#protocol-04" class="underline decoration-amber-500/50 hover:decoration-amber-400 hover:text-amber-200 hover:bg-amber-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-04a/b Snap &amp; Noise</button>)</span>, <span class="text-emerald-400 font-mono">Book II (<button type="button" data-proto-bar="12" data-proto-part="part4" data-proto-tuning="1" data-proto-note="Book II P-03 & Appendix A (pp. 48, 87, Bar 13): Software adaptation applying Just-Intonation cent trims (-13.7¢ maj 3rd, +2.0¢ 5th, +15.6¢ min 3rd) to ensemble chords." data-proto-patch="Book II P-03 concept: CH A (±5V) + CH B (±1V Cents) → ANALOG MIXER → VCO FREQ IN" data-proto-url="https://voltageandwave.co.uk/off_the_grid.html#p-03" class="underline decoration-emerald-500/50 hover:decoration-emerald-300 hover:bg-emerald-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-03 Just Intonation</button>, <button type="button" data-proto-bar="4" data-proto-part="part1" data-proto-note="Book II P-04 (p. 50, Bar 05): Web Audio frequency slewing inspired by SQ-10 Portamento A glides on Dada Lead leaps." data-proto-patch="Hardware concept: SQ-10 CH A (PORTAMENTO A RAISED) → MS-10 VCO CV IN" data-proto-url="https://voltageandwave.co.uk/off_the_grid.html#p-04" class="underline decoration-emerald-500/50 hover:decoration-emerald-300 hover:bg-emerald-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-04 Portamento</button>, <button type="button" data-proto-bar="4" data-proto-part="part5" data-proto-timing="1" data-proto-note="Book II P-05 (p. 52, Bar 05): Programmed 16th-note timing displacement approximating SQ-10 Channel C → CLOCK ÷2/V step lag." data-proto-patch="Hardware concept: SQ-10 CH C OUT → CLOCK ÷2/V | CH A → VCO CV IN | MULT TRIG → EG TRIG IN" data-proto-url="https://voltageandwave.co.uk/off_the_grid.html#p-05" class="underline decoration-emerald-500/50 hover:decoration-emerald-300 hover:bg-emerald-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-05 Timing Approx</button>, <button type="button" data-proto-bar="12" data-proto-part="part3" data-proto-note="Book II P-07 (p. 56, Bar 13): Software 5-note cycle sliding against 4/4, inspired by SQ-10 Trig Out 5 → RESET IN (which pairs 5 steps against 12 in the book)." data-proto-patch="Hardware concept: SQ-10 TRIG OUT 5 → RESET IN | CH A → VCO CV IN | MULT TRIG → EG TRIG IN" data-proto-url="https://voltageandwave.co.uk/off_the_grid.html#p-07" class="underline decoration-emerald-500/50 hover:decoration-emerald-300 hover:bg-emerald-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-07 5-Note Cycle</button>, <button type="button" data-proto-bar="0" data-proto-part="part3" data-proto-note="Book II P-01 & P-08 (pp. 44, 58, Bar 01): Stepped per-note lowpass cutoff sequence inspired by SQ-10 Channel B (±1V) → VCF cutoff." data-proto-patch="Hardware concept: SQ-10 CH A → VCO CV IN | CH B (±1V) → MS-10 VCF CUTOFF JACK" data-proto-url="https://voltageandwave.co.uk/off_the_grid.html#p-08" class="underline decoration-emerald-500/50 hover:decoration-emerald-300 hover:bg-emerald-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-01 + P-08 Stepped VCF</button>)</span> &amp; <span class="text-orange-400 font-mono">Book III (<button type="button" data-proto-bar="12" data-proto-part="part2" data-proto-note="Book III V-02 (p. 112, Bar 13): High-frequency noise burst blended into synthetic voice consonants, inspired by VC-10 Noise Carrier." data-proto-patch="Hardware concept: MIC INPUT (Modulator) + NOISE GEN (Input Sig Bal) → VC-10 SIMULATOR" data-proto-url="https://voltageandwave.co.uk/voces_ex_machina.html#v-02" class="underline decoration-orange-500/50 hover:decoration-orange-300 hover:bg-orange-500/15 px-1 rounded-sm transition-colors cursor-pointer">V-02 Noise Consonants</button>, <button type="button" data-proto-bar="12" data-proto-part="part2" data-proto-note="Book III V-05 & Sec. 07 (pp. 105, 118, Bar 13): Stepped pitch intervals illustrating VC-10's 1/3 oct/V (400¢/V, 0.25V/semi) scaling (synthesised voice, not live mic vocoding)." data-proto-patch="Hardware concept: SQ-10 CH A (±1V) → VC-10 EXT PITCH CONTROL (400¢/V) | OUT BAL: SIMULATOR" data-proto-url="https://voltageandwave.co.uk/voces_ex_machina.html#v-05" class="underline decoration-orange-500/50 hover:decoration-orange-300 hover:bg-orange-500/15 px-1 rounded-sm transition-colors cursor-pointer">V-05 400¢/V Pitch Scale</button>, <button type="button" data-proto-bar="12" data-proto-part="part4" data-proto-note="Book III V-06 (p. 120, Bar 13): Detuned 3-voice ensemble approximation inspired by VC-10 Ensemble chorus + Book II P-03 Just Intonation." data-proto-patch="Hardware concept: VC-10 KEYS → ENSEMBLE ON + ACCENT BEND LOW → FINAL OUT" data-proto-url="https://voltageandwave.co.uk/voces_ex_machina.html#v-06" class="underline decoration-orange-500/50 hover:decoration-orange-300 hover:bg-orange-500/15 px-1 rounded-sm transition-colors cursor-pointer">V-06 Ensemble</button>, <button type="button" data-proto-bar="12" data-proto-part="part2" data-proto-note="Book III V-08 (p. 124, Bar 13): Formant-filtered voice routed into a lowpass filter stage inspired by chaining VC-10 Final Out into the MS-10 Korg-35." data-proto-patch="Hardware concept: VC-10 FINAL OUT → PAD → MS-10 EXT SIGNAL IN → KORG-35 VCF → SIGNAL OUT" data-proto-url="https://voltageandwave.co.uk/voces_ex_machina.html#v-08" class="underline decoration-orange-500/50 hover:decoration-orange-300 hover:bg-orange-500/15 px-1 rounded-sm transition-colors cursor-pointer">V-08 Filter Chain</button>)</span>.
             </p>
             <div id="protocolCueBanner" class="mt-2.5 flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] bg-zinc-950 border border-zinc-800 text-zinc-300 px-3 py-1.5 rounded-sm">
               <div class="flex flex-col gap-0.5 min-w-0 flex-1">
                 <div>
                   <span class="text-amber-500 font-bold">MANUAL CUE:</span>
-                  <span id="protocolCueText">Click any protocol link above or hardware card below to jump to its bar & inspect the patch.</span>
+                  <span id="protocolCueText">Click any protocol link above or card below to jump to its bar and inspect the book reference.</span>
                 </div>
                 <div id="protocolSchematicText" class="text-[10px] text-emerald-400/90 hidden"></div>
               </div>
@@ -243,29 +254,29 @@
 
         <!-- Active Protocol Chips Strip -->
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mb-4 font-mono text-[10px]">
-          <button type="button" data-proto-bar="4" data-proto-part="part1" data-proto-note="Book I P-02a + Book II P-04 (pp. 20, 50, Bar 05): Manual Korg-35 Cutoff/Peak riding + Portamento A octave glides on Dada Lead" data-proto-patch="SQ-10 CH A (PORTAMENTO A) → MS-10 VCO CV IN | KORG-35 VCF (Live Ride) → SIGNAL OUT" data-proto-url="https://voltageandwave.co.uk/analogue_grinder.html#protocol-02" class="text-left bg-zinc-950 border border-zinc-800 hover:border-cyan-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+          <button type="button" data-proto-bar="4" data-proto-part="part1" data-proto-note="Book I P-02a + Book II P-04 (pp. 20, 50, Bar 05): Filter contour riding + pitch slewing inspired by MS-10 Korg-35 & SQ-10 Portamento A" data-proto-patch="Hardware concept: SQ-10 CH A (PORTAMENTO A) → MS-10 VCO CV IN | KORG-35 VCF (Live Ride) → SIGNAL OUT" data-proto-url="https://voltageandwave.co.uk/analogue_grinder.html#protocol-02" class="text-left bg-zinc-950 border border-zinc-800 hover:border-cyan-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
             <span class="text-cyan-400 font-bold block">BOOK I // P-02a + P-04</span>
-            <span class="text-zinc-400">Dada Lead K35 Ride → Bar 05</span>
+            <span class="text-zinc-400">Dada Lead Contour → Bar 05</span>
           </button>
-          <button type="button" data-proto-bar="20" data-proto-part="part4" data-proto-note="Book I P-03 + Book III V-06 (pp. 22, 120, Bar 21): MG Square → INITIAL GAIN VCA chop gating VC-10 Ensemble chords into 16ths" data-proto-patch="MOD GENERATOR (Square) → VCA INITIAL GAIN | VC-10 ENSEMBLE ON" data-proto-url="https://voltageandwave.co.uk/analogue_grinder.html#protocol-03" class="text-left bg-zinc-950 border border-zinc-800 hover:border-purple-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
-            <span class="text-purple-400 font-bold block">BOOK I // P-03 + V-06</span>
+          <button type="button" data-proto-bar="20" data-proto-part="part4" data-proto-note="Book I P-03 + Book III V-06 (pp. 22, 120, Bar 21): Software adaptation applying MG square-wave VCA chopping to a VC-10-style ensemble" data-proto-patch="Combined concept: MOD GENERATOR (Square) → VCA INITIAL GAIN + VC-10 ENSEMBLE" data-proto-url="https://voltageandwave.co.uk/analogue_grinder.html#protocol-03" class="text-left bg-zinc-950 border border-zinc-800 hover:border-purple-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-purple-400 font-bold block">ADAPT // P-03 + V-06</span>
             <span class="text-zinc-400">VCA Chop Ensemble → Bar 21</span>
           </button>
-          <button type="button" data-proto-bar="4" data-proto-part="part5" data-proto-offgrid="1" data-proto-note="Book II Sec. 11 (P-01 + P-03 + P-05, p. 74, Bar 05): SQ-10 Channel C → Clock ÷2/V lag + Just Intonation + Book I P-01 overdrive" data-proto-patch="SQ-10 CH C → CLOCK ÷2/V | CH A + CH B (JI) → MIXER → VCO CV IN (Overdriven)" data-proto-url="https://voltageandwave.co.uk/off_the_grid.html#p-05" class="text-left bg-zinc-950 border border-zinc-800 hover:border-emerald-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+          <button type="button" data-proto-bar="4" data-proto-part="part5" data-proto-timing="1" data-proto-tuning="1" data-proto-note="Book II Sec. 11 (P-01 + P-03 + P-05, p. 74, Bar 05): Programmed timing lag approximating P-05 (÷2/V) + P-03 Just Intonation + Book I P-01 saturation" data-proto-patch="Hardware concept: SQ-10 CH C → CLOCK ÷2/V | CH A + CH B (JI) → MIXER → VCO CV IN" data-proto-url="https://voltageandwave.co.uk/off_the_grid.html#p-05" class="text-left bg-zinc-950 border border-zinc-800 hover:border-emerald-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
             <span class="text-emerald-400 font-bold block">BOOK II // SEC 11 BASS</span>
-            <span class="text-zinc-400">P-03 JI + P-05 ÷2/V → Bar 05</span>
+            <span class="text-zinc-400">P-05 Approx + JI → Bar 05</span>
           </button>
-          <button type="button" data-proto-bar="12" data-proto-part="part3" data-proto-note="Book II Sec. 13 (P-07 + P-08, pp. 56–58, 78, Bar 13): Trig Out 5 → RESET IN 5-step polymeter with Channel B stepped VCF cutoff" data-proto-patch="SQ-10 TRIG OUT 5 → RESET IN | CH A → VCO CV IN | CH B (±1V) → VCF CUTOFF" data-proto-url="https://voltageandwave.co.uk/off_the_grid.html#p-07" class="text-left bg-zinc-950 border border-zinc-800 hover:border-sky-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+          <button type="button" data-proto-bar="12" data-proto-part="part3" data-proto-note="Book II P-07 + P-08 (pp. 56–58, Bar 13): Software 5-note cycle sliding against 4/4 (adapted from P-07's 5-against-12 loop) + stepped filter cutoff" data-proto-patch="Hardware concept: SQ-10 TRIG OUT 5 → RESET IN | CH A → VCO CV IN | CH B (±1V) → VCF CUTOFF" data-proto-url="https://voltageandwave.co.uk/off_the_grid.html#p-07" class="text-left bg-zinc-950 border border-zinc-800 hover:border-sky-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
             <span class="text-sky-400 font-bold block">BOOK II // P-07 + P-08</span>
-            <span class="text-zinc-400">5-Step Polymeter → Bar 13</span>
+            <span class="text-zinc-400">5-Note Cycle + VCF → Bar 13</span>
           </button>
-          <button type="button" data-proto-bar="12" data-proto-part="part2" data-proto-note="Book III V-05 + V-02 + V-08 (pp. 112–124, Bar 13): 400¢/V SQ-10 pitch CV + Noise sibilance → MS-10 Korg-35 filter" data-proto-patch="SQ-10 CH A (±1V) → EXT PITCH (400¢/V) | FINAL OUT → MS-10 KORG-35" data-proto-url="https://voltageandwave.co.uk/voces_ex_machina.html#v-05" class="text-left bg-zinc-950 border border-zinc-800 hover:border-orange-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+          <button type="button" data-proto-bar="12" data-proto-part="part2" data-proto-note="Book III V-05 + V-02 + V-08 (pp. 112–124, Bar 13): Synthesised formant voice illustrating 400¢/V pitch steps, noise consonants & lowpass filtering (not live mic vocoding)" data-proto-patch="Hardware concept: SQ-10 CH A (±1V) → EXT PITCH (400¢/V) | FINAL OUT → MS-10 KORG-35" data-proto-url="https://voltageandwave.co.uk/voces_ex_machina.html#v-05" class="text-left bg-zinc-950 border border-zinc-800 hover:border-orange-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
             <span class="text-orange-400 font-bold block">BOOK III // V-05 + V-08</span>
-            <span class="text-zinc-400">400¢/V Vox → K35 → Bar 13</span>
+            <span class="text-zinc-400">400¢/V Synth Vox → Bar 13</span>
           </button>
-          <button type="button" data-proto-bar="0" data-proto-part="part6" data-proto-note="Book I P-04a + P-04b + P-02a (pp. 20–24, Bar 01): EG transient snap kick, noise snare/hats & Korg-35 laser zaps" data-proto-patch="EXT TRIG → EG (H:0 A:0 D:2 S:0) + VCO NOISE → KORG-35 VCF" data-proto-url="https://voltageandwave.co.uk/analogue_grinder.html#protocol-04" class="text-left bg-zinc-950 border border-zinc-800 hover:border-amber-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+          <button type="button" data-proto-bar="0" data-proto-part="part6" data-proto-note="Book I P-04a + P-04b + P-02a (pp. 20–24, Bar 01): Synthesised transient-snapped kick, filtered noise snare/hats & resonant laser zaps" data-proto-patch="Hardware concept: EXT TRIG → EG (H:0 A:0 D:2 S:0) + VCO NOISE → KORG-35 VCF" data-proto-url="https://voltageandwave.co.uk/analogue_grinder.html#protocol-04" class="text-left bg-zinc-950 border border-zinc-800 hover:border-amber-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
             <span class="text-amber-400 font-bold block">BOOK I // P-04a/b + P-02a</span>
-            <span class="text-zinc-400">Snap Drums & Zap → Bar 01</span>
+            <span class="text-zinc-400">Snap Drums &amp; Zap → Bar 01</span>
           </button>
         </div>
 
@@ -303,14 +314,14 @@
         </div>
       </section>
 
-      <!-- 3. COMPACT OSCILLOSCOPE & 12-VOICE HARDWARE TELEMETRY -->
+      <!-- 3. SOFTWARE OSCILLOSCOPE & VIRTUAL VOICE MONITOR -->
       <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         <div class="lg:col-span-7 bg-zinc-900/90 border border-zinc-800 rounded-sm p-4 flex flex-col">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
               <span class="font-mono text-xs font-bold text-white uppercase tracking-widest">
-                MS-10 + SQ-10 + VC-10 Output Oscilloscope
+                Software Oscilloscope — Simulated MS-10 / SQ-10 / VC-10 Parts
               </span>
             </div>
             <div class="flex gap-1.5 font-mono text-[10px]">
@@ -330,7 +341,7 @@
           <div>
             <div class="flex items-center justify-between mb-3">
               <span class="font-mono text-xs font-bold text-white uppercase tracking-widest">
-                1978 Korg Hardware Routing Matrix
+                Virtual Voice &amp; Routing Monitor
               </span>
               <span id="elapsedClock" class="font-mono text-xs text-amber-500 font-bold">00:00.0</span>
             </div>
@@ -348,21 +359,21 @@
         </div>
       </section>
 
-      <!-- 4. DAW MULTITRACK & 24-BIT STEM RECORDER -->
+      <!-- 4. BROWSER MULTITRACK & 24-BIT STEM EXPORTER -->
       <section id="dawRecorderPanel" class="bg-zinc-900/90 border border-zinc-800 rounded-sm p-4 sm:p-5 shadow-2xl">
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-4 mb-4 border-b border-zinc-800">
           <div>
             <div class="flex items-center gap-2">
               <span id="recHeaderLed" class="w-2 h-2 rounded-full bg-zinc-600"></span>
               <h2 class="font-mono text-xs sm:text-sm font-bold text-white uppercase tracking-widest">
-                DAW Multitrack Stem Recorder & Discrete Audio Bus
+                Browser Multitrack Stem Exporter &amp; Discrete Audio Bus
               </h2>
               <span id="recSampleRateBadge" class="font-mono text-[10px] bg-zinc-950 border border-zinc-700 text-amber-400 px-2 py-0.5 rounded-sm">
                 24-BIT PCM WAV
               </span>
             </div>
             <p class="text-xs text-zinc-400 mt-1">
-              Capture sample-aligned <span class="text-zinc-200 font-mono">24-bit WAV</span> stems (per Book I Sec. 06: <span class="text-amber-400 font-mono">-6 to -3 dBFS</span> target) for your DAW, or route discrete channels (<span class="text-emerald-400 font-mono">Ch 1–2 Master, Ch 3–8 Parts</span>) into a multi-channel audio interface.
+              Record the browser-generated master mix and six individual software parts as <span class="text-zinc-200 font-mono">24-bit PCM WAV</span> files. The parts are captured together within the browser audio engine (aim for <span class="text-amber-400 font-mono">-6 to -3 dBFS</span> peaks on the meters per Book I Sec. 06). This is a software rendering and export tool, not a hardware-return recorder or an external DAW synchronisation system.
             </p>
           </div>
           <div class="flex flex-wrap items-center gap-2 font-mono text-xs shrink-0">
@@ -380,7 +391,7 @@
             <button type="button" id="recLiveBtn" class="inline-flex items-center gap-1.5 bg-red-600 hover:bg-red-500 text-white px-3.5 py-1.5 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer shadow-[0_0_12px_rgba(220,38,38,0.35)]">
               <span id="recLiveIcon">●</span> <span id="recLiveLabel">Rec Live</span>
             </button>
-            <button type="button" id="print32Btn" title="Reset to Bar 01 and record one complete 32-bar pass automatically" class="inline-flex items-center gap-1.5 bg-zinc-950 hover:bg-zinc-800 border border-amber-500/50 text-amber-400 px-3 py-1.5 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">
+            <button type="button" id="print32Btn" title="Reset to Bar 01 and render one complete 32-bar browser pass automatically" class="inline-flex items-center gap-1.5 bg-zinc-950 hover:bg-zinc-800 border border-amber-500/50 text-amber-400 px-3 py-1.5 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">
               ⚡ Print 32-Bar Pass
             </button>
           </div>
@@ -391,7 +402,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 pt-3 border-t border-zinc-800/80">
           <div class="lg:col-span-5 bg-zinc-950 border border-zinc-800 p-3 rounded-sm flex flex-col justify-between gap-2.5 font-mono">
             <div class="flex items-center justify-between gap-2">
-              <span class="text-[11px] font-bold text-white uppercase tracking-wider">Live DAW Bus Routing</span>
+              <span class="text-[11px] font-bold text-white uppercase tracking-wider">Browser Audio Bus Routing</span>
               <span id="sinkChannelInfo" class="text-[10px] text-emerald-400">2-Ch Stereo Out</span>
             </div>
             <div class="flex flex-col sm:flex-row gap-2">
@@ -412,7 +423,7 @@
           <div class="lg:col-span-7 bg-zinc-950 border border-zinc-800 p-3 rounded-sm flex flex-col justify-between gap-2 font-mono">
             <div class="flex items-center justify-between gap-2">
               <div class="flex items-center gap-2">
-                <span class="text-[11px] font-bold text-white uppercase tracking-wider">Captured 24-Bit DAW Stems</span>
+                <span class="text-[11px] font-bold text-white uppercase tracking-wider">Exported 24-Bit Browser Stems</span>
                 <span id="recTimerLabel" class="text-[11px] text-zinc-500">00:00.0</span>
               </div>
               <button type="button" id="downloadAllWavBtn" disabled class="px-3 py-1 rounded-sm bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 disabled:opacity-30 disabled:pointer-events-none hover:bg-emerald-500/30 text-[10px] font-bold uppercase tracking-wider cursor-pointer transition-colors">
@@ -421,7 +432,7 @@
             </div>
             <div id="wavExportList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 min-h-[54px] items-center">
               <p class="col-span-full text-[11px] text-zinc-500">
-                Arm tracks above and press <span class="text-red-400 font-bold">Rec Live</span> or <span class="text-amber-400 font-bold">Print 32-Bar Pass</span> to generate sample-aligned 24-bit WAV files.
+                Arm tracks above and press <span class="text-red-400 font-bold">Rec Live</span> or <span class="text-amber-400 font-bold">Print 32-Bar Pass</span> to render browser-generated 24-bit WAV files.
               </p>
             </div>
           </div>
@@ -433,14 +444,14 @@
 
   <footer class="py-6 text-center border-t border-zinc-800 bg-zinc-950 relative z-20">
     <p class="font-mono text-xs text-zinc-500 uppercase tracking-widest">
-      © 2026 JOSÉ VELÁZQUEZ / <a href="index.html" class="text-zinc-300 hover:text-amber-500 transition-colors underline decoration-amber-500/40">VOLTAGE & WAVE</a> // GUMMITWIST PROTOCOL — VOLTAGE, SEQUENCE & SPEECH (VOLS 01–03)
+      © 2026 JOSÉ VELÁZQUEZ / <a href="index.html" class="text-zinc-300 hover:text-amber-500 transition-colors underline decoration-amber-500/40">VOLTAGE &amp; WAVE</a> // GUMMITWIST PROTOCOL — SOFTWARE SHOWCASE INSPIRED BY VOLTAGE, SEQUENCE &amp; SPEECH (VOLS 01–03)
     </p>
   </footer>
 
   <script>
     /* ==========================================================================
-       1. SCORE METADATA & GUMMITWIST COMPOSITION (32 BARS, 126 BPM, C MIXOLYDIAN)
-          Cross-Referencing Voltage, Sequence & Speech (Books I, II & III)
+       1. SCORE METADATA & GUMMITWIST COMPOSITION (32 BARS, 126 BPM, C-CENTRED)
+          Original Showcase Composition Inspired by Voltage, Sequence & Speech
        ========================================================================== */
     const BPM = 126;
     const BEAT_SEC = 60 / BPM;
@@ -448,9 +459,11 @@
     const TOTAL_BARS = 32;
     const LOOP_SEC = TOTAL_BARS * BAR_SEC;
 
-    let offGridEnabled = true; // Toggles Book II P-05 Warped Time (÷2/V) + P-03 Just Intonation vs P-12 Grid
+    // Independent A/B toggles for timing displacement and just-intonation offsets
+    let warpedTimingEnabled = true;   // Programmed 16th-note lag approximating Book II P-05 (÷2/V)
+    let justIntonationEnabled = true; // Book II P-03 / Appendix A cent offsets vs 12-TET
 
-    // Book II P-05 (p. 52): SQ-10 Channel C -> CLOCK ÷2/V pushes off-beat 16ths behind the grid
+    // Fixed lookup table approximating Book II P-05 (p. 52) off-beat step displacement
     const WARPED_CLOCK_LAG_BEATS = {
       2: 0.04,  // & of 1
       6: 0.05,  // & of 2
@@ -460,21 +473,21 @@
 
     function getStepBeatOffset(rawBeatOff) {
       const sixteenthIdx = Math.round(rawBeatOff * 4);
-      if (!offGridEnabled) return rawBeatOff;
+      if (!warpedTimingEnabled) return rawBeatOff;
       const lag = WARPED_CLOCK_LAG_BEATS[sixteenthIdx % 16] || 0;
       return rawBeatOff + lag;
     }
 
     const SECTIONS = [
-      { id: 'INTRO', label: 'ROBOT MARCH',  startBar: 0,  endBar: 3,  desc: 'Book I P-04a/b Drums + Book II P-01/P-08 Stepped Arp' },
-      { id: 'A1',    label: 'DADA MINIMAL', startBar: 4,  endBar: 11, desc: 'Book I P-02a Dada Lead + Book II Sec. 11 ÷2/V Rubber Bass' },
-      { id: 'B',     label: 'GUMMI BOUNCE', startBar: 12, endBar: 19, desc: 'Book III V-05 400¢/V Vocoder + Book II P-07 5-Step Polymeter' },
-      { id: 'A2',    label: 'NEUE WELLE',   startBar: 20, endBar: 27, desc: 'Book I P-03 VCA-Chopped Ensemble + Dada Lead Return' },
-      { id: 'OUTRO', label: 'SYSTEM HALT',  startBar: 28, endBar: 31, desc: 'Book III V-06 Just-Intonation Ensemble + Book I P-04a Exit' }
+      { id: 'INTRO', label: 'ROBOT MARCH',  startBar: 0,  endBar: 3,  desc: 'Original showcase intro: P-04-style drums + P-08-style stepped arp' },
+      { id: 'A1',    label: 'DADA MINIMAL', startBar: 4,  endBar: 11, desc: 'Dada Lead (P-02a/P-04 style) + Rubber Bass (P-05 timing approx)' },
+      { id: 'B',     label: 'GUMMI BOUNCE', startBar: 12, endBar: 19, desc: 'Synth Voice (V-05 400¢/V pitch steps) + 5-Note Cycle (P-07 inspired)' },
+      { id: 'A2',    label: 'NEUE WELLE',   startBar: 20, endBar: 27, desc: 'VCA-Chopped Ensemble Adaptation (P-03 + V-06) + Dada Lead return' },
+      { id: 'OUTRO', label: 'SYSTEM HALT',  startBar: 28, endBar: 31, desc: 'Just-Intonation Ensemble (V-06 + P-03) + minimal percussion exit' }
     ];
 
-    // Main 4-Bar Quirky Progression: Cmaj -> Gmaj -> Bbmaj -> Fmaj
-    // Book II P-03 & Appendix A (pp. 48, 87): Just-Intonation cent trims applied to VC-10 Ensemble & Bass
+    // Primary 4-Bar Progression: Cmaj -> Gmaj -> Bbmaj -> Fmaj (C Mixolydian)
+    // Book II P-03 & Appendix A (pp. 48, 87): Just-Intonation cent trims (-13.7¢ maj 3rd, +2.0¢ 5th, +15.6¢ min 3rd)
     const CHORDS_MAIN = [
       { name: 'Cmaj',  rootMidi: 36, ensMidi: [60, 64, 67], ensCents: [0.0, -13.7, 2.0],  voxChord: [60, 64, 67] },
       { name: 'Gmaj',  rootMidi: 43, ensMidi: [59, 62, 67], ensCents: [-13.7, 2.0, 0.0],  voxChord: [59, 62, 67] },
@@ -482,7 +495,7 @@
       { name: 'Fmaj',  rootMidi: 41, ensMidi: [60, 65, 69], ensCents: [2.0, 0.0, -13.7],  voxChord: [60, 65, 69] }
     ];
 
-    // Section B Breakdown: Ebmaj -> Bbmaj -> Fm -> Cmin
+    // Section B Harmonic Lift: Ebmaj -> Bbmaj -> Fm -> Cmin (contrasting C minor area)
     const CHORDS_B = [
       { name: 'Ebmaj', rootMidi: 39, ensMidi: [63, 67, 70], ensCents: [0.0, -13.7, 2.0],  voxChord: [63, 67, 70] },
       { name: 'Bbmaj', rootMidi: 46, ensMidi: [58, 62, 65], ensCents: [0.0, -13.7, 2.0],  voxChord: [58, 62, 65] },
@@ -490,7 +503,7 @@
       { name: 'Cmin',  rootMidi: 36, ensMidi: [60, 63, 67], ensCents: [0.0, 15.6, 2.0],   voxChord: [60, 63, 67] }
     ];
 
-    // Book I P-03 (p. 22): MG Square -> INITIAL GAIN VCA chop pattern for Section A' (Bars 21–28)
+    // Software adaptation of Book I P-03 (MG Square -> INITIAL GAIN) applied to ensemble chords in Section A'
     const P03_CHOP_STEPS = [
       { off: 0.00, dur: 0.16, vel: 0.72 },
       { off: 0.50, dur: 0.18, vel: 0.85 },
@@ -501,7 +514,7 @@
       { off: 3.75, dur: 0.16, vel: 0.82 }
     ];
 
-    // Book II Sec. 13 / P-07 (pp. 56, 78): 5-Step Trig Out 5 -> RESET IN polymeter cell
+    // 5-note software cycle sliding against 16th-note 4/4 bars (inspired by Book II P-07)
     const SQ10_POLY5_SEMI   = [0, 7, 10, 12, 16];
     const SQ10_POLY5_CUTOFF = [950, 1650, 1180, 2450, 1420];
 
@@ -521,21 +534,21 @@
     }
 
     /* ==========================================================================
-       2. 1978 KORG ARSENAL DSP ENGINE (MS-10 + SQ-10 + VC-10)
+       2. BROWSER WEB AUDIO SYNTHESIS ENGINE (Korg-Inspired Software Architecture)
        ========================================================================== */
     const PATCH_DATA = {
-      kick:    { name: "MS-10 P04a Kick",  rgb: "255, 0, 85",    s: [32,'t',0,null,0,1,0,0,4.5,8.6,0,4.8,null,null,0,0,1.2,0,1.0], cab: ['PINK>EXT'] },
-      snare:   { name: "MS-10 P04b Snare", rgb: "250, 100, 0",   s: [0,'n',0,null,0,6.4,0,0,6.3,4.2,0,6.8,'s',0,2.5,0,2.9,0,1.9], cab: ['PINK>EXT'] },
-      hat:     { name: "MS-10 P04b Hat",   rgb: "255, 200, 0",   s: [0,'n',0,null,0,0,0,0,8.9,1.6,0,2.5,'s',0,0,0,0.85,0,0.4], cab: ['WHT>EXT'] },
-      bass:    { name: "SQ10 Sec11 Bass",  rgb: "0, 255, 135",   s: [16,'s',0,null,0,null,0,0,5.2,8.0,0,7.8,null,null,0,0.1,2.5,3.2,1.2], cab: [] },
-      lead:    { name: "MS-10 P02a Lead",  rgb: "0, 234, 255",   s: [8,'q',0,4,0,null,1.0,0,6.5,7.0,0,5.8,'t',4.6,0,0.4,1.8,7.5,1.5], cab: [] },
-      arp:     { name: "SQ10 P07/P08 Arp", rgb: "56, 189, 248",  s: [8,'q',0,3,0,null,0.3,0,6.5,7.8,0,8.2,'t',3.5,0,0.05,1.1,1.6,0.7], cab: [] },
-      pad1:    { name: "VC10 V06+P03 1",   rgb: "168, 85, 247",  s: [8,'q',0,5,0,null,1.0,0,6.2,3.2,0,3.5,'t',3.2,0,0.8,2.5,8.0,2.5], cab: [] },
-      pad2:    { name: "VC10 V06+P03 2",   rgb: "217, 70, 239",  s: [8,'q',0,6,0,null,1.1,0,6.2,3.2,0,3.5,'t',3.6,0,0.8,2.5,8.0,2.5], cab: [] },
-      pad3:    { name: "VC10 V06+P03 3",   rgb: "244, 114, 182", s: [8,'q',0,4,0,null,0.9,0,6.2,3.2,0,3.5,'t',2.8,0,0.8,2.5,8.0,2.5], cab: [] },
-      zap:     { name: "MS-10 P02a Zap",   rgb: "74, 222, 128",  s: [0,'t',0,null,0,null,0,0,6.2,9.6,0,9.5,'t',2.0,0,1.5,3.5,0,2.5], cab: [] },
-      noise:   { name: "MS-10 P04b Air",   rgb: "103, 232, 249", s: [0,'n',0,null,0,4.0,0,0,5.2,7.8,2.5,5.5,'t',1.2,4.0,4.0,3.0,0,4.5], cab: ['PINK>EXT'] },
-      vocoder: { name: "VC10 V05/V08 Vox", rgb: "255, 140, 0",   s: [8,'s',0,null,0,null,0.8,0,10,0,0,0,'t',4.8,0,0.2,1.2,8.5,1.0], cab: [] }
+      kick:    { name: "Sim Kick (P04a)",   rgb: "255, 0, 85",    s: [32,'t',0,null,0,1,0,0,4.5,8.6,0,4.8,null,null,0,0,1.2,0,1.0], cab: ['PINK>EXT'] },
+      snare:   { name: "Sim Snare (P04b)",  rgb: "250, 100, 0",   s: [0,'n',0,null,0,6.4,0,0,6.3,4.2,0,6.8,'s',0,2.5,0,2.9,0,1.9], cab: ['PINK>EXT'] },
+      hat:     { name: "Sim Hat (P04b)",    rgb: "255, 200, 0",   s: [0,'n',0,null,0,0,0,0,8.9,1.6,0,2.5,'s',0,0,0,0.85,0,0.4], cab: ['WHT>EXT'] },
+      bass:    { name: "Sim Bass (P05)",    rgb: "0, 255, 135",   s: [16,'s',0,null,0,null,0,0,5.2,8.0,0,7.8,null,null,0,0.1,2.5,3.2,1.2], cab: [] },
+      lead:    { name: "Sim Lead (P02a)",   rgb: "0, 234, 255",   s: [8,'q',0,4,0,null,1.0,0,6.5,7.0,0,5.8,'t',4.6,0,0.4,1.8,7.5,1.5], cab: [] },
+      arp:     { name: "Sim Arp (P07/P08)", rgb: "56, 189, 248",  s: [8,'q',0,3,0,null,0.3,0,6.5,7.8,0,8.2,'t',3.5,0,0.05,1.1,1.6,0.7], cab: [] },
+      pad1:    { name: "Sim Ens 1 (V06)",   rgb: "168, 85, 247",  s: [8,'q',0,5,0,null,1.0,0,6.2,3.2,0,3.5,'t',3.2,0,0.8,2.5,8.0,2.5], cab: [] },
+      pad2:    { name: "Sim Ens 2 (V06)",   rgb: "217, 70, 239",  s: [8,'q',0,6,0,null,1.1,0,6.2,3.2,0,3.5,'t',3.6,0,0.8,2.5,8.0,2.5], cab: [] },
+      pad3:    { name: "Sim Ens 3 (V06)",   rgb: "244, 114, 182", s: [8,'q',0,4,0,null,0.9,0,6.2,3.2,0,3.5,'t',2.8,0,0.8,2.5,8.0,2.5], cab: [] },
+      zap:     { name: "Sim Zap (P02a)",    rgb: "74, 222, 128",  s: [0,'t',0,null,0,null,0,0,6.2,9.6,0,9.5,'t',2.0,0,1.5,3.5,0,2.5], cab: [] },
+      noise:   { name: "Sim Air (P04b)",    rgb: "103, 232, 249", s: [0,'n',0,null,0,4.0,0,0,5.2,7.8,2.5,5.5,'t',1.2,4.0,4.0,3.0,0,4.5], cab: ['PINK>EXT'] },
+      vocoder: { name: "Synth Vox (V05)",   rgb: "255, 140, 0",   s: [8,'s',0,null,0,null,0.8,0,10,0,0,0,'t',4.8,0,0.2,1.2,8.5,1.0], cab: [] }
     };
 
     const BASE_VOLUMES = {
@@ -545,12 +558,12 @@
     };
 
     const SCORE_PARTS = [
-      { id: 'part1', num: 'PART 01', title: 'MS-10 DADA LEAD',     spec: "BOOK I P-02a + BOOK II P-04 GLIDE", color: '#00eaff', rgb: '0, 234, 255',  voices: ['lead'], gain: 1.0, muted: false, solo: false },
-      { id: 'part2', num: 'PART 02', title: 'VC-10 ROBO VOX',      spec: "BOOK III V-05 400¢/V + V-08 K35",  color: '#ff8c00', rgb: '255, 140, 0',  voices: ['vocoder'], gain: 1.0, muted: false, solo: false },
-      { id: 'part3', num: 'PART 03', title: 'SQ-10 RIGID ARP',     spec: "BOOK II P-08 VCF + P-07 5-STEP",   color: '#38bdf8', rgb: '56, 189, 248', voices: ['arp'], gain: 1.0, muted: false, solo: false },
-      { id: 'part4', num: 'PART 04', title: 'VC-10 COLD ENS',      spec: "BOOK III V-06 + P-03 JI / VCA CHOP",color: '#c084fc', rgb: '192, 132, 252',voices: ['pad1', 'pad2', 'pad3'], gain: 1.0, muted: false, solo: false },
-      { id: 'part5', num: 'PART 05', title: 'GUMMI RUBBER BASS',   spec: "BOOK II SEC 11 (P-01+P-03+P-05)",  color: '#00ff87', rgb: '0, 255, 135',  voices: ['bass'], gain: 1.0, muted: false, solo: false },
-      { id: 'part6', num: 'PART 06', title: 'MS-10 MINIMAL PERC',  spec: "BOOK I P-04a/b SNAP & P-02a ZAP",  color: '#f59e0b', rgb: '245, 158, 11', voices: ['kick', 'snare', 'hat', 'zap', 'noise'], gain: 1.0, muted: false, solo: false }
+      { id: 'part1', num: 'PART 01', title: 'DADA LEAD (MS-10 STYLE)',    spec: "INSPIRED BY BOOK I P-02a + P-04 GLIDE", color: '#00eaff', rgb: '0, 234, 255',  voices: ['lead'], gain: 1.0, muted: false, solo: false },
+      { id: 'part2', num: 'PART 02', title: 'ROBO VOX (VC-10 STYLE)',     spec: "SYNTH VOICE // V-05 400¢/V + V-08 IDEA", color: '#ff8c00', rgb: '255, 140, 0',  voices: ['vocoder'], gain: 1.0, muted: false, solo: false },
+      { id: 'part3', num: 'PART 03', title: 'RIGID ARP (SQ-10 STYLE)',    spec: "INSPIRED BY BOOK II P-08 VCF + P-07 CYCLE",color: '#38bdf8', rgb: '56, 189, 248', voices: ['arp'], gain: 1.0, muted: false, solo: false },
+      { id: 'part4', num: 'PART 04', title: 'COLD ENS (VC-10 STYLE)',     spec: "ADAPTATION: V-06 + P-03 JI / P-03 CHOP", color: '#c084fc', rgb: '192, 132, 252',voices: ['pad1', 'pad2', 'pad3'], gain: 1.0, muted: false, solo: false },
+      { id: 'part5', num: 'PART 05', title: 'RUBBER BASS (SQ/MS STYLE)',  spec: "INSPIRED BY BOOK II SEC 11 (P-05 APPROX)", color: '#00ff87', rgb: '0, 255, 135',  voices: ['bass'], gain: 1.0, muted: false, solo: false },
+      { id: 'part6', num: 'PART 06', title: 'MINIMAL PERC (MS-10 STYLE)', spec: "INSPIRED BY BOOK I P-04a/b + P-02a ZAP",  color: '#f59e0b', rgb: '245, 158, 11', voices: ['kick', 'snare', 'hat', 'zap', 'noise'], gain: 1.0, muted: false, solo: false }
     ];
 
     let ac = null, masterOut = null, masterBus = null, masterAnalyser = null, echoWet = null;
@@ -561,12 +574,12 @@
 
     const DAW_TRACK_DEFS = [
       { id: 'master', num: 'MST', name: 'Master_Mix', fileSlug: '00_Master_Mix', channels: 2, color: '#f59e0b', armed: true },
-      { id: 'part1',  num: 'P01', name: 'Dada_Lead',  fileSlug: '01_MS10_P02a_Dada_Lead', channels: 1, color: '#00eaff', armed: true },
-      { id: 'part2',  num: 'P02', name: 'Robo_Vox',   fileSlug: '02_VC10_V05_Robo_Vox',   channels: 1, color: '#ff8c00', armed: true },
-      { id: 'part3',  num: 'P03', name: 'Rigid_Arp',  fileSlug: '03_SQ10_P08_Rigid_Arp',  channels: 1, color: '#38bdf8', armed: true },
-      { id: 'part4',  num: 'P04', name: 'Cold_Ens',   fileSlug: '04_VC10_V06_Cold_Ens',   channels: 1, color: '#c084fc', armed: true },
-      { id: 'part5',  num: 'P05', name: 'Rubber_Bass',fileSlug: '05_SQ10_Sec11_Bass',     channels: 1, color: '#00ff87', armed: true },
-      { id: 'part6',  num: 'P06', name: 'Min_Perc',   fileSlug: '06_MS10_P04_Min_Perc',   channels: 1, color: '#fbbf24', armed: true }
+      { id: 'part1',  num: 'P01', name: 'Dada_Lead',  fileSlug: '01_Sim_Dada_Lead',   channels: 1, color: '#00eaff', armed: true },
+      { id: 'part2',  num: 'P02', name: 'Robo_Vox',   fileSlug: '02_Synth_Robo_Vox',  channels: 1, color: '#ff8c00', armed: true },
+      { id: 'part3',  num: 'P03', name: 'Rigid_Arp',  fileSlug: '03_Sim_Rigid_Arp',   channels: 1, color: '#38bdf8', armed: true },
+      { id: 'part4',  num: 'P04', name: 'Cold_Ens',   fileSlug: '04_Sim_Cold_Ens',    channels: 1, color: '#c084fc', armed: true },
+      { id: 'part5',  num: 'P05', name: 'Rubber_Bass',fileSlug: '05_Sim_Rubber_Bass', channels: 1, color: '#00ff87', armed: true },
+      { id: 'part6',  num: 'P06', name: 'Min_Perc',   fileSlug: '06_Sim_Min_Perc',    channels: 1, color: '#fbbf24', armed: true }
     ];
     let recMode = 'ALL', isRecording = false, autoStopAtLoopEnd = false, recStartTime = 0;
     let recNode = null, recBuffers = {}, recPeaks = {}, renderedTakes = [];
@@ -658,7 +671,8 @@
       v.so = src('sine', 500); v.so.detune.value = 0; v.fb.connect(v.so.detune); v.sg = G(0); v.so.connect(v.sg);
       const vca = G(0);
 
-      // Book III (V-02 + V-05 + V-08): VC-10 Vocoder with Noise Sibilance routed into MS-10 Korg-35 Filter
+      // Synthesised formant voice approximation (3 fixed bandpass formants + white noise + lowpass stage)
+      // Inspired by Book III concepts; not a 20-band speech-modulator vocoder
       if (id === 'vocoder') {
         pre.disconnect(v.vcf); v.vcf.disconnect();
         v.voxDetune = src('square', 330); v.voxDetune.detune.value = 18;
@@ -733,7 +747,7 @@
       const chord = getChordForBar(b);
       const events = [];
 
-      // 1. MS-10 DADA LEAD (Book I P-02a Manual Groove Riding + Book II P-04 Portamento Glides)
+      // 1. DADA LEAD (Inspired by Book I P-02a filter riding + Book II P-04 portamento glides)
       if (sec.id === 'A1' || sec.id === 'A2') {
         const root = chord.rootMidi;
         const leadPattern = [
@@ -751,7 +765,7 @@
         });
       }
 
-      // 2. VC-10 ROBO VOX (Book III V-05 400¢/V Seq Vocoder + V-02 Noise + V-08 Korg-35)
+      // 2. ROBO VOX (Synthesised formant voice illustrating Book III V-05 400¢/V pitch intervals)
       if (sec.id === 'B') {
         const voxPattern = [0, 0.25, 0.75, 1.5, 2.0, 2.25, 2.75, 3.5];
         const baseMidi = chord.voxChord[0];
@@ -763,7 +777,7 @@
         });
       }
 
-      // 3. SQ-10 RIGID ARP (Book II P-01 + P-08 Stepped VCF; Book II Sec 13 P-07 5-Step Polymeter in B)
+      // 3. RIGID ARP (Inspired by Book II P-01 + P-08 stepped cutoff; 5-note cycle in B inspired by P-07)
       if (sec.id === 'B') {
         for (let i = 0; i < 16; i++) {
           const global16th = (b - 12) * 16 + i;
@@ -780,7 +794,7 @@
         }
       }
 
-      // 4. VC-10 COLD ENSEMBLE (Book III V-06 + Book II P-03 JI; Book I P-03 VCA Chop in Section A')
+      // 4. COLD ENSEMBLE (Software adaptation combining Book III V-06 + Book II P-03 JI + Book I P-03 chop)
       if (sec.id === 'B' || sec.id === 'OUTRO') {
         chord.ensMidi.forEach((m, vIdx) => {
           events.push({ type: 'note', partId: 'part4', voiceId: `pad${vIdx + 1}`, rawBeatOff: 0, durBeats: 3.8, midi: m, cents: chord.ensCents[vIdx], vel: 0.75, label: `V06:${chord.name}`, domKey: vIdx === 0 ? `p4_${b}_0` : null });
@@ -793,7 +807,7 @@
         });
       }
 
-      // 5. GUMMI RUBBER BASS (Book II Sec. 11: P-01 Octaves + P-03 Just Intonation + P-05 ÷2/V + Book I P-01)
+      // 5. GUMMI RUBBER BASS (Inspired by Book II Sec. 11: P-01 octaves + P-03 JI + P-05 timing approx)
       if (sec.id === 'A1' || sec.id === 'B' || sec.id === 'A2') {
         for (let i = 0; i < 8; i++) {
           const off = i * 0.5;
@@ -810,7 +824,7 @@
         }
       }
 
-      // 6. MS-10 MINIMAL PERC & FX (Book I P-04a/b Transient Snap & Noise + P-02a Laser Zap)
+      // 6. MINIMAL PERC & FX (Inspired by Book I P-04a/b transient snap & noise + P-02a laser zap)
       [0, 1, 2, 3].forEach((off, i) => {
         events.push({ type: 'kick', partId: 'part6', voiceId: 'kick', rawBeatOff: off, durSec: 0.15, vel: 1.0, label: 'P04a:KIK', domKey: `p6_k_${b}_${i}` });
       });
@@ -874,7 +888,7 @@
     function triggerAudioEvent(ev, at) {
       const v = tracks[ev.voiceId]; if (!v) return;
       const durSec = ev.durSec || (ev.durBeats * BEAT_SEC); const vel = ev.vel !== undefined ? ev.vel : 1.0;
-      const activeCents = offGridEnabled ? (ev.cents || 0) : 0;
+      const activeCents = justIntonationEnabled ? (ev.cents || 0) : 0;
 
       if (ev.type === 'note' || ev.type === 'lead_ride') {
         const scaleMult = (v.P.s[0] === 32 ? 0.25 : (v.P.s[0] === 16 ? 0.5 : 1));
@@ -1125,7 +1139,7 @@
     }
 
     /* ==========================================================================
-       5. DAW MULTITRACK CAPTURE, 24-BIT WAV ENCODER & DISCRETE OUTPUT ROUTING
+       5. BROWSER MULTITRACK CAPTURE, 24-BIT WAV ENCODER & DISCRETE OUTPUT ROUTING
        ========================================================================== */
     function setupDawCaptureTap() {
       if (!ac || recNode) return;
@@ -1157,7 +1171,7 @@
       renderedTakes.forEach(t => URL.revokeObjectURL(t.url)); renderedTakes = [];
       recBuffers = { masterL: [], masterR: [] }; recPeaks = { master: 0 }; SCORE_PARTS.forEach(p => { recBuffers[p.id] = []; recPeaks[p.id] = 0; });
       isRecording = true; recStartTime = ac.currentTime; updateRecTransportUI(true);
-      const exportList = document.getElementById('wavExportList'); if (exportList) exportList.innerHTML = `<p class="col-span-full text-[11px] text-red-400 font-bold animate-pulse">● RECORDING ARMED TRACKS IN 24-BIT PCM WAV...</p>`;
+      const exportList = document.getElementById('wavExportList'); if (exportList) exportList.innerHTML = `<p class="col-span-full text-[11px] text-red-400 font-bold animate-pulse">● RECORDING ARMED BROWSER TRACKS IN 24-BIT PCM WAV...</p>`;
       document.getElementById('downloadAllWavBtn').disabled = true;
       if (auto32Bars) { autoStopAtLoopEnd = true; if (isPlaying) seekToBar(0); else { anchorSongTime = 0; nextBarIndex = 0; startPlayback(); } } else if (!isPlaying) startPlayback();
     }
@@ -1264,11 +1278,16 @@
       const cueNote = el.dataset.protoNote || '';
       const cuePatch = el.dataset.protoPatch || '';
       const cueUrl = el.dataset.protoUrl || '';
-      const needsOffGrid = el.dataset.protoOffgrid === '1';
+      const needsTiming = el.dataset.protoTiming === '1';
+      const needsTuning = el.dataset.protoTuning === '1';
 
-      if (needsOffGrid && !offGridEnabled) {
-        const offGridBtn = document.getElementById('offGridBtn');
-        if (offGridBtn) offGridBtn.click();
+      if (needsTiming && !warpedTimingEnabled) {
+        const timingBtn = document.getElementById('timingModeBtn');
+        if (timingBtn) timingBtn.click();
+      }
+      if (needsTuning && !justIntonationEnabled) {
+        const tuningBtn = document.getElementById('tuningModeBtn');
+        if (tuningBtn) tuningBtn.click();
       }
 
       const cueText = document.getElementById('protocolCueText');
@@ -1279,7 +1298,7 @@
       if (cueText && cueNote) cueText.textContent = cueNote;
       if (schematicText) {
         if (cuePatch) {
-          schematicText.textContent = `PATCH: ${cuePatch}`;
+          schematicText.textContent = cuePatch;
           schematicText.classList.remove('hidden');
         } else {
           schematicText.classList.add('hidden');
@@ -1326,17 +1345,29 @@
         if (laneSoloBtn) laneSoloBtn.click();
       });
 
-      document.getElementById('offGridBtn').addEventListener('click', (e) => {
-        offGridEnabled = !offGridEnabled;
-        e.target.textContent = offGridEnabled ? 'Off-Grid (P-05): On' : '12-TET Grid (P-12)';
-        e.target.classList.toggle('border-emerald-500/60', offGridEnabled);
-        e.target.classList.toggle('bg-emerald-500/15', offGridEnabled);
-        e.target.classList.toggle('text-emerald-400', offGridEnabled);
-        e.target.classList.toggle('border-zinc-700', !offGridEnabled);
-        e.target.classList.toggle('bg-zinc-900', !offGridEnabled);
-        e.target.classList.toggle('text-zinc-400', !offGridEnabled);
+      document.getElementById('timingModeBtn').addEventListener('click', (e) => {
+        warpedTimingEnabled = !warpedTimingEnabled;
+        e.target.textContent = warpedTimingEnabled ? 'Timing: Warped (P-05 Approx)' : 'Timing: Straight Grid';
+        e.target.classList.toggle('border-emerald-500/60', warpedTimingEnabled);
+        e.target.classList.toggle('bg-emerald-500/15', warpedTimingEnabled);
+        e.target.classList.toggle('text-emerald-400', warpedTimingEnabled);
+        e.target.classList.toggle('border-zinc-700', !warpedTimingEnabled);
+        e.target.classList.toggle('bg-zinc-900', !warpedTimingEnabled);
+        e.target.classList.toggle('text-zinc-400', !warpedTimingEnabled);
         renderScoreLanes(displayedSystem);
       });
+
+      document.getElementById('tuningModeBtn').addEventListener('click', (e) => {
+        justIntonationEnabled = !justIntonationEnabled;
+        e.target.textContent = justIntonationEnabled ? 'Tuning: Just Int (P-03)' : 'Tuning: 12-TET';
+        e.target.classList.toggle('border-sky-500/60', justIntonationEnabled);
+        e.target.classList.toggle('bg-sky-500/15', justIntonationEnabled);
+        e.target.classList.toggle('text-sky-400', justIntonationEnabled);
+        e.target.classList.toggle('border-zinc-700', !justIntonationEnabled);
+        e.target.classList.toggle('bg-zinc-900', !justIntonationEnabled);
+        e.target.classList.toggle('text-zinc-400', !justIntonationEnabled);
+      });
+
       document.getElementById('loopBtn').addEventListener('click', (e) => { loopEnabled = !loopEnabled; e.target.textContent = `Loop: ${loopEnabled ? 'On' : 'Off'}`; e.target.classList.toggle('border-amber-500/50', loopEnabled); e.target.classList.toggle('bg-amber-500/15', loopEnabled); e.target.classList.toggle('text-amber-400', loopEnabled); e.target.classList.toggle('border-zinc-700', !loopEnabled); e.target.classList.toggle('bg-zinc-900', !loopEnabled); e.target.classList.toggle('text-zinc-400', !loopEnabled); });
 
       document.querySelectorAll('[data-proto-bar]').forEach(btn => btn.addEventListener('click', () => jumpToProtocolCue(btn)));
