@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WHY-EM-O // VOLTAGE & WAVE — Partiture Reader</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          gridTemplateColumns: {
+            '16': 'repeat(16, minmax(0, 1fr))',
+          },
+          colors: {
+            amber: {
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              900: '#78350f',
+              950: '#451a03',
+            },
+            zinc: {
+              850: '#202022',
+              900: '#18181b',
+              950: '#09090b',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #09090b;
+      color: #d4d4d8;
+      overflow-x: hidden;
+    }
+
+    /* Subtle CRT scanline overlay matching Voltage & Wave aesthetic */
+    .scanlines::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                  linear-gradient(90deg, rgba(245, 158, 11, 0.04), rgba(245, 158, 11, 0.02), rgba(217, 119, 6, 0.04));
+      z-index: 50;
+      background-size: 100% 2px, 3px 100%;
+      pointer-events: none;
+      opacity: 0.3;
+    }
+
+    .bg-synth-grid {
+      background-image: linear-gradient(to right, rgba(245, 158, 11, 0.07) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(245, 158, 11, 0.07) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .glow-text {
+      text-shadow: 0 0 12px rgba(245, 158, 11, 0.55);
+    }
+
+    /* Custom industrial range sliders */
+    input[type="range"].vw-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      background: #27272a;
+      height: 4px;
+      border-radius: 2px;
+      outline: none;
+    }
+    input[type="range"].vw-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px;
+      height: 16px;
+      background: #f59e0b;
+      border: 1px solid #09090b;
+      border-radius: 2px;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+    }
+    input[type="range"].vw-slider::-moz-range-thumb {
+      width: 12px;
+      height: 16px;
+      background: #f59e0b;
+      border: 1px solid #09090b;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    /* Score Note Event Highlighting */
+    .score-note {
+      transition: transform 0.05s ease, filter 0.05s ease, box-shadow 0.05s ease;
+    }
+    .score-note.active {
+      filter: brightness(1.45);
+      transform: scaleY(1.08);
+      box-shadow: 0 0 14px var(--note-glow, rgba(245, 158, 11, 0.85));
+      z-index: 15;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #09090b; }
+    ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+  </style>
+</head>
+<body class="antialiased relative selection:bg-amber-500 selection:text-zinc-950 flex flex-col min-h-screen">
+  <div class="scanlines"></div>
+
+  <!-- Fixed Top Transport & Telemetry Header -->
+  <header class="fixed w-full z-40 top-0 bg-zinc-950/95 backdrop-blur-md border-b border-zinc-800">
+    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-wrap justify-between items-center py-2.5 gap-3">
+        <!-- Brand & Score Identity -->
+        <div class="flex items-center gap-3">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" class="text-amber-500 w-6 h-6 shrink-0">
+            <path d="M2 12h4v-7h6v14h6v-7h4"/>
+          </svg>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-mono font-bold text-white tracking-widest text-sm sm:text-base">VOLTAGE & WAVE</span>
+              <span class="hidden sm:inline-block font-mono text-[10px] text-amber-500 border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 uppercase tracking-widest">
+                Score Reader
+              </span>
+            </div>
+            <p class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">
+              WHY-EM-O // 135 BPM // A MINOR // 4/4
+            </p>
+          </div>
+        </div>
+
+        <!-- Live Bar / Beat / Section / Chord Readout -->
+        <div class="flex items-center gap-2 sm:gap-4 bg-zinc-900/90 border border-zinc-800 px-3 py-1.5 rounded-sm font-mono">
+          <div class="text-center pr-2 sm:pr-4 border-r border-zinc-800">
+            <div class="text-[9px] text-zinc-500 uppercase tracking-widest">Bar</div>
+            <div id="hudBar" class="text-base sm:text-xl font-bold text-amber-500 glow-text leading-none mt-0.5">01<span class="text-zinc-600 text-xs">/32</span></div>
+          </div>
+          <div class="text-center pr-2 sm:pr-4 border-r border-zinc-800">
+            <div class="text-[9px] text-zinc-500 uppercase tracking-widest">Beat</div>
+            <div id="hudBeat" class="text-base sm:text-xl font-bold text-white leading-none mt-0.5">1.1</div>
+          </div>
+          <div class="text-center pr-2 sm:pr-4 border-r border-zinc-800">
+            <div class="text-[9px] text-zinc-500 uppercase tracking-widest">Section</div>
+            <div id="hudSection" class="text-xs sm:text-sm font-bold text-amber-400 leading-none mt-1">INTRO</div>
+          </div>
+          <div class="text-center">
+            <div class="text-[9px] text-zinc-500 uppercase tracking-widest">Chord</div>
+            <div id="hudChord" class="text-base sm:text-xl font-bold text-emerald-400 leading-none mt-0.5">Am</div>
+          </div>
+        </div>
+
+        <!-- Transport Buttons -->
+        <div class="flex items-center gap-2 font-mono text-xs">
+          <button id="playBtn" class="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-zinc-950 px-4 py-2 font-bold uppercase tracking-wider rounded-sm transition-all shadow-[0_0_15px_rgba(245,158,11,0.35)] cursor-pointer">
+            <span id="playIcon">▶</span> <span id="playLabel">Play</span>
+          </button>
+          <button id="stopBtn" class="inline-flex items-center gap-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 px-3 py-2 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">
+            ■ Stop
+          </button>
+          <button id="loopBtn" title="Toggle 32-Bar Loop" class="px-2.5 py-2 border border-amber-500/50 bg-amber-500/15 text-amber-400 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">
+            Loop: On
+          </button>
+          <button id="clickBtn" title="Metronome Click Mode (Intro Count-In / All / Off)" class="hidden md:inline-block px-2.5 py-2 border border-zinc-700 bg-zinc-900 text-zinc-300 hover:border-amber-500/50 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">
+            Click: Intro
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workstation Body -->
+  <main class="pt-24 sm:pt-20 pb-12 flex-1 relative z-10">
+    <div class="fixed inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
+
+    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-6 mt-4">
+
+      <!-- 1. ARRANGEMENT & 32-BAR PROGRESS NAVIGATOR -->
+      <section class="bg-zinc-900/90 border border-zinc-800 rounded-sm p-4 sm:p-5 shadow-2xl">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4 pb-3 border-b border-zinc-800">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+              <h1 class="font-mono text-xs sm:text-sm font-bold text-white uppercase tracking-widest">
+                Arrangement Map // 32-Bar Master Timeline
+              </h1>
+            </div>
+            <p class="text-xs text-zinc-400 mt-1">
+              Click any section or bar cell (`01–32`) to jump the playhead directly to that measure.
+            </p>
+          </div>
+
+          <!-- Section Quick-Jump Pills -->
+          <div class="flex flex-wrap gap-1.5 font-mono text-[11px]" id="sectionNav">
+            <button data-jump="0" class="sec-pill px-2.5 py-1 rounded-sm border border-amber-500 bg-amber-500/20 text-amber-400 font-bold uppercase tracking-wider cursor-pointer transition-colors">
+              Intro (1–4)
+            </button>
+            <button data-jump="4" class="sec-pill px-2.5 py-1 rounded-sm border border-zinc-700 bg-zinc-950 text-zinc-400 hover:border-amber-500/50 hover:text-zinc-200 uppercase tracking-wider cursor-pointer transition-colors">
+              Groove (5–8)
+            </button>
+            <button data-jump="8" class="sec-pill px-2.5 py-1 rounded-sm border border-zinc-700 bg-zinc-950 text-zinc-400 hover:border-amber-500/50 hover:text-zinc-200 uppercase tracking-wider cursor-pointer transition-colors">
+              A (9–16)
+            </button>
+            <button data-jump="16" class="sec-pill px-2.5 py-1 rounded-sm border border-zinc-700 bg-zinc-950 text-zinc-400 hover:border-amber-500/50 hover:text-zinc-200 uppercase tracking-wider cursor-pointer transition-colors">
+              B (17–24)
+            </button>
+            <button data-jump="24" class="sec-pill px-2.5 py-1 rounded-sm border border-zinc-700 bg-zinc-950 text-zinc-400 hover:border-amber-500/50 hover:text-zinc-200 uppercase tracking-wider cursor-pointer transition-colors">
+              A' (25–32)
+            </button>
+          </div>
+        </div>
+
+        <!-- 32-Bar Interactive Grid -->
+        <div id="barMatrix" class="grid grid-cols-4 sm:grid-cols-8 lg:grid-cols-16 gap-1.5">
+          <!-- Populated via JS for Bars 1 to 32 -->
+        </div>
+      </section>
+
+      <!-- 2. PARTITURE // 5-PART SYNCHRONIZED SCORE READER -->
+      <section class="bg-zinc-900/90 border border-zinc-800 rounded-sm shadow-2xl overflow-hidden">
+        <!-- Partiture Toolbar -->
+        <div class="bg-zinc-950 border-b border-zinc-800 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <span class="font-mono text-xs font-bold text-amber-500 uppercase tracking-widest">
+              Performing Parts Book
+            </span>
+            <span id="systemBadge" class="font-mono text-[11px] bg-zinc-900 border border-zinc-700 text-zinc-300 px-2.5 py-0.5 rounded-sm">
+              SYSTEM 01 // BARS 01–04 (INTRO)
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2 font-mono text-[11px]">
+            <span class="text-zinc-500 hidden sm:inline">VIEW:</span>
+            <button id="view4Btn" class="px-2.5 py-1 rounded-sm border border-amber-500 bg-amber-500/15 text-amber-400 font-bold uppercase cursor-pointer">
+              4-Bar System (Auto-Page)
+            </button>
+            <button id="view32Btn" class="px-2.5 py-1 rounded-sm border border-zinc-700 bg-zinc-900 text-zinc-400 hover:text-white uppercase cursor-pointer">
+              32-Bar Full Score
+            </button>
+          </div>
+        </div>
+
+        <!-- Score Container -->
+        <div id="partitureBody" class="divide-y divide-zinc-800/90">
+          <!-- 5 Part Lanes generated via JS -->
+        </div>
+      </section>
+
+      <!-- 3. COMPACT OSCILLOSCOPE & MS-10 VOICE TELEMETRY -->
+      <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <!-- Live Multi-Channel Waveform / Spectrum Scope -->
+        <div class="lg:col-span-7 bg-zinc-900/90 border border-zinc-800 rounded-sm p-4 flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+              <span class="font-mono text-xs font-bold text-white uppercase tracking-widest">
+                MS-10 Output Oscilloscope
+              </span>
+            </div>
+            <div class="flex gap-1.5 font-mono text-[10px]">
+              <button id="scopeWaveBtn" class="px-2.5 py-1 rounded-sm border border-amber-500 bg-amber-500/20 text-amber-400 font-bold uppercase cursor-pointer">
+                Waveform
+              </button>
+              <button id="scopeFreqBtn" class="px-2.5 py-1 rounded-sm border border-zinc-700 bg-zinc-950 text-zinc-400 hover:text-white uppercase cursor-pointer">
+                Spectrum
+              </button>
+            </div>
+          </div>
+          <div class="relative flex-1 min-h-[130px] bg-zinc-950 border border-zinc-800 rounded-sm overflow-hidden">
+            <canvas id="scopeCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+          </div>
+        </div>
+
+        <!-- Master Bus & Active MS-10 Voice Matrix -->
+        <div class="lg:col-span-5 bg-zinc-900/90 border border-zinc-800 rounded-sm p-4 flex flex-col justify-between gap-4">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="font-mono text-xs font-bold text-white uppercase tracking-widest">
+                11-Voice Korg MS-10 Engine
+              </span>
+              <span id="elapsedClock" class="font-mono text-xs text-amber-500 font-bold">00:00.0</span>
+            </div>
+            <!-- 11 Voice Activity LEDs -->
+            <div id="voiceLedGrid" class="grid grid-cols-3 sm:grid-cols-4 gap-2 font-mono text-[10px]">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+          <!-- Master Output Gain -->
+          <div class="bg-zinc-950 border border-zinc-800 p-3 rounded-sm flex items-center justify-between gap-4">
+            <label for="masterGainSlider" class="font-mono text-xs text-zinc-400 uppercase tracking-wider shrink-0">
+              Master Out
+            </label>
+            <input id="masterGainSlider" type="range" min="0" max="1.4" step="0.01" value="0.85" class="vw-slider w-full">
+            <span id="masterGainVal" class="font-mono text-xs text-amber-500 font-bold w-10 text-right">85%</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="py-6 text-center border-t border-zinc-800 bg-zinc-950 relative z-20">
+    <p class="font-mono text-xs text-zinc-500 uppercase tracking-widest">
+      VOLTAGE & WAVE STUDIO // WHY-EM-O PERFORMING PARTS BOOK // KORG MS-10 WEB AUDIO DSP
+    </p>
+  </footer>
+
+  <script>
+    /* ==========================================================================
+       1. SCORE METADATA & MUSICAL DEFINITIONS (WHY-EM-O — 32 BARS, 135 BPM, Am)
+       ========================================================================== */
+    const BPM = 135;
+    const BEAT_SEC = 60 / BPM;
+    const BAR_SEC = 4 * BEAT_SEC;
+    const TOTAL_BARS = 32;
+    const LOOP_SEC = TOTAL_BARS * BAR_SEC;
+
+    const SECTIONS = [
+      { id: 'INTRO',  label: 'INTRO',  startBar: 0,  endBar: 3,  desc: '4 Bars Rest (Count-In)' },
+      { id: 'GROOVE', label: 'GROOVE', startBar: 4,  endBar: 7,  desc: 'Synth Bass & Drums Enter' },
+      { id: 'A',      label: 'A',      startBar: 8,  endBar: 15, desc: 'Lead Hook + Sustained Pads' },
+      { id: 'B',      label: 'B',      startBar: 16, endBar: 23, desc: 'Flute Arp 8va + Rhythmic Pads' },
+      { id: 'AP',     label: "A'",     startBar: 24, endBar: 31, desc: 'Full Tutti Climax' }
+    ];
+
+    const CHORDS = [
+      { name: 'Am', rootMidi: 33, padMidi: [57, 60, 64] }, // A1 | A3, C4, E4
+      { name: 'F',  rootMidi: 29, padMidi: [53, 57, 60] }, // F1 | F3, A3, C4
+      { name: 'G',  rootMidi: 31, padMidi: [55, 59, 62] }, // G1 | G3, B3, D4
+      { name: 'Em', rootMidi: 28, padMidi: [52, 55, 59] }  // E1 | E3, G3, B3
+    ];
+
+    // Part 1: Lead Synth (16' Pulse) — Written pitches, sounded 1 octave lower via 16' scale
+    const LEAD_PHRASE = [
+      [ { off: 0.0, midi: 81, dur: 0.5 }, { off: 0.5, midi: 76, dur: 0.5 }, { off: 1.0, midi: 81, dur: 0.5 }, { off: 1.5, midi: 84, dur: 0.5 }, { off: 2.0, midi: 81, dur: 1.5 } ],
+      [ { off: 0.0, midi: 81, dur: 0.5 }, { off: 0.5, midi: 79, dur: 0.5 }, { off: 1.0, midi: 77, dur: 0.5 }, { off: 1.5, midi: 72, dur: 2.0 } ],
+      [ { off: 0.0, midi: 79, dur: 0.5 }, { off: 0.5, midi: 74, dur: 0.5 }, { off: 1.0, midi: 79, dur: 0.5 }, { off: 1.5, midi: 83, dur: 0.5 }, { off: 2.0, midi: 79, dur: 1.5 } ],
+      [ { off: 0.0, midi: 79, dur: 0.5 }, { off: 0.5, midi: 77, dur: 0.5 }, { off: 1.0, midi: 76, dur: 0.5 }, { off: 1.5, midi: 71, dur: 2.0 } ]
+    ];
+
+    // Part 4: Synth Bass (32') — Octave-jumping groove riff
+    const BASS_STEPS = [
+      { off: 0.00, oct: 0,  dur: 0.20 },
+      { off: 0.25, oct: 12, dur: 0.20 },
+      { off: 0.75, oct: 12, dur: 0.20 },
+      { off: 1.50, oct: 0,  dur: 0.20 },
+      { off: 2.00, oct: 0,  dur: 0.20 },
+      { off: 2.25, oct: 12, dur: 0.20 },
+      { off: 2.75, oct: 12, dur: 0.20 },
+      { off: 3.50, oct: 0,  dur: 0.20 }
+    ];
+
+    // Part 2: Flute Arp (4', 8va) — 16th-note arpeggio (Root - 3rd - 5th - 3rd x 4)
+    const ARP_INDICES = [0, 1, 2, 1, 0, 1, 2, 1, 0, 1, 2, 1, 0, 1, 2, 1];
+
+    const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    function midiToName(midi) {
+      const name = NOTE_NAMES[midi % 12];
+      const oct = Math.floor(midi / 12) - 1;
+      return `${name}${oct}`;
+    }
+
+    function getSectionForBar(barIdx) {
+      return SECTIONS.find(s => barIdx >= s.startBar && barIdx <= s.endBar) || SECTIONS[0];
+    }
+
+    /* ==========================================================================
+       2. KORG MS-10 WEB AUDIO DSP ENGINE (EXACT PATCH ARCHITECTURE)
+       ========================================================================== */
+    const PATCH_DATA = {
+      kick:  { name: "Kick",          rgb: "255, 49, 49",  s: [32,'t',0,null,0,1,0,0,4.5,7,0,4,null,null,0,0,2,0,2], cab: ['PINK>EXT'] },
+      snare: { name: "Snare",         rgb: "249, 115, 22", s: [0,'n',0,null,0,6,0,0,6,3,0,5,'s',0,0,0,3.2,0,2.5], cab: ['PINK>EXT'] },
+      hat:   { name: "Hi-Hat",        rgb: "250, 204, 21", s: [0,'n',0,null,0,0,0,0,8,0,0,3,'s',0,0,0,1.4,0,1], cab: ['PINK>EXT'] },
+      bass:  { name: "Bass",          rgb: "0, 255, 135",  s: [32,'s',0,null,0,null,0,0,5,7,0,6,null,null,0,0,1.5,3,1], cab: [] },
+      lead:  { name: "Lead Synth",    rgb: "0, 234, 255",  s: [16,'q',0,5,0,null,0,3,5.5,8,0,10,'t',4,0,1,1,7,1], cab: ['WHL>FM'] },
+      flute: { name: "Flute / Pluck", rgb: "56, 189, 248", s: [4,'t',0,null,0,null,1,1,6,2,3,8,'t',3.5,0,1,2,7,1], cab: ['WHT>FM'] },
+      pad1:  { name: "Pad (Voice 1)", rgb: "192, 132, 252",s: [8,'s',0,null,0,null,1,0,6.5,4,0,0,'t',3.5,0,5,0,10,4], cab: [] },
+      pad2:  { name: "Pad (Voice 2)", rgb: "216, 180, 254",s: [8,'s',0,null,0,null,1,0,6.5,4,0,0,'t',3.5,0,5,0,10,4], cab: [] },
+      pad3:  { name: "Pad (Voice 3)", rgb: "244, 114, 182",s: [8,'s',0,null,0,null,1,0,6.5,4,0,0,'t',3.5,0,5,0,10,4], cab: [] },
+      gun:   { name: "Laser Sweep",   rgb: "255, 0, 85",   s: [0,'q',0,2,0,null,0,0,4,10,10,0,'q',6,0,0,0,10,0], cab: [] },
+      star:  { name: "Falling Star",  rgb: "45, 212, 191", s: [0,'q',0,2,0,null,0,0,6,10,6,8,'q',5,7,0,5,0,0], cab: [] }
+    };
+
+    const BASE_VOLUMES = {
+      kick: 1.0, snare: 0.75, hat: 0.28, bass: 0.95,
+      lead: 0.45, flute: 0.55, pad1: 0.18, pad2: 0.18, pad3: 0.18,
+      gun: 0.45, star: 0.45
+    };
+
+    // 5 Score Parts mapped to the 11 MS-10 voices
+    const SCORE_PARTS = [
+      {
+        id: 'part1',
+        num: 'PART 01',
+        title: 'LEAD SYNTH',
+        spec: "16' PULSE // PWM + VIB",
+        color: '#00eaff',
+        rgb: '0, 234, 255',
+        voices: ['lead'],
+        gain: 1.0,
+        muted: false,
+        solo: false
+      },
+      {
+        id: 'part2',
+        num: 'PART 02',
+        title: 'FLUTE ARP',
+        spec: "4' TRIANGLE // 8va",
+        color: '#38bdf8',
+        rgb: '56, 189, 248',
+        voices: ['flute'],
+        gain: 1.0,
+        muted: false,
+        solo: false
+      },
+      {
+        id: 'part3',
+        num: 'PART 03',
+        title: 'PADS 1–3',
+        spec: "8' 3-VOICE SAW POLY",
+        color: '#c084fc',
+        rgb: '192, 132, 252',
+        voices: ['pad1', 'pad2', 'pad3'],
+        gain: 1.0,
+        muted: false,
+        solo: false
+      },
+      {
+        id: 'part4',
+        num: 'PART 04',
+        title: 'SYNTH BASS',
+        spec: "32' SAWTOOTH SUB",
+        color: '#00ff87',
+        rgb: '0, 255, 135',
+        voices: ['bass'],
+        gain: 1.0,
+        muted: false,
+        solo: false
+      },
+      {
+        id: 'part5',
+        num: 'PART 05',
+        title: 'PERC / FX TRIG',
+        spec: "DRUMS + LASER + STAR",
+        color: '#f59e0b',
+        rgb: '245, 158, 11',
+        voices: ['kick', 'snare', 'hat', 'gun', 'star'],
+        gain: 1.0,
+        muted: false,
+        solo: false
+      }
+    ];
+
+    let ac = null;
+    let masterOut = null;
+    let tracks = {};
+    let nW = null, nP = null;
+    let masterGainValue = 0.85;
+
+    const mapFc = v => 40 * Math.pow(2, v * 0.9);
+    const mgHz  = v => 0.5 * Math.pow(2, 0.93 * (v || 0));
+    const tm    = v => v <= 0 ? 0.003 : 0.003 * Math.pow(10, 0.36 * v);
+    const dm    = v => Math.max(0.06, tm(v));
+
+    function initAudioEngine() {
+      if (ac) return;
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      ac = new AudioCtx();
+
+      const comp = ac.createDynamicsCompressor();
+      comp.threshold.value = -12;
+      comp.knee.value = 12;
+      comp.ratio.value = 4;
+      comp.attack.value = 0.003;
+      comp.release.value = 0.15;
+
+      masterOut = ac.createGain();
+      masterOut.gain.value = masterGainValue;
+
+      comp.connect(masterOut);
+      masterOut.connect(ac.destination);
+      ac.cp = comp;
+
+      // White & Pink noise buffers
+      const L = ac.sampleRate * 3;
+      nW = ac.createBuffer(1, L, ac.sampleRate);
+      nP = ac.createBuffer(1, L, ac.sampleRate);
+      const w = nW.getChannelData(0);
+      const p = nP.getChannelData(0);
+      let a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0;
+      for (let i = 0; i < L; i++) {
+        const x = Math.random() * 2 - 1;
+        w[i] = x;
+        a = 0.99886 * a + x * 0.0555179;
+        b = 0.99332 * b + x * 0.0750759;
+        c = 0.96900 * c + x * 0.1538520;
+        d = 0.86650 * d + x * 0.3104856;
+        e = 0.55000 * e + x * 0.5329522;
+        f = -0.7616 * f - x * 0.0168980;
+        p[i] = (a + b + c + d + e + f + g + x * 0.5362) * 0.12;
+        g = x * 0.115926;
+      }
+
+      Object.keys(PATCH_DATA).forEach(id => {
+        tracks[id] = buildVoice(id, PATCH_DATA[id]);
+      });
+      applyMixerGains();
+    }
+
+    function buildVoice(id, pData) {
+      const s = pData.s;
+      const v = { all: [], P: pData };
+      const N = (f, ...a) => ac[f](...a);
+      const src = (t, f) => {
+        const o = N('createOscillator');
+        o.type = t;
+        o.frequency.value = f;
+        o.start();
+        v.all.push(o);
+        return o;
+      };
+      const G = (g = 1) => {
+        const n = N('createGain');
+        n.gain.value = g;
+        return n;
+      };
+      const cs = () => {
+        const o = N('createConstantSource');
+        o.offset.value = 0;
+        o.start();
+        v.all.push(o);
+        return o;
+      };
+      const nz = b => {
+        const o = N('createBufferSource');
+        o.buffer = b;
+        o.loop = true;
+        o.start();
+        v.all.push(o);
+        return o;
+      };
+
+      v.eg = cs();
+      v.wh = cs();
+      v.mg = src(({ t: 'triangle', s: 'sawtooth', q: 'square' })[s[12]] || 'triangle', 1);
+      v.mgT = src('triangle', 1);
+      v.mgS = src('square', 1);
+
+      const memo = {};
+      const S = n => memo[n] || (memo[n] = ({
+        EG: () => v.eg,
+        EGR: () => { const g = G(-1); v.eg.connect(g); return g; },
+        WHL: () => v.wh,
+        MGT: () => v.mgT,
+        MGS: () => v.mgS,
+        PINK: () => { const g = G(0.3); nz(nP).connect(g); return g; },
+        WHT: () => { const g = G(0.2); nz(nW).connect(g); return g; }
+      })[n]());
+
+      const jk = (d, def) => {
+        const c = pData.cab.find(c => c.endsWith('>' + d));
+        return c ? c.split('>')[0] : def;
+      };
+      const nzs = n => (n === 'PINK' || n === 'WHT') ? 0.5 : 1;
+
+      v.vcf = N('createBiquadFilter');
+      v.vcf.type = 'lowpass';
+      const pre = G(0.5);
+      pre.connect(v.vcf);
+      v.fb = G(1);
+      v.fb.connect(v.vcf.detune);
+
+      if (s[1] === 'n') {
+        S('WHT').connect(pre);
+      } else if (s[0]) {
+        if (s[1] === 'q') {
+          v.osc = src('triangle', 200);
+          const m = G(1), ws = N('createWaveShaper'), c = new Float32Array(512);
+          for (let i = 0; i < 512; i++) c[i] = i < 256 ? -1 : 1;
+          ws.curve = c;
+          v.pwc = cs();
+          v.osc.connect(m);
+          v.pwc.connect(m);
+          m.connect(ws);
+          const q = G(0.45);
+          ws.connect(q);
+          q.connect(pre);
+          const pm = jk('PWM');
+          if (pm) {
+            v.gPwm = G(0.8);
+            S(pm).connect(v.gPwm);
+            v.gPwm.connect(v.pwc.offset);
+          }
+        } else {
+          v.osc = src(s[1] === 's' ? 'sawtooth' : 'triangle', 200);
+          v.osc.connect(pre);
+        }
+        v.gFmM = G(0);
+        v.mg.connect(v.gFmM);
+        v.gFmM.connect(v.osc.detune);
+        const fs = jk('FM', 'EG');
+        v.gFmE = G(0);
+        S(fs).connect(v.gFmE);
+        v.gFmE.connect(v.osc.detune);
+        v.fm = nzs(fs);
+      }
+
+      const ex = jk('EXT');
+      if (ex) {
+        v.gEx = G(0);
+        S(ex).connect(v.gEx);
+        v.gEx.connect(pre);
+      }
+
+      v.gFcM = G(0);
+      v.mg.connect(v.gFcM);
+      v.gFcM.connect(v.fb);
+      const fcs = jk('FC', 'EG');
+      v.gFcE = G(0);
+      S(fcs).connect(v.gFcE);
+      v.gFcE.connect(v.fb);
+      v.fc = nzs(fcs);
+
+      v.so = src('sine', 500);
+      v.so.detune.value = 0;
+      v.fb.connect(v.so.detune);
+      v.sg = G(0);
+      v.so.connect(v.sg);
+
+      const vca = G(0);
+      v.vcf.connect(vca);
+      v.sg.connect(vca);
+
+      const vsum = G(0.5), clip = N('createWaveShaper');
+      clip.curve = new Float32Array([0, 0, 2]);
+      vsum.connect(clip);
+      clip.connect(vca.gain);
+
+      const ge = G(0.9);
+      v.eg.connect(ge);
+      ge.connect(vsum);
+      const vs = jk('VCA');
+      if (vs) {
+        const g = G(0.9);
+        S(vs).connect(g);
+        g.connect(vsum);
+      }
+
+      v.out = G(BASE_VOLUMES[id]);
+      vca.connect(v.out);
+      v.out.connect(ac.cp);
+
+      v.an = ac.createAnalyser();
+      v.an.fftSize = 2048;
+      v.an.smoothingTimeConstant = 0.75;
+      v.out.connect(v.an);
+
+      const t = ac.currentTime, st = (p, x) => p.setTargetAtTime(x, t, 0.02);
+      const hzf = mapFc(s[8]);
+      st(v.vcf.frequency, hzf);
+      st(v.vcf.Q, s[9] * 2.4);
+      st(v.so.frequency, hzf);
+      const mf = mgHz(s[13]);
+      [v.mg, v.mgT, v.mgS].forEach(o => st(o.frequency, mf));
+      v.osc && st(v.osc.detune, s[2] * 100);
+      v.gFmM && st(v.gFmM.gain, s[6] * 40);
+      v.gFmE && st(v.gFmE.gain, s[7] * 267 * v.fm);
+      st(v.gFcM.gain, s[10] * 270);
+      st(v.gFcE.gain, s[11] * 540 * v.fc);
+      st(v.sg.gain, Math.max(0, Math.min(1, (s[9] - 8) / 2)) * 0.4);
+      v.pwc && st(v.pwc.offset, (s[3] == null ? 0 : s[3] / 10 * 1.8 - 0.9));
+      v.gEx && st(v.gEx.gain, 2 * Math.pow((s[5] || 0) / 10, 0.7));
+
+      return v;
+    }
+
+    const hold = (o, t, on) => {
+      if (o.cancelAndHoldAtTime) {
+        o.cancelAndHoldAtTime(t);
+        o.setValueAtTime(o.value, t);
+      } else {
+        o.cancelScheduledValues(t);
+        if (on) o.setValueAtTime(0, t);
+        else o.setValueAtTime(o.value, t);
+      }
+    };
+
+    function schedOn(v, at) {
+      const s = v.P.s, o = v.eg.offset, a = tm(s[15]), h = tm(s[14]);
+      hold(o, at, 1);
+      o.linearRampToValueAtTime(1, at + a);
+      o.setValueAtTime(1, at + a + (s[14] ? h : 0));
+      o.setTargetAtTime(s[17] / 10, at + a + (s[14] ? h : 0), dm(s[16]) / 3);
+    }
+
+    function schedOff(v, at) {
+      const o = v.eg.offset;
+      hold(o, at, 0);
+      o.setTargetAtTime(0, at, Math.max(0.004, dm(v.P.s[18]) / 3));
+    }
+
+    function applyMixerGains() {
+      if (!ac) return;
+      const anySolo = SCORE_PARTS.some(p => p.solo);
+      SCORE_PARTS.forEach(part => {
+        const active = anySolo ? part.solo : !part.muted;
+        const mult = active ? part.gain : 0;
+        part.voices.forEach(vid => {
+          if (tracks[vid] && tracks[vid].out) {
+            tracks[vid].out.gain.setTargetAtTime(BASE_VOLUMES[vid] * mult, ac.currentTime, 0.02);
+          }
+        });
+      });
+    }
+
+    /* ==========================================================================
+       3. SCORE EVENT GENERATOR & LOOKAHEAD SCHEDULER (INSTANT SEEK & LOOP)
+       ========================================================================== */
+    // Precompute deterministic musical events for each of the 32 bars
+    const BAR_EVENTS = [];
+    for (let b = 0; b < TOTAL_BARS; b++) {
+      const sec = getSectionForBar(b);
+      const chord = CHORDS[b % 4];
+      const events = [];
+
+      // Click track on every beat (for count-in / metronome)
+      for (let beat = 0; beat < 4; beat++) {
+        events.push({ type: 'click', beatOff: beat, accent: beat === 0 });
+      }
+
+      // Part 1: Lead Synth (Sections A & A')
+      if (sec.id === 'A' || sec.id === 'AP') {
+        LEAD_PHRASE[b % 4].forEach((n, idx) => {
+          events.push({
+            type: 'note',
+            partId: 'part1',
+            voiceId: 'lead',
+            beatOff: n.off,
+            durBeats: n.dur * 0.85,
+            midi: n.midi,
+            label: midiToName(n.midi - 12), // Sounded pitch (16')
+            domKey: `p1_${b}_${idx}`
+          });
+        });
+      }
+
+      // Part 2: Flute Arp 8va (Sections B & A')
+      if (sec.id === 'B' || sec.id === 'AP') {
+        ARP_INDICES.forEach((chordToneIdx, stepIdx) => {
+          const midi = chord.padMidi[chordToneIdx] + 12;
+          events.push({
+            type: 'note',
+            partId: 'part2',
+            voiceId: 'flute',
+            beatOff: stepIdx * 0.25,
+            durBeats: 0.20,
+            midi: midi,
+            label: midiToName(midi + 12), // Sounded 4' + 8va
+            domKey: `p2_${b}_${stepIdx}`
+          });
+        });
+      }
+
+      // Part 3: Pads 1-3 (Sustained whole notes in A & A'; dotted-quarter/quarter stabs in B)
+      if (sec.id === 'A' || sec.id === 'AP') {
+        chord.padMidi.forEach((m, vIdx) => {
+          events.push({
+            type: 'note',
+            partId: 'part3',
+            voiceId: `pad${vIdx + 1}`,
+            beatOff: 0,
+            durBeats: 3.85,
+            midi: m,
+            label: `${chord.name}`,
+            domKey: vIdx === 0 ? `p3_${b}_0` : null
+          });
+        });
+      } else if (sec.id === 'B') {
+        const stabOffsets = [
+          { off: 0.0, dur: 1.25 },
+          { off: 1.5, dur: 1.25 },
+          { off: 2.5, dur: 0.85 }
+        ];
+        stabOffsets.forEach((st, sIdx) => {
+          chord.padMidi.forEach((m, vIdx) => {
+            events.push({
+              type: 'note',
+              partId: 'part3',
+              voiceId: `pad${vIdx + 1}`,
+              beatOff: st.off,
+              durBeats: st.dur,
+              midi: m,
+              label: chord.name,
+              domKey: vIdx === 0 ? `p3_${b}_${sIdx}` : null
+            });
+          });
+        });
+      }
+
+      // Part 4: Synth Bass (Groove, A, B, A' — Bars 5–32)
+      if (b >= 4) {
+        BASS_STEPS.forEach((st, idx) => {
+          const midi = chord.rootMidi + st.oct;
+          events.push({
+            type: 'note',
+            partId: 'part4',
+            voiceId: 'bass',
+            beatOff: st.off,
+            durBeats: st.dur,
+            midi: midi,
+            label: midiToName(midi),
+            domKey: `p4_${b}_${idx}`
+          });
+        });
+      }
+
+      // Part 5: Perc & FX Triggers (Bars 5–32)
+      if (b >= 4) {
+        // 4-on-the-floor Kick
+        [0, 1, 2, 3].forEach(beat => {
+          events.push({
+            type: 'kick',
+            partId: 'part5',
+            voiceId: 'kick',
+            beatOff: beat,
+            durSec: 0.2,
+            label: 'KIK',
+            domKey: `p5_k_${b}_${beat}`
+          });
+        });
+        // Snare on 2 & 4 + extra pickup on beat 4.75 every 4th bar (Bars 8, 12, 16, 20, 24, 28, 32)
+        [1, 3].forEach(beat => {
+          events.push({
+            type: 'hit',
+            partId: 'part5',
+            voiceId: 'snare',
+            beatOff: beat,
+            durSec: 0.18,
+            label: 'SNR',
+            domKey: `p5_s_${b}_${beat}`
+          });
+        });
+        if (b % 4 === 3) {
+          events.push({
+            type: 'hit',
+            partId: 'part5',
+            voiceId: 'snare',
+            beatOff: 3.75,
+            durSec: 0.12,
+            label: 'SNR',
+            domKey: `p5_s_${b}_pick`
+          });
+        }
+        // Hi-Hat (8ths in Groove Bars 5-8; 16ths in A, B, A' Bars 9-32)
+        const hatDiv = b >= 8 ? 16 : 8;
+        for (let h = 0; h < hatDiv; h++) {
+          events.push({
+            type: 'hit',
+            partId: 'part5',
+            voiceId: 'hat',
+            beatOff: h * (4 / hatDiv),
+            durSec: BEAT_SEC * 0.1,
+            label: 'HAT',
+            domKey: null
+          });
+        }
+      }
+
+      // FX Triggers: Laser Sweep (Bars 8, 16, 24) & Falling Star (Bars 9, 25)
+      if (b === 7 || b === 15 || b === 23) {
+        events.push({
+          type: 'hit',
+          partId: 'part5',
+          voiceId: 'gun',
+          beatOff: 3.0,
+          durSec: BEAT_SEC * 0.95,
+          label: '⚡ LASER SWEEP',
+          domKey: `p5_fx_${b}`
+        });
+      }
+      if (b === 8 || b === 24) {
+        events.push({
+          type: 'hit',
+          partId: 'part5',
+          voiceId: 'star',
+          beatOff: 0.0,
+          durSec: BAR_SEC * 0.95,
+          label: '★ FALLING STAR',
+          domKey: `p5_fx_${b}`
+        });
+      }
+
+      BAR_EVENTS.push(events);
+    }
+
+    // Playback State
+    let isPlaying = false;
+    let loopEnabled = true;
+    let clickMode = 'INTRO'; // 'INTRO' | 'ALL' | 'OFF'
+    let viewMode = '4BAR';   // '4BAR' | '32BAR'
+    let displayedSystem = 0; // 0..7 (each system = 4 bars)
+
+    let anchorAudioTime = 0;
+    let anchorSongTime = 0;
+    let nextBarIndex = 0;
+    let schedulerTimer = null;
+    let rafId = null;
+    let visualQueue = [];
+
+    const midiToFreq = m => 440 * Math.pow(2, (m - 69) / 12);
+
+    function playClickTone(at, accent) {
+      if (!ac) return;
+      const osc = ac.createOscillator();
+      const gain = ac.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(accent ? 1320 : 880, at);
+      gain.gain.setValueAtTime(accent ? 0.12 : 0.06, at);
+      gain.gain.exponentialRampToValueAtTime(0.0001, at + 0.045);
+      osc.connect(gain);
+      gain.connect(masterOut);
+      osc.start(at);
+      osc.stop(at + 0.05);
+    }
+
+    function scheduleWindow() {
+      if (!isPlaying || !ac) return;
+      const now = ac.currentTime;
+      const elapsed = now - anchorAudioTime;
+      const currentSongTime = anchorSongTime + elapsed;
+      const horizon = currentSongTime + 0.25; // 250ms lookahead
+
+      // Step by exact integer bar indices to avoid IEEE 754 float boundary stalls
+      while (nextBarIndex * BAR_SEC < horizon) {
+        const cycleIdx = Math.floor(nextBarIndex / TOTAL_BARS);
+        if (!loopEnabled && cycleIdx >= 1) {
+          const stopDelay = Math.max(0, (LOOP_SEC - currentSongTime) * 1000);
+          setTimeout(() => { if (isPlaying && !loopEnabled) stopPlayback(); }, stopDelay);
+          nextBarIndex++;
+          break;
+        }
+
+        const barIdx = nextBarIndex % TOTAL_BARS;
+        const barStartSongTime = nextBarIndex * BAR_SEC;
+        const events = BAR_EVENTS[barIdx];
+
+        for (let i = 0; i < events.length; i++) {
+          const ev = events[i];
+          const evSongTime = barStartSongTime + ev.beatOff * BEAT_SEC;
+          if (evSongTime >= anchorSongTime - 1e-6) {
+            const evAudioTime = anchorAudioTime + (evSongTime - anchorSongTime);
+            triggerAudioEvent(ev, Math.max(now, evAudioTime), barIdx);
+          }
+        }
+
+        nextBarIndex++;
+      }
+    }
+
+    function triggerAudioEvent(ev, at, barIdx) {
+      if (ev.type === 'click') {
+        if (clickMode === 'ALL' || (clickMode === 'INTRO' && barIdx < 4)) {
+          playClickTone(at, ev.accent);
+        }
+        return;
+      }
+
+      const v = tracks[ev.voiceId];
+      if (!v) return;
+
+      let durSec = ev.durSec || (ev.durBeats * BEAT_SEC);
+
+      if (ev.type === 'note') {
+        const scaleMult = ({ 32: 0.25, 16: 0.5, 8: 1, 4: 2 })[v.P.s[0]] || 1;
+        const freq = midiToFreq(ev.midi) * scaleMult;
+        v.osc.frequency.setValueAtTime(freq, at);
+        schedOn(v, at);
+        schedOff(v, at + durSec);
+      } else if (ev.type === 'kick') {
+        v.osc.frequency.setValueAtTime(150, at);
+        v.osc.frequency.setTargetAtTime(46, at, 0.025);
+        schedOn(v, at);
+        schedOff(v, at + durSec);
+      } else if (ev.type === 'hit') {
+        schedOn(v, at);
+        schedOff(v, at + durSec);
+      }
+
+      visualQueue.push({
+        time: at,
+        offTime: at + durSec,
+        partId: ev.partId,
+        voiceId: ev.voiceId,
+        label: ev.label,
+        domKey: ev.domKey
+      });
+    }
+
+    function silenceAllVoices() {
+      if (!ac) return;
+      const now = ac.currentTime;
+      Object.values(tracks).forEach(v => {
+        if (v && v.eg) {
+          hold(v.eg.offset, now, 0);
+          v.eg.offset.setValueAtTime(0, now);
+        }
+      });
+      visualQueue = [];
+      document.querySelectorAll('.score-note.active').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('[data-voice-led]').forEach(el => {
+        el.style.opacity = '0.25';
+        el.style.boxShadow = 'none';
+      });
+    }
+
+    function startPlayback() {
+      initAudioEngine();
+      if (ac.state === 'suspended') ac.resume();
+
+      if (isPlaying) {
+        // Pause
+        const elapsed = ac.currentTime - anchorAudioTime;
+        anchorSongTime = (anchorSongTime + elapsed) % LOOP_SEC;
+        isPlaying = false;
+        clearInterval(schedulerTimer);
+        silenceAllVoices();
+        updateTransportUI();
+        return;
+      }
+
+      isPlaying = true;
+      anchorAudioTime = ac.currentTime + 0.03;
+      nextBarIndex = Math.floor(anchorSongTime / BAR_SEC);
+
+      scheduleWindow();
+      schedulerTimer = setInterval(scheduleWindow, 25);
+      updateTransportUI();
+      if (!rafId) rafId = requestAnimationFrame(renderLoop);
+    }
+
+    function stopPlayback() {
+      isPlaying = false;
+      clearInterval(schedulerTimer);
+      anchorSongTime = 0;
+      nextBarIndex = 0;
+      silenceAllVoices();
+      updateTransportUI();
+      updatePositionUI(0);
+    }
+
+    function seekToBar(barIdx) {
+      const clamped = Math.max(0, Math.min(TOTAL_BARS - 1, barIdx));
+      anchorSongTime = clamped * BAR_SEC;
+      nextBarIndex = clamped;
+      if (isPlaying && ac) {
+        silenceAllVoices();
+        anchorAudioTime = ac.currentTime + 0.02;
+        scheduleWindow();
+      } else {
+        updatePositionUI(anchorSongTime);
+      }
+    }
+
+    /* ==========================================================================
+       4. INTERACTIVE UI BUILDERS (32-BAR MATRIX, 5-PART SCORE, VOICE LEDS)
+       ========================================================================== */
+    function buildBarMatrix() {
+      const matrix = document.getElementById('barMatrix');
+      matrix.innerHTML = '';
+
+      for (let b = 0; b < TOTAL_BARS; b++) {
+        const sec = getSectionForBar(b);
+        const chord = CHORDS[b % 4];
+        const hasLaser = (b === 7 || b === 15 || b === 23);
+        const hasStar = (b === 8 || b === 24);
+
+        const cell = document.createElement('button');
+        cell.id = `barCell_${b}`;
+        cell.dataset.bar = b;
+        cell.className = 'relative text-left bg-zinc-950 border border-zinc-800 hover:border-amber-500/70 p-2 rounded-sm transition-all overflow-hidden cursor-pointer group';
+        cell.innerHTML = `
+          <div id="barFill_${b}" class="absolute inset-y-0 left-0 bg-amber-500/20 pointer-events-none" style="width: 0%"></div>
+          <div class="relative z-10 flex items-center justify-between font-mono text-[10px]">
+            <span class="text-zinc-500 group-hover:text-zinc-300 font-bold">${String(b + 1).padStart(2, '0')}</span>
+            <span class="text-[9px] px-1 rounded bg-zinc-900 text-zinc-400 border border-zinc-800">${sec.label}</span>
+          </div>
+          <div class="relative z-10 flex items-center justify-between mt-1 font-mono">
+            <span class="text-xs font-bold text-zinc-200">${chord.name}</span>
+            <span class="text-[10px]">${hasLaser ? '⚡' : hasStar ? '★' : ''}</span>
+          </div>
+        `;
+        cell.addEventListener('click', () => seekToBar(b));
+        matrix.appendChild(cell);
+      }
+    }
+
+    function buildVoiceLedGrid() {
+      const grid = document.getElementById('voiceLedGrid');
+      grid.innerHTML = '';
+      Object.entries(PATCH_DATA).forEach(([id, data]) => {
+        const item = document.createElement('div');
+        item.className = 'bg-zinc-950 border border-zinc-800 px-2 py-1.5 rounded-sm flex items-center gap-2';
+        item.innerHTML = `
+          <span data-voice-led="${id}" class="w-2 h-2 rounded-full shrink-0 transition-opacity" style="background: rgb(${data.rgb}); opacity: 0.25;"></span>
+          <span class="text-zinc-400 truncate">${data.name}</span>
+        `;
+        grid.appendChild(item);
+      });
+    }
+
+    function buildPartitureShell() {
+      const container = document.getElementById('partitureBody');
+      container.innerHTML = '';
+
+      SCORE_PARTS.forEach(part => {
+        const row = document.createElement('div');
+        row.className = 'grid grid-cols-1 lg:grid-cols-12 bg-zinc-900/60 hover:bg-zinc-900/90 transition-colors';
+        row.innerHTML = `
+          <!-- Left Track Control Strip -->
+          <div class="lg:col-span-3 p-3 sm:p-4 border-b lg:border-b-0 lg:border-r border-zinc-800 flex flex-col justify-between gap-2 bg-zinc-950/60">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <div class="flex items-center gap-2 font-mono text-[10px] tracking-widest">
+                  <span class="font-bold" style="color: ${part.color}">${part.num}</span>
+                  <span class="text-zinc-500">//</span>
+                  <span id="partStatus_${part.id}" class="text-zinc-400 font-bold">READY</span>
+                </div>
+                <h2 class="font-mono text-sm font-bold text-white tracking-wide mt-0.5">${part.title}</h2>
+                <p class="font-mono text-[10px] text-zinc-500">${part.spec}</p>
+              </div>
+
+              <!-- Mute / Solo Buttons -->
+              <div class="flex items-center gap-1 font-mono text-[10px]">
+                <button data-mute="${part.id}" class="w-6 h-6 rounded-sm border border-zinc-700 bg-zinc-900 text-zinc-400 hover:text-white font-bold cursor-pointer transition-colors" title="Mute Part">M</button>
+                <button data-solo="${part.id}" class="w-6 h-6 rounded-sm border border-zinc-700 bg-zinc-900 text-zinc-400 hover:text-white font-bold cursor-pointer transition-colors" title="Solo Part">S</button>
+              </div>
+            </div>
+
+            <!-- Channel Level Slider -->
+            <div class="flex items-center gap-2 pt-1">
+              <span class="font-mono text-[9px] text-zinc-500 uppercase">LVL</span>
+              <input type="range" data-gain="${part.id}" min="0" max="1.5" step="0.01" value="1" class="vw-slider w-full">
+            </div>
+          </div>
+
+          <!-- Right Score Notation & Note Lane -->
+          <div class="lg:col-span-9 relative overflow-x-auto bg-zinc-950/30">
+            <div id="lane_${part.id}" class="relative h-24 sm:h-28 min-w-[600px] select-none">
+              <!-- Rendered dynamically for 4-Bar System or 32-Bar Full Score -->
+            </div>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+
+      // Wire Mute / Solo / Gain controls
+      container.querySelectorAll('[data-mute]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const part = SCORE_PARTS.find(p => p.id === btn.dataset.mute);
+          part.muted = !part.muted;
+          btn.classList.toggle('bg-red-600', part.muted);
+          btn.classList.toggle('border-red-500', part.muted);
+          btn.classList.toggle('text-white', part.muted);
+          btn.classList.toggle('bg-zinc-900', !part.muted);
+          btn.classList.toggle('text-zinc-400', !part.muted);
+          applyMixerGains();
+        });
+      });
+
+      container.querySelectorAll('[data-solo]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const part = SCORE_PARTS.find(p => p.id === btn.dataset.solo);
+          part.solo = !part.solo;
+          btn.classList.toggle('bg-amber-500', part.solo);
+          btn.classList.toggle('border-amber-400', part.solo);
+          btn.classList.toggle('text-zinc-950', part.solo);
+          btn.classList.toggle('bg-zinc-900', !part.solo);
+          btn.classList.toggle('text-zinc-400', !part.solo);
+          applyMixerGains();
+        });
+      });
+
+      container.querySelectorAll('[data-gain]').forEach(slider => {
+        slider.addEventListener('input', () => {
+          const part = SCORE_PARTS.find(p => p.id === slider.dataset.gain);
+          part.gain = parseFloat(slider.value);
+          applyMixerGains();
+        });
+      });
+    }
+
+    function renderScoreLanes(systemIdx) {
+      displayedSystem = systemIdx;
+      const startBar = viewMode === '4BAR' ? systemIdx * 4 : 0;
+      const numBars = viewMode === '4BAR' ? 4 : TOTAL_BARS;
+      const sec = getSectionForBar(startBar);
+
+      const sysBadge = document.getElementById('systemBadge');
+      if (sysBadge) {
+        if (viewMode === '4BAR') {
+          sysBadge.textContent = `SYSTEM 0${systemIdx + 1} // BARS ${String(startBar + 1).padStart(2, '0')}–${String(startBar + 4).padStart(2, '0')} (${sec.label})`;
+        } else {
+          sysBadge.textContent = `FULL SCORE // BARS 01–32 (ALL SECTIONS)`;
+        }
+      }
+
+      SCORE_PARTS.forEach(part => {
+        const lane = document.getElementById(`lane_${part.id}`);
+        if (!lane) return;
+
+        lane.style.width = viewMode === '32BAR' ? '2600px' : '100%';
+        let html = '';
+
+        // 1. Background Bar & Beat Grid + Chord Headers
+        for (let i = 0; i < numBars; i++) {
+          const b = startBar + i;
+          const leftPct = (i / numBars) * 100;
+          const widthPct = (1 / numBars) * 100;
+          const chord = CHORDS[b % 4];
+          const bSec = getSectionForBar(b);
+
+          html += `
+            <div onclick="seekToBar(${b})" title="Jump to Bar ${b + 1}"
+                 class="absolute inset-y-0 border-r border-zinc-800 hover:bg-amber-500/5 cursor-pointer transition-colors"
+                 style="left:${leftPct}%; width:${widthPct}%;">
+              <div class="flex items-center justify-between px-2 pt-1 font-mono text-[10px]">
+                <span class="text-zinc-500 font-bold">BAR ${String(b + 1).padStart(2, '0')}</span>
+                <span class="text-amber-500/80 font-bold">${chord.name}</span>
+              </div>
+              <!-- Subtle 5-line musical staff lines -->
+              <div class="absolute inset-x-0 top-7 bottom-2 flex flex-col justify-between opacity-15 pointer-events-none">
+                <div class="border-t border-zinc-400"></div>
+                <div class="border-t border-zinc-400"></div>
+                <div class="border-t border-zinc-400"></div>
+                <div class="border-t border-zinc-400"></div>
+                <div class="border-t border-zinc-400"></div>
+              </div>
+              <!-- Beat subdivisions (Beats 2, 3, 4) -->
+              <div class="absolute inset-y-6 left-1/4 border-l border-dashed border-zinc-800/70 pointer-events-none"></div>
+              <div class="absolute inset-y-6 left-2/4 border-l border-dashed border-zinc-800/70 pointer-events-none"></div>
+              <div class="absolute inset-y-6 left-3/4 border-l border-dashed border-zinc-800/70 pointer-events-none"></div>
+            </div>
+          `;
+        }
+
+        // 2. Render Multi-Measure Rests or Note Events per Bar
+        for (let i = 0; i < numBars; i++) {
+          const b = startBar + i;
+          const bSec = getSectionForBar(b);
+          const barLeftPct = (i / numBars) * 100;
+          const barWidthPct = (1 / numBars) * 100;
+
+          const isResting =
+            (part.id === 'part1' && (bSec.id === 'INTRO' || bSec.id === 'GROOVE' || bSec.id === 'B')) ||
+            (part.id === 'part2' && (bSec.id === 'INTRO' || bSec.id === 'GROOVE' || bSec.id === 'A')) ||
+            (part.id === 'part3' && (bSec.id === 'INTRO' || bSec.id === 'GROOVE')) ||
+            ((part.id === 'part4' || part.id === 'part5') && bSec.id === 'INTRO');
+
+          if (isResting) {
+            // Draw engraved multi-measure rest indicator on the first bar of a 4-bar group
+            if (i % 4 === 0) {
+              const restSpanWidth = (Math.min(4, numBars - i) / numBars) * 100;
+              const restBarsCount = (part.id === 'part4' || part.id === 'part5') ? '4 BARS REST' : '8 BARS REST';
+              html += `
+                <div class="absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center pointer-events-none px-6"
+                     style="left:${barLeftPct}%; width:${restSpanWidth}%;">
+                  <span class="font-mono text-[10px] font-bold text-zinc-500 tracking-widest mb-1">${restBarsCount}</span>
+                  <div class="w-full flex items-center">
+                    <div class="w-0.5 h-3 bg-zinc-600"></div>
+                    <div class="flex-1 h-1.5 bg-zinc-700/80"></div>
+                    <div class="w-0.5 h-3 bg-zinc-600"></div>
+                  </div>
+                </div>
+              `;
+            }
+            continue;
+          }
+
+          // Render actual musical events in this bar
+          const evs = BAR_EVENTS[b].filter(e => e.partId === part.id && e.domKey);
+          evs.forEach(ev => {
+            const evLeftPct = barLeftPct + (ev.beatOff / 4) * barWidthPct;
+            const durBeats = ev.durBeats || (ev.durSec ? ev.durSec / BEAT_SEC : 0.25);
+            const evWidthPct = Math.max(0.45, (durBeats / 4) * barWidthPct * 0.94);
+
+            // Vertical pitch positioning inside the lane
+            let topPct = 36;
+            let heightPct = 46;
+
+            if (part.id === 'part1') {
+              // Pitch range 71..84
+              const norm = (ev.midi - 70) / 16;
+              topPct = Math.round(68 - norm * 42);
+              heightPct = 22;
+            } else if (part.id === 'part2') {
+              // Pitch range 64..76
+              const norm = (ev.midi - 63) / 15;
+              topPct = Math.round(70 - norm * 44);
+              heightPct = 20;
+            } else if (part.id === 'part3') {
+              topPct = 34;
+              heightPct = 50;
+            } else if (part.id === 'part4') {
+              // Low vs Octave jump
+              const isOct = ev.midi >= 40;
+              topPct = isOct ? 34 : 60;
+              heightPct = 24;
+            } else if (part.id === 'part5') {
+              if (ev.voiceId === 'kick') { topPct = 64; heightPct = 22; }
+              else if (ev.voiceId === 'snare') { topPct = 42; heightPct = 20; }
+              else { topPct = 26; heightPct = 22; } // Laser / Star FX
+            }
+
+            const showText = viewMode === '4BAR' && (part.id !== 'part2' || durBeats >= 0.25);
+            const labelText = part.id === 'part2' ? ev.label.replace(/\d/, '') : ev.label;
+
+            html += `
+              <div id="note_${ev.domKey}"
+                   style="left:${evLeftPct}%; width:${evWidthPct}%; top:${topPct}%; height:${heightPct}%; background: rgba(${part.rgb}, 0.25); border-color: rgba(${part.rgb}, 0.85); --note-glow: rgba(${part.rgb}, 0.9);"
+                   class="score-note absolute border rounded-[2px] flex items-center justify-center overflow-hidden px-0.5 pointer-events-none">
+                ${showText ? `<span class="font-mono text-[9px] font-bold text-white truncate leading-none">${labelText}</span>` : ''}
+              </div>
+            `;
+          });
+        }
+
+        // 3. Real-Time Playhead Line
+        html += `
+          <div id="playhead_${part.id}" class="absolute inset-y-0 w-0.5 bg-amber-400 shadow-[0_0_12px_#f59e0b] z-20 pointer-events-none" style="left: 0%;">
+            <div class="w-2 h-2 -ml-[3px] bg-amber-400 rotate-45"></div>
+          </div>
+        `;
+
+        lane.innerHTML = html;
+      });
+    }
+
+    /* ==========================================================================
+       5. 60FPS PLAYHEAD, BAR TELEMETRY & OSCILLOSCOPE RENDER LOOP
+       ========================================================================== */
+    function updatePositionUI(songTime) {
+      const posInLoop = ((songTime % LOOP_SEC) + LOOP_SEC) % LOOP_SEC;
+      const barIdx = Math.min(TOTAL_BARS - 1, Math.floor(posInLoop / BAR_SEC));
+      const barProgress = (posInLoop - barIdx * BAR_SEC) / BAR_SEC;
+      const beatFloat = barProgress * 4;
+      const beatNum = Math.floor(beatFloat) + 1;
+      const subNum = Math.floor((beatFloat % 1) * 4) + 1;
+
+      const sec = getSectionForBar(barIdx);
+      const chord = CHORDS[barIdx % 4];
+
+      // Update Top Telemetry HUD
+      document.getElementById('hudBar').innerHTML = `${String(barIdx + 1).padStart(2, '0')}<span class="text-zinc-600 text-xs">/32</span>`;
+      document.getElementById('hudBeat').textContent = `${beatNum}.${subNum}`;
+      document.getElementById('hudSection').textContent = sec.label;
+      document.getElementById('hudChord').textContent = chord.name;
+
+      const mins = Math.floor(posInLoop / 60);
+      const secs = (posInLoop % 60).toFixed(1).padStart(4, '0');
+      document.getElementById('elapsedClock').textContent = `${String(mins).padStart(2, '0')}:${secs}`;
+
+      // Highlight Active Section Pill
+      document.querySelectorAll('.sec-pill').forEach(pill => {
+        const start = parseInt(pill.dataset.jump, 10);
+        const isCurrent = barIdx >= start && barIdx < start + (start === 0 || start === 4 ? 4 : 8);
+        pill.classList.toggle('border-amber-500', isCurrent);
+        pill.classList.toggle('bg-amber-500/20', isCurrent);
+        pill.classList.toggle('text-amber-400', isCurrent);
+        pill.classList.toggle('font-bold', isCurrent);
+        pill.classList.toggle('border-zinc-700', !isCurrent);
+        pill.classList.toggle('bg-zinc-950', !isCurrent);
+        pill.classList.toggle('text-zinc-400', !isCurrent);
+      });
+
+      // Highlight 32-Bar Matrix Cells
+      for (let b = 0; b < TOTAL_BARS; b++) {
+        const cell = document.getElementById(`barCell_${b}`);
+        const fill = document.getElementById(`barFill_${b}`);
+        if (!cell || !fill) continue;
+
+        if (b < barIdx) {
+          cell.classList.remove('border-amber-500', 'ring-1', 'ring-amber-500/50');
+          cell.classList.add('border-zinc-800');
+          fill.style.width = '100%';
+        } else if (b === barIdx) {
+          cell.classList.add('border-amber-500', 'ring-1', 'ring-amber-500/50');
+          cell.classList.remove('border-zinc-800');
+          fill.style.width = `${(barProgress * 100).toFixed(1)}%`;
+        } else {
+          cell.classList.remove('border-amber-500', 'ring-1', 'ring-amber-500/50');
+          cell.classList.add('border-zinc-800');
+          fill.style.width = '0%';
+        }
+      }
+
+      // Auto-turn page every 4 bars in 4-Bar System View
+      const targetSystem = Math.floor(barIdx / 4);
+      if (viewMode === '4BAR' && targetSystem !== displayedSystem) {
+        renderScoreLanes(targetSystem);
+      }
+
+      // Position Playhead inside each Part Lane
+      const playheadPct = viewMode === '4BAR'
+        ? (((barIdx % 4) + barProgress) / 4) * 100
+        : ((barIdx + barProgress) / TOTAL_BARS) * 100;
+
+      SCORE_PARTS.forEach(part => {
+        const ph = document.getElementById(`playhead_${part.id}`);
+        if (ph) ph.style.left = `${playheadPct.toFixed(2)}%`;
+      });
+    }
+
+    let scopeMode = 'WAVE';
+    const scopeCanvas = document.getElementById('scopeCanvas');
+    const scopeCtx = scopeCanvas.getContext('2d');
+
+    function drawScope() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = scopeCanvas.clientWidth * dpr;
+      const h = scopeCanvas.clientHeight * dpr;
+      if (w === 0 || h === 0) return;
+
+      if (scopeCanvas.width !== w || scopeCanvas.height !== h) {
+        scopeCanvas.width = w;
+        scopeCanvas.height = h;
+      }
+
+      scopeCtx.globalCompositeOperation = 'source-over';
+      scopeCtx.fillStyle = '#09090b';
+      scopeCtx.fillRect(0, 0, w, h);
+
+      // Amber studio reticle grid
+      scopeCtx.strokeStyle = 'rgba(245, 158, 11, 0.08)';
+      scopeCtx.lineWidth = 1;
+      scopeCtx.beginPath();
+      for (let i = 1; i < 4; i++) {
+        scopeCtx.moveTo(0, (h * i) / 4);
+        scopeCtx.lineTo(w, (h * i) / 4);
+        scopeCtx.moveTo((w * i) / 4, 0);
+        scopeCtx.lineTo((w * i) / 4, h);
+      }
+      scopeCtx.stroke();
+
+      scopeCtx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      scopeCtx.beginPath();
+      scopeCtx.moveTo(0, h / 2);
+      scopeCtx.lineTo(w, h / 2);
+      scopeCtx.stroke();
+
+      if (!isPlaying || !ac) return;
+
+      scopeCtx.globalCompositeOperation = 'screen';
+      scopeCtx.lineWidth = 2 * dpr;
+
+      Object.keys(tracks).forEach(id => {
+        const track = tracks[id];
+        if (!track || !track.an) return;
+
+        const rgb = PATCH_DATA[id].rgb;
+        scopeCtx.strokeStyle = `rgba(${rgb}, 0.9)`;
+        scopeCtx.fillStyle = `rgba(${rgb}, 0.7)`;
+
+        if (scopeMode === 'FREQ') {
+          const bins = new Uint8Array(track.an.frequencyBinCount);
+          track.an.getByteFrequencyData(bins);
+          let active = false;
+          for (let j = 0; j < 50; j += 5) {
+            if (bins[j] > 5) { active = true; break; }
+          }
+          if (!active) return;
+
+          const count = 96;
+          for (let i = 0; i < count; i++) {
+            const k = Math.floor(Math.pow(bins.length * 0.55, i / count));
+            const v = bins[k] / 255;
+            if (v > 0.01) {
+              scopeCtx.fillRect((i * w) / count + 1, h - v * h, w / count - 2, v * h);
+            }
+          }
+        } else {
+          const buf = new Float32Array(track.an.fftSize);
+          track.an.getFloatTimeDomainData(buf);
+          let active = false;
+          for (let j = 0; j < 256; j += 8) {
+            if (Math.abs(buf[j]) > 0.01) { active = true; break; }
+          }
+          if (!active) return;
+
+          let offset = 0;
+          for (let i = 1; i < buf.length / 2; i++) {
+            if (buf[i - 1] < 0 && buf[i] >= 0) { offset = i; break; }
+          }
+
+          scopeCtx.beginPath();
+          for (let i = 0; i < 1024; i++) {
+            const val = buf[offset + i];
+            const x = (i * w) / 1024;
+            const y = h / 2 - val * h * 0.85;
+            i === 0 ? scopeCtx.moveTo(x, y) : scopeCtx.lineTo(x, y);
+          }
+          scopeCtx.stroke();
+        }
+      });
+    }
+
+    function renderLoop() {
+      if (isPlaying && ac) {
+        const now = ac.currentTime;
+        const songTime = anchorSongTime + (now - anchorAudioTime);
+        updatePositionUI(songTime);
+
+        // Process visual note highlights
+        for (let i = visualQueue.length - 1; i >= 0; i--) {
+          const ev = visualQueue[i];
+          if (now >= ev.time && now <= ev.offTime) {
+            if (ev.domKey) {
+              const el = document.getElementById(`note_${ev.domKey}`);
+              if (el) el.classList.add('active');
+            }
+            const statusEl = document.getElementById(`partStatus_${ev.partId}`);
+            if (statusEl) statusEl.textContent = ev.label;
+
+            const led = document.querySelector(`[data-voice-led="${ev.voiceId}"]`);
+            if (led) {
+              led.style.opacity = '1';
+              led.style.boxShadow = `0 0 8px rgb(${PATCH_DATA[ev.voiceId].rgb})`;
+            }
+          } else if (now > ev.offTime) {
+            if (ev.domKey) {
+              const el = document.getElementById(`note_${ev.domKey}`);
+              if (el) el.classList.remove('active');
+            }
+            const led = document.querySelector(`[data-voice-led="${ev.voiceId}"]`);
+            if (led) {
+              led.style.opacity = '0.25';
+              led.style.boxShadow = 'none';
+            }
+            visualQueue.splice(i, 1);
+          }
+        }
+      }
+
+      drawScope();
+      rafId = requestAnimationFrame(renderLoop);
+    }
+
+    function updateTransportUI() {
+      const playBtn = document.getElementById('playBtn');
+      const playIcon = document.getElementById('playIcon');
+      const playLabel = document.getElementById('playLabel');
+
+      if (isPlaying) {
+        playIcon.textContent = '⏸';
+        playLabel.textContent = 'Pause';
+        playBtn.classList.replace('bg-amber-500', 'bg-amber-400');
+      } else {
+        playIcon.textContent = '▶';
+        playLabel.textContent = anchorSongTime > 0 ? 'Resume' : 'Play';
+        playBtn.classList.replace('bg-amber-400', 'bg-amber-500');
+      }
+    }
+
+    /* ==========================================================================
+       6. EVENT LISTENERS & INITIALIZATION
+       ========================================================================== */
+    document.getElementById('playBtn').addEventListener('click', startPlayback);
+    document.getElementById('stopBtn').addEventListener('click', stopPlayback);
+
+    document.getElementById('loopBtn').addEventListener('click', (e) => {
+      loopEnabled = !loopEnabled;
+      e.target.textContent = `Loop: ${loopEnabled ? 'On' : 'Off'}`;
+      e.target.classList.toggle('border-amber-500/50', loopEnabled);
+      e.target.classList.toggle('bg-amber-500/15', loopEnabled);
+      e.target.classList.toggle('text-amber-400', loopEnabled);
+      e.target.classList.toggle('border-zinc-700', !loopEnabled);
+      e.target.classList.toggle('bg-zinc-900', !loopEnabled);
+      e.target.classList.toggle('text-zinc-400', !loopEnabled);
+    });
+
+    document.getElementById('clickBtn').addEventListener('click', (e) => {
+      const modes = ['INTRO', 'ALL', 'OFF'];
+      clickMode = modes[(modes.indexOf(clickMode) + 1) % modes.length];
+      e.target.textContent = `Click: ${clickMode[0] + clickMode.slice(1).toLowerCase()}`;
+    });
+
+    document.querySelectorAll('.sec-pill').forEach(pill => {
+      pill.addEventListener('click', () => seekToBar(parseInt(pill.dataset.jump, 10)));
+    });
+
+    document.getElementById('view4Btn').addEventListener('click', () => {
+      viewMode = '4BAR';
+      document.getElementById('view4Btn').className = 'px-2.5 py-1 rounded-sm border border-amber-500 bg-amber-500/15 text-amber-400 font-bold uppercase cursor-pointer';
+      document.getElementById('view32Btn').className = 'px-2.5 py-1 rounded-sm border border-zinc-700 bg-zinc-900 text-zinc-400 hover:text-white uppercase cursor-pointer';
+      const curBar = Math.floor((((anchorSongTime + (isPlaying && ac ? ac.currentTime - anchorAudioTime : 0)) % LOOP_SEC) / BAR_SEC));
+      renderScoreLanes(Math.floor(curBar / 4));
+    });
+
+    document.getElementById('view32Btn').addEventListener('click', () => {
+      viewMode = '32BAR';
+      document.getElementById('view32Btn').className = 'px-2.5 py-1 rounded-sm border border-amber-500 bg-amber-500/15 text-amber-400 font-bold uppercase cursor-pointer';
+      document.getElementById('view4Btn').className = 'px-2.5 py-1 rounded-sm border border-zinc-700 bg-zinc-900 text-zinc-400 hover:text-white uppercase cursor-pointer';
+      renderScoreLanes(0);
+    });
+
+    document.getElementById('scopeWaveBtn').addEventListener('click', () => {
+      scopeMode = 'WAVE';
+      document.getElementById('scopeWaveBtn').className = 'px-2.5 py-1 rounded-sm border border-amber-500 bg-amber-500/20 text-amber-400 font-bold uppercase cursor-pointer';
+      document.getElementById('scopeFreqBtn').className = 'px-2.5 py-1 rounded-sm border border-zinc-700 bg-zinc-950 text-zinc-400 hover:text-white uppercase cursor-pointer';
+    });
+
+    document.getElementById('scopeFreqBtn').addEventListener('click', () => {
+      scopeMode = 'FREQ';
+      document.getElementById('scopeFreqBtn').className = 'px-2.5 py-1 rounded-sm border border-amber-500 bg-amber-500/20 text-amber-400 font-bold uppercase cursor-pointer';
+      document.getElementById('scopeWaveBtn').className = 'px-2.5 py-1 rounded-sm border border-zinc-700 bg-zinc-950 text-zinc-400 hover:text-white uppercase cursor-pointer';
+    });
+
+    document.getElementById('masterGainSlider').addEventListener('input', (e) => {
+      masterGainValue = parseFloat(e.target.value);
+      document.getElementById('masterGainVal').textContent = `${Math.round(masterGainValue * 100)}%`;
+      if (masterOut && ac) {
+        masterOut.gain.setTargetAtTime(masterGainValue, ac.currentTime, 0.02);
+      }
+    });
+
+    // Spacebar Play/Pause shortcut
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+        startPlayback();
+      }
+    });
+
+    // Boot UI on Load
+    window.addEventListener('DOMContentLoaded', () => {
+      buildBarMatrix();
+      buildVoiceLedGrid();
+      buildPartitureShell();
+      renderScoreLanes(0);
+      updatePositionUI(0);
+      rafId = requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>
