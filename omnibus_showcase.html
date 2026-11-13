@@ -201,9 +201,13 @@
                 Trinity Protocol // Voltage, Sequence & Speech Showcase (32 Bars)
               </h1>
             </div>
-            <p class="text-xs text-zinc-400 mt-1">
-              Demonstrating <span class="text-amber-400 font-mono">Book I (P-01 Drive, P-02a Korg-35 Riding, P-03 VCA Chop, P-04 Transient/Noise)</span>, <span class="text-emerald-400 font-mono">Book II (P-03 Just Intonation, P-05 Warped Time ÷2/V, P-07 5-Step Reset Polymeter, P-08 Stepped VCF)</span> & <span class="text-orange-400 font-mono">Book III (V-03 MS-10 Carrier, V-04 Talking Drums, V-05 400¢/V Seq Vocoder, V-08 Korg-35 Chain)</span>.
+            <p class="text-xs text-zinc-400 mt-1.5 leading-relaxed">
+              Demonstrating <span class="text-amber-400 font-mono">Book I (<button type="button" data-proto-bar="4" data-proto-part="part6" data-proto-note="Book I P-01 (Bar 05): Overdriven MS-10 snare & sub-bass drive enter on beats 2 & 4" class="underline decoration-amber-500/50 hover:decoration-amber-400 hover:text-amber-200 hover:bg-amber-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-01 Drive</button>, <button type="button" data-proto-bar="8" data-proto-part="part1" data-proto-note="Book I P-02a (Bar 09): Manual Korg-35 cutoff & peak squelch riding on the F Dorian lead" class="underline decoration-amber-500/50 hover:decoration-amber-400 hover:text-amber-200 hover:bg-amber-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-02a Korg-35 Riding</button>, <button type="button" data-proto-bar="4" data-proto-part="part4" data-proto-note="Book I P-03 (Bar 05): MG square wave patched to INITIAL GAIN chops VC-10 chords" class="underline decoration-amber-500/50 hover:decoration-amber-400 hover:text-amber-200 hover:bg-amber-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-03 VCA Chop</button>, <button type="button" data-proto-bar="0" data-proto-part="part6" data-proto-note="Book I P-04 (Bar 01): Transient-snapped kick & white-noise hi-hat texture" class="underline decoration-amber-500/50 hover:decoration-amber-400 hover:text-amber-200 hover:bg-amber-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-04 Transient/Noise</button>)</span>, <span class="text-emerald-400 font-mono">Book II (<button type="button" data-proto-bar="4" data-proto-part="part5" data-proto-offgrid="1" data-proto-note="Book II P-03 (Bar 05): Appendix A Just-Intonation cent offsets on bass & ensemble thirds/fifths" class="underline decoration-emerald-500/50 hover:decoration-emerald-300 hover:bg-emerald-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-03 Just Intonation</button>, <button type="button" data-proto-bar="4" data-proto-part="part5" data-proto-offgrid="1" data-proto-note="Book II P-05 (Bar 05): SQ-10 Channel C → CLOCK ÷2/V lags syncopated 16th steps behind the grid" class="underline decoration-emerald-500/50 hover:decoration-emerald-300 hover:bg-emerald-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-05 Warped Time ÷2/V</button>, <button type="button" data-proto-bar="0" data-proto-part="part3" data-proto-note="Book II P-07 (Bar 01): SQ-10 Trig Out 5 → RESET IN creates a 5-step polymeter against 4/4" class="underline decoration-emerald-500/50 hover:decoration-emerald-300 hover:bg-emerald-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-07 5-Step Reset Polymeter</button>, <button type="button" data-proto-bar="0" data-proto-part="part3" data-proto-note="Book II P-08 (Bar 01): SQ-10 Channel B (±1V) steps Korg-35 VCF cutoff per step" class="underline decoration-emerald-500/50 hover:decoration-emerald-300 hover:bg-emerald-500/15 px-1 rounded-sm transition-colors cursor-pointer">P-08 Stepped VCF</button>)</span> & <span class="text-orange-400 font-mono">Book III (<button type="button" data-proto-bar="10" data-proto-part="part2" data-proto-note="Book III V-03 (Bar 11): MS-10 sawtooth oscillator feeds VC-10 External Signal Input as carrier" class="underline decoration-orange-500/50 hover:decoration-orange-300 hover:bg-orange-500/15 px-1 rounded-sm transition-colors cursor-pointer">V-03 MS-10 Carrier</button>, <button type="button" data-proto-bar="0" data-proto-part="part2" data-proto-note="Book III V-04 (Bar 01): Drum hits articulate the VC-10 chord into rhythmic formant bursts" class="underline decoration-orange-500/50 hover:decoration-orange-300 hover:bg-orange-500/15 px-1 rounded-sm transition-colors cursor-pointer">V-04 Talking Drums</button>, <button type="button" data-proto-bar="16" data-proto-part="part2" data-proto-note="Book III V-05 (Bar 17): SQ-10 Channel A (±1V) steps VC-10 Ext Pitch Control at 400¢/V (+1V = Maj 3rd)" class="underline decoration-orange-500/50 hover:decoration-orange-300 hover:bg-orange-500/15 px-1 rounded-sm transition-colors cursor-pointer">V-05 400¢/V Seq Vocoder</button>, <button type="button" data-proto-bar="10" data-proto-part="part2" data-proto-note="Book III V-08 (Bar 11): VC-10 Final Out routed back through MS-10 Korg-35 lowpass filter" class="underline decoration-orange-500/50 hover:decoration-orange-300 hover:bg-orange-500/15 px-1 rounded-sm transition-colors cursor-pointer">V-08 Korg-35 Chain</button>)</span>.
             </p>
+            <div id="protocolCueBanner" class="mt-2 inline-flex items-center gap-2 font-mono text-[11px] bg-zinc-950 border border-zinc-800 text-zinc-300 px-2.5 py-1 rounded-sm">
+              <span class="text-amber-500 font-bold">CUE:</span>
+              <span id="protocolCueText">Click any protocol above or card below to jump directly to its bar in the score.</span>
+            </div>
           </div>
 
           <!-- Section Quick-Jump Pills -->
@@ -226,32 +230,32 @@
           </div>
         </div>
 
-        <!-- Active Protocol Chips Strip -->
+        <!-- Active Protocol Chips Strip (Also Clickable to Jump) -->
         <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2 mb-4 font-mono text-[10px]">
-          <div class="bg-zinc-950 border border-zinc-800 px-2.5 py-1.5 rounded-sm">
+          <button type="button" data-proto-bar="8" data-proto-part="part1" data-proto-note="Book I P-02a + P-04 (Bar 09): Korg-35 filter riding on lead + snapped percussion" class="text-left bg-zinc-950 border border-zinc-800 hover:border-cyan-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
             <span class="text-cyan-400 font-bold block">BOOK I // P-02a + P-04</span>
-            <span class="text-zinc-400">Korg-35 Riding & Snap</span>
-          </div>
-          <div class="bg-zinc-950 border border-zinc-800 px-2.5 py-1.5 rounded-sm">
+            <span class="text-zinc-400">Korg-35 Riding & Snap → Bar 09</span>
+          </button>
+          <button type="button" data-proto-bar="4" data-proto-part="part4" data-proto-note="Book I P-03 (Bar 05): Square-wave MG gating VCA INITIAL GAIN on VC-10 Ensemble" class="text-left bg-zinc-950 border border-zinc-800 hover:border-purple-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
             <span class="text-purple-400 font-bold block">BOOK I // P-03 VCA CHOP</span>
-            <span class="text-zinc-400">MG Square → Init Gain</span>
-          </div>
-          <div class="bg-zinc-950 border border-zinc-800 px-2.5 py-1.5 rounded-sm">
+            <span class="text-zinc-400">MG Square → Init Gain → Bar 05</span>
+          </button>
+          <button type="button" data-proto-bar="4" data-proto-part="part5" data-proto-offgrid="1" data-proto-note="Book II P-03 + P-05 (Bar 05): Just-Intonation intervals + ÷2/V warped clock pocket" class="text-left bg-zinc-950 border border-zinc-800 hover:border-emerald-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
             <span class="text-emerald-400 font-bold block">BOOK II // P-03 + P-05</span>
-            <span class="text-zinc-400">Just Intonation + ÷2/V Lag</span>
-          </div>
-          <div class="bg-zinc-950 border border-zinc-800 px-2.5 py-1.5 rounded-sm">
+            <span class="text-zinc-400">Just Int + ÷2/V Lag → Bar 05</span>
+          </button>
+          <button type="button" data-proto-bar="0" data-proto-part="part3" data-proto-note="Book II P-07 + P-08 (Bar 01): 5-step Trig Out 5 → Reset In polymeter + stepped VCF" class="text-left bg-zinc-950 border border-zinc-800 hover:border-sky-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
             <span class="text-sky-400 font-bold block">BOOK II // P-07 + P-08</span>
-            <span class="text-zinc-400">Trig Out 5 → Reset In</span>
-          </div>
-          <div class="bg-zinc-950 border border-zinc-800 px-2.5 py-1.5 rounded-sm">
+            <span class="text-zinc-400">Trig Out 5 → Reset In → Bar 01</span>
+          </button>
+          <button type="button" data-proto-bar="16" data-proto-part="part2" data-proto-note="Book III V-04 + V-05 (Bar 17): SQ-10 400¢/V stepped pitch CV on VC-10 Vocoder" class="text-left bg-zinc-950 border border-zinc-800 hover:border-orange-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
             <span class="text-orange-400 font-bold block">BOOK III // V-04 + V-05</span>
-            <span class="text-zinc-400">Talking Drums + 400¢/V</span>
-          </div>
-          <div class="bg-zinc-950 border border-zinc-800 px-2.5 py-1.5 rounded-sm">
+            <span class="text-zinc-400">400¢/V Seq Vocoder → Bar 17</span>
+          </button>
+          <button type="button" data-proto-bar="10" data-proto-part="part2" data-proto-note="Book III V-03 + V-08 (Bar 11): MS-10 carrier vocoder chained into Korg-35 filter" class="text-left bg-zinc-950 border border-zinc-800 hover:border-amber-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
             <span class="text-amber-400 font-bold block">BOOK III // V-03 + V-08</span>
-            <span class="text-zinc-400">MS-10 Carrier → K35 VCF</span>
-          </div>
+            <span class="text-zinc-400">MS-10 Carrier → K35 → Bar 11</span>
+          </button>
         </div>
 
         <!-- 32-Bar Interactive Grid -->
@@ -1572,7 +1576,8 @@
 
       SCORE_PARTS.forEach(part => {
         const row = document.createElement('div');
-        row.className = 'grid grid-cols-1 lg:grid-cols-12 bg-zinc-900/60 hover:bg-zinc-900/90 transition-colors';
+        row.id = `partRow_${part.id}`;
+        row.className = 'grid grid-cols-1 lg:grid-cols-12 bg-zinc-900/60 hover:bg-zinc-900/90 transition-all duration-300';
         row.innerHTML = `
           <!-- Left Track Control Strip -->
           <div class="lg:col-span-3 p-3 sm:p-4 border-b lg:border-b-0 lg:border-r border-zinc-800 flex flex-col justify-between gap-2 bg-zinc-950/60">
@@ -2100,6 +2105,45 @@
           e.preventDefault();
           startPlayback();
         }
+      });
+
+      document.querySelectorAll('[data-proto-bar]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetBar = parseInt(btn.dataset.protoBar, 10);
+          const targetPart = btn.dataset.protoPart;
+          const noteText = btn.dataset.protoNote;
+
+          if (btn.dataset.protoOffgrid === '1' && !offGridEnabled) {
+            document.getElementById('offGridBtn').click();
+          }
+
+          if (noteText) {
+            const cueText = document.getElementById('protocolCueText');
+            const cueBanner = document.getElementById('protocolCueBanner');
+            if (cueText) cueText.textContent = noteText;
+            if (cueBanner) {
+              cueBanner.classList.add('border-amber-500', 'bg-amber-500/10');
+              setTimeout(() => cueBanner.classList.remove('border-amber-500', 'bg-amber-500/10'), 1800);
+            }
+          }
+
+          seekToBar(targetBar);
+          if (!isPlaying) {
+            startPlayback();
+          }
+
+          if (targetPart) {
+            document.querySelectorAll('[id^="partRow_"]').forEach(r => {
+              r.classList.remove('ring-1', 'ring-amber-500', 'bg-amber-500/10');
+            });
+            const row = document.getElementById(`partRow_${targetPart}`);
+            if (row) {
+              row.classList.add('ring-1', 'ring-amber-500', 'bg-amber-500/10');
+              row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              setTimeout(() => row.classList.remove('ring-1', 'ring-amber-500', 'bg-amber-500/10'), 2400);
+            }
+          }
+        });
       });
 
       buildBarMatrix();
