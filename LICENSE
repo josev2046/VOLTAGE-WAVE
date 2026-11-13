@@ -1,0 +1,14 @@
+# Copyright & Licensing — Voltage & Wave
+
+## 1. Musical Compositions, Engraved Scores & Audio Renders (All Rights Reserved)
+© 2026 José Velázquez / Voltage & Wave. All rights reserved.
+
+All original musical compositions, melodies, harmonies, arrangements, engraved PDF/LaTeX
+partitures (including *Why-Em-O*, *Circuit Boogie*, and *Trinity Protocol*), and exported
+24-bit WAV audio stems in this repository are protected by UK and international copyright law.
+Unauthorised copying, reproduction, public performance, broadcasting, or commercial use is
+prohibited without prior written permission from the author.
+
+## 2. Web Audio Player & Interface Source Code (MIT License)
+The underlying HTML/JavaScript Web Audio synthesizer engine and score-reader interface code
+are licensed under the MIT License for educational and non-commercial study.
