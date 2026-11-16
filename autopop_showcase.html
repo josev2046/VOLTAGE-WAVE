@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UPBEAT ELECTRO // VOLTAGE & WAVE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <script>
+    if (window.tailwind) {
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+            colors: {
+              amber: { 400: '#ef4444', 500: '#dc2626' },
+              zinc: { 850: '#202022', 900: '#18181b', 950: '#09090b' }
+            }
+          }
+        }
+      };
+    }
+  </script>
+  <style>
+    body { background-color: #09090b; color: #d4d4d8; overflow-x: hidden; }
+    .scanlines::before {
+      content: " "; display: block; position: fixed; inset: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                  linear-gradient(90deg, rgba(220, 38, 38, 0.04), rgba(220, 38, 38, 0.02), rgba(185, 28, 28, 0.04));
+      z-index: 50; background-size: 100% 2px, 3px 100%; pointer-events: none; opacity: 0.3;
+    }
+    .bg-synth-grid {
+      background-image: linear-gradient(to right, rgba(220, 38, 38, 0.07) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(220, 38, 38, 0.07) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    input[type="range"].vw-slider {
+      -webkit-appearance: none; appearance: none; background: #27272a; height: 4px; border-radius: 2px; outline: none;
+    }
+    input[type="range"].vw-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none; width: 12px; height: 16px; background: #dc2626; border: 1px solid #09090b; border-radius: 2px; cursor: pointer; box-shadow: 0 0 8px rgba(220, 38, 38, 0.4);
+    }
+    input[type="range"].vw-slider::-moz-range-thumb {
+      width: 12px; height: 16px; background: #dc2626; border: 1px solid #09090b; border-radius: 2px; cursor: pointer;
+    }
+    .score-note { transition: transform 0.05s ease, filter 0.05s ease, box-shadow 0.05s ease; }
+    .score-note.active { filter: brightness(1.45); transform: scaleY(1.08); box-shadow: 0 0 14px var(--note-glow, rgba(220, 38, 38, 0.85)); z-index: 15; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #09090b; }
+    ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #dc2626; }
+  </style>
+</head>
+<body class="antialiased relative selection:bg-amber-500 selection:text-zinc-950 flex flex-col min-h-screen">
+  <div class="scanlines"></div>
+
+  <!-- Fixed Top Transport & Telemetry Header -->
+  <header class="fixed w-full z-40 top-0 bg-zinc-950/95 backdrop-blur-md border-b border-zinc-800">
+    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-wrap justify-between items-center py-2.5 gap-3">
+        <!-- Brand & Score Identity -->
+        <div class="flex items-center gap-3">
+          <a href="index.html" class="flex items-center gap-3 group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" class="text-amber-500 w-6 h-6 shrink-0 group-hover:text-amber-400 transition-colors">
+              <path d="M2 12h4v-7h6v14h6v-7h4"/>
+            </svg>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-mono font-bold text-white tracking-widest text-sm sm:text-base">VOLTAGE & WAVE</span>
+                <span class="hidden sm:inline-block font-mono text-[10px] text-amber-500 border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 uppercase tracking-widest">
+                  Auto-Pop Showcase
+                </span>
+              </div>
+              <p class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">
+                UPBEAT ELECTRO // 124 BPM // F-LYDIAN // 4/4
+              </p>
+            </div>
+          </a>
+        </div>
+
+        <!-- Live Bar / Beat Readout -->
+        <div class="flex items-center gap-2 sm:gap-4 bg-zinc-900/90 border border-zinc-800 px-3 py-1.5 rounded-sm font-mono">
+          <div class="text-center pr-2 sm:pr-4 border-r border-zinc-800">
+            <div class="text-[9px] text-zinc-500 uppercase tracking-widest">Bar</div>
+            <div id="hudBar" class="text-base sm:text-xl font-bold text-amber-500 leading-none mt-0.5">01<span class="text-zinc-600 text-xs">/32</span></div>
+          </div>
+          <div class="text-center pr-2 sm:pr-4 border-r border-zinc-800">
+            <div class="text-[9px] text-zinc-500 uppercase tracking-widest">Beat</div>
+            <div id="hudBeat" class="text-base sm:text-xl font-bold text-white leading-none mt-0.5">1.1</div>
+          </div>
+          <div class="text-center pr-2 sm:pr-4 border-r border-zinc-800">
+            <div class="text-[9px] text-zinc-500 uppercase tracking-widest">Section</div>
+            <div id="hudSection" class="text-xs sm:text-sm font-bold text-amber-400 leading-none mt-1">SYSTEM BOOT</div>
+          </div>
+          <div class="text-center">
+            <div class="text-[9px] text-zinc-500 uppercase tracking-widest">Chord</div>
+            <div id="hudChord" class="text-base sm:text-xl font-bold text-emerald-400 leading-none mt-0.5">Fmaj</div>
+          </div>
+        </div>
+
+        <!-- Transport Controls -->
+        <div class="flex flex-wrap items-center gap-2 font-mono text-xs">
+          <button id="playBtn" class="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-zinc-950 px-4 py-2 font-bold uppercase tracking-wider rounded-sm transition-all shadow-[0_0_15px_rgba(245,158,11,0.35)] cursor-pointer">
+            <span id="playIcon">▶</span> <span id="playLabel">Play</span>
+          </button>
+          <button id="stopBtn" class="inline-flex items-center gap-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 px-3 py-2 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer" disabled>
+            ■ Stop
+          </button>
+          <button id="gateModeBtn" title="A/B Compare: Book II P-09 Gate Length Modulation vs Static Gates" class="px-2.5 py-2 border border-emerald-500/60 bg-emerald-500/15 text-emerald-400 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">
+            Gates: Modulated (P-09)
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="pt-28 sm:pt-20 pb-12 flex-1 relative z-10">
+    <div class="fixed inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
+    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-6 mt-4">
+
+      <section class="bg-zinc-900/90 border border-zinc-800 rounded-sm p-4 sm:p-5 shadow-2xl">
+        <div class="mb-4 px-3 py-2 rounded-sm bg-zinc-950 border border-amber-500/30 flex items-start sm:items-center gap-2.5 font-mono text-[11px] text-zinc-300">
+          <span class="text-amber-400 font-bold uppercase shrink-0">[Software Showcase]</span>
+          <span>
+            A bright, 124 BPM Auto-Pop sequence demonstrating real-time synthesis, blending the mechanical drive of early Düsseldorf electro with syncopated, eccentric funk.
+          </span>
+        </div>
+
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-4 pb-3 border-b border-zinc-800">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+              <h1 class="font-mono text-xs sm:text-sm font-bold text-white uppercase tracking-widest">
+                Upbeat Electro // 124 BPM Sequence
+              </h1>
+            </div>
+            
+            <div id="protocolCueBanner" class="mt-2.5 flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] bg-zinc-950 border border-zinc-800 text-zinc-300 px-3 py-1.5 rounded-sm">
+              <div class="flex flex-col gap-0.5 min-w-0 flex-1">
+                <div>
+                  <span class="text-amber-500 font-bold">MANUAL CUE:</span>
+                  <span id="protocolCueText">Click any protocol card below to jump to its bar and inspect the book reference.</span>
+                </div>
+                <div id="protocolSchematicText" class="text-[10px] text-emerald-400/90 hidden"></div>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <a id="cueManualLink" href="#" target="_blank" rel="noopener" class="hidden px-2 py-0.5 rounded-sm border border-zinc-700 bg-zinc-900 text-zinc-300 hover:border-amber-500/60 hover:text-amber-400 text-[10px] font-bold uppercase transition-colors">
+                  Companion Page ↗
+                </a>
+                <button type="button" id="cueSoloBtn" class="hidden px-2 py-0.5 rounded-sm border border-amber-500/60 bg-amber-500/15 text-amber-400 hover:bg-amber-500/25 text-[10px] font-bold uppercase cursor-pointer">
+                  Solo Protocol Part
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex flex-wrap gap-1.5 font-mono text-[11px] shrink-0" id="sectionNav">
+            <button data-jump="0" class="sec-pill px-2.5 py-1 rounded-sm border border-amber-500 bg-amber-500/20 text-amber-400 font-bold uppercase tracking-wider cursor-pointer transition-colors">
+              System Boot (1–4)
+            </button>
+            <button data-jump="4" class="sec-pill px-2.5 py-1 rounded-sm border border-zinc-700 bg-zinc-950 text-zinc-400 hover:border-amber-500/50 hover:text-zinc-200 uppercase tracking-wider cursor-pointer transition-colors">
+              Neon Melody (5–15)
+            </button>
+            <button data-jump="15" class="sec-pill px-2.5 py-1 rounded-sm border border-zinc-700 bg-zinc-950 text-zinc-400 hover:border-amber-500/50 hover:text-zinc-200 uppercase tracking-wider cursor-pointer transition-colors">
+              CPU Process (16)
+            </button>
+            <button data-jump="16" class="sec-pill px-2.5 py-1 rounded-sm border border-zinc-700 bg-zinc-950 text-zinc-400 hover:border-amber-500/50 hover:text-zinc-200 uppercase tracking-wider cursor-pointer transition-colors">
+              Auto-Pop (17–32)
+            </button>
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-4 font-mono text-[10px]">
+          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="0" data-proto-part="part4" data-proto-note="Book I P-01 (p. 18): Analogue Saturation. Using a divide-by-2 circuit logic to create massive, rigid octave jumps in the bassline." data-proto-patch="EXT SIGNAL IN (Level 8–10) → KORG-35 VCF → VCA" data-proto-url="https://voltageandwave.co.uk/analogue_grinder.html#protocol-01" class="text-left bg-zinc-950 border border-zinc-800 hover:border-emerald-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-emerald-400 font-bold block">BOOK I // P-01</span>
+            <span class="text-zinc-400">Analogue Bass Overdrive</span>
+          </button>
+          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="4" data-proto-part="part2" data-proto-note="Book I P-03 (p. 22): VCA Gating & Chopping. Routing the Mod Gen square wave into INITIAL GAIN to chop the sustained PWM chords." data-proto-patch="MOD GENERATOR (Square) → VCA INITIAL GAIN" data-proto-url="https://voltageandwave.co.uk/analogue_grinder.html#protocol-03" class="text-left bg-zinc-950 border border-zinc-800 hover:border-amber-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-amber-400 font-bold block">BOOK I // P-03</span>
+            <span class="text-zinc-400">VCA Gating (Chord Chop)</span>
+          </button>
+          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="15" data-proto-part="part5" data-proto-note="Book I P-04 (p. 24): Transient Reshaping. A synthetic click layered on the kick, and white noise texture shaping the synthetic snare." data-proto-patch="EXT TRIG → EG (H:0 A:0 D:2 S:0) + VCO NOISE WAVE" data-proto-url="https://voltageandwave.co.uk/analogue_grinder.html#protocol-04" class="text-left bg-zinc-950 border border-zinc-800 hover:border-emerald-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-emerald-400 font-bold block">BOOK I // P-04</span>
+            <span class="text-zinc-400">Transient Reshaping (Drums)</span>
+          </button>
+          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="0" data-proto-part="part4" data-proto-note="Book II P-05 (p. 52): Warped Time. Using Channel C to push and pull the robotic step timing on the syncopated bassline." data-proto-patch="SQ-10 CH C OUT → CLOCK ÷2/V" data-proto-url="https://voltageandwave.co.uk/off_the_grid.html#p-05" class="text-left bg-zinc-950 border border-zinc-800 hover:border-orange-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-orange-400 font-bold block">BOOK II // P-05</span>
+            <span class="text-zinc-400">Warped Time (Bass Lag)</span>
+          </button>
+          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="8" data-proto-part="part3" data-proto-note="Book III V-06 (p. 120): Ensemble. Applying the VC-10 chorus and pitch waver to create the synthetic robotic choir effect." data-proto-patch="VC-10 KEYS → ENSEMBLE ON + ACCENT BEND LOW" data-proto-url="https://voltageandwave.co.uk/voces_ex_machina.html#v-06" class="text-left bg-zinc-950 border border-zinc-800 hover:border-orange-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-orange-400 font-bold block">BOOK III // V-06</span>
+            <span class="text-zinc-400">Ensemble & Accent Bend</span>
+          </button>
+        </div>
+
+        <div id="barMatrix" class="grid grid-cols-4 sm:grid-cols-8 lg:grid-cols-16 gap-1.5">
+          <!-- Populated via JS for Bars 1 to 32 -->
+        </div>
+      </section>
+
+      <!-- 2. PARTITURE -->
+      <section class="bg-zinc-900/90 border border-zinc-800 rounded-sm shadow-2xl overflow-hidden">
+        <div class="bg-zinc-950 border-b border-zinc-800 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <span class="font-mono text-xs font-bold text-amber-500 uppercase tracking-widest">Performing Parts</span>
+          </div>
+          <div class="flex items-center gap-2 font-mono text-[11px]">
+            <button id="view4Btn" class="px-2.5 py-1 rounded-sm border border-amber-500 bg-amber-500/15 text-amber-400 font-bold uppercase cursor-pointer">
+              4-Bar System
+            </button>
+            <button id="view32Btn" class="px-2.5 py-1 rounded-sm border border-zinc-700 bg-zinc-900 text-zinc-400 hover:text-white uppercase cursor-pointer">
+              32-Bar Score
+            </button>
+          </div>
+        </div>
+        <div id="partitureBody" class="divide-y divide-zinc-800/90">
+          <!-- Populated via JS -->
+        </div>
+      </section>
+
+      <!-- 3. SCOPE & MIXER -->
+      <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <div class="lg:col-span-7 bg-zinc-900/90 border border-zinc-800 rounded-sm p-4 flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+              <span class="font-mono text-xs font-bold text-white uppercase tracking-widest">Multi-Track Oscilloscope</span>
+            </div>
+            <div class="flex gap-1.5 font-mono text-[10px]">
+              <button id="scopeWaveBtn" class="px-2.5 py-1 rounded-sm border border-amber-500 bg-amber-500/20 text-amber-400 font-bold uppercase cursor-pointer">Wave</button>
+              <button id="scopeFreqBtn" class="px-2.5 py-1 rounded-sm border border-zinc-700 bg-zinc-950 text-zinc-400 hover:text-white uppercase cursor-pointer">Freq</button>
+            </div>
+          </div>
+          <div class="relative flex-1 min-h-[140px] bg-zinc-950 border border-zinc-800 rounded-sm overflow-hidden">
+            <canvas id="scopeCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+          </div>
+        </div>
+        <div class="lg:col-span-5 bg-zinc-900/90 border border-zinc-800 rounded-sm p-4 flex flex-col justify-between gap-4">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="font-mono text-xs font-bold text-white uppercase tracking-widest">Virtual Voice Matrix</span>
+              <span id="elapsedClock" class="font-mono text-xs text-amber-500 font-bold">00:00.0</span>
+            </div>
+            <div id="voiceLedGrid" class="grid grid-cols-3 sm:grid-cols-4 gap-2 font-mono text-[10px]">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+          <div class="bg-zinc-950 border border-zinc-800 p-3 rounded-sm flex items-center justify-between gap-4">
+            <label for="masterGainSlider" class="font-mono text-xs text-zinc-400 uppercase tracking-wider shrink-0">Master Out</label>
+            <input id="masterGainSlider" type="range" min="0" max="1.4" step="0.01" value="0.9" class="vw-slider w-full">
+            <span id="masterGainVal" class="font-mono text-xs text-amber-500 font-bold w-10 text-right">90%</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    /* ==========================================================================
+       GLOBAL SYNTHESIS UTILITIES
+       ========================================================================== */
+    function midiToFreq(m) { return 440 * Math.pow(2, (m - 69) / 12); }
+    const mapFc = v => 40 * Math.pow(2, v * 0.9);
+    const mgHz  = v => 0.5 * Math.pow(2, 0.93 * (v || 0));
+    const tm    = v => v <= 0 ? 0.003 : 0.003 * Math.pow(10, 0.36 * v);
+    const dm    = v => Math.max(0.06, tm(v));
+    const NOTE_NAMES = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'];
+    function midiToName(midi) { return `${NOTE_NAMES[((midi % 12) + 12) % 12]}${Math.floor(midi / 12) - 1}`; }
+
+    let ac = null;
+    function clampFreq(hz) { return Math.max(20, Math.min(ac ? ac.sampleRate * 0.45 : 20000, hz)); }
+
+    /* ==========================================================================
+       SCORE METADATA & COMPOSITION (32 BARS, 124 BPM)
+       ========================================================================== */
+    const BPM = 124;
+    const BEAT_SEC = 60 / BPM;
+    const BAR_SEC = 4 * BEAT_SEC;
+    const TOTAL_BARS = 32;
+    const LOOP_SEC = TOTAL_BARS * BAR_SEC;
+
+    let p09GateModEnabled = true;
+
+    const SECTIONS = [
+      { id: 'INTRO',  label: 'SYSTEM BOOT', startBar: 0,  endBar: 3,  desc: 'P-05 Sub-Osc Bass & V-04 Vocoder Choir engage' },
+      { id: 'MELODY', label: 'NEON MELODY', startBar: 4,  endBar: 14, desc: 'Bouncy Pop Marimba & P-07 PWM Chords enter' },
+      { id: 'BREAK',  label: 'CPU PROCESS', startBar: 15, endBar: 15, desc: '1-Bar Ratchet & Data-Blip Break' },
+      { id: 'CHORUS', label: 'AUTO-POP',    startBar: 16, endBar: 31, desc: 'Full uplifting electro bounce (16 Bars)' }
+    ];
+
+    // Harmonic Core: F Lydian / C Major
+    const CHORDS = [
+      { name: 'Fmaj', rootMidi: 41, chord: [53, 57, 60] }, 
+      { name: 'Gmaj', rootMidi: 43, chord: [55, 59, 62] },
+      { name: 'Emin', rootMidi: 40, chord: [52, 55, 59] },
+      { name: 'Amin', rootMidi: 45, chord: [57, 60, 64] }
+    ];
+
+    function getSectionForBar(barIdx) { return SECTIONS.find(s => barIdx >= s.startBar && barIdx <= s.endBar) || SECTIONS[0]; }
+    function getChordForBar(barIdx) { return CHORDS[barIdx % 4]; }
+
+    /* ==========================================================================
+       BROWSER WEB AUDIO SYNTHESIS ENGINE (Bright Pop Colors)
+       ========================================================================== */
+    const PATCH_DATA = {
+      kick:    { name: "Electro Kick",  rgb: "239, 68, 68",  s: [32,'q',0,2,0,null,0,0,5.0,8,0,0,null,null,0,0,1.2,0,1.0], cab: [] }, 
+      snare:   { name: "Clap(V03 Sib)", rgb: "249, 115, 22", s: [0,'n',0,null,0,8.0,0,0,8.0,6.0,0,6.0,'s',0,0,0,0.8,0,0.4], cab: ['PINK>EXT'] },
+      hat:     { name: "Tick Hat",      rgb: "250, 204, 21", s: [0,'n',0,null,0,0,0,0,9.5,1.0,0,1.0,'s',0,0,0,0.3,0,0.1], cab: ['WHT>EXT'] },
+      bass:    { name: "Sub-Osc (P05)", rgb: "132, 204, 22", s: [16,'s',0,null,0,null,0,0,5.0,8.0,0,8.0,null,null,0,0,2.0,0,1.0], cab: [] },
+      lead:    { name: "Pop Marimba",   rgb: "6, 182, 212",  s: [8,'q',0,5,0,null,0,0,6.0,3.0,0,5.0,'t',4.5,0,0,1.5,0,1.5], cab: [] }, 
+      vox1:    { name: "Vox Choir 1",   rgb: "20, 184, 166", s: [8,'q',0,3,0,null,0,0,8.0,0,0,0,'s',0,0,0,1.0,0,1.0], cab: [] },
+      vox2:    { name: "Vox Choir 2",   rgb: "13, 148, 136", s: [8,'q',0,3,0,null,0,0,8.0,0,0,0,'s',0,0,0,1.0,0,1.0], cab: [] },
+      chord1:  { name: "PWM Pad (P07)", rgb: "168, 85, 247", s: [8,'q',0,5,0,null,0,0,6.5,4.0,0,0,'t',1.5,5.0,5.0,8.0,8.0,6.0], cab: ['MGT>PWM'] }, 
+      chord2:  { name: "PWM Pad (P07)", rgb: "217, 70, 239", s: [8,'q',0,5,0,null,0,0,6.5,4.0,0,0,'t',1.2,5.0,5.0,8.0,8.0,6.0], cab: ['MGT>PWM'] },
+      chord3:  { name: "PWM Pad (P07)", rgb: "244, 114, 182",s: [8,'q',0,5,0,null,0,0,6.5,4.0,0,0,'t',1.8,5.0,5.0,8.0,8.0,6.0], cab: ['MGT>PWM'] },
+      quirk:   { name: "Data Blip",     rgb: "236, 72, 153", s: [4,'q',0,null,0,null,0,0,8.0,0,0,0,'s',0,0,0,0.5,0,0.5], cab: [] } 
+    };
+
+    const BASE_VOLUMES = { kick: 1.3, snare: 0.95, hat: 0.5, bass: 1.25, lead: 1.0, vox1: 0.8, vox2: 0.8, chord1: 0.4, chord2: 0.4, chord3: 0.4, quirk: 0.85 };
+
+    const SCORE_PARTS = [
+      { id: 'part1', num: 'TRK 01', title: 'UPBEAT PLUCK',     spec: "STACCATO POP MARIMBA", color: '#06b6d4', rgb: '6, 182, 212',   voices: ['lead'], gain: 1.0, muted: false, solo: false },
+      { id: 'part2', num: 'TRK 02', title: 'PWM CHORDS',       spec: "BOOK I P-03 (VCA GATING)", color: '#a855f7', rgb: '168, 85, 247',  voices: ['chord1', 'chord2', 'chord3'], gain: 1.0, muted: false, solo: false },
+      { id: 'part3', num: 'TRK 03', title: 'VOCODER CHORUS',   spec: "BOOK III V-06 (ENSEMBLE CHORUS)", color: '#14b8a6', rgb: '20, 184, 166',  voices: ['vox1', 'vox2'], gain: 1.0, muted: false, solo: false },
+      { id: 'part4', num: 'TRK 04', title: 'SUB-OSC BASS',     spec: "BOOK I P-01 & BOOK II P-05", color: '#84cc16', rgb: '132, 204, 22',  voices: ['bass'], gain: 1.0, muted: false, solo: false },
+      { id: 'part5', num: 'TRK 05', title: 'AUTO DRUMS & FX',  spec: "BOOK I P-04 (RESHAPING & NOISE)", color: '#f59e0b', rgb: '245, 158, 11',  voices: ['kick', 'snare', 'hat', 'quirk'], gain: 1.0, muted: false, solo: false }
+    ];
+
+    let masterOut = null, masterBus = null, masterAnalyser = null;
+    let partBuses = {}, partAnalysers = {}, tracks = {};
+    let nW = null, nP = null, masterGainValue = 0.90;
+    let activeCuePartId = '';
+
+    function initAudioEngine() {
+      if (ac) return;
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      ac = new AudioCtx();
+      const comp = ac.createDynamicsCompressor();
+      comp.threshold.value = -10; comp.ratio.value = 3.0; comp.attack.value = 0.005; comp.release.value = 0.1;
+      masterOut = ac.createGain(); masterOut.gain.value = masterGainValue;
+      masterBus = ac.createGain(); masterBus.gain.value = 1.0;
+      masterAnalyser = ac.createAnalyser(); masterAnalyser.fftSize = 1024;
+      masterAnalyser.smoothingTimeConstant = 0.75;
+
+      SCORE_PARTS.forEach(part => {
+        const bus = ac.createGain(); bus.gain.value = 1.0; bus.connect(comp);
+        partBuses[part.id] = bus;
+        const an = ac.createAnalyser(); an.fftSize = 1024; an.smoothingTimeConstant = 0.75;
+        bus.connect(an); partAnalysers[part.id] = an;
+      });
+
+      comp.connect(masterOut); masterOut.connect(masterBus); masterBus.connect(masterAnalyser); masterBus.connect(ac.destination);
+      ac.cp = comp;
+
+      const L = ac.sampleRate * 3; nW = ac.createBuffer(1, L, ac.sampleRate); nP = ac.createBuffer(1, L, ac.sampleRate);
+      const w = nW.getChannelData(0), p = nP.getChannelData(0);
+      let a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0;
+      for (let i = 0; i < L; i++) {
+        const x = Math.random() * 2 - 1; w[i] = x;
+        a = 0.99886 * a + x * 0.0555179; b = 0.99332 * b + x * 0.0750759; c = 0.96900 * c + x * 0.1538520;
+        d = 0.86650 * d + x * 0.3104856; e = 0.55000 * e + x * 0.5329522; f = -0.7616 * f - x * 0.0168980;
+        p[i] = (a + b + c + d + e + f + g + x * 0.5362) * 0.12; g = x * 0.115926;
+      }
+      Object.keys(PATCH_DATA).forEach(id => { tracks[id] = buildVoice(id, PATCH_DATA[id]); });
+      applyMixerGains();
+    }
+
+    function buildVoice(id, pData) {
+      const s = pData.s, v = { all: [], P: pData }, N = (f, ...a) => ac[f](...a);
+      const src = (t, f) => { const o = N('createOscillator'); o.type = t; o.frequency.value = f; o.start(); v.all.push(o); return o; };
+      const G = (g = 1) => { const n = N('createGain'); n.gain.value = g; return n; };
+      const cs = () => { const o = N('createConstantSource'); o.offset.value = 0; o.start(); v.all.push(o); return o; };
+      const nz = b => { const o = N('createBufferSource'); o.buffer = b; o.loop = true; o.start(); v.all.push(o); return o; };
+      v.eg = cs(); v.wh = cs(); v.mg = src(({ t: 'triangle', s: 'sawtooth', q: 'square' })[s[12]] || 'triangle', 1);
+      v.mgT = src('triangle', 1); v.mgS = src('square', 1);
+      const memo = {};
+      const S = n => memo[n] || (memo[n] = ({ EG: () => v.eg, EGR: () => { const g = G(-1); v.eg.connect(g); return g; }, WHL: () => v.wh, MGT: () => v.mgT, MGS: () => v.mgS, PINK: () => { const g = G(0.3); nz(nP).connect(g); return g; }, WHT: () => { const g = G(0.2); nz(nW).connect(g); return g; } })[n]());
+      const jk = (d, def) => { const c = pData.cab.find(c => c.endsWith('>' + d)); return c ? c.split('>')[0] : def; };
+      const nzs = n => (n === 'PINK' || n === 'WHT') ? 0.5 : 1;
+      
+      v.vcf = N('createBiquadFilter'); v.vcf.type = 'lowpass'; const pre = G(0.5); pre.connect(v.vcf);
+      v.fb = G(1); v.fb.connect(v.vcf.detune);
+      v.so = src('sine', 500); v.so.detune.value = 0; v.fb.connect(v.so.detune); v.sg = G(0); v.so.connect(v.sg);
+      const vca = G(0);
+
+      // ALWAYS build primary osc/noise first so references exist
+      if (id === 'snare') {
+        const hp = N('createBiquadFilter'); hp.type = 'highpass'; hp.frequency.value = 6000;
+        S('WHT').connect(hp); hp.connect(pre);
+      } else if (s[1] === 'n') { 
+        S('WHT').connect(pre); 
+      }
+      
+      if (s[0]) {
+        if (s[1] === 'q') {
+          v.osc = src('triangle', 200); const m = G(1), ws = N('createWaveShaper'), c = new Float32Array(512);
+          for (let i = 0; i < 512; i++) c[i] = i < 256 ? -1 : 1; ws.curve = c;
+          v.pwc = cs(); v.osc.connect(m); v.pwc.connect(m); m.connect(ws);
+          const q = G(0.45); ws.connect(q); q.connect(pre);
+          const pm = jk('PWM'); if (pm) { v.gPwm = G(0.8); S(pm).connect(v.gPwm); v.gPwm.connect(v.pwc.offset); }
+        } else {
+          v.osc = src(s[1] === 's' ? 'sawtooth' : 'triangle', 200); v.osc.connect(pre);
+        }
+        v.gFmM = G(0); v.mg.connect(v.gFmM); v.gFmM.connect(v.osc.detune);
+        const fs = jk('FM', 'EG'); v.gFmE = G(0); S(fs).connect(v.gFmE); v.gFmE.connect(v.osc.detune); v.fm = nzs(fs);
+      }
+
+      // Dedicated Formant Choir Logic
+      if (id.startsWith('vox')) {
+        pre.disconnect(); 
+        v.voxDetune = src('square', 330); v.voxDetune.detune.value = 12; 
+        v.voxSub = src('sawtooth', 165);
+        const gDet = G(0.7); const gSub = G(0.5); v.voxDetune.connect(gDet); v.voxSub.connect(gSub);
+        gDet.connect(pre); gSub.connect(pre);
+        v.voxNoiseGain = G(0.15); nz(nW).connect(v.voxNoiseGain); v.voxNoiseGain.connect(pre);
+        
+        const vSum = G(3.0);
+        const formants = [ { f: 600, q: 6.0, g: 1.5 }, { f: 1200, q: 7.0, g: 1.0 }, { f: 2500, q: 5.0, g: 0.8 } ];
+        v.formantFilters = formants.map(fm => {
+          const bp = N('createBiquadFilter'); bp.type = 'bandpass'; bp.frequency.value = fm.f; bp.Q.value = fm.q;
+          const fGain = G(fm.g); pre.connect(bp); bp.connect(fGain); fGain.connect(vSum); return bp;
+        });
+        
+        v.k35Post = N('createBiquadFilter'); v.k35Post.type = 'lowpass'; v.k35Post.frequency.value = 4500; v.k35Post.Q.value = 1.0;
+        vSum.connect(v.k35Post); v.k35Post.connect(vca);
+      } else {
+        const ex = jk('EXT'); if (ex) { v.gEx = G(0); S(ex).connect(v.gEx); v.gEx.connect(pre); }
+        v.gFcM = G(0); v.mg.connect(v.gFcM); v.gFcM.connect(v.fb);
+        const fcs = jk('FC', 'EG'); v.gFcE = G(0); S(fcs).connect(v.gFcE); v.gFcE.connect(v.fb); v.fc = nzs(fcs);
+        v.vcf.connect(vca); v.sg.connect(vca);
+      }
+
+      const vsum = G(0.5), clip = N('createWaveShaper'); clip.curve = new Float32Array([0, 0, 2]);
+      vsum.connect(clip); clip.connect(vca.gain);
+      const ge = G(0.9); v.eg.connect(ge); ge.connect(vsum);
+      const vs = jk('VCA');
+      if (vs) { const g = G(0.9); S(vs).connect(g); g.connect(vsum); }
+
+      v.out = G(BASE_VOLUMES[id]); vca.connect(v.out);
+      const ownerPart = SCORE_PARTS.find(p => p.voices.includes(id));
+      if (ownerPart && partBuses[ownerPart.id]) v.out.connect(partBuses[ownerPart.id]);
+      else v.out.connect(ac.cp);
+
+      v.an = ac.createAnalyser(); v.an.fftSize = 2048; v.an.smoothingTimeConstant = 0.75; v.out.connect(v.an);
+      
+      const t = ac.currentTime, st = (p, x) => p.setTargetAtTime(x, t, 0.02);
+      const hzf = clampFreq(mapFc(s[8])); st(v.vcf.frequency, hzf); st(v.vcf.Q, s[9] * 2.4); st(v.so.frequency, hzf);
+      const mf = mgHz(s[13]); [v.mg, v.mgT, v.mgS].forEach(o => st(o.frequency, mf));
+      
+      if (v.osc) {
+         st(v.osc.detune, s[2] * 100);
+         v.gFmM && st(v.gFmM.gain, s[6] * 40);
+         if(v.gFmE) st(v.gFmE.gain, s[7] * 267 * v.fm);
+      }
+      
+      if(v.gFcM) st(v.gFcM.gain, s[10] * 270);
+      if(v.gFcE) st(v.gFcE.gain, s[11] * 540 * v.fc);
+      st(v.sg.gain, Math.max(0, Math.min(1, (s[9] - 8) / 2)) * 0.4);
+      v.pwc && st(v.pwc.offset, (s[3] == null ? 0 : s[3] / 10 * 1.8 - 0.9));
+      v.gEx && st(v.gEx.gain, 2 * Math.pow((s[5] || 0) / 10, 0.7));
+      return v;
+    }
+
+    const hold = (o, t, on) => { try { if (o.cancelAndHoldAtTime) { o.cancelAndHoldAtTime(t); o.setValueAtTime(o.value, t); return; } } catch(e){} o.cancelScheduledValues(t); if(on)o.setValueAtTime(0,t);else o.setValueAtTime(o.value,t); };
+    function schedOn(v, at, vel = 1.0) { const s=v.P.s, o=v.eg.offset, a=tm(s[15]), h=tm(s[14]), peak=Math.max(0.15, Math.min(1.0, vel)); hold(o,at,1); o.linearRampToValueAtTime(peak, at+a); o.setValueAtTime(peak, at+a+(s[14]?h:0)); o.setTargetAtTime((s[17]/10)*peak, at+a+(s[14]?h:0), dm(s[16])/3); }
+    function schedOff(v, at) { const o=v.eg.offset; hold(o,at,0); o.setTargetAtTime(0, at, Math.max(0.004, dm(v.P.s[18])/3)); }
+    function applyMixerGains() {
+      if(!ac)return; const anySolo=SCORE_PARTS.some(p=>p.solo);
+      SCORE_PARTS.forEach(part => {
+        const active=anySolo?part.solo:!part.muted; const mult=active?part.gain:0;
+        part.voices.forEach(vid => { if(tracks[vid]&&tracks[vid].out) tracks[vid].out.gain.setTargetAtTime(BASE_VOLUMES[vid]*mult, ac.currentTime, 0.02); });
+      });
+      syncSoloButtonState();
+    }
+
+    /* ==========================================================================
+       SCORE EVENT GENERATOR (Auto-Pop Sequence)
+       ========================================================================== */
+    const BAR_EVENTS = [];
+    
+    function buildScoreEvents() {
+      BAR_EVENTS.length = 0; 
+      
+      const leadMelodies = [
+        [{off: 0.0, m: 65, dur: 0.25}, {off: 0.5, m: 72, dur: 0.25}, {off: 1.5, m: 69, dur: 0.25}, {off: 2.0, m: 65, dur: 0.25}, {off: 2.75, m: 64, dur: 0.25}], 
+        [{off: 0.0, m: 67, dur: 0.25}, {off: 0.5, m: 74, dur: 0.25}, {off: 1.5, m: 71, dur: 0.25}, {off: 2.0, m: 67, dur: 0.25}, {off: 2.75, m: 65, dur: 0.25}], 
+        [{off: 0.0, m: 64, dur: 0.25}, {off: 0.5, m: 71, dur: 0.25}, {off: 1.5, m: 67, dur: 0.25}, {off: 2.0, m: 64, dur: 0.25}, {off: 2.75, m: 62, dur: 0.25}], 
+        [{off: 0.0, m: 69, dur: 0.25}, {off: 0.5, m: 76, dur: 0.25}, {off: 1.5, m: 72, dur: 0.25}, {off: 2.0, m: 69, dur: 0.25}, {off: 2.75, m: 72, dur: 0.25}]  
+      ];
+
+      for (let b = 0; b < TOTAL_BARS; b++) {
+        const sec = getSectionForBar(b);
+        const c = getChordForBar(b);
+        const events = [];
+
+        if (sec.id !== 'BREAK') {
+          [0, 1, 2, 3].forEach(off => events.push({ type: 'kick', partId: 'part5', voiceId: 'kick', rawBeatOff: off, durSec: 0.1, vel: 1.0, label: 'KIK' }));
+          [1, 3].forEach(off => events.push({ type: 'hit', partId: 'part5', voiceId: 'snare', rawBeatOff: off, durSec: 0.15, vel: 1.0, label: 'V03:CLAP' }));
+          for (let h = 0; h < 16; h++) {
+            events.push({ type: 'hit', partId: 'part5', voiceId: 'hat', rawBeatOff: h*0.25, durSec: 0.05, vel: (h%4===2)?0.8:0.3, label: 'HAT' });
+          }
+        } else {
+          events.push({ type: 'kick', partId: 'part5', voiceId: 'kick', rawBeatOff: 0, durSec: 0.1, vel: 1.0, label: 'KIK' });
+          [3.0, 3.25, 3.5, 3.75].forEach(off => events.push({ type: 'hit', partId: 'part5', voiceId: 'snare', rawBeatOff: off, durSec: 0.05, vel: 0.8, label: 'P11:RATCH' }));
+        }
+
+        if (sec.id !== 'BREAK') {
+           const r = c.rootMidi;
+           const bassPat = [r, r, r+12, r, r, r, r+12, r];
+           const filterCut = 400 + (b * 40); 
+           for (let h = 0; h < 8; h++) {
+             events.push({ type: 'note', partId: 'part4', voiceId: 'bass', rawBeatOff: h*0.5, durBeats: 0.25, midi: bassPat[h], cutoffHz: filterCut, vel: 1.0, label: `P05:SUB` });
+           }
+        } else {
+           events.push({ type: 'note', partId: 'part4', voiceId: 'bass', rawBeatOff: 0, durBeats: 2.0, midi: c.rootMidi-12, vel: 1.0, label: `P05:DROP` });
+        }
+
+        if (sec.id !== 'BREAK') {
+           const voxPat = [0, 1.5, 2.5, 3.5];
+           voxPat.forEach(off => {
+             events.push({ type: 'note', partId: 'part3', voiceId: 'vox1', rawBeatOff: off, durBeats: 0.5, midi: c.chord[0], vel: 0.9, label: `V04:VOX` });
+             events.push({ type: 'note', partId: 'part3', voiceId: 'vox2', rawBeatOff: off, durBeats: 0.5, midi: c.chord[1], vel: 0.9, label: `V04:VOX` });
+           });
+        }
+
+        if (sec.id === 'MELODY' || sec.id === 'CHORUS') {
+           c.chord.forEach((m, i) => {
+             events.push({ type: 'note', partId: 'part2', voiceId: `chord${i+1}`, rawBeatOff: 0, durBeats: 4.0, midi: m, vel: 0.6 + (b/100), label: `P03:GATING` });
+           });
+        }
+
+        if (sec.id === 'MELODY' || sec.id === 'CHORUS') {
+           leadMelodies[b % 4].forEach(n => {
+             events.push({ type: 'note', partId: 'part1', voiceId: 'lead', rawBeatOff: n.off, durBeats: n.dur, midi: n.m, vel: 1.0, label: `POP` });
+           });
+        }
+        
+        if (sec.id === 'BREAK') {
+           events.push({ type: 'note', partId: 'part5', voiceId: 'quirk', rawBeatOff: 1.0, durBeats: 0.1, midi: c.rootMidi+24, vel: 1.0, label: `DATA:BLIP` });
+           events.push({ type: 'note', partId: 'part5', voiceId: 'quirk', rawBeatOff: 1.5, durBeats: 0.1, midi: c.rootMidi+27, vel: 1.0, label: `DATA:BLIP` });
+           events.push({ type: 'note', partId: 'part5', voiceId: 'quirk', rawBeatOff: 2.25, durBeats: 0.1, midi: c.rootMidi+31, vel: 1.0, label: `DATA:BLIP` });
+        }
+
+        events.forEach((ev, i) => { ev.domKey = `bar${b}_ev${i}`; });
+        BAR_EVENTS.push(events);
+      }
+    }
+
+    // Playback Engine & UI logic
+    let isPlaying = false, loopEnabled = true, viewMode = '4BAR', displayedSystem = 0;
+    let anchorAudioTime = 0, anchorSongTime = 0, nextBarIndex = 0;
+    let schedulerTimer = null, rafId = null, visualQueue = [];
+
+    function scheduleWindow() {
+      if (!isPlaying || !ac) return;
+      const now = ac.currentTime;
+      const elapsed = now - anchorAudioTime;
+      const currentSongTime = anchorSongTime + elapsed;
+      const horizon = currentSongTime + 0.25;
+
+      while (nextBarIndex * BAR_SEC < horizon) {
+        const cycleIdx = Math.floor(nextBarIndex / TOTAL_BARS);
+        if (!loopEnabled && cycleIdx >= 1) {
+          const stopDelay = Math.max(0, (LOOP_SEC - currentSongTime) * 1000);
+          setTimeout(() => { if (isPlaying && !loopEnabled) stopPlayback(); }, stopDelay);
+          nextBarIndex++; break;
+        }
+        const barIdx = nextBarIndex % TOTAL_BARS;
+        const barStartSongTime = nextBarIndex * BAR_SEC;
+        const events = BAR_EVENTS[barIdx];
+        
+        for (let i = 0; i < events.length; i++) {
+          const ev = events[i];
+          const evSongTime = barStartSongTime + ev.rawBeatOff * BEAT_SEC;
+          if (evSongTime >= anchorSongTime - 1e-6) {
+            const evAudioTime = anchorAudioTime + (evSongTime - anchorSongTime);
+            triggerAudioEvent(ev, Math.max(now, evAudioTime));
+          }
+        }
+        nextBarIndex++;
+      }
+    }
+
+    function triggerAudioEvent(ev, at) {
+      const v = tracks[ev.voiceId]; if (!v) return;
+      const durSec = ev.durSec || (ev.durBeats * BEAT_SEC); const vel = ev.vel !== undefined ? ev.vel : 1.0;
+
+      if (ev.type === 'note') {
+        const scaleMult = (v.P.s[0] === 32 ? 0.25 : (v.P.s[0] === 16 ? 0.5 : 1));
+        const freq = midiToFreq(ev.midi) * scaleMult;
+        
+        if (ev.voiceId.startsWith('vox')) {
+           if(v.voxDetune) { v.voxDetune.frequency.cancelScheduledValues(at); v.voxDetune.frequency.setValueAtTime(freq, at); }
+           if(v.voxSub) { v.voxSub.frequency.cancelScheduledValues(at); v.voxSub.frequency.setValueAtTime(freq*0.5, at); }
+        } else {
+           if (v.osc) { v.osc.frequency.cancelScheduledValues(at); v.osc.frequency.setValueAtTime(freq, at); }
+        }
+        
+        if (ev.cutoffHz && v.vcf) {
+          v.vcf.frequency.cancelScheduledValues(at); v.vcf.frequency.setTargetAtTime(clampFreq(ev.cutoffHz), at, 0.015);
+        }
+        schedOn(v, at, vel); schedOff(v, at + durSec);
+      } else if (ev.type === 'kick') {
+        if (v.osc) { v.osc.frequency.cancelScheduledValues(at); v.osc.frequency.setValueAtTime(140, at); v.osc.frequency.setTargetAtTime(45, at, 0.02); }
+        schedOn(v, at, vel); schedOff(v, at + durSec);
+      } else if (ev.type === 'hit') {
+        schedOn(v, at, vel); schedOff(v, at + durSec);
+      }
+      visualQueue.push({ time: at, offTime: at + durSec, partId: ev.partId, voiceId: ev.voiceId, label: ev.label, domKey: ev.domKey });
+    }
+
+    function silenceAllVoices() {
+      if(!ac)return; const now=ac.currentTime; Object.values(tracks).forEach(v=>{ if(v&&v.eg) { hold(v.eg.offset,now,0); v.eg.offset.setValueAtTime(0,now); }});
+      visualQueue=[]; document.querySelectorAll('.score-note.active').forEach(el=>el.classList.remove('active'));
+      document.querySelectorAll('[data-voice-led]').forEach(el=>{el.style.opacity='0.25'; el.style.boxShadow='none';});
+    }
+
+    function startPlayback() {
+      initAudioEngine(); if (ac.state === 'suspended') ac.resume();
+      if (isPlaying) { const elapsed=ac.currentTime-anchorAudioTime; anchorSongTime=(anchorSongTime+elapsed)%LOOP_SEC; isPlaying=false; clearInterval(schedulerTimer); silenceAllVoices(); updateTransportUI(); return; }
+      isPlaying = true; anchorAudioTime = ac.currentTime + 0.03; nextBarIndex = Math.floor(anchorSongTime / BAR_SEC);
+      scheduleWindow(); schedulerTimer = setInterval(scheduleWindow, 25); updateTransportUI(); if (!rafId) rafId = requestAnimationFrame(renderLoop);
+    }
+    
+    function stopPlayback() { isPlaying=false; clearInterval(schedulerTimer); anchorSongTime=0; nextBarIndex=0; silenceAllVoices(); updateTransportUI(); updatePositionUI(0); }
+    
+    function seekToBar(barIdx) {
+      const clamped = Math.max(0, Math.min(TOTAL_BARS-1, barIdx)); anchorSongTime = clamped * BAR_SEC; nextBarIndex = clamped;
+      if (isPlaying && ac) { silenceAllVoices(); anchorAudioTime = ac.currentTime+0.02; scheduleWindow(); } else updatePositionUI(anchorSongTime);
+    }
+    window.seekToBar = seekToBar;
+
+    /* ==========================================================================
+       UI BUILDERS & EVENT LOGIC
+       ========================================================================== */
+    function syncSoloButtonState() {
+      const soloBtn = document.getElementById('cueSoloBtn');
+      if (!soloBtn || !activeCuePartId) return;
+      const part = SCORE_PARTS.find(p => p.id === activeCuePartId);
+      if (!part) return;
+      soloBtn.textContent = part.solo ? `Unsolo ${part.num}` : `Solo ${part.num}`;
+      soloBtn.classList.toggle('bg-amber-500', part.solo);
+      soloBtn.classList.toggle('text-zinc-950', part.solo);
+      soloBtn.classList.toggle('bg-amber-500/15', !part.solo);
+      soloBtn.classList.toggle('text-amber-400', !part.solo);
+    }
+
+    function jumpToProtocolCue(el) {
+      const targetBar = parseInt(el.dataset.protoBar || '0', 10);
+      const targetPart = el.dataset.protoPart || '';
+      const cueNote = el.dataset.protoNote || '';
+      const cuePatch = el.dataset.protoPatch || '';
+      const cueUrl = el.dataset.protoUrl || '';
+
+      const cueText = document.getElementById('protocolCueText');
+      const schematicText = document.getElementById('protocolSchematicText');
+      const soloBtn = document.getElementById('cueSoloBtn');
+      const manualLink = document.getElementById('cueManualLink');
+
+      if (cueText && cueNote) cueText.textContent = cueNote;
+      if (schematicText) {
+        if (cuePatch) {
+          schematicText.textContent = cuePatch;
+          schematicText.classList.remove('hidden');
+        } else {
+          schematicText.classList.add('hidden');
+        }
+      }
+      if (manualLink) {
+        if (cueUrl) {
+          manualLink.href = cueUrl;
+          manualLink.classList.remove('hidden');
+        } else {
+          manualLink.classList.add('hidden');
+        }
+      }
+
+      activeCuePartId = targetPart;
+      if (soloBtn && targetPart) {
+        soloBtn.classList.remove('hidden');
+        syncSoloButtonState();
+      }
+
+      seekToBar(targetBar);
+      if (!isPlaying) startPlayback();
+      
+      if (targetPart) {
+        const row = document.getElementById(`partRow_${targetPart}`);
+        if (row) {
+          row.classList.add('ring-1', 'ring-amber-400', 'bg-amber-500/10');
+          setTimeout(() => row.classList.remove('ring-1', 'ring-amber-400', 'bg-amber-500/10'), 1800);
+        }
+      }
+    }
+    window.jumpToProtocolCue = jumpToProtocolCue;
+
+    function buildBarMatrix() {
+      const matrix = document.getElementById('barMatrix'); if (!matrix) return; matrix.innerHTML = '';
+      for (let b = 0; b < TOTAL_BARS; b++) {
+        const sec = getSectionForBar(b), chord = getChordForBar(b);
+        const cell = document.createElement('button'); cell.id = `barCell_${b}`; cell.dataset.bar = b;
+        cell.className = 'relative text-left bg-zinc-950 border border-zinc-800 hover:border-amber-500/70 p-2 rounded-sm transition-all overflow-hidden cursor-pointer group';
+        cell.innerHTML = `
+          <div id="barFill_${b}" class="absolute inset-y-0 left-0 bg-amber-500/20 pointer-events-none" style="width: 0%"></div>
+          <div class="relative z-10 flex items-center justify-between font-mono text-[10px]">
+            <span class="text-zinc-500 group-hover:text-zinc-300 font-bold">${String(b + 1).padStart(2, '0')}</span>
+            <span class="text-[9px] px-1 rounded bg-zinc-900 text-zinc-400 border border-zinc-800">${sec.label.split(' ')[0]}</span>
+          </div>
+          <div class="relative z-10 flex items-center justify-between mt-1 font-mono">
+            <span class="text-[11px] font-bold text-zinc-200 truncate">${chord.name}</span>
+          </div>`;
+        cell.addEventListener('click', () => seekToBar(b)); matrix.appendChild(cell);
+      }
+    }
+    
+    function buildVoiceLedGrid() {
+      const grid = document.getElementById('voiceLedGrid'); if (!grid) return; grid.innerHTML = '';
+      Object.entries(PATCH_DATA).forEach(([id, data]) => {
+        const item = document.createElement('div'); item.className = 'bg-zinc-950 border border-zinc-800 px-2 py-1.5 rounded-sm flex items-center gap-2';
+        item.innerHTML = `<span data-voice-led="${id}" class="w-2 h-2 rounded-full shrink-0 transition-opacity" style="background: rgb(${data.rgb}); opacity: 0.25;"></span><span class="text-zinc-400 truncate">${data.name}</span>`;
+        grid.appendChild(item);
+      });
+    }
+    
+    function buildPartitureShell() {
+      const container = document.getElementById('partitureBody'); if (!container) return; container.innerHTML = '';
+      SCORE_PARTS.forEach(part => {
+        const row = document.createElement('div'); row.id = `partRow_${part.id}`; row.className = 'grid grid-cols-1 lg:grid-cols-12 bg-zinc-900/60 hover:bg-zinc-900/90 transition-all';
+        row.innerHTML = `
+          <div class="lg:col-span-3 p-3 sm:px-4 sm:py-2.5 border-b lg:border-b-0 lg:border-r border-zinc-800 flex flex-col justify-between gap-1.5 bg-zinc-950/60">
+            <div class="flex items-start justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2 font-mono text-[10px] tracking-widest">
+                  <span class="font-bold shrink-0" style="color: ${part.color}">${part.num}</span><span class="text-zinc-500 shrink-0">//</span><span id="partStatus_${part.id}" class="text-zinc-400 font-bold truncate">READY</span>
+                </div>
+                <h2 class="font-mono text-sm font-bold text-white tracking-wide mt-0.5 truncate">${part.title}</h2>
+                <p class="font-mono text-[10px] text-zinc-500 truncate">${part.spec}</p>
+              </div>
+              <div class="flex items-center gap-1 font-mono text-[10px] shrink-0">
+                <button data-mute="${part.id}" class="w-6 h-6 rounded-sm border border-zinc-700 bg-zinc-900 text-zinc-400 hover:text-white font-bold cursor-pointer transition-colors" title="Mute Part">M</button>
+                <button data-solo="${part.id}" class="w-6 h-6 rounded-sm border border-zinc-700 bg-zinc-900 text-zinc-400 hover:text-white font-bold cursor-pointer transition-colors" title="Solo Part">S</button>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 pt-0.5"><span class="font-mono text-[9px] text-zinc-500 uppercase">LVL</span><input type="range" data-gain="${part.id}" min="0" max="1.5" step="0.01" value="1" class="vw-slider w-full"></div>
+          </div>
+          <div class="lg:col-span-9 relative overflow-x-auto overflow-y-hidden bg-zinc-950/30">
+            <div id="lane_${part.id}" class="relative h-24 min-w-[600px] select-none"></div>
+          </div>`;
+        container.appendChild(row);
+      });
+      container.querySelectorAll('[data-mute]').forEach(b => b.addEventListener('click', () => { const p=SCORE_PARTS.find(x=>x.id===b.dataset.mute); p.muted=!p.muted; b.classList.toggle('bg-red-600',p.muted); b.classList.toggle('text-white',p.muted); b.classList.toggle('bg-zinc-900',!p.muted); applyMixerGains(); }));
+      container.querySelectorAll('[data-solo]').forEach(b => b.addEventListener('click', () => { const p=SCORE_PARTS.find(x=>x.id===b.dataset.solo); p.solo=!p.solo; b.classList.toggle('bg-amber-500',p.solo); b.classList.toggle('text-zinc-950',p.solo); b.classList.toggle('bg-zinc-900',!p.solo); applyMixerGains(); }));
+      container.querySelectorAll('[data-gain]').forEach(s => s.addEventListener('input', () => { const p=SCORE_PARTS.find(x=>x.id===s.dataset.gain); p.gain=parseFloat(s.value); applyMixerGains(); }));
+    }
+
+    function renderScoreLanes(systemIdx) {
+      displayedSystem = systemIdx; const startBar = viewMode === '4BAR' ? systemIdx * 4 : 0; const numBars = viewMode === '4BAR' ? 4 : TOTAL_BARS;
+      const sec = getSectionForBar(startBar); const sysBadge = document.getElementById('systemBadge');
+      if (sysBadge) sysBadge.textContent = viewMode === '4BAR' ? `SYSTEM 0${systemIdx + 1} // BARS ${String(startBar + 1).padStart(2, '0')}–${String(startBar + 4).padStart(2, '0')} (${sec.label})` : `FULL SCORE // BARS 01–32 (ALL SECTIONS)`;
+
+      SCORE_PARTS.forEach(part => {
+        const lane = document.getElementById(`lane_${part.id}`); if (!lane) return;
+        lane.style.width = viewMode === '32BAR' ? '2600px' : '100%'; let html = '';
+        for (let i = 0; i < numBars; i++) {
+          const b = startBar + i, leftPct = (i / numBars) * 100, widthPct = (1 / numBars) * 100, chord = getChordForBar(b);
+          html += `<div onclick="seekToBar(${b})" class="absolute inset-y-0 border-r border-zinc-800 hover:bg-amber-500/5 cursor-pointer transition-colors" style="left:${leftPct}%; width:${widthPct}%;">
+            <div class="flex items-center justify-between px-2 pt-1 font-mono text-[10px]"><span class="text-zinc-500 font-bold">BAR ${String(b + 1).padStart(2, '0')}</span><span class="text-amber-500/80 font-bold">${chord.name}</span></div>
+            <div class="absolute inset-x-0 top-6 bottom-2 flex flex-col justify-between opacity-15 pointer-events-none"><div class="border-t border-zinc-400"></div><div class="border-t border-zinc-400"></div><div class="border-t border-zinc-400"></div><div class="border-t border-zinc-400"></div><div class="border-t border-zinc-400"></div></div>
+            <div class="absolute inset-y-6 left-1/4 border-l border-dashed border-zinc-800/70 pointer-events-none"></div><div class="absolute inset-y-6 left-2/4 border-l border-dashed border-zinc-800/70 pointer-events-none"></div><div class="absolute inset-y-6 left-3/4 border-l border-dashed border-zinc-800/70 pointer-events-none"></div></div>`;
+        }
+        for (let i = 0; i < numBars; i++) {
+          const b = startBar + i, barLeftPct = (i / numBars) * 100, barWidthPct = (1 / numBars) * 100;
+          const evs = BAR_EVENTS[b].filter(e => e.partId === part.id && e.domKey);
+          if (evs.length === 0) {
+            html += `<div class="absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center pointer-events-none px-3" style="left:${barLeftPct}%; width:${barWidthPct}%;"><span class="font-mono text-[9px] text-zinc-600 tracking-widest uppercase">REST</span></div>`; continue;
+          }
+          evs.forEach(ev => {
+            const beatOff = ev.rawBeatOff, evLeftPct = barLeftPct + (beatOff / 4) * barWidthPct, durBeats = ev.durBeats || (ev.durSec ? ev.durSec / BEAT_SEC : 0.25), evWidthPct = Math.max(0.45, (durBeats / 4) * barWidthPct * 0.94);
+            let topPct = 34, heightPct = 52;
+            if (part.id === 'part1') { 
+              const norm = Math.max(0, Math.min(1, (ev.midi - 60) / 24)); topPct = Math.round(70 - norm * 42); heightPct = 21;
+            } else if (part.id === 'part2') { 
+              topPct = 40; heightPct = 30;
+            } else if (part.id === 'part3') { 
+              topPct = 30; heightPct = 50;
+            } else if (part.id === 'part4') { 
+              const norm = Math.max(0, Math.min(1, (ev.midi - 36) / 24)); topPct = Math.round(70 - norm * 42); heightPct = 21;
+            } else if (part.id === 'part5') { 
+              topPct = ev.voiceId === 'kick' ? 68 : (ev.voiceId === 'snare' ? 48 : 28); heightPct = 20;
+            }
+            html += `<div id="note_${ev.domKey}" style="left:${evLeftPct}%; width:${evWidthPct}%; top:${topPct}%; height:${heightPct}%; background: rgba(${part.rgb}, 0.25); border-color: rgba(${part.rgb}, 0.85); --note-glow: rgba(${part.rgb}, 0.9);" class="score-note absolute border rounded-[2px] flex items-center justify-center overflow-hidden px-0.5 pointer-events-none">${viewMode==='4BAR'&&part.id!=='part2' ? `<span class="font-mono text-[9px] font-bold text-white truncate leading-none">${ev.label}</span>` : ''}</div>`;
+          });
+        }
+        html += `<div id="playhead_${part.id}" class="absolute inset-y-0 w-0.5 bg-amber-400 shadow-[0_0_12px_#f59e0b] z-20 pointer-events-none" style="left: 0%;"><div class="w-2 h-2 -ml-[3px] bg-amber-400 rotate-45"></div></div>`;
+        lane.innerHTML = html;
+      });
+    }
+
+    function updatePositionUI(songTime) {
+      const posInLoop = ((songTime % LOOP_SEC) + LOOP_SEC) % LOOP_SEC, barIdx = Math.min(TOTAL_BARS - 1, Math.floor(posInLoop / BAR_SEC)), barProgress = (posInLoop - barIdx * BAR_SEC) / BAR_SEC;
+      const beatFloat = barProgress * 4, beatNum = Math.floor(beatFloat) + 1, subNum = Math.floor((beatFloat % 1) * 4) + 1;
+      const sec = getSectionForBar(barIdx), chord = getChordForBar(barIdx);
+      document.getElementById('hudBar').innerHTML = `${String(barIdx + 1).padStart(2, '0')}<span class="text-zinc-600 text-xs">/32</span>`;
+      document.getElementById('hudBeat').textContent = `${beatNum}.${subNum}`; document.getElementById('hudSection').textContent = sec.label; document.getElementById('hudChord').textContent = chord.name;
+      const mins = Math.floor(posInLoop / 60), secs = (posInLoop % 60).toFixed(1).padStart(4, '0'); document.getElementById('elapsedClock').textContent = `${String(mins).padStart(2, '0')}:${secs}`;
+
+      document.querySelectorAll('.sec-pill').forEach(pill => {
+        const start = parseInt(pill.dataset.jump, 10);
+        const span = (start === 15) ? 1 : (start === 16) ? 16 : (start === 0) ? 4 : 11; 
+        const isCurrent = barIdx >= start && barIdx < start + span;
+        pill.className = `sec-pill px-2.5 py-1 rounded-sm border uppercase tracking-wider cursor-pointer transition-colors ${isCurrent ? 'border-amber-500 bg-amber-500/20 text-amber-400 font-bold' : 'border-zinc-700 bg-zinc-950 text-zinc-400 hover:border-amber-500/50 hover:text-zinc-200'}`;
+      });
+      for (let b = 0; b < TOTAL_BARS; b++) {
+        const cell = document.getElementById(`barCell_${b}`), fill = document.getElementById(`barFill_${b}`); if (!cell || !fill) continue;
+        if (b < barIdx) { cell.classList.remove('border-amber-500', 'ring-1', 'ring-amber-500/50'); cell.classList.add('border-zinc-800'); fill.style.width = '100%'; }
+        else if (b === barIdx) { cell.classList.add('border-amber-500', 'ring-1', 'ring-amber-500/50'); cell.classList.remove('border-zinc-800'); fill.style.width = `${(barProgress * 100).toFixed(1)}%`; }
+        else { cell.classList.remove('border-amber-500', 'ring-1', 'ring-amber-500/50'); cell.classList.add('border-zinc-800'); fill.style.width = '0%'; }
+      }
+      const targetSystem = Math.floor(barIdx / 4); if (viewMode === '4BAR' && targetSystem !== displayedSystem) renderScoreLanes(targetSystem);
+      const playheadPct = viewMode === '4BAR' ? (((barIdx % 4) + barProgress) / 4) * 100 : ((barIdx + barProgress) / TOTAL_BARS) * 100;
+      SCORE_PARTS.forEach(part => { const ph = document.getElementById(`playhead_${part.id}`); if (ph) ph.style.left = `${playheadPct.toFixed(2)}%`; });
+    }
+
+    let scopeMode = 'WAVE'; const scopeCanvas = document.getElementById('scopeCanvas'), scopeCtx = scopeCanvas ? scopeCanvas.getContext('2d') : null;
+    function drawScope() {
+      if (!scopeCanvas || !scopeCtx) return; const dpr = window.devicePixelRatio || 1, w = scopeCanvas.clientWidth * dpr, h = scopeCanvas.clientHeight * dpr;
+      if (w === 0 || h === 0) return; if (scopeCanvas.width !== w || scopeCanvas.height !== h) { scopeCanvas.width = w; scopeCanvas.height = h; }
+      scopeCtx.globalCompositeOperation = 'source-over'; scopeCtx.fillStyle = '#09090b'; scopeCtx.fillRect(0, 0, w, h);
+      scopeCtx.strokeStyle = 'rgba(245, 158, 11, 0.08)'; scopeCtx.lineWidth = 1; scopeCtx.beginPath();
+      for (let i = 1; i < 4; i++) { scopeCtx.moveTo(0, (h * i) / 4); scopeCtx.lineTo(w, (h * i) / 4); scopeCtx.moveTo((w * i) / 4, 0); scopeCtx.lineTo((w * i) / 4, h); } scopeCtx.stroke();
+      scopeCtx.strokeStyle = 'rgba(255, 255, 255, 0.08)'; scopeCtx.beginPath(); scopeCtx.moveTo(0, h / 2); scopeCtx.lineTo(w, h / 2); scopeCtx.stroke();
+      if (!isPlaying || !ac) return; scopeCtx.globalCompositeOperation = 'screen'; scopeCtx.lineWidth = 2 * dpr;
+
+      Object.keys(tracks).forEach(id => {
+        const track = tracks[id]; if (!track || !track.an) return;
+        scopeCtx.strokeStyle = `rgba(${PATCH_DATA[id].rgb}, 0.9)`; scopeCtx.fillStyle = `rgba(${PATCH_DATA[id].rgb}, 0.7)`;
+        if (scopeMode === 'FREQ') {
+          const bins = new Uint8Array(track.an.frequencyBinCount); track.an.getByteFrequencyData(bins);
+          let active = false; for (let j = 0; j < 50; j += 5) if (bins[j] > 5) { active = true; break; } if (!active) return;
+          const count = 96; for (let i = 0; i < count; i++) {
+            const k = Math.floor(Math.pow(bins.length * 0.55, i / count)), v = bins[k] / 255;
+            if (v > 0.01) scopeCtx.fillRect((i * w) / count + 1, h - v * h, w / count - 2, v * h);
+          }
+        } else {
+          const buf = new Float32Array(track.an.fftSize); track.an.getFloatTimeDomainData(buf);
+          let active = false; for (let j = 0; j < 256; j += 8) if (Math.abs(buf[j]) > 0.01) { active = true; break; } if (!active) return;
+          let offset = 0; for (let i = 1; i < buf.length / 2; i++) if (buf[i - 1] < 0 && buf[i] >= 0) { offset = i; break; }
+          scopeCtx.beginPath(); for (let i = 0; i < 1024; i++) { const val = buf[offset + i], x = (i * w) / 1024, y = h / 2 - val * h * 0.85; i === 0 ? scopeCtx.moveTo(x, y) : scopeCtx.lineTo(x, y); } scopeCtx.stroke();
+        }
+      });
+    }
+
+    function renderLoop() {
+      if (isPlaying && ac) {
+        const now = ac.currentTime, songTime = anchorSongTime + (now - anchorAudioTime); updatePositionUI(songTime);
+        for (let i = visualQueue.length - 1; i >= 0; i--) {
+          const ev = visualQueue[i];
+          if (now >= ev.time && now <= ev.offTime) {
+            if (ev.domKey) { const el = document.getElementById(`note_${ev.domKey}`); if (el) el.classList.add('active'); }
+            const statusEl = document.getElementById(`partStatus_${ev.partId}`); if (statusEl) statusEl.textContent = ev.label;
+            const led = document.querySelector(`[data-voice-led="${ev.voiceId}"]`); if (led) { led.style.opacity = '1'; led.style.boxShadow = `0 0 8px rgb(${PATCH_DATA[ev.voiceId].rgb})`; }
+          } else if (now > ev.offTime) {
+            if (ev.domKey) { const el = document.getElementById(`note_${ev.domKey}`); if (el) el.classList.remove('active'); }
+            const led = document.querySelector(`[data-voice-led="${ev.voiceId}"]`); if (led) { led.style.opacity = '0.25'; led.style.boxShadow = 'none'; }
+            visualQueue.splice(i, 1);
+          }
+        }
+      }
+      drawScope(); rafId = requestAnimationFrame(renderLoop);
+    }
+
+    function updateTransportUI() {
+      const playBtn = document.getElementById('playBtn'), playIcon = document.getElementById('playIcon'), playLabel = document.getElementById('playLabel');
+      const stopBtn = document.getElementById('stopBtn');
+      if (isPlaying) { 
+        playIcon.textContent = '⏸'; playLabel.textContent = 'Pause'; playBtn.classList.replace('bg-amber-500', 'bg-amber-400'); 
+        if (stopBtn) stopBtn.disabled = false;
+      }
+      else { 
+        playIcon.textContent = '▶'; playLabel.textContent = anchorSongTime > 0 ? 'Resume' : 'Play'; playBtn.classList.replace('bg-amber-400', 'bg-amber-500'); 
+        if (stopBtn && anchorSongTime === 0) stopBtn.disabled = true;
+      }
+    }
+
+    function initApp() {
+      document.getElementById('playBtn')?.addEventListener('click', startPlayback); 
+      document.getElementById('stopBtn')?.addEventListener('click', stopPlayback);
+      
+      document.getElementById('cueSoloBtn')?.addEventListener('click', () => {
+        if (!activeCuePartId) return;
+        const laneSoloBtn = document.querySelector(`[data-solo="${activeCuePartId}"]`);
+        if (laneSoloBtn) laneSoloBtn.click();
+      });
+
+      document.querySelectorAll('.sec-pill').forEach(pill => pill.addEventListener('click', () => seekToBar(parseInt(pill.dataset.jump, 10))));
+      document.getElementById('view4Btn')?.addEventListener('click', () => { viewMode = '4BAR'; document.getElementById('view4Btn').className = 'px-2.5 py-1 rounded-sm border border-amber-500 bg-amber-500/15 text-amber-400 font-bold uppercase cursor-pointer'; document.getElementById('view32Btn').className = 'px-2.5 py-1 rounded-sm border border-zinc-700 bg-zinc-900 text-zinc-400 hover:text-white uppercase cursor-pointer'; const curBar = Math.floor((((anchorSongTime + (isPlaying && ac ? ac.currentTime - anchorAudioTime : 0)) % LOOP_SEC) / BAR_SEC)); renderScoreLanes(Math.floor(curBar / 4)); });
+      document.getElementById('view32Btn')?.addEventListener('click', () => { viewMode = '32BAR'; document.getElementById('view32Btn').className = 'px-2.5 py-1 rounded-sm border border-amber-500 bg-amber-500/15 text-amber-400 font-bold uppercase cursor-pointer'; document.getElementById('view4Btn').className = 'px-2.5 py-1 rounded-sm border border-zinc-700 bg-zinc-900 text-zinc-400 hover:text-white uppercase cursor-pointer'; renderScoreLanes(0); });
+      document.getElementById('scopeWaveBtn')?.addEventListener('click', () => { scopeMode = 'WAVE'; document.getElementById('scopeWaveBtn').className = 'px-2.5 py-1 rounded-sm border border-amber-500 bg-amber-500/20 text-amber-400 font-bold uppercase cursor-pointer'; document.getElementById('scopeFreqBtn').className = 'px-2.5 py-1 rounded-sm border border-zinc-700 bg-zinc-950 text-zinc-400 hover:text-white uppercase cursor-pointer'; });
+      document.getElementById('scopeFreqBtn')?.addEventListener('click', () => { scopeMode = 'FREQ'; document.getElementById('scopeFreqBtn').className = 'px-2.5 py-1 rounded-sm border border-amber-500 bg-amber-500/20 text-amber-400 font-bold uppercase cursor-pointer'; document.getElementById('scopeWaveBtn').className = 'px-2.5 py-1 rounded-sm border border-zinc-700 bg-zinc-950 text-zinc-400 hover:text-white uppercase cursor-pointer'; });
+      document.getElementById('masterGainSlider')?.addEventListener('input', (e) => { masterGainValue = parseFloat(e.target.value); document.getElementById('masterGainVal').textContent = `${Math.round(masterGainValue * 100)}%`; if (masterOut && ac) masterOut.gain.setTargetAtTime(masterGainValue, ac.currentTime, 0.02); });
+      window.addEventListener('keydown', (e) => { if (e.code === 'Space' && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'SELECT') { e.preventDefault(); startPlayback(); } });
+
+      buildScoreEvents();
+      buildBarMatrix(); 
+      buildVoiceLedGrid(); 
+      buildPartitureShell(); 
+      renderScoreLanes(0); 
+      updatePositionUI(0); 
+      rafId = requestAnimationFrame(renderLoop);
+    }
+    
+    if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', initApp); else initApp();
+  </script>
+</body>
+</html>
