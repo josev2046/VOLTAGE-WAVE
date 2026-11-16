@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VOLTAGE & WAVE // COMPOSITIONS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            amber: { 400: '#fbbf24', 500: '#f59e0b', 900: '#78350f' },
+            zinc: { 850: '#202022', 900: '#18181b', 950: '#09090b' }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { background-color: #09090b; color: #d4d4d8; overflow-x: hidden; }
+    
+    .scanlines::before {
+      content: " "; display: block; position: fixed; inset: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                  linear-gradient(90deg, rgba(245, 158, 11, 0.04), rgba(245, 158, 11, 0.02), rgba(217, 119, 6, 0.04));
+      z-index: 50; background-size: 100% 2px, 3px 100%; pointer-events: none; opacity: 0.3;
+    }
+    .bg-synth-grid {
+      background-image: linear-gradient(to right, rgba(245, 158, 11, 0.05) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(245, 158, 11, 0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .glow-text { text-shadow: 0 0 12px rgba(245, 158, 11, 0.55); }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #09090b; }
+    ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+  </style>
+</head>
+<body class="antialiased relative selection:bg-amber-500 selection:text-zinc-950 flex flex-col min-h-screen">
+  <div class="scanlines"></div>
+
+  <!-- Header -->
+  <header class="fixed w-full z-40 top-0 bg-zinc-950/95 backdrop-blur-md border-b border-zinc-800">
+    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-wrap justify-between items-center py-4 gap-3">
+        <a href="index.html" class="flex items-center gap-3 group">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" class="text-amber-500 w-6 h-6 shrink-0 group-hover:text-amber-400 transition-colors">
+             <path d="M2 12h4v-7h6v14h6v-7h4"/>
+          </svg>
+          <div>
+            <span class="font-mono font-bold text-white group-hover:text-amber-400 transition-colors tracking-widest text-sm sm:text-base">VOLTAGE & WAVE</span>
+            <span class="hidden sm:inline-block font-mono text-[10px] text-amber-500 border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 uppercase tracking-widest ml-2">Compositions</span>
+          </div>
+        </a>
+        <nav class="flex items-center gap-6 font-mono text-xs uppercase tracking-widest">
+            <a href="index.html" class="text-zinc-400 hover:text-amber-400 transition-colors">Home</a>
+            <a href="hardware.html" class="text-zinc-400 hover:text-amber-400 transition-colors">Hardware</a>
+            <a href="publications.html" class="text-zinc-400 hover:text-amber-400 transition-colors">Publications</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="pt-32 pb-24 flex-1 relative z-10">
+    <div class="fixed inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+      <div class="mb-12">
+        <h1 class="font-mono text-3xl font-bold text-white uppercase tracking-widest mb-4">Compositions & Showcases</h1>
+        <p class="text-zinc-400 max-w-2xl leading-relaxed">
+          An archive of original works composed specifically to demonstrate the hardware protocols detailed in the <span class="text-amber-400 font-medium">Voltage, Sequence & Speech</span> studio manual series. Each entry includes interactive DAW showcases and engraved PDF scores.
+        </p>
+      </div>
+
+      <div class="grid gap-6">
+
+        <!-- CIRCUIT BOOGIE -->
+        <div class="bg-zinc-900/90 border border-zinc-800 rounded-sm p-6 hover:border-amber-500/30 transition-colors">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+            <h2 class="font-mono text-lg font-bold text-white uppercase tracking-widest">Circuit Boogie</h2>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+             <div class="flex flex-col gap-2">
+                 <h3 class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">Engraved Scores (PDF)</h3>
+                 <a href="compositions/Circuit Boogie Master Musical Score.pdf" target="_blank" class="font-mono text-xs text-zinc-300 hover:text-amber-400 transition-colors flex items-center gap-2">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Master Musical Score
+                 </a>
+                 <a href="compositions/Circuit Boogie Performing Parts Book.pdf" target="_blank" class="font-mono text-xs text-zinc-300 hover:text-amber-400 transition-colors flex items-center gap-2">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Performing Parts Book
+                 </a>
+             </div>
+          </div>
+        </div>
+
+        <!-- GUMMITWIST -->
+        <div class="bg-zinc-900/90 border border-zinc-800 rounded-sm p-6 hover:border-amber-500/30 transition-colors">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+            <h2 class="font-mono text-lg font-bold text-white uppercase tracking-widest">Gummitwist</h2>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+             <div class="flex flex-col gap-2">
+                 <h3 class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">Interactive</h3>
+                 <a href="gummitwist_showcase_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-amber-400 transition-colors flex items-center gap-2">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Software Showcase DAW
+                 </a>
+             </div>
+             <div class="flex flex-col gap-2">
+                 <h3 class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">Engraved Scores (PDF)</h3>
+                 <a href="compositions/Gummitwist Protocol — Master Musical Score.pdf" target="_blank" class="font-mono text-xs text-zinc-300 hover:text-amber-400 transition-colors flex items-center gap-2">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Master Musical Score
+                 </a>
+                 <a href="compositions/Gummitwist Protocol — Performing Parts Book.pdf" target="_blank" class="font-mono text-xs text-zinc-300 hover:text-amber-400 transition-colors flex items-center gap-2">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Performing Parts Book
+                 </a>
+             </div>
+          </div>
+        </div>
+
+        <!-- UPBEAT ELECTRO -->
+        <div class="bg-zinc-900/90 border border-zinc-800 rounded-sm p-6 hover:border-amber-500/30 transition-colors">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+            <h2 class="font-mono text-lg font-bold text-white uppercase tracking-widest">Upbeat Electro</h2>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+             <div class="flex flex-col gap-2">
+                 <h3 class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">Interactive</h3>
+                 <a href="autopop_showcase_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-amber-400 transition-colors flex items-center gap-2">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Software Showcase DAW
+                 </a>
+             </div>
+             <div class="flex flex-col gap-2">
+                 <h3 class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">Engraved Scores (PDF)</h3>
+                 <a href="compositions/Upbeat_Electro_Master_Score.pdf" target="_blank" class="font-mono text-xs text-zinc-300 hover:text-amber-400 transition-colors flex items-center gap-2">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Master Musical Score
+                 </a>
+                 <a href="compositions/Upbeat_Electro_Performing_Parts_Book.pdf" target="_blank" class="font-mono text-xs text-zinc-300 hover:text-amber-400 transition-colors flex items-center gap-2">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Performing Parts Book
+                 </a>
+             </div>
+          </div>
+        </div>
+
+        <!-- WHY-EM-O -->
+        <div class="bg-zinc-900/90 border border-zinc-800 rounded-sm p-6 hover:border-amber-500/30 transition-colors">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+            <h2 class="font-mono text-lg font-bold text-white uppercase tracking-widest">Why-Em-O</h2>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+             <div class="flex flex-col gap-2">
+                 <h3 class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">Interactive</h3>
+                 <a href="why-em-o_showcase_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-amber-400 transition-colors flex items-center gap-2">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Software Showcase DAW
+                 </a>
+             </div>
+             <div class="flex flex-col gap-2">
+                 <h3 class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">Engraved Scores (PDF)</h3>
+                 <a href="compositions/Why-Em-O — Master Musical Score.pdf" target="_blank" class="font-mono text-xs text-zinc-300 hover:text-amber-400 transition-colors flex items-center gap-2">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Master Musical Score
+                 </a>
+                 <a href="compositions/Why-Em-O — Performing Parts Book.pdf" target="_blank" class="font-mono text-xs text-zinc-300 hover:text-amber-400 transition-colors flex items-center gap-2">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Performing Parts Book
+                 </a>
+             </div>
+          </div>
+        </div>
+        
+        <!-- OMNIBUS SHOWCASES -->
+        <div class="bg-zinc-900/90 border border-zinc-800 rounded-sm p-6 hover:border-amber-500/30 transition-colors">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-2 h-2 rounded-full bg-cyan-500"></span>
+            <h2 class="font-mono text-lg font-bold text-white uppercase tracking-widest">Omnibus Showcases (VC-10)</h2>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+             <div class="flex flex-col gap-2">
+                 <h3 class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">Interactive</h3>
+                 <a href="compositions/omnibus_showcase_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-cyan-400 transition-colors flex items-center gap-2">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Omnibus Showcase DAW
+                 </a>
+             </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="py-12 border-t border-zinc-800 bg-zinc-950 relative z-20">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div>
+        <h4 class="font-mono text-xs text-white uppercase tracking-widest mb-4">Voltage &amp; Wave Studio</h4>
+        <p class="text-sm text-zinc-400 leading-relaxed mb-4">
+          London-based creative audio practice dedicated to unquantised sequencing, hardware vocoding and analogue re-amping.
+        </p>
+        <p class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">
+          © 2026 JOSÉ VELÁZQUEZ / VOLTAGE &amp; WAVE
+        </p>
+      </div>
+      <div>
+        <h4 class="font-mono text-xs text-white uppercase tracking-widest mb-4">Resources</h4>
+        <ul class="space-y-2 font-mono text-xs">
+          <li><a href="hardware.html" class="text-zinc-400 hover:text-amber-500 transition-colors">Hardware Capabilities</a></li>
+          <li><a href="publications.html" class="text-zinc-400 hover:text-amber-500 transition-colors">Publications &amp; Books</a></li>
+          <li><a href="index.html" class="text-zinc-400 hover:text-amber-500 transition-colors">Home</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
