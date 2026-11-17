@@ -102,7 +102,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest" onerror="this.onerror=null;var f=document.createElement('script');f.src='https://cdn.jsdelivr.net/npm/lucidelatest/dist/umd/lucide.min.js';f.onload=function(){window.refreshIcons&&window.refreshIcons()};document.head.appendChild(f);"></script>
+    <script src="https://unpkg.com/lucide@latest" onerror="this.onerror=null;var f=document.createElement('script');f.src='https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js';f.onload=function(){window.refreshIcons&&window.refreshIcons()};document.head.appendChild(f);"></script>
     
     <script>
         tailwind.config = {
@@ -219,6 +219,7 @@
                     <a href="#arsenal" class="text-zinc-400 hover:text-amber-500 transition-colors">ARSENAL</a>
                     <a href="#operators" class="text-zinc-400 hover:text-amber-500 transition-colors">OPERATORS</a>
                     <a href="#lab" class="text-zinc-400 hover:text-amber-500 transition-colors">THE LAB</a>
+                    <a href="#compositions" class="text-zinc-400 hover:text-amber-500 transition-colors">COMPOSITIONS</a>
                     <a href="#protocol" class="text-zinc-400 hover:text-amber-500 transition-colors">PROTOCOL</a>
                     <a href="#submit" class="text-zinc-950 bg-amber-500 hover:bg-amber-400 px-4 py-1.5 font-bold transition-colors hover:shadow-[0_0_15px_rgba(245,158,11,0.4)]">CLIENT PORTAL</a>
                 </div>
@@ -447,7 +448,7 @@
                         <div class="col-span-2"><dt class="text-zinc-600 uppercase tracking-widest mb-1">ISBN</dt><dd class="text-zinc-300">9798165429125</dd></div>
                     </dl>
                     <div class="flex flex-col sm:flex-row gap-4 font-mono">
-<a href="https://www.amazon.co.uk/dp/B0HPBMTJNZ" target="_blank" rel="noopener" class="inline-flex justify-center items-center gap-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 px-8 py-3.5 font-bold transition-all hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] rounded-sm">
+                        <a href="https://www.amazon.co.uk/dp/B0HPBMTJNZ" target="_blank" rel="noopener" class="inline-flex justify-center items-center gap-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 px-8 py-3.5 font-bold transition-all hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] rounded-sm">
                             BUY ON AMAZON <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
                         </a>
                         <a href="https://voltageandwave.co.uk/voces_ex_machina.html" class="inline-flex justify-center items-center gap-2 border border-zinc-700 hover:border-zinc-500 hover:text-white text-zinc-300 px-8 py-3.5 transition-colors bg-zinc-950/50 rounded-sm">
@@ -805,8 +806,64 @@
         </div>
     </section>
 
-    <!-- UNIFIED PROTOCOL SECTION (Workflow + Specs) (bg-zinc-950) -->
-    <section id="protocol" class="py-24 bg-zinc-950 border-b border-zinc-800">
+    <!-- COMPOSITIONS SHOWCASE (bg-zinc-950) -->
+    <section id="compositions" class="py-24 bg-zinc-950 border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 reveal">
+                <div class="max-w-2xl">
+                    <h2 class="text-3xl font-bold text-white mb-4 uppercase tracking-wide">Reference Tracks</h2>
+                    <p class="text-amber-500 font-mono text-sm uppercase tracking-widest mb-3">Original Works & Session Data</p>
+                    <p class="text-zinc-400 text-base leading-relaxed">
+                        Original Web Audio API works composed specifically to illustrate the hardware protocols detailed in the <em class="text-zinc-300">Voltage, Sequence & Speech</em> studio manual series. Each entry includes interactive DAW showcases and engraved PDF scores.
+                    </p>
+                </div>
+                <a href="https://voltageandwave.co.uk/compositions/index.html" class="inline-flex items-center gap-2 border border-zinc-700 hover:border-amber-500 hover:text-amber-500 text-zinc-300 px-6 py-3 transition-colors font-mono text-xs rounded-sm shrink-0">
+                    VIEW FULL ARCHIVE <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Composition 1: Moroder Polymeter -->
+                <div class="bg-zinc-900 border border-zinc-800 p-8 hover:border-amber-500/50 transition-colors group reveal [transition-delay:100ms] hardware-card flex flex-col relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-zinc-800 to-zinc-700 group-hover:from-amber-600 group-hover:to-amber-400 transition-colors"></div>
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white mb-1 tracking-tight">Moroder Polymeter</h3>
+                            <p class="text-amber-500 font-mono text-xs">126 BPM // C MINOR // 4/4</p>
+                        </div>
+                        <i data-lucide="disc-3" class="w-6 h-6 text-zinc-600 group-hover:text-amber-500 transition-colors"></i>
+                    </div>
+                    <p class="text-zinc-400 text-sm leading-relaxed mb-8">
+                        A driving homage to late-70s Munich disco. Demonstrates analogue saturation, polymetric arpeggios, VCA gating, and 3-voice ensemble detuning utilizing the MS-10, SQ-10, and VC-10.
+                    </p>
+                    <a href="compositions/moroder-polymeter.html" class="mt-auto inline-flex justify-center items-center gap-2 bg-zinc-950 border border-zinc-800 hover:border-amber-500 text-white px-6 py-3 font-mono text-sm transition-all hover:text-amber-500 w-full sm:w-auto self-start shadow-lg">
+                        <i data-lucide="play" class="w-4 h-4"></i> LAUNCH SEQUENCER
+                    </a>
+                </div>
+
+                <!-- Composition 2: Gummitwist Protocol -->
+                <div class="bg-zinc-900 border border-zinc-800 p-8 hover:border-amber-500/50 transition-colors group reveal [transition-delay:200ms] hardware-card flex flex-col relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-zinc-800 to-zinc-700 group-hover:from-amber-600 group-hover:to-amber-400 transition-colors"></div>
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white mb-1 tracking-tight">Gummitwist Protocol</h3>
+                            <p class="text-amber-500 font-mono text-xs">126 BPM // C MIXOLYDIAN // 4/4</p>
+                        </div>
+                        <i data-lucide="audio-waveform" class="w-6 h-6 text-zinc-600 group-hover:text-amber-500 transition-colors"></i>
+                    </div>
+                    <p class="text-zinc-400 text-sm leading-relaxed mb-8">
+                        A full 6-part showcase emulating the complete Korg arsenal. Features rigid arpeggios, staccato vocoder speech, rubbery +2/V lag basslines, and minimal snap percussion triggers.
+                    </p>
+                    <a href="compositions/gummitwist-protocol.html" class="mt-auto inline-flex justify-center items-center gap-2 bg-zinc-950 border border-zinc-800 hover:border-amber-500 text-white px-6 py-3 font-mono text-sm transition-all hover:text-amber-500 w-full sm:w-auto self-start shadow-lg">
+                        <i data-lucide="play" class="w-4 h-4"></i> LAUNCH SEQUENCER
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- UNIFIED PROTOCOL SECTION (Workflow + Specs) (bg-zinc-900) -->
+    <section id="protocol" class="py-24 bg-zinc-900 border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Part 1: How It Works -->
@@ -851,7 +908,7 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- 1. Channel Format -->
-                <div class="hardware-card bg-zinc-900 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:100ms]">
+                <div class="hardware-card bg-zinc-950 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:100ms]">
                     <i data-lucide="audio-lines" class="w-6 h-6 text-amber-500 mb-4"></i>
                     <h4 class="text-white font-bold font-mono text-sm mb-2">CHANNEL FORMAT</h4>
                     <ul class="text-zinc-400 text-xs space-y-2 leading-relaxed">
@@ -861,7 +918,7 @@
                 </div>
 
                 <!-- 2. Stem Duration -->
-                <div class="hardware-card bg-zinc-900 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:150ms]">
+                <div class="hardware-card bg-zinc-950 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:150ms]">
                     <i data-lucide="timer" class="w-6 h-6 text-amber-500 mb-4"></i>
                     <h4 class="text-white font-bold font-mono text-sm mb-2">STEM DURATION</h4>
                     <ul class="text-zinc-400 text-xs space-y-2 leading-relaxed">
@@ -871,7 +928,7 @@
                 </div>
                 
                 <!-- 3. Gain Staging -->
-                <div class="hardware-card bg-zinc-900 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:200ms]">
+                <div class="hardware-card bg-zinc-950 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:200ms]">
                     <i data-lucide="activity" class="w-6 h-6 text-amber-500 mb-4"></i>
                     <h4 class="text-white font-bold font-mono text-sm mb-2">GAIN STAGING</h4>
                     <ul class="text-zinc-400 text-xs space-y-2 leading-relaxed">
@@ -881,7 +938,7 @@
                 </div>
 
                 <!-- 4. Processing & Effects -->
-                <div class="hardware-card bg-zinc-900 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:300ms]">
+                <div class="hardware-card bg-zinc-950 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:300ms]">
                     <i data-lucide="droplet-off" class="w-6 h-6 text-amber-500 mb-4"></i>
                     <h4 class="text-white font-bold font-mono text-sm mb-2">PROCESSING & EFFECTS</h4>
                     <ul class="text-zinc-400 text-xs space-y-2 leading-relaxed">
@@ -891,7 +948,7 @@
                 </div>
 
                 <!-- 5. Frequency Content -->
-                <div class="hardware-card bg-zinc-900 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:400ms]">
+                <div class="hardware-card bg-zinc-950 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:400ms]">
                     <i data-lucide="bar-chart-2" class="w-6 h-6 text-amber-500 mb-4"></i>
                     <h4 class="text-white font-bold font-mono text-sm mb-2">FREQUENCY CONTENT</h4>
                     <ul class="text-zinc-400 text-xs space-y-2 leading-relaxed">
@@ -901,7 +958,7 @@
                 </div>
 
                 <!-- 6. File Format -->
-                <div class="hardware-card bg-zinc-900 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:500ms]">
+                <div class="hardware-card bg-zinc-950 border border-zinc-800 p-6 rounded-sm reveal [transition-delay:500ms]">
                     <i data-lucide="file-audio-2" class="w-6 h-6 text-amber-500 mb-4"></i>
                     <h4 class="text-white font-bold font-mono text-sm mb-2">FILE FORMAT</h4>
                     <ul class="text-zinc-400 text-xs space-y-2 leading-relaxed">
@@ -914,17 +971,17 @@
         </div>
     </section>
 
-    <!-- CLIENT PORTAL SUBMISSION (bg-zinc-900) -->
-    <section id="submit" class="py-24 bg-zinc-900 border-b border-zinc-800">
+    <!-- CLIENT PORTAL SUBMISSION (bg-zinc-950) -->
+    <section id="submit" class="py-24 bg-zinc-950 border-b border-zinc-800">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-zinc-950 border border-zinc-800 p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+            <div class="bg-zinc-900 border border-zinc-800 p-8 sm:p-12 shadow-2xl relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-600 to-amber-400"></div>
                 <div class="mb-10 text-center">
                     <h2 class="text-2xl font-mono font-bold text-white uppercase tracking-widest mb-2">Client Portal</h2>
                     <p class="text-zinc-400 text-sm">Submit your stems for analogue processing</p>
                 </div>
                 <div class="relative">
-                    <div class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 rounded-sm">
+                    <div class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-zinc-900/80 backdrop-blur-sm border border-zinc-800 rounded-sm">
                         <i data-lucide="lock" class="w-8 h-8 text-amber-500 mb-3"></i>
                         <p class="text-white font-mono font-bold tracking-widest">PORTAL OFFLINE</p>
                         <p class="text-zinc-400 text-sm mt-2">Calibration in progress. Launching in 2027.</p>
@@ -933,18 +990,18 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div class="space-y-2">
                                 <label class="block font-mono text-xs text-zinc-500 uppercase">Full Name</label>
-                                <input type="text" disabled class="w-full bg-zinc-900 border border-zinc-800 p-3 text-white focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-700" placeholder="e.g. Alex Turner">
+                                <input type="text" disabled class="w-full bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-700" placeholder="e.g. Alex Turner">
                             </div>
                             <div class="space-y-2">
                                 <label class="block font-mono text-xs text-zinc-500 uppercase">Email Address</label>
-                                <input type="email" disabled class="w-full bg-zinc-900 border border-zinc-800 p-3 text-white focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-700" placeholder="producer@studio.com">
+                                <input type="email" disabled class="w-full bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-700" placeholder="producer@studio.com">
                             </div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div class="space-y-2">
                                 <label class="block font-mono text-xs text-zinc-500 uppercase">Select Service</label>
                                 <div class="relative">
-                                    <select disabled class="w-full appearance-none bg-zinc-900 border border-zinc-800 p-3 text-white focus:outline-none focus:border-amber-500 transition-colors cursor-pointer">
+                                    <select disabled class="w-full appearance-none bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-amber-500 transition-colors cursor-pointer">
                                         <option value="" disabled selected>Select a processing path...</option>
                                         <option value="pass">Analogue Pass-Through</option>
                                         <option value="sequence">Sequence Translation</option>
@@ -958,12 +1015,12 @@
                             </div>
                             <div class="space-y-2">
                                 <label class="block font-mono text-xs text-zinc-500 uppercase">Track Tempo / Key</label>
-                                <input type="text" disabled class="w-full bg-zinc-900 border border-zinc-800 p-3 text-white focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-700" placeholder="e.g. 155 BPM / B-minor">
+                                <input type="text" disabled class="w-full bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-700" placeholder="e.g. 155 BPM / B-minor">
                             </div>
                         </div>
                         <div class="space-y-2 pt-4">
                             <label class="block font-mono text-xs text-zinc-500 uppercase">Upload Files (WAV or MIDI)</label>
-                            <div id="dropzone" class="border-2 border-dashed border-zinc-800 bg-zinc-900/50 p-8 text-center hover:border-amber-500/50 hover:bg-zinc-900 transition-all cursor-pointer group rounded-sm">
+                            <div id="dropzone" class="border-2 border-dashed border-zinc-800 bg-zinc-950/50 p-8 text-center hover:border-amber-500/50 hover:bg-zinc-950 transition-all cursor-pointer group rounded-sm">
                                 <i data-lucide="upload-cloud" class="w-8 h-8 text-zinc-600 mx-auto mb-3 group-hover:text-amber-500 transition-colors"></i>
                                 <p class="text-sm text-zinc-400 font-medium group-hover:text-zinc-300">Drag & drop your .wav or .mid files here</p>
                                 <p class="text-xs text-zinc-600 mt-1">Maximum file size: 250MB</p>
@@ -973,7 +1030,7 @@
                         </div>
                         <div class="space-y-2 pt-4">
                             <label class="block font-mono text-xs text-zinc-500 uppercase">Notes / Routing Instructions</label>
-                            <textarea rows="4" disabled class="w-full bg-zinc-900 border border-zinc-800 p-3 text-white focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-700 resize-none" placeholder="e.g. Please sweep the filter resonance hard on the final 4 bars..."></textarea>
+                            <textarea rows="4" disabled class="w-full bg-zinc-950 border border-zinc-800 p-3 text-white focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-700 resize-none" placeholder="e.g. Please sweep the filter resonance hard on the final 4 bars..."></textarea>
                         </div>
                         <button type="submit" disabled id="submitBtn" class="w-full font-mono bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold p-4 flex justify-center items-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(245,158,11,0.3)]">
                             <span>INITIATE TRANSFER</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
