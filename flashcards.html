@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en-GB" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hardware Capabilities // Protocol Cards</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        amber: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' },
+                        zinc: { 850: '#202022', 900: '#18181b', 950: '#09090b' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #09090b; color: #d4d4d8; }
+        
+        .scanlines::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(245, 158, 11, 0.04), rgba(245, 158, 11, 0.02), rgba(217, 119, 6, 0.04));
+            z-index: 50;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        
+        .card-inner {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .is-flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .bg-synth-grid {
+            background-image: linear-gradient(to right, rgba(245, 158, 11, 0.07) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(245, 158, 11, 0.07) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        
+        .module-btn {
+            transition: all 0.2s ease;
+        }
+        .module-btn.active {
+            background-color: rgba(245, 158, 11, 0.15);
+            border-color: #f59e0b;
+            color: #f59e0b;
+            box-shadow: inset 0 0 10px rgba(245, 158, 11, 0.2), 0 0 15px rgba(245, 158, 11, 0.2);
+        }
+        .module-btn.active .status-led {
+            background-color: #f59e0b;
+            box-shadow: 0 0 8px #f59e0b;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #09090b; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+        @supports not selector(::-webkit-scrollbar) {
+            .custom-scrollbar { scrollbar-width: thin; scrollbar-color: #3f3f46 #09090b; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .card-inner { transition: none; }
+        }
+    </style>
+</head>
+<body class="antialiased relative selection:bg-amber-500 selection:text-zinc-950 min-h-screen flex flex-col">
+    <div class="scanlines fixed inset-0 pointer-events-none" aria-hidden="true"></div>
+    <div aria-hidden="true" class="absolute inset-0 bg-synth-grid [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
+
+    <nav class="w-full z-40 top-0 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-3 cursor-pointer group">
+                    <i data-lucide="arrow-left" class="text-zinc-500 group-hover:text-amber-500 transition-colors w-5 h-5"></i>
+                    <span class="font-mono font-bold text-white tracking-widest text-sm group-hover:text-amber-500 transition-colors">VOLTAGE &amp; WAVE</span>
+                </a>
+                <div class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest border border-zinc-800 bg-zinc-900 px-3 py-1">
+                    LEARNING PROTOCOL // <span id="module-display" class="text-amber-500">ALL MODULES</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow flex flex-col items-center p-4 relative z-10 pt-10 pb-16">
+        
+        <div class="w-full max-w-3xl mb-10 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex flex-wrap justify-center gap-3">
+                <button onclick="setModule('ALL')" id="btn-ALL" class="module-btn active flex items-center gap-2 border border-zinc-700 bg-zinc-900/50 text-zinc-400 px-4 py-2 font-mono text-xs uppercase tracking-widest">
+                    <div class="status-led w-2 h-2 rounded-full bg-zinc-700"></div> ALL
+                </button>
+                <button onclick="setModule('MS-10')" id="btn-MS-10" class="module-btn flex items-center gap-2 border border-zinc-700 bg-zinc-900/50 text-zinc-400 px-4 py-2 font-mono text-xs uppercase tracking-widest">
+                    <div class="status-led w-2 h-2 rounded-full bg-zinc-700"></div> 01 MS-10
+                </button>
+                <button onclick="setModule('SQ-10')" id="btn-SQ-10" class="module-btn flex items-center gap-2 border border-zinc-700 bg-zinc-900/50 text-zinc-400 px-4 py-2 font-mono text-xs uppercase tracking-widest">
+                    <div class="status-led w-2 h-2 rounded-full bg-zinc-700"></div> 02 SQ-10
+                </button>
+                <button onclick="setModule('VC-10')" id="btn-VC-10" class="module-btn flex items-center gap-2 border border-zinc-700 bg-zinc-900/50 text-zinc-400 px-4 py-2 font-mono text-xs uppercase tracking-widest">
+                    <div class="status-led w-2 h-2 rounded-full bg-zinc-700"></div> 03 VC-10
+                </button>
+            </div>
+            
+            <button onclick="toggleIndex()" id="toggle-index-btn" class="flex items-center gap-2 border border-amber-500/50 bg-amber-500/10 text-amber-500 hover:bg-amber-500 hover:text-zinc-950 px-4 py-2 font-mono text-xs uppercase tracking-widest transition-colors">
+                <i data-lucide="list" class="w-4 h-4"></i> <span id="index-btn-text">DATA INDEX</span>
+            </button>
+        </div>
+
+        <div id="card-interface" class="w-full flex flex-col items-center">
+            <div id="card-container" tabindex="0" role="group" aria-label="Flashcard. Press Space or Enter to flip." class="w-full max-w-3xl h-80 sm:h-[26rem] perspective-1000 cursor-pointer group mb-10 outline-none focus-visible:ring-2 focus-visible:ring-amber-500">
+                <div class="card-inner w-full h-full relative transform-style-3d">
+                    <div id="front-face" aria-hidden="false" class="absolute w-full h-full backface-hidden bg-zinc-900 border border-zinc-800 p-8 sm:p-12 flex flex-col justify-center items-center shadow-2xl group-hover:border-amber-500/30 transition-colors">
+                        <span id="front-tag" class="font-mono text-amber-500 text-[10px] uppercase tracking-widest absolute top-6 left-6 border border-amber-500/30 bg-amber-500/10 px-2 py-1"></span>
+                        <i data-lucide="cpu" class="w-6 h-6 text-zinc-700 absolute top-6 right-6"></i>
+                        
+                        <h2 id="front-text" class="text-2xl sm:text-3xl font-bold text-white text-center leading-tight"></h2>
+                        
+                        <div class="absolute bottom-6 w-full px-8 flex justify-between items-center text-[10px] font-mono text-zinc-600">
+                            <span>// PROTOCOL CARD</span>
+                            <span class="flex items-center gap-2 text-zinc-500"><i data-lucide="mouse-pointer-click" class="w-3.5 h-3.5"></i> CLICK TO REVEAL</span>
+                        </div>
+                    </div>
+
+                    <div id="back-face" aria-hidden="true" class="absolute w-full h-full backface-hidden rotate-y-180 bg-zinc-950 border border-amber-500 p-8 sm:p-12 flex flex-col shadow-[0_0_30px_rgba(245,158,11,0.15)] overflow-hidden">
+                        <span class="font-mono text-zinc-500 text-[10px] uppercase tracking-widest absolute top-6 left-6 border border-zinc-800 px-2 py-1">PROCEDURE / THEORY</span>
+                        
+                        <div class="flex-grow flex items-center justify-center overflow-y-auto custom-scrollbar mt-8 mb-4">
+                            <div id="back-text" class="w-full text-center text-zinc-300 text-sm sm:text-base leading-relaxed font-light px-2"></div>
+                        </div>
+
+                        <div class="w-full flex justify-between items-center text-[10px] font-mono text-zinc-600 border-t border-zinc-800/80 pt-4 shrink-0">
+                            <span>// SOURCE</span>
+                            <span class="text-amber-500/80 flex items-center gap-1.5 bg-amber-500/10 px-2 py-1 border border-amber-500/20">
+                                <i data-lucide="book-open" class="w-3 h-3"></i> <span id="back-ref"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col items-center gap-4 w-full max-w-3xl">
+                <div class="flex items-center justify-between w-full font-mono">
+                    <button id="prev-btn" class="flex items-center gap-2 border border-zinc-700 bg-zinc-900 hover:border-amber-500 hover:text-amber-500 transition-colors text-zinc-400 px-6 py-3 text-xs tracking-widest uppercase">
+                        <i data-lucide="chevron-left" class="w-4 h-4"></i> PREV
+                    </button>
+                    
+                    <span id="deck-progress" class="text-zinc-500 text-xs tracking-widest font-bold">CARD 00 // 00</span>
+                    
+                    <button id="next-btn" class="flex items-center gap-2 border border-zinc-700 bg-zinc-900 hover:border-amber-500 hover:text-amber-500 transition-colors text-zinc-400 px-6 py-3 text-xs tracking-widest uppercase">
+                        NEXT <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="index-interface" class="hidden w-full max-w-3xl bg-zinc-950 border border-zinc-800 p-6 sm:p-10 shadow-2xl">
+            <div class="flex items-center gap-3 mb-8 border-b border-zinc-800 pb-4">
+                <i data-lucide="list-ordered" class="w-6 h-6 text-amber-500"></i>
+                <h2 class="text-xl font-bold text-white uppercase tracking-widest font-mono">Data Manifest</h2>
+            </div>
+            
+            <div id="index-list" class="flex flex-col gap-2 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2">
+            </div>
+        </div>
+    </main>
+
+    <script>
+        if (window.lucide) lucide.createIcons();
+
+        const formatText = (text) => text.replace(/\[cite:\s*[\d,\s]+\]/g, '').trim();
+
+        const masterDeck = [
+            // ==========================================
+            // BOOK 01: MS-10 EXTERNAL PROCESSING (34 Cards)
+            // ==========================================
+            {
+                "module": "MS-10",
+                "front": "What is the primary purpose of the MS-10 in this studio workflow?",
+                "back": "It is used as a re-amping and colouration device to add harmonic distortion, weight, grit, and filter movement to clean digital audio, rather than as a conventional subtractive synthesiser.",
+                "ref": "Book 01, Sec 01 (p. 9)"
+            },
+            {
+                "module": "MS-10",
+                "front": "What four main treatments does MS-10 re-amping provide?",
+                "back": "Adding harmonic distortion to thin sources; injecting manual/LFO filter movement; rhythmically gating sustained material; and reshaping transients while blending analogue noise.",
+                "ref": "Book 01, Sec 01 (p. 9)"
+            },
+            {
+                "module": "MS-10",
+                "front": "What are the five core components of the MS-10's analogue signal path?",
+                "back": "The Voltage-Controlled Amplifier (VCA), Korg-35 filter, Envelope Generator (EG), Modulation Generator (LFO), and the patchbay.",
+                "ref": "Book 01, Sec 03 (p. 11)"
+            },
+            {
+                "module": "MS-10",
+                "front": "What is the maximum input level for the MS-10 External Signal In?",
+                "back": "The maximum ceiling is 3Vp-p, which is below a nominal +4 dBu line signal. Signals exceeding this must be padded at the DAW output or via a DI/attenuator.",
+                "ref": "Book 01, Sec 02 (p. 10)"
+            },
+            {
+                "module": "MS-10",
+                "front": "Why is a warm-up period required for the MS-10?",
+                "back": "Analogue filter and oscillator circuits drift on power-up and require a few minutes to settle into stable operation before critical work begins.",
+                "ref": "Book 01, Sec 02 (p. 10)"
+            },
+            {
+                "module": "MS-10",
+                "front": "Why must you reduce the Ext Signal In level before patching?",
+                "back": "Patching hot can cause an audible pop and unnecessarily wears the input circuitry over time.",
+                "ref": "Book 01, Sec 02 (p. 10)"
+            },
+            {
+                "module": "MS-10",
+                "front": "How do you silence the MS-10's internal VCO?",
+                "back": "Select the Rectangle (Pulse) waveform and turn the PW/PWM knob to the extreme clockwise position. This narrows the pulse so much that the VCO virtually disappears.",
+                "ref": "Book 01, Sec 07 (p. 16)"
+            },
+            {
+                "module": "MS-10",
+                "front": "What is the maximum voltage output at the MS-10 SIGNAL OUT jack?",
+                "back": "SIGNAL OUT peaks at 2Vp-p from a 3.5kΩ source.",
+                "ref": "Book 01, Sec 02 (p. 10)"
+            },
+            {
+                "module": "MS-10",
+                "front": "Where does the VOLUME knob sit in the MS-10 signal chain?",
+                "back": "The VOLUME knob sits after the VCA in the signal chain. It should be used to trim the return level to the DAW.",
+                "ref": "Book 01, Sec 02 (p. 10)"
+            },
+            {
+                "module": "MS-10",
+                "front": "What audio stem format and channel configuration is required?",
+                "back": "Send strictly mono, 24-bit WAV or AIFF files. For stereo sources, export separate left and right mono stems for independent processing.",
+                "ref": "Book 01, Sec 06 (p. 15)"
+            },
+            {
+                "module": "MS-10",
+                "front": "Why must digital stems be uncompressed before MS-10 processing?",
+                "back": "The VCA and resonant filter rely on natural volume fluctuations to overdrive interactively. A pre-flattened stem will not saturate correctly.",
+                "ref": "Book 01, Sec 06 (p. 15)"
+            },
+            {
+                "module": "MS-10",
+                "front": "Why should you avoid pre-equalising stems sent to the MS-10?",
+                "back": "The resonant low-pass filter requires dense, high-frequency harmonic content to process effectively. Pre-EQ'd stems give the filter less raw material to work with.",
+                "ref": "Book 01, Sec 06 (p. 15)"
+            },
+            {
+                "module": "MS-10",
+                "front": "What is the recommended stem duration for looping material?",
+                "back": "Send 1–2 minute evolving loops (16–64 bars) rather than full-length renders, because the hardware is ridden in real time.",
+                "ref": "Book 01, Sec 06 (p. 15)"
+            },
+            {
+                "module": "MS-10",
+                "front": "How do you achieve continuous pass-through of the external signal (opening the VCA)?",
+                "back": "Either hold a key down with EG Attack at 0 and Sustain at 10, or patch the Control Wheel Out into INITIAL GAIN with the wheel fully up.",
+                "ref": "Book 01, Sec 07 (p. 16)"
+            },
+            {
+                "module": "MS-10",
+                "front": "What three internal modules can be patched as modulation sources?",
+                "back": "The Modulation Generator (LFO), Envelope Generator (EG), and Noise Generator can be patched into the signal chain as control-voltage or audio sources.",
+                "ref": "Book 01, Sec 03 (p. 11)"
+            },
+            {
+                "module": "MS-10",
+                "front": "What is the 'safe state' checklist for the MS-10?",
+                "back": "Ext Signal Level at 0; Korg-35 Cutoff fully open (10); Peak at 0; PORT at 0; all modulation knobs at 0; VOLUME moderate; and modulation jacks unpatched.",
+                "ref": "Book 01, Sec 07 (p. 16)"
+            },
+            {
+                "module": "MS-10",
+                "front": "What is Protocol P-01 used for?",
+                "back": "Analogue Saturation & Overdrive: used when a thin bassline or sterile drum track needs weight, grit, and harmonic distortion.",
+                "ref": "Book 01, P-01 (p. 18)"
+            },
+            {
+                "module": "MS-10",
+                "front": "How do you patch and set up P-01 (Analogue Saturation)?",
+                "back": "Set Korg-35 Cutoff fully open (10) and raise the Ext Signal Level knob towards 8–10 to deliberately push the VCA and filter into musical clipping.",
+                "ref": "Book 01, P-01 (p. 18)"
+            },
+            {
+                "module": "MS-10",
+                "front": "How can you visually verify a genuine analogue return in a spectrogram?",
+                "back": "Look for an irregular, performance-tracking harmonic ridge and a raised, continuous low-level noise floor that digital pass-throughs lack.",
+                "ref": "Book 01, P-01 (p. 19)"
+            },
+            {
+                "module": "MS-10",
+                "front": "What is the difference between Manual Groove Riding and Rhythmic LFO Sweeps (P-02)?",
+                "back": "Manual riding tracks the human performance organically, while LFO sweeps create predictable, cyclic auto-wah movement synced by ear.",
+                "ref": "Book 01, P-02 (p. 21)"
+            },
+            {
+                "module": "MS-10",
+                "front": "What two conditions must be met for LFO modulation to be audible?",
+                "back": "The Modulation Generator (MG) knob must be positioned above 0, and the modulation-mode switch must not be set to pushbutton.",
+                "ref": "Book 01, P-02 (p. 20)"
+            },
+            {
+                "module": "MS-10",
+                "front": "What is Protocol P-03 used for?",
+                "back": "VCA Gating & Rhythmic Chopping: used to turn a sustained drone or ambient texture into a tight, percussive rhythmic sequence.",
+                "ref": "Book 01, P-03 (p. 22)"
+            },
+            {
+                "module": "MS-10",
+                "front": "How do you patch P-03 (VCA Gating)?",
+                "back": "Patch the MG Rectangle output (0 to +5V) into the INITIAL GAIN jack on the patch panel, setting the MG frequency by ear to the desired subdivision.",
+                "ref": "Book 01, P-03 (p. 22)"
+            },
+            {
+                "module": "MS-10",
+                "front": "What is Protocol P-04a used for?",
+                "back": "Transient Reshaping: used when dull acoustic drums need sharper synthetic transients.",
+                "ref": "Book 01, P-04a (p. 24)"
+            },
+            {
+                "module": "MS-10",
+                "front": "How do you set the Envelope Generator for P-04a (Transient Reshaping)?",
+                "back": "Set Hold 0, Attack 0, Decay 2, Sustain 0, and Release 0 to create a fast, percussive envelope snap.",
+                "ref": "Book 01, P-04a (p. 24)"
+            },
+            {
+                "module": "MS-10",
+                "front": "How is Noise Texturing achieved in Protocol P-04b?",
+                "back": "Select the Noise waveform instead of Rectangle on the VCO. Because the noise is fixed-level, rebalance the blend using the External Signal Level knob.",
+                "ref": "Book 01, P-04b (p. 24)"
+            },
+            {
+                "module": "MS-10",
+                "front": "What function do the White/Pink jacks serve on the patchbay?",
+                "back": "They are modulation outputs only, not audio inputs. Audio-rate noise enters the filter internally via the VCO waveform selector.",
+                "ref": "Book 01, P-04b (p. 24)"
+            },
+            {
+                "module": "MS-10",
+                "front": "Troubleshooting: What causes a 'whistling' or pure tone on the MS-10?",
+                "back": "The Peak (resonance) is too high. Near maximum, the Korg-35 filter self-oscillates. Back the Peak off toward 0.",
+                "ref": "Book 01, Sec 10 (p. 27)"
+            },
+            {
+                "module": "MS-10",
+                "front": "Troubleshooting: The distortion sounds 'fizzy' rather than warm.",
+                "back": "The incoming digital source is likely too hot. Pad it at the DAW output and re-drive the MS-10 from a lower starting point.",
+                "ref": "Book 01, Sec 10 (p. 27)"
+            },
+            {
+                "module": "MS-10",
+                "front": "Troubleshooting: The VCA gate is not fully 'off' between pulses in P-03.",
+                "back": "The EG or the control wheel is also sending voltage to the VCA. The VCA sums these voltages; unpatch the wheel and release any held keys.",
+                "ref": "Book 01, Sec 10 (p. 27)"
+            },
+            {
+                "module": "MS-10",
+                "front": "Troubleshooting: The source cuts off immediately after the hit in P-04a.",
+                "back": "The EG also drives the VCA. With Sustain 0, the source gates shut after the Decay phase. Open the VCA with the wheel method if full pass-through is desired.",
+                "ref": "Book 01, Sec 10 (p. 27)"
+            },
+            {
+                "module": "MS-10",
+                "front": "What is the Initial Gain patch-panel jack?",
+                "back": "It is a 0 to +5V input that adds external CV to the VCA alongside the EG. Total CV above +5V changes nothing.",
+                "ref": "Book 01, Glossary (p. 30)"
+            },
+            {
+                "module": "MS-10",
+                "front": "Why is the non-destructive 'Print, don't commit live' rule important?",
+                "back": "Always record the Hardware Return to a new track/file. Analogue processing is unpredictable; keeping an untreated backup is essential for safety and A/B comparison.",
+                "ref": "Book 01, Sec 11 (p. 28)"
+            },
+            {
+                "module": "MS-10",
+                "front": "Why should you re-zero the panel between scenarios?",
+                "back": "Analogue pots do not recall settings automatically. Returning to the default safe state prevents leftover modulation from ruining the next patch.",
+                "ref": "Book 01, Sec 11 (p. 28)"
+            },
+
+            // ==========================================
+            // BOOK 02: SQ-10 OFF THE GRID (35 Cards)
+            // ==========================================
+            {
+                "module": "SQ-10",
+                "front": "What is the SQ-10's core function in the studio?",
+                "back": "The Korg SQ-10 is a 12-step, 3-channel analogue sequencer from 1978 that generates control voltages rather than producing sound directly. It outputs three voltages per step to tell a synthesiser what pitch, timbre and timing to play.",
+                "ref": "Book 02, Sec 01 (p. 35)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What does 'Off the grid' mean in the context of the SQ-10?",
+                "back": "The SQ-10's voltage knobs are continuous (tuning by ear, not semitones), and its internal clock is a free-running analogue oscillator (timing set by hand, not a DAW grid).",
+                "ref": "Book 02, Sec 01 (p. 35)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "Why does the SQ-10 require a 10-minute warm-up?",
+                "back": "Korg specifies a ten-minute warm-up for accurate, stable voltage outputs. This determines the pace of a sequencing session.",
+                "ref": "Book 02, Sec 02 (p. 36)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What are the voltage characteristics of Channels A, B, and C?",
+                "back": "Channels A and B are bipolar with selectable ranges of ±5V or ±1V and support portamento. Channel C outputs unipolar 0 to +5V.",
+                "ref": "Book 02, Sec 05 (p. 40)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What is the maximum rating for the MS-10 VCF control input?",
+                "back": "The VCF control input is rated for ±5V (listed as 2 octaves per volt). Never feed it voltages outside this range.",
+                "ref": "Book 02, Sec 02 (p. 36)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "How do Hz/V and V/oct pitch inputs differ?",
+                "back": "On a Hz/V input, frequency is proportional to voltage (doubling voltage = one octave), meaning cents vary per step. On a V/oct input, every semitone is a constant 1/12 volt step.",
+                "ref": "Book 02, Sec 04 (p. 39)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What trigger polarity is required for the SQ-10 and MS-10?",
+                "back": "The SQ-10 STEP and START/STOP jacks and the MS-10 trigger input use pull-to-ground (S-trig) polarity. External converters must use open-collector S-trig without pull-up.",
+                "ref": "Book 02, Sec 02 (p. 36)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What happens if you leave the SQ-10 clock free-running (unpatched STEP)?",
+                "back": "Timing wanders slightly between repetitions, creating organic variations. If timing becomes rigidly locked, the clock is likely slaved to an external source.",
+                "ref": "Book 02, Sec 05 (p. 40)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "How do you lock the SQ-10 sequence to a DAW grid?",
+                "back": "Slave the sequence by patching a converter clock output (set to S-trig) into the SQ-10 STEP jack, and set the mode selector to Stepped.",
+                "ref": "Book 02, Sec 10 (p. 72)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What is the function of the Multiple Trig Out?",
+                "back": "It fires a pulse with every step, and its width is set by the Duty knob.",
+                "ref": "Book 02, Sec 14 (p. 80)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What does a dark LED on the SQ-10 indicate when stopped?",
+                "back": "If the unit is stopped in a non-stepped mode, it is simply on standby. This is normal behaviour, not a fault.",
+                "ref": "Book 02, Sec 02 (p. 36)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What is Protocol P-01 used for?",
+                "back": "Free-Running Pitch Loop: used for a repeating 12-note figure (bassline/arpeggio) played by hardware off the grid.",
+                "ref": "Book 02, P-01 (p. 44)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "How do you set pitches in Stepped mode?",
+                "back": "Select Stepped mode, press STEP, and adjust the Channel A knobs one at a time while listening to the output. The LED indicates the current step being tuned.",
+                "ref": "Book 02, P-01 (p. 44)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What is Protocol P-02 used for?",
+                "back": "Rough-and-Fine Tuning: used when pitches must be set precisely by ear or deliberately detuned off the semitone grid using the analog mixer.",
+                "ref": "Book 02, P-02 (p. 46)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "How is the Analog Mixer configured in P-02?",
+                "back": "Patch Channel A (±5V) to IN 1 for rough tuning, and Channel B (±1V) to IN 2 for fine trimming. Take MIXER OUT to the MS-10 pitch input.",
+                "ref": "Book 02, P-02 (p. 46)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What does Protocol P-03 (Microtonal Scales) achieve?",
+                "back": "It generates scales outside 12-tone equal temperament, such as just intonation or quarter tones, by using Channel B to apply precise cent offsets to Channel A's base pitches.",
+                "ref": "Book 02, P-03 (p. 48)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What happens when you patch a Trig Out into RESET IN (P-07)?",
+                "back": "It shortens the sequence, returning it to step 1 after that specific step. For example, Trig Out 5 creates a 5-step loop for polymetric phasing.",
+                "ref": "Book 02, P-07 (p. 56)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What does Protocol P-05 (Warped Time) achieve?",
+                "back": "It organically pushes and pulls step spacing by patching Channel C into the clock's ÷2/V (lag) or ×2/V (rush) inputs.",
+                "ref": "Book 02, P-05 (p. 52)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What is the danger of sending too much voltage into ×2/V?",
+                "back": "Every 1V halves the step time. Sending 5V multiplies the base rate by 32, resulting in runaway, chaotic speeds.",
+                "ref": "Book 02, P-05 (p. 52)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What happens in a Self-Clocking Loop (P-06)?",
+                "back": "The sequence sets its own tempo. Raising Channel C knobs on the ×2/V input causes the loop to accelerate through specific steps and then recover every cycle.",
+                "ref": "Book 02, P-06 (p. 54)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "How do you set up 24-Step Series Mode (P-09)?",
+                "back": "Set mode selector to 1×24. Patch A OUT to MIXER IN 1 and B OUT to MIXER IN 2. The sequence will run through row A then row B before repeating.",
+                "ref": "Book 02, P-09 (p. 60)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What is the routing for Protocol P-10 (Stepped Filter on a Stem)?",
+                "back": "DAW stem feeds MS-10 Ext Signal In. SQ-10 Channel A drives the VCF cutoff, and Multiple Trig Out triggers the MS-10 EG to open the VCA.",
+                "ref": "Book 02, P-10 (p. 62)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What is the purpose of Protocol P-11 (Gated Pad)?",
+                "back": "To chop a sustained DAW pad into rhythmic pulses using the SQ-10's Multiple Trig Out to drive the MS-10's EG.",
+                "ref": "Book 02, P-11 (p. 64)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "Troubleshooting: Pitch jumps wildly when Channel B is nudged.",
+                "back": "The Channel B range switch is set to ±5V. Change it to ±1V to regain fine control over pitch modulation.",
+                "ref": "Book 02, Sec 15 (p. 82)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "Troubleshooting: The sequence runs once and then halts.",
+                "back": "The mode selector is set to One-time instead of Continuous.",
+                "ref": "Book 02, Sec 15 (p. 82)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "Troubleshooting: A polymeter loop (P-07) never realigns with the DAW track.",
+                "back": "The SQ-10 clock is free-running. To guarantee realignment at a specific interval, the SQ-10 must be slaved to the DAW via the STEP jack.",
+                "ref": "Book 02, Sec 15 (p. 82)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "Troubleshooting: Timbre remains static in Protocol P-08.",
+                "back": "Channel B is not correctly patched to the MS-10 VCF cutoff jack, or the knobs lack sufficient spread.",
+                "ref": "Book 02, Sec 15 (p. 82)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "How do you test if a fault is in the SQ-10 or the MS-10?",
+                "back": "Remove all SQ-10 cords and play the MS-10 alone. If it fails, the fault is the MS-10. If it works, meter the SQ-10 outputs to isolate the issue.",
+                "ref": "Book 02, Sec 15 (p. 83)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What does a round-trip latency measurement achieve (Section 10)?",
+                "back": "It provides a millisecond average used as a negative offset in the DAW to perfectly align printed Hardware Returns to the digital grid.",
+                "ref": "Book 02, Sec 10 (p. 72)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What is the RP-25 used for in this workflow?",
+                "back": "It is a browser-based reference tone generator that provides precise, continuous pitches and voltage readouts for ear-tuning the SQ-10's continuous knobs.",
+                "ref": "Book 02, App B (p. 88)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What is the cent offset for a just intonation major third?",
+                "back": "It is -13.7 cents (386.31 cents) compared to the 12-TET major third (400 cents).",
+                "ref": "Book 02, App A (p. 87)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "Why is documentation critical after completing an SQ-10 setup?",
+                "back": "The 36 continuous knobs do not recall their positions automatically. Photograph the panel and fill out a Session Log to ensure reproducibility.",
+                "ref": "Book 02, Sec 19 (p. 90)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What happens if you combine P-01, P-03, and P-05?",
+                "back": "You create a custom bassline (P-01) with just-intonation colour (P-03) that deliberately drags behind the grid on chosen steps (P-05).",
+                "ref": "Book 02, Sec 11 (p. 74)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "What is the Kenton Pro Solo used for in P-12?",
+                "back": "It bridges DAW MIDI to analogue CV/Gate, slaving the SQ-10 step advancement to MIDI note-on messages while passing pitch to the MS-10.",
+                "ref": "Book 02, P-12 (p. 66)"
+            },
+            {
+                "module": "SQ-10",
+                "front": "How do you calibrate Channel B to zero?",
+                "back": "Set every Channel B knob to its centre physical position and confirm an output of 0V on a voltmeter before applying microtonal offsets.",
+                "ref": "Book 02, P-02 (p. 46)"
+            },
+
+            // ==========================================
+            // BOOK 03: VC-10 VOCES EX MACHINA (31 Cards)
+            // ==========================================
+            {
+                "module": "VC-10",
+                "front": "Vocoder Anatomy: What are the two core signal roles?",
+                "back": "The <strong>modulator</strong> (voice) supplies spectral shape and articulation. The <strong>carrier</strong> supplies the actual pitch and tone that will be heard.",
+                "ref": "Book 03, Sec 01 (p. 97)"
+            },
+            {
+                "module": "VC-10",
+                "front": "What three carriers does the VC-10 provide?",
+                "back": "1. The built-in 32-key polyphonic keyboard. 2. The internal Noise Generator. 3. An External Signal (patched via the Ext Signal Input).",
+                "ref": "Book 03, Sec 01 (p. 96)"
+            },
+            {
+                "module": "VC-10",
+                "front": "What is the maximum rating for the Ext Signal Input?",
+                "back": "The maximum ceiling is 3Vp-p. Signals exceeding this must be attenuated to avoid distortion.",
+                "ref": "Book 03, Sec 04 (p. 102)"
+            },
+            {
+                "module": "VC-10",
+                "front": "How is the VC-10 pitch control scaled differently?",
+                "back": "It is scaled at 1/3 octave per volt, meaning one volt moves the pitch by a major third (400 cents). Standard 1 V/oct sequences will sound too small.",
+                "ref": "Book 03, Sec 07 (p. 105)"
+            },
+            {
+                "module": "VC-10",
+                "front": "What is the maximum rating for the Ext Pitch Control input?",
+                "back": "It accepts -3V to +3V, which equates to exactly ±1 octave (±1200 cents).",
+                "ref": "Book 03, Sec 07 (p. 105)"
+            },
+            {
+                "module": "VC-10",
+                "front": "How should a line-level DAW stem be sent to the Mic Input?",
+                "back": "The Mic Input is labelled -50 dB to 0 dB. A line-level signal is far too hot and must be heavily attenuated via a pad or re-amp box.",
+                "ref": "Book 03, Sec 04 (p. 102)"
+            },
+            {
+                "module": "VC-10",
+                "front": "What is the proper gain-staging target for the VC-10 Mic Level?",
+                "back": "Play the loudest part of the stem and raise Mic Level until the VU meter (with Meter Select set to MIC) peaks at 0 dB without passing it.",
+                "ref": "Book 03, Sec 06 (p. 104)"
+            },
+            {
+                "module": "VC-10",
+                "front": "How should you position a live microphone with the VC-10?",
+                "back": "Use a directional dynamic mic, keep it level with or behind the studio speakers, and point it away from them to prevent acoustic feedback.",
+                "ref": "Book 03, Sec 05 (p. 103)"
+            },
+            {
+                "module": "VC-10",
+                "front": "What does the Out Bal knob do?",
+                "back": "It blends the pure vocoded signal (anticlockwise at SIMULATOR) with the unprocessed direct microphone signal (clockwise).",
+                "ref": "Book 03, Sec 03 (p. 100)"
+            },
+            {
+                "module": "VC-10",
+                "front": "What does the Input Sig Bal knob control?",
+                "back": "It mixes the internal carrier sources, blending between the keyboard (KBD, anticlockwise) and the noise generator (clockwise).",
+                "ref": "Book 03, Sec 03 (p. 100)"
+            },
+            {
+                "module": "VC-10",
+                "front": "How do you read the VC-10 VU meter?",
+                "back": "Meter Select to the right shows Mic Level. Meter Select to the left shows the carrier level (keyboard or external signal).",
+                "ref": "Book 03, Sec 03 (p. 100)"
+            },
+            {
+                "module": "VC-10",
+                "front": "What does the Tune knob range cover?",
+                "back": "The Tune knob shifts the keyboard pitch by ±100 cents. Centred is standard A = 440 Hz.",
+                "ref": "Book 03, Sec 03 (p. 100)"
+            },
+            {
+                "module": "VC-10",
+                "front": "What is Protocol V-01 used for?",
+                "back": "Speech over Keys: used when a spoken or sung stem should drive a chord played on the VC-10 keyboard.",
+                "ref": "Book 03, P-01 (p. 110)"
+            },
+            {
+                "module": "VC-10",
+                "front": "What is Protocol V-02 (Noise Carrier) used for?",
+                "back": "Turn Input Sig Bal fully clockwise to NOISE to replace chord lines with broadband energy. This removes pitch entirely, ideal for whispered speech and sharp consonants.",
+                "ref": "Book 03, P-02 (p. 112)"
+            },
+            {
+                "module": "VC-10",
+                "front": "What is Protocol V-03 (MS-10 as Carrier)?",
+                "back": "Route the MS-10 Signal Out to the VC-10 Ext Signal Input. The MS-10 oscillator and filter now provide the tone that the voice shapes.",
+                "ref": "Book 03, P-03 (p. 114)"
+            },
+            {
+                "module": "VC-10",
+                "front": "Do Vibrato and Accent Bend affect external carriers?",
+                "back": "No, they only act on the internal tone generators. They add nothing to an MS-10 or DAW stem carrier.",
+                "ref": "Book 03, Sec 03 (p. 100)"
+            },
+            {
+                "module": "VC-10",
+                "front": "How do you set up V-04 (Talking Drums)?",
+                "back": "Route a drum bus stem to the Mic Input, and a sustained pad to the Ext Signal Input. The pad energy appears only on the drum hits, effectively chopping the pad.",
+                "ref": "Book 03, P-04 (p. 116)"
+            },
+            {
+                "module": "VC-10",
+                "front": "How do you patch V-05 (Sequenced Vocoder)?",
+                "back": "Patch SQ-10 Channel A (±1V range) to the Ext Pitch Control. This steps the vocoder's pitch automatically while a chord is held.",
+                "ref": "Book 03, P-05 (p. 118)"
+            },
+            {
+                "module": "VC-10",
+                "front": "What does Protocol V-06 (Ensemble and Accent Bend) achieve?",
+                "back": "It turns a single mechanical voice into a lively small choir by activating the chorus and adding a slight pitch waver to key strikes.",
+                "ref": "Book 03, P-06 (p. 120)"
+            },
+            {
+                "module": "VC-10",
+                "front": "Why should you blend the vocoded return with the dry stem in the DAW (V-07)?",
+                "back": "Blending in the DAW keeps parts separate, allows independent processing, and lets you compensate for hardware latency to prevent phasing.",
+                "ref": "Book 03, P-07 (p. 122)"
+            },
+            {
+                "module": "VC-10",
+                "front": "What is Protocol V-09 (DAW Stem as Carrier)?",
+                "back": "Send a mono, harmonically rich synth or guitar stem into the Ext Signal Input. The speech stem's rhythm and tone are carved out of the DAW stem.",
+                "ref": "Book 03, P-09 (p. 126)"
+            },
+            {
+                "module": "VC-10",
+                "front": "Troubleshooting: The return sounds muffled.",
+                "back": "The carrier lacks upper harmonics (energy in the high frequencies). A vocoder can only output frequencies that are present in the carrier.",
+                "ref": "Book 03, Sec 10 (p. 129)"
+            },
+            {
+                "module": "VC-10",
+                "front": "Troubleshooting: Consonants like S and T are weak or missing.",
+                "back": "Tonal carriers lack high-frequency noise. Nudge the Input Sig Bal slightly toward NOISE to blend sibilance back into the carrier.",
+                "ref": "Book 03, Sec 10 (p. 129)"
+            },
+            {
+                "module": "VC-10",
+                "front": "Troubleshooting: The pitch clashes with the track and Tune won't reach it.",
+                "back": "The Tune knob only covers ±100 cents. Transpose the track in the DAW instead, as the Octave switch only shifts by whole octaves.",
+                "ref": "Book 03, P-06 (p. 120)"
+            },
+            {
+                "module": "VC-10",
+                "front": "How do you prove the VC-10 return is clean before a take?",
+                "back": "With the modulator stem silent and keys held, nothing should sound. If you hear anything, the mic path is leaking or the stem is not truly silent.",
+                "ref": "Book 03, Sec 06 (p. 104)"
+            },
+            {
+                "module": "VC-10",
+                "front": "Why lightly compress a speech stem before vocoding?",
+                "back": "Mic Level is set by the loudest peak. If the stem has large swings, quiet words fall away. Compression helps even out the envelope so all words survive.",
+                "ref": "Book 03, Sec 04 (p. 103)"
+            },
+            {
+                "module": "VC-10",
+                "front": "Why keep sibilance on the stem instead of de-essing?",
+                "back": "Consonant detail lives in the upper bands. Heavy de-essing or low-pass filtering removes the very frequencies the vocoder needs to articulate speech clearly.",
+                "ref": "Book 03, Sec 04 (p. 103)"
+            },
+            {
+                "module": "VC-10",
+                "front": "What does the Frequency Response Simulator do?",
+                "back": "It is Korg's name for the vocoder block containing 20 analysis and 20 synthesis bands that impose the mic's tonal character onto the carrier.",
+                "ref": "Book 03, Sec 01 (p. 97)"
+            },
+            {
+                "module": "VC-10",
+                "front": "What is the AV-20 in the context of the studio manual?",
+                "back": "It is a browser-based, 20-band vocoder emulator built by Voltage & Wave for A/B testing principles without waiting for hardware warm-up.",
+                "ref": "Book 03, Emulation (p. 132)"
+            },
+            {
+                "module": "VC-10",
+                "front": "What is the 'Neutral Start' state for the VC-10?",
+                "back": "Accent Bend 0, Vibrato 0, Ensemble off, Pitch Wheel centred, Tune centred, Octave Normal, and Ext Pitch Control at 0.",
+                "ref": "Book 03, Sec 06 (p. 104)"
+            },
+            {
+                "module": "VC-10",
+                "front": "How do you test if a fault is the VC-10 or the external carrier?",
+                "back": "Remove external cords and use the keyboard carrier (V-01). If it works, the fault is the external signal routing; if it fails, it is the VC-10.",
+                "ref": "Book 03, Sec 10 (p. 129)"
+            }
+        ];
+
+        let currentDeck = [...masterDeck];
+        let currentIndex = 0;
+        let isIndexView = false;
+
+        const reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+        const FLIP_MS = reduceMotion ? 0 : 600;
+        let isFlipped = false;
+        let flipEndsAt = 0;      
+        let flipTimer = null;
+        let pendingBack = null;  
+        let pendingRef = null;
+
+        const container = document.getElementById('card-container');
+        const frontFace = document.getElementById('front-face');
+        const backFace = document.getElementById('back-face');
+        const frontText = document.getElementById('front-text');
+        const frontTag = document.getElementById('front-tag');
+        const backText = document.getElementById('back-text');
+        const backRef = document.getElementById('back-ref');
+        const progressText = document.getElementById('deck-progress');
+        const moduleDisplay = document.getElementById('module-display');
+
+        const cardInterface = document.getElementById('card-interface');
+        const indexInterface = document.getElementById('index-interface');
+        const indexBtnText = document.getElementById('index-btn-text');
+        const indexToggleBtn = document.getElementById('toggle-index-btn');
+        const indexList = document.getElementById('index-list');
+
+        const pad = (n) => String(n).padStart(2, '0');
+
+        function setModule(moduleName) {
+            document.querySelectorAll('.module-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-pressed', 'false');
+            });
+            const activeBtn = document.getElementById(`btn-${moduleName}`);
+            activeBtn.classList.add('active');
+            activeBtn.setAttribute('aria-pressed', 'true');
+            moduleDisplay.innerText = moduleName === 'ALL' ? 'ALL MODULES' : `BOOK: ${moduleName}`;
+
+            currentDeck = moduleName === 'ALL' ? [...masterDeck] : masterDeck.filter(card => card.module === moduleName);
+
+            currentIndex = 0;
+            loadCard(currentIndex);
+            buildIndex();
+        }
+
+        function showBack(html, refHtml) {
+            backText.innerHTML = html;
+            backRef.innerHTML = refHtml;
+            backFace.scrollTop = 0;
+        }
+
+        function applyPendingBack() {
+            clearTimeout(flipTimer);
+            flipTimer = null;
+            if (pendingBack !== null) {
+                showBack(pendingBack, pendingRef);
+                pendingBack = null;
+                pendingRef = null;
+            }
+        }
+
+        function setFlipped(flipped) {
+            if (flipped === isFlipped) return;
+            isFlipped = flipped;
+            flipEndsAt = Date.now() + FLIP_MS;
+            container.classList.toggle('is-flipped', flipped);
+            frontFace.setAttribute('aria-hidden', String(flipped));
+            backFace.setAttribute('aria-hidden', String(!flipped));
+        }
+
+        function loadCard(index) {
+            const card = currentDeck[index];
+            if (!card) return;
+
+            clearTimeout(flipTimer);
+            flipTimer = null;
+            pendingBack = null;
+            pendingRef = null;
+
+            frontTag.textContent = `[ ${card.module} ]`;
+            frontText.innerHTML = formatText(card.front);
+            progressText.textContent = `CARD ${pad(index + 1)} // ${pad(currentDeck.length)}`;
+
+            setFlipped(false);
+            const wait = flipEndsAt - Date.now();
+            if (wait > 0) {
+                pendingBack = formatText(card.back);
+                pendingRef = card.ref || "Omnibus Manual";
+                flipTimer = setTimeout(applyPendingBack, wait);
+            } else {
+                showBack(formatText(card.back), card.ref || "Omnibus Manual");
+            }
+        }
+
+        function flipCard() {
+            if (!isFlipped) applyPendingBack(); 
+            setFlipped(!isFlipped);
+        }
+
+        function nextCard() {
+            if (isIndexView || currentDeck.length === 0) return;
+            currentIndex = (currentIndex + 1) % currentDeck.length;
+            loadCard(currentIndex);
+        }
+
+        function prevCard() {
+            if (isIndexView || currentDeck.length === 0) return;
+            currentIndex = (currentIndex - 1 + currentDeck.length) % currentDeck.length;
+            loadCard(currentIndex);
+        }
+
+        function buildIndex() {
+            indexList.innerHTML = '';
+            currentDeck.forEach((card, i) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = "flex items-center gap-4 w-full text-left p-4 border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800 hover:border-amber-500/50 transition-colors group";
+                btn.onclick = () => jumpToCard(i);
+
+                btn.innerHTML = `
+                    <span class="font-mono text-amber-500 text-sm font-bold opacity-70 group-hover:opacity-100">${pad(i + 1)}</span>
+                    <span class="font-mono text-[10px] text-zinc-500 border border-zinc-700 px-2 py-0.5 shrink-0 w-14 text-center">${card.module}</span>
+                    <span class="font-sans font-semibold text-zinc-300 text-sm group-hover:text-white line-clamp-1">${formatText(card.front)}</span>
+                `;
+                indexList.appendChild(btn);
+            });
+        }
+
+        function toggleIndex() {
+            isIndexView = !isIndexView;
+            indexToggleBtn.setAttribute('aria-expanded', String(isIndexView));
+            if (isIndexView) {
+                cardInterface.classList.add('hidden');
+                indexInterface.classList.remove('hidden');
+                indexBtnText.innerText = "RETURN TO DECK";
+            } else {
+                indexInterface.classList.add('hidden');
+                cardInterface.classList.remove('hidden');
+                indexBtnText.innerText = "DATA INDEX";
+            }
+        }
+
+        function jumpToCard(index) {
+            currentIndex = index;
+            loadCard(currentIndex);
+            toggleIndex();
+        }
+
+        container.addEventListener('click', () => {
+            if (window.getSelection && window.getSelection().toString()) return;
+            flipCard();
+        });
+
+        const onNavClick = (fn) => (e) => {
+            fn();
+            if (e.detail > 0) container.focus({ preventScroll: true });
+        };
+        document.getElementById('next-btn').addEventListener('click', onNavClick(nextCard));
+        document.getElementById('prev-btn').addEventListener('click', onNavClick(prevCard));
+
+        document.addEventListener('keydown', (e) => {
+            if (isIndexView || e.altKey || e.ctrlKey || e.metaKey) return;
+            const onControl = e.target.closest && e.target.closest('button, a, input, select, textarea');
+            switch (e.code) {
+                case 'ArrowRight':
+                    nextCard();
+                    break;
+                case 'ArrowLeft':
+                    prevCard();
+                    break;
+                case 'ArrowUp':
+                case 'ArrowDown':
+                    e.preventDefault();
+                    flipCard();
+                    break;
+                case 'Space':
+                case 'Enter':
+                    if (onControl) return; 
+                    e.preventDefault();
+                    flipCard();
+                    break;
+            }
+        });
+
+        setModule('ALL');
+    </script>
+</body>
+</html>
