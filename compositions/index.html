@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VOLTAGE & WAVE // COMPOSITIONS</title>
+    <title>VOLTAGE &amp; WAVE // COMPOSITIONS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,6 +22,7 @@
                         rose: { 400: '#fb7185', 500: '#f43f5e', 600: '#e11d48' },
                         violet: { 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed' },
                         emerald: { 400: '#34d399', 500: '#10b981', 600: '#059669' },
+                        teal: { 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488' },
                         zinc: { 850: '#202022', 900: '#18181b', 950: '#09090b' }
                     }
                 }
@@ -60,7 +61,7 @@
                         <path d="M2 12h4v-7h6v14h6v-7h4"/>
                     </svg>
                     <div>
-                        <span class="font-mono font-bold text-white group-hover:text-amber-400 transition-colors tracking-widest text-sm sm:text-base">VOLTAGE & WAVE</span>
+                        <span class="font-mono font-bold text-white group-hover:text-amber-400 transition-colors tracking-widest text-sm sm:text-base">VOLTAGE &amp; WAVE</span>
                         <span class="hidden sm:inline-block font-mono text-[10px] text-amber-500 border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 uppercase tracking-widest ml-2">Compositions</span>
                     </div>
                 </a>
@@ -78,13 +79,70 @@
         <div class="fixed inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="mb-12">
-                <h1 class="font-mono text-3xl font-bold text-white uppercase tracking-widest mb-4">Compositions & Showcases</h1>
+                <h1 class="font-mono text-3xl font-bold text-white uppercase tracking-widest mb-4">Compositions &amp; Showcases</h1>
                 <p class="text-zinc-400 max-w-2xl leading-relaxed">
-                    An archive of original works composed specifically to demonstrate the hardware protocols detailed in the <a href="https://www.amazon.co.uk/dp/B0HPNXKYZ9/ref=tmm_pap_swatch_0?th=1"><span class="text-amber-400 font-medium">Voltage, Sequence & Speech</span></a> studio manual series. Each entry includes interactive DAW showcases and engraved PDF scores.
+                    An archive of original works composed specifically to demonstrate the hardware protocols detailed in the <a href="https://www.amazon.co.uk/dp/B0HPNXKYZ9/ref=tmm_pap_swatch_0?th=1"><span class="text-amber-400 font-medium">Voltage, Sequence &amp; Speech</span></a> studio manual series. Each entry includes interactive DAW showcases and engraved PDF scores.
                 </p>
             </div>
 
             <div class="grid gap-6">
+                <!-- CIRCUIT SUITE -->
+                <div class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col md:flex-row hover:border-teal-500/50 transition-all group overflow-hidden">
+                    <div class="md:w-1/3 bg-zinc-950/50 p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-zinc-800 relative">
+                        <div class="absolute inset-0 bg-synth-grid opacity-20 pointer-events-none"></div>
+                        <div class="w-32 h-32 relative z-10 group-hover:scale-110 transition-transform duration-500">
+                            <!-- Horizontal Patch Bay & Twin 1/4" Plugs SVG -->
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" class="w-full h-full text-teal-400 drop-shadow-[0_0_8px_rgba(45,212,191,0.8)]">
+                                <!-- Horizontal Patch Bay Chassis Bar -->
+                                <rect x="12" y="18" width="76" height="14" rx="2" stroke-width="2.5"/>
+                                <circle cx="32" cy="25" r="3" fill="currentColor"/>
+                                <circle cx="50" cy="25" r="2" opacity="0.5"/>
+                                <circle cx="68" cy="25" r="3" fill="currentColor"/>
+                                <!-- Left 1/4" Plug Shaft & Barrel -->
+                                <line x1="32" y1="32" x2="32" y2="39" stroke-width="3"/>
+                                <rect x="26" y="39" width="12" height="18" rx="1.5" stroke-width="2.5"/>
+                                <!-- Right 1/4" Plug Shaft & Barrel -->
+                                <line x1="68" y1="32" x2="68" y2="39" stroke-width="3"/>
+                                <rect x="62" y="39" width="12" height="18" rx="1.5" stroke-width="2.5"/>
+                                <!-- Symmetrical U-Loop Patch Cable -->
+                                <path d="M 32 57 C 32 86, 68 86, 68 57" stroke-width="3" stroke-linecap="round"/>
+                                <path d="M 32 57 C 32 77, 68 77, 68 57" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.65"/>
+                                <!-- Centre CV Loop Node -->
+                                <circle cx="50" cy="79" r="3.5" fill="currentColor"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="md:w-2/3 p-6 flex flex-col justify-center">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="w-2 h-2 rounded-full bg-teal-400 shadow-[0_0_8px_rgba(45,212,191,0.8)]"></span>
+                            <h2 class="font-mono text-xl font-bold text-white uppercase tracking-widest">Circuit Suite</h2>
+                        </div>
+                        <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide leading-relaxed">
+                            A 96-bar French Touch suite at 124 BPM, uniting funky MS-10 slap-bass octaves, SQ-10 polymetric hooks, and a 20-band VC-10 vocoder climax.
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div class="flex flex-col gap-3">
+                                <h3 class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">Interactive</h3>
+                                <a href="https://voltageandwave.co.uk/compositions/daft_v0_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-teal-400 transition-colors flex items-center gap-2 group/link">
+                                    <svg class="w-3 h-3 group-hover/link:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    DAW Demo
+                                </a>
+                            </div>
+                            <div class="flex flex-col gap-3">
+                                <h3 class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">Engraved Scores (PDF)</h3>
+                                <span class="font-mono text-xs text-zinc-500 flex items-center gap-2 cursor-not-allowed select-none" title="Score engraving in progress">
+                                    <svg class="w-3 h-3 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    Master Musical Score <span class="text-[9px] uppercase tracking-widest border border-zinc-800 bg-zinc-950 px-1.5 py-0.5 text-zinc-500">Forthcoming</span>
+                                </span>
+                                <span class="font-mono text-xs text-zinc-500 flex items-center gap-2 cursor-not-allowed select-none" title="Parts book engraving in progress">
+                                    <svg class="w-3 h-3 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    Performing Parts Book <span class="text-[9px] uppercase tracking-widest border border-zinc-800 bg-zinc-950 px-1.5 py-0.5 text-zinc-500">Forthcoming</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- MORODER POLYMETER -->
                 <div class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col md:flex-row hover:border-emerald-500/50 transition-all group overflow-hidden">
                     <div class="md:w-1/3 bg-zinc-950/50 p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-zinc-800 relative">
