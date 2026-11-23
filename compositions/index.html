@@ -91,26 +91,32 @@
                     <div class="md:w-1/3 bg-zinc-950/50 p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-zinc-800 relative">
                         <div class="absolute inset-0 bg-synth-grid opacity-20 pointer-events-none"></div>
                         <div class="w-32 h-32 relative z-10 group-hover:scale-110 transition-transform duration-500">
-                            <!-- Concept D: Analog VU Needle & Stereo Carrier SVG -->
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" class="w-full h-full text-teal-400 drop-shadow-[0_0_8px_rgba(45,212,191,0.8)]">
-                                <!-- Meter Housing -->
-                                <rect x="14" y="18" width="72" height="50" rx="4" stroke-width="2.75"/>
+                            <!-- Korg VC-10 Input VU Level Meter SVG -->
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" fill="none" stroke="currentColor" stroke-width="2.5" class="w-full h-full text-teal-400 drop-shadow-[0_0_8px_rgba(45,212,191,0.8)]">
+                                <!-- Outer VU Meter Bezel -->
+                                <rect x="10" y="18" width="80" height="58" rx="6" stroke-width="3"/>
+                                <!-- Inner Scale Window -->
+                                <rect x="16" y="24" width="68" height="36" rx="2" stroke-width="1.5" opacity="0.45"/>
                                 <!-- Curved VU Scale Arc -->
-                                <path d="M 24 48 Q 50 28 76 48" stroke-width="2" opacity="0.65"/>
-                                <!-- Redline Overload Segment -->
-                                <path d="M 62 39 Q 70 42 76 48" stroke-width="3.5"/>
-                                <!-- Scale Ticks -->
-                                <line x1="32" y1="42" x2="30" y2="38" stroke-width="2"/>
-                                <line x1="50" y1="36" x2="50" y2="31" stroke-width="2"/>
-                                <line x1="68" y1="42" x2="70" y2="38" stroke-width="2"/>
-                                <!-- Sweeping VU Needle -->
-                                <line x1="50" y1="62" x2="67" y2="36" stroke-width="2.75" stroke-linecap="round"/>
-                                <circle cx="50" cy="62" r="3.5" fill="currentColor"/>
-                                <!-- Bottom Balanced Out Terminals -->
-                                <line x1="34" y1="68" x2="34" y2="82" stroke-width="2.5"/>
-                                <line x1="66" y1="68" x2="66" y2="82" stroke-width="2.5"/>
-                                <circle cx="34" cy="84" r="3.5" fill="currentColor"/>
-                                <circle cx="66" cy="84" r="3.5" fill="currentColor"/>
+                                <path d="M 22 50 A 38 38 0 0 1 78 50" stroke-width="2" stroke-linecap="round" opacity="0.75"/>
+                                <!-- Overload (+3 dB) Heavy Arc Segment -->
+                                <path d="M 61 38.5 A 38 38 0 0 1 78 50" stroke-width="4" stroke-linecap="round"/>
+                                <!-- Radial Calibration Ticks -->
+                                <line x1="25" y1="47" x2="21" y2="43" stroke-width="2" stroke-linecap="round"/>
+                                <line x1="36" y1="39" x2="34" y2="34" stroke-width="2" stroke-linecap="round"/>
+                                <line x1="50" y1="36" x2="50" y2="30" stroke-width="2.5" stroke-linecap="round"/>
+                                <line x1="64" y1="39" x2="66" y2="34" stroke-width="2" stroke-linecap="round"/>
+                                <line x1="75" y1="47" x2="79" y2="43" stroke-width="2.5" stroke-linecap="round"/>
+                                <!-- Sweeping Needle -->
+                                <line x1="50" y1="68" x2="71" y2="35" stroke-width="3" stroke-linecap="round"/>
+                                <!-- Needle Pivot Jewel -->
+                                <circle cx="50" cy="68" r="4.5" fill="currentColor"/>
+                                <circle cx="50" cy="68" r="8" stroke-width="1.5" opacity="0.4"/>
+                                <!-- Bottom Terminal Posts -->
+                                <line x1="32" y1="76" x2="32" y2="87" stroke-width="2.5" stroke-linecap="round"/>
+                                <circle cx="32" cy="89" r="3" fill="currentColor"/>
+                                <line x1="68" y1="76" x2="68" y2="87" stroke-width="2.5" stroke-linecap="round"/>
+                                <circle cx="68" cy="89" r="3" fill="currentColor"/>
                             </svg>
                         </div>
                     </div>
