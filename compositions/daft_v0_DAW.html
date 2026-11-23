@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CIRCUIT SUITE — VOLTAGE &amp; WAVE</title>
+  <title>CIRCUIT SUITE // VOLTAGE &amp; WAVE</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,9 +16,9 @@
             fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
             gridTemplateColumns: { '16': 'repeat(16, minmax(0, 1fr))' },
             colors: {
-              gold: { 300: '#fcd34d', 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' },
-              plum: { 200: '#e9d5ff', 300: '#d8b4fe', 400: '#c084fc', 500: '#a855f7', 600: '#9333ea', 700: '#7e22ce', 900: '#581c87', 950: '#3b0764' },
-              midnight: { 850: '#13111c', 900: '#0b0914', 950: '#05040a' }
+              gold: { 300: '#67e8f9', 400: '#22d3ee', 500: '#06b6d4', 600: '#0891b2' },
+              plum: { 200: '#e2e8f0', 300: '#cbd5e1', 400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155', 900: '#1e293b', 950: '#0f172a' },
+              midnight: { 850: '#131c28', 900: '#0c121a', 950: '#06090e' }
             }
           }
         }
@@ -26,28 +26,28 @@
     }
   </script>
   <style>
-    body { background-color: #05040a; color: #e2e8f0; overflow-x: hidden; }
+    body { background-color: #06090e; color: #e2e8f0; overflow-x: hidden; }
     .scanlines::before {
       content: " "; display: block; position: fixed; inset: 0;
       background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.20) 50%),
-                  linear-gradient(90deg, rgba(245, 158, 11, 0.03), rgba(245, 158, 11, 0.01), rgba(168, 85, 247, 0.03));
+                  linear-gradient(90deg, rgba(6, 182, 212, 0.03), rgba(255, 255, 255, 0.005), rgba(249, 115, 22, 0.025));
       z-index: 50; background-size: 100% 2px, 3px 100%; pointer-events: none; opacity: 0.4;
     }
     .bg-synth-grid {
-      background-image: linear-gradient(to right, rgba(245, 158, 11, 0.06) 1px, transparent 1px),
-                        linear-gradient(to bottom, rgba(168, 85, 247, 0.04) 1px, transparent 1px);
+      background-image: linear-gradient(to right, rgba(34, 211, 238, 0.06) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
       background-size: 40px 40px;
     }
-    .glow-text { text-shadow: 0 0 14px rgba(245, 158, 11, 0.7); }
-    input[type="range"].vw-slider { -webkit-appearance: none; appearance: none; background: #3b0764; height: 4px; border-radius: 2px; outline: none; }
-    input[type="range"].vw-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 12px; height: 16px; background: #f59e0b; border: 1px solid #05040a; border-radius: 2px; cursor: pointer; box-shadow: 0 0 8px rgba(245, 158, 11, 0.6); }
-    input[type="range"].vw-slider::-moz-range-thumb { width: 12px; height: 16px; background: #f59e0b; border: 1px solid #05040a; border-radius: 2px; cursor: pointer; }
+    .glow-text { text-shadow: 0 0 14px rgba(34, 211, 238, 0.72); }
+    input[type="range"].vw-slider { -webkit-appearance: none; appearance: none; background: #1e293b; height: 4px; border-radius: 2px; outline: none; }
+    input[type="range"].vw-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 12px; height: 16px; background: #06b6d4; border: 1px solid #06090e; border-radius: 2px; cursor: pointer; box-shadow: 0 0 8px rgba(34, 211, 238, 0.72); }
+    input[type="range"].vw-slider::-moz-range-thumb { width: 12px; height: 16px; background: #06b6d4; border: 1px solid #06090e; border-radius: 2px; cursor: pointer; }
     .score-note { transition: transform 0.05s ease, filter 0.05s ease, box-shadow 0.05s ease; }
-    .score-note.active { filter: brightness(1.3); transform: scaleY(1.05); box-shadow: 0 0 12px var(--note-glow, rgba(245, 158, 11, 0.8)); z-index: 15; }
+    .score-note.active { filter: brightness(1.3); transform: scaleY(1.05); box-shadow: 0 0 12px var(--note-glow, rgba(34, 211, 238, 0.72)); z-index: 15; }
     ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: #05040a; }
-    ::-webkit-scrollbar-thumb { background: #581c87; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+    ::-webkit-scrollbar-track { background: #06090e; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
   </style>
 </head>
 <body class="antialiased relative selection:bg-gold-500 selection:text-midnight-950 flex flex-col min-h-screen">
@@ -65,7 +65,7 @@
             <div>
               <div class="flex items-center gap-2">
                 <span class="font-mono font-bold text-white tracking-widest text-sm sm:text-base">VOLTAGE &amp; WAVE</span>
-                <span class="hidden sm:inline-block font-mono text-[10px] text-gold-500 border border-gold-500/30 bg-gold-500/10 px-2 py-0.5 uppercase tracking-widest">Paris Circuit // Roulé Suite (03:06)</span>
+                <span class="hidden sm:inline-block font-mono text-[10px] text-gold-500 border border-gold-500/30 bg-gold-500/10 px-2 py-0.5 uppercase tracking-widest">Circuit Suite (03:06)</span>
               </div>
               <p class="font-mono text-[10px] text-plum-400 uppercase tracking-widest">MS-10 · SQ-10 · VC-10 // 124 BPM // F#m ↔ Dm // 96 BARS</p>
             </div>
@@ -100,7 +100,7 @@
 
         <!-- Transport Controls -->
         <div class="flex flex-wrap items-center gap-2 font-mono text-xs">
-          <button id="playBtn" class="inline-flex items-center gap-1.5 bg-gold-500 hover:bg-gold-400 text-midnight-950 px-4 py-2 font-bold uppercase tracking-wider rounded-sm transition-all shadow-[0_0_15px_rgba(245,158,11,0.35)] cursor-pointer">
+          <button id="playBtn" class="inline-flex items-center gap-1.5 bg-gold-500 hover:bg-gold-400 text-midnight-950 px-4 py-2 font-bold uppercase tracking-wider rounded-sm transition-all shadow-[0_0_15px_rgba(6,182,212,0.35)] cursor-pointer">
             <span id="playIcon">▶</span> <span id="playLabel">Play</span>
           </button>
           <button id="stopBtn" class="inline-flex items-center gap-1.5 bg-midnight-900 hover:bg-midnight-850 border border-plum-900 text-plum-300 px-3 py-2 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none" disabled>
@@ -123,7 +123,7 @@
         <div class="mb-4 px-3 py-2 rounded-sm bg-midnight-950 border border-gold-500/30 flex items-start sm:items-center justify-between gap-2.5 font-mono text-[11px] text-plum-300">
           <div class="flex items-start sm:items-center gap-2.5">
             <span class="text-gold-400 font-bold uppercase shrink-0">[1978 Studio Standard Suite — 03:06]</span>
-            <span>Full-length 96-bar composition and browser-based software emulation of studio techniques from the Voltage & Wave books. It does not control the original Korg hardware..</span>
+            <span>Full-length 96-bar composition and browser-based software emulation of studio techniques from the Voltage &amp; Wave books. It does not control the original Korg hardware..</span>
           </div>
           <span class="hidden xl:inline-block text-gold-400 font-bold shrink-0">96 BARS · 03:05.8</span>
         </div>
@@ -132,7 +132,7 @@
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-gold-500 animate-pulse"></span>
-              <h1 class="font-mono text-xs sm:text-sm font-bold text-white uppercase tracking-widest">Paris Circuit // Roulé Suite — 6-Movement Full Arrangement</h1>
+              <h1 class="font-mono text-xs sm:text-sm font-bold text-white uppercase tracking-widest">Circuit Suite — 6-Movement Full Arrangement</h1>
             </div>
             <div id="protocolCueBanner" class="mt-2.5 flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] bg-midnight-950 border border-midnight-850 text-plum-200 px-3 py-1.5 rounded-sm">
               <div class="flex flex-col gap-0.5 min-w-0 flex-1">
@@ -159,12 +159,12 @@
             <span class="text-cyan-400 font-bold block">BOOK I // P-01 &amp; P-02</span>
             <span class="text-plum-300">Phat MS-10 Funk &amp; Slap Bass</span>
           </button>
-          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="16" data-proto-note="Book II P-07 &amp; Book I P-08 (Bars 17–32 — II. Orbital Hook &amp; Bars 65–80 — V. Roulé Bridge): SQ-10 TRIG OUT -> RESET IN polymetric call-and-response hook with MS-10 Portamento glides, modulating from F# Minor into D Minor / Dorian (Dm9 -> Gm7 -> Bbmaj7 -> A7#9) in Movement V." class="text-left bg-midnight-950 border border-midnight-850 hover:border-green-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
-            <span class="text-green-400 font-bold block">BOOK II // P-07 &amp; P-08</span>
+          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="16" data-proto-note="Book II P-07 &amp; Book I P-08 (Bars 17–32 — II. Orbital Hook &amp; Bars 65–80 — V. Roulé Bridge): SQ-10 TRIG OUT -> RESET IN polymetric call-and-response hook with MS-10 Portamento glides, modulating from F# Minor into D Minor / Dorian (Dm9 -> Gm7 -> Bbmaj7 -> A7#9) in Movement V." class="text-left bg-midnight-950 border border-midnight-850 hover:border-emerald-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-emerald-400 font-bold block">BOOK II // P-07 &amp; P-08</span>
             <span class="text-plum-300">SQ-10 Hook &amp; D Dorian Bridge</span>
           </button>
-          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="32" data-proto-note="Book III V-06 &amp; Book I P-03 (Bars 33–48 — III. Chrome Dream): Vinyl-loop lowpass filter breakdown—smoothly opening the Korg35 VCF across gated VC-10 Ensemble chords &amp; V-02 white-noise sweeps into a Bar 47–48 snare build &amp; beat-4 kick drop." class="text-left bg-midnight-950 border border-midnight-850 hover:border-purple-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
-            <span class="text-purple-400 font-bold block">BOOK III // V-06 &amp; P-03</span>
+          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="32" data-proto-note="Book III V-06 &amp; Book I P-03 (Bars 33–48 — III. Chrome Dream): Vinyl-loop lowpass filter breakdown—smoothly opening the Korg35 VCF across gated VC-10 Ensemble chords &amp; V-02 white-noise sweeps into a Bar 47–48 snare build &amp; beat-4 kick drop." class="text-left bg-midnight-950 border border-midnight-850 hover:border-slate-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-slate-300 font-bold block">BOOK III // V-06 &amp; P-03</span>
             <span class="text-plum-300">VC-10 Ensemble &amp; Filter Sweep</span>
           </button>
           <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="48" data-proto-note="Book III V-01, V-02 &amp; V-07 (Bars 49–64 — IV. Voltage Circuit &amp; Bars 81–96 — VI. High Voltage Finale): VC-10 20-Band Analog Vocoder (125 Hz – 8 kHz filter bank) drives the F#2 -> F#2 -> A2 -> B2 -> C#3 -> A2 ('RO-BOT-HU-MAN-WRL') climax riff over the full Korg trio." class="text-left bg-midnight-950 border border-midnight-850 hover:border-orange-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
@@ -283,7 +283,7 @@
               <button type="button" data-rec-mode="ALL" class="rec-mode-btn px-2.5 py-1 rounded-sm bg-gold-500/20 text-gold-400 font-bold uppercase cursor-pointer transition-colors">Master + Stems</button>
               <button type="button" data-rec-mode="STEMS" class="rec-mode-btn px-2.5 py-1 rounded-sm text-plum-400 hover:text-white uppercase cursor-pointer transition-colors">Stems Only</button>
             </div>
-            <button type="button" id="recLiveBtn" class="inline-flex items-center gap-1.5 bg-red-600 hover:bg-red-500 text-white px-3.5 py-1.5 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer shadow-[0_0_12px_rgba(220,38,38,0.35)]">
+            <button type="button" id="recLiveBtn" class="inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-400 text-midnight-950 px-3.5 py-1.5 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer shadow-[0_0_12px_rgba(249,115,22,0.4)]">
               <span id="recLiveIcon">●</span> <span id="recLiveLabel">Rec Live</span>
             </button>
             <button type="button" id="printFullBtn" class="inline-flex items-center gap-1.5 bg-midnight-950 hover:bg-midnight-900 border border-gold-500/50 text-gold-400 px-3 py-1.5 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">⚡ Print 96-Bar Song</button>
@@ -312,7 +312,7 @@
               <button type="button" id="downloadAllWavBtn" disabled class="px-3 py-1 rounded-sm bg-plum-500/20 border border-plum-500/50 text-plum-300 disabled:opacity-30 disabled:pointer-events-none hover:bg-plum-500/30 text-[10px] font-bold uppercase tracking-wider cursor-pointer transition-colors">↓ Download All</button>
             </div>
             <div id="wavExportList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 min-h-[54px] items-center">
-              <p class="col-span-full text-[11px] text-plum-500">Arm tracks above and press <span class="text-red-400 font-bold">Rec Live</span> or <span class="text-gold-400 font-bold">Print 96-Bar Song</span>.</p>
+              <p class="col-span-full text-[11px] text-plum-500">Arm tracks above and press <span class="text-orange-400 font-bold">Rec Live</span> or <span class="text-gold-400 font-bold">Print 96-Bar Song</span>.</p>
             </div>
           </div>
         </div>
@@ -322,7 +322,7 @@
   </main>
 
   <footer class="py-6 text-center border-t border-midnight-850 bg-midnight-950 relative z-20">
-    <p class="font-mono text-xs text-plum-500 uppercase tracking-widest">VOLTAGE &amp; WAVE // PARIS CIRCUIT // ROULÉ SUITE — KORG MS-10 · SQ-10 · VC-10 PROTOCOL</p>
+    <p class="font-mono text-xs text-plum-500 uppercase tracking-widest">VOLTAGE &amp; WAVE // CIRCUIT SUITE — KORG MS-10 · SQ-10 · VC-10 PROTOCOL</p>
   </footer>
 
   <script>
@@ -426,16 +426,16 @@
     const VC10_ENS_S = [8, 's', 0, null, 0, null, 0, 0, 5.6, 2.1, 0, 0, null, null, 0, 2.6, 1.85, 2.4, 1.1];
 
     const PATCH_DATA = {
-      kick:    { name: "MS10 Kick",   rgb: "239, 68, 68",   s: [32,'t',0,2,0,null,0,0,4.2,7.2,0,0,null,null,0,0,1.25,0,0.88] },
-      snare:   { name: "MS10 Snare",  rgb: "244, 114, 182", s: [16,'n',0,null,0,7.5,0,0,7.0,4.2,0,5.5,'s',0,0,0,0.82,0,0.38] },
-      hat:     { name: "MS10 Hat",    rgb: "250, 204, 21",  s: [0,'n',0,null,0,0,0,0,9.1,2.2,0,1.0,'s',0,0,0,0.28,0,0.1] },
+      kick:    { name: "MS10 Kick",   rgb: "249, 115, 22",  s: [32,'t',0,2,0,null,0,0,4.2,7.2,0,0,null,null,0,0,1.25,0,0.88] },
+      snare:   { name: "MS10 Snare",  rgb: "251, 146, 60",  s: [16,'n',0,null,0,7.5,0,0,7.0,4.2,0,5.5,'s',0,0,0,0.82,0,0.38] },
+      hat:     { name: "MS10 Hat",    rgb: "253, 186, 116", s: [0,'n',0,null,0,0,0,0,9.1,2.2,0,1.0,'s',0,0,0,0.28,0,0.1] },
       bass:    { name: "MS10 Bass",   rgb: "34, 211, 238",  s: [16,'q',0,null,0,null,0,0,4.2,3.8,0,6.0,null,null,0,0,1.28,0,0.14] },
-      arp:     { name: "SQ10 Hook",   rgb: "74, 222, 128",  s: [8,'s',0,null,0,null,0,0,6.0,3.6,0,0,null,null,0,0.12,1.35,0.6,0.25] },
-      ens1:    { name: "VC10 Ens 1",  rgb: "168, 85, 247",  s: VC10_ENS_S },
-      ens2:    { name: "VC10 Ens 2",  rgb: "192, 38, 211",  s: VC10_ENS_S },
-      ens3:    { name: "VC10 Ens 3",  rgb: "162, 28, 175",  s: VC10_ENS_S },
-      vocoder: { name: "VC10 20-Bnd", rgb: "251, 191, 36",  s: [8,'s',0,null,0,null,0,0,6.8,3.5,0,0,null,null,0,0.14,1.85,4.2,0.32] },
-      whisper: { name: "VC10 Noise",  rgb: "255, 140, 0",   s: [0,'n',0,null,0,6.0,0,0,8.2,3.0,0,0,'s',0,0,0.4,1.8,3.2,0.55] }
+      arp:     { name: "SQ10 Hook",   rgb: "52, 211, 153",  s: [8,'s',0,null,0,null,0,0,6.0,3.6,0,0,null,null,0,0.12,1.35,0.6,0.25] },
+      ens1:    { name: "VC10 Ens 1",  rgb: "148, 163, 184", s: VC10_ENS_S },
+      ens2:    { name: "VC10 Ens 2",  rgb: "100, 116, 139", s: VC10_ENS_S },
+      ens3:    { name: "VC10 Ens 3",  rgb: "203, 213, 225", s: VC10_ENS_S },
+      vocoder: { name: "VC10 20-Bnd", rgb: "6, 182, 212",   s: [8,'s',0,null,0,null,0,0,6.8,3.5,0,0,null,null,0,0.14,1.85,4.2,0.32] },
+      whisper: { name: "VC10 Noise",  rgb: "251, 146, 60",  s: [0,'n',0,null,0,6.0,0,0,8.2,3.0,0,0,'s',0,0,0.4,1.8,3.2,0.55] }
     };
 
     const BASE_VOLUMES = {
@@ -448,19 +448,19 @@
 
     const SCORE_PARTS = [
       { id: 'part1', num: 'TRK 01', title: 'MS-10 FUNK & SLAP BASS',spec: 'BOOK I P-01 & P-02 // 16\'/32\' SQUARE + EXT FEEDBACK', color: '#22d3ee', rgb: '34, 211, 238',  voices: ['bass'], gain: 1.0, muted: false, solo: false },
-      { id: 'part2', num: 'TRK 02', title: 'MS-10 HOUSE DRUMS',     spec: 'BOOK I P-04 // 32\' TRI KICK + OFFBEAT OPEN HAT',      color: '#ef4444', rgb: '239, 68, 68',   voices: ['kick', 'snare', 'hat'], gain: 1.0, muted: false, solo: false },
-      { id: 'part3', num: 'TRK 03', title: 'SQ-10 POLYMETER HOOK',  spec: 'BOOK II P-07 + P-08 // RESET IN + PORTAMENTO GLIDE',   color: '#4ade80', rgb: '74, 222, 128',  voices: ['arp'], gain: 1.0, muted: false, solo: false },
-      { id: 'part4', num: 'TRK 04', title: 'VC-10 ENSEMBLE CHOP',   spec: 'BOOK III V-06 + P-03 // STABS & GATED BBD CHORUS',     color: '#a855f7', rgb: '168, 85, 247',  voices: ['ens1', 'ens2', 'ens3'], gain: 1.0, muted: false, solo: false },
-      { id: 'part5', num: 'TRK 05', title: 'VC-10 20-BAND VOCODER', spec: 'BOOK III V-01/V-02 // 20-BAND FORMANT & NOISE',       color: '#f59e0b', rgb: '245, 158, 11',  voices: ['vocoder', 'whisper'], gain: 1.0, muted: false, solo: false }
+      { id: 'part2', num: 'TRK 02', title: 'MS-10 HOUSE DRUMS',     spec: 'BOOK I P-04 // 32\' TRI KICK + OFFBEAT OPEN HAT',      color: '#f97316', rgb: '249, 115, 22',  voices: ['kick', 'snare', 'hat'], gain: 1.0, muted: false, solo: false },
+      { id: 'part3', num: 'TRK 03', title: 'SQ-10 POLYMETER HOOK',  spec: 'BOOK II P-07 + P-08 // RESET IN + PORTAMENTO GLIDE',   color: '#34d399', rgb: '52, 211, 153',  voices: ['arp'], gain: 1.0, muted: false, solo: false },
+      { id: 'part4', num: 'TRK 04', title: 'VC-10 ENSEMBLE CHOP',   spec: 'BOOK III V-06 + P-03 // STABS & GATED BBD CHORUS',     color: '#94a3b8', rgb: '148, 163, 184', voices: ['ens1', 'ens2', 'ens3'], gain: 1.0, muted: false, solo: false },
+      { id: 'part5', num: 'TRK 05', title: 'VC-10 20-BAND VOCODER', spec: 'BOOK III V-01/V-02 // 20-BAND FORMANT & NOISE',       color: '#fb923c', rgb: '251, 146, 60',  voices: ['vocoder', 'whisper'], gain: 1.0, muted: false, solo: false }
     ];
 
     const DAW_TRACK_DEFS = [
-      { id: 'master', num: 'MST', name: 'Master_Mix',          fileSlug: '00_Master_Mix',          channels: 2, color: '#f59e0b', armed: true },
-      { id: 'part1',  num: 'T01', name: 'MS10_Funk_Slap_Bass', fileSlug: '01_MS10_Funk_Slap_Bass', channels: 1, color: '#22d3ee', armed: true },
-      { id: 'part2',  num: 'T02', name: 'MS10_House_Drums',    fileSlug: '02_MS10_House_Drums',    channels: 1, color: '#ef4444', armed: true },
-      { id: 'part3',  num: 'T03', name: 'SQ10_Polymeter_Hook', fileSlug: '03_SQ10_Polymeter_Hook', channels: 1, color: '#4ade80', armed: true },
-      { id: 'part4',  num: 'T04', name: 'VC10_Ensemble_Chop',  fileSlug: '04_VC10_Ensemble_Chop',  channels: 1, color: '#a855f7', armed: true },
-      { id: 'part5',  num: 'T05', name: 'VC10_20Band_Vocoder', fileSlug: '05_VC10_20Band_Vocoder', channels: 1, color: '#ff8c00', armed: true }
+      { id: 'master', num: 'MST', name: 'Master_Mix',          fileSlug: '00_Master_Mix',          channels: 2, color: '#22d3ee', armed: true },
+      { id: 'part1',  num: 'T01', name: 'MS10_Funk_Slap_Bass', fileSlug: '01_MS10_Funk_Slap_Bass', channels: 1, color: '#06b6d4', armed: true },
+      { id: 'part2',  num: 'T02', name: 'MS10_House_Drums',    fileSlug: '02_MS10_House_Drums',    channels: 1, color: '#f97316', armed: true },
+      { id: 'part3',  num: 'T03', name: 'SQ10_Polymeter_Hook', fileSlug: '03_SQ10_Polymeter_Hook', channels: 1, color: '#34d399', armed: true },
+      { id: 'part4',  num: 'T04', name: 'VC10_Ensemble_Chop',  fileSlug: '04_VC10_Ensemble_Chop',  channels: 1, color: '#94a3b8', armed: true },
+      { id: 'part5',  num: 'T05', name: 'VC10_20Band_Vocoder', fileSlug: '05_VC10_20Band_Vocoder', channels: 1, color: '#fb923c', armed: true }
     ];
 
     // =========================================================================
@@ -797,7 +797,6 @@
 
     // =========================================================================
     // 4. 96-BAR FULL SUITE COMPOSITION GENERATOR (~03:06 @ 124 BPM)
-    // Tastefully blends Iteration 1, Iteration 2, and Iteration 3 (Roulé Bridge)
     // =========================================================================
     const BAR_EVENTS = [];
 
@@ -808,9 +807,7 @@
         const sec = getSectionForBar(b);
         const chord = getChordForBar(b);
         const isAnswerBar = (b % 2 === 1);
-        const isPhraseEnd4 = (b % 4 === 3);
         const isPhraseEnd8 = (b % 8 === 7);
-        const isSectionEnd = (b === sec.endBar);
         const events = [];
 
         // Effective SQ-10 Reset step count (auto-shifts to 7-step in Roulé Bridge unless user locked a step length)
@@ -819,7 +816,7 @@
         // Lowpass filter tension multiplier for Movement III (Bars 32–47) & late Movement V (Bars 76–79)
         let filterTensionMult = 1.0;
         if (sec.id === 'CHROME_DREAM') {
-          const p = (b - 32) / 16; // 0.0 -> 0.9375 across 16 bars
+          const p = (b - 32) / 16;
           filterTensionMult = 0.32 + Math.pow(p, 1.55) * 0.78;
         } else if (sec.id === 'ROULE_BRIDGE' && b >= 76) {
           const p = (b - 76) / 4;
@@ -829,8 +826,6 @@
         // ---------------------------------------------------------------------
         // TRK 02: PUNCHY, DRY MS-10 HOUSE DRUMS (Book I P-04)
         // ---------------------------------------------------------------------
-        // 4/4 kick across all 96 bars, dropping beat 4 at Bar 48 & Bar 80 before the big drops,
-        // and stopping cleanly on beat 2 of Bar 96 for the final ending punch
         [0, 1, 2, 3].forEach(off => {
           if ((b === 47 || b === 79) && off === 3) return;
           if (b === 95 && off > 1) return;
@@ -845,7 +840,6 @@
           });
         });
 
-        // Snappy noise+triangle snare on beats 2 & 4 (introduced at Bar 4 in Movement I)
         if (b >= 3 && b < 95) {
           [1, 3].forEach(off => {
             events.push({
@@ -862,7 +856,6 @@
           events.push({ type: 'snare', partId: 'part2', voiceId: 'snare', rawBeatOff: 1.0, durSec: 0.18, vel: 0.92, label: 'END SNR' });
         }
 
-        // Section-end snare rolls (Bar 47–48 into Voltage Circuit; Bar 79 into High Voltage Finale) & 8-bar fills
         if (b === 46) {
           events.push({ type: 'snare', partId: 'part2', voiceId: 'snare', rawBeatOff: 3.5, durSec: 0.11, vel: 0.74, label: 'BLD SNR' });
         } else if (b === 47 || b === 79) {
@@ -882,7 +875,6 @@
           events.push({ type: 'snare', partId: 'part2', voiceId: 'snare', rawBeatOff: 3.75, durSec: 0.11, vel: 0.90, label: 'TURN SNR' });
         }
 
-        // Swinging French house hi-hats: offbeat open hat on '&' + crisp 16th hats
         if (b < 95) {
           for (let h = 0; h < 16; h++) {
             const isOffbeatOpen = (h % 4 === 2);
@@ -904,11 +896,9 @@
 
         // ---------------------------------------------------------------------
         // TRK 01: PHAT KORG MS-10 FUNK & SLAP BASS (Book I P-01 & P-02)
-        // Combines chunky F#m funk swagger (Movements I–IV) with rolling D Dorian slap bass (Movement V & Finale)
         // ---------------------------------------------------------------------
         const r = chord.rootMidi;
         if (b === 95) {
-          // Final Bar 96 resolution punch on F#1 + F#2
           events.push({
             type: 'note', partId: 'part1', voiceId: 'bass', rawBeatOff: 0.00, durBeats: 0.45,
             midi: r, cutoffHz: 260, envPeakHz: 780, glideSec: 0, vel: 1.0, cleanMonoBreath: true, label: 'P-01 END'
@@ -918,7 +908,6 @@
             midi: r + 12, cutoffHz: 320, envPeakHz: 940, glideSec: 0.015, vel: 1.0, cleanMonoBreath: true, label: 'P-01 END'
           });
         } else if (sec.id === 'ROULE_BRIDGE' || (sec.id === 'HIGH_VOLTAGE' && b >= 88)) {
-          // Rolling 16th-note slap-synth bassline (from Iteration 3 — Roulé Engine)
           const slapBarA = [
             { off: 0.00, midi: r,      dur: 0.22, vel: 1.00, cut: 235, envPeak: 690, glide: 0 },
             { off: 0.25, midi: r,      dur: 0.18, vel: 0.84, cut: 215, envPeak: 580, glide: 0 },
@@ -952,7 +941,6 @@
             });
           });
         } else {
-          // Chunky 1997 French-Touch funk bassline (from Iteration 1)
           const funkBarA = [
             { off: 0.00, midi: r,      dur: 0.36, vel: 1.00, cut: 225, envPeak: 660, glide: 0 },
             { off: 0.75, midi: r + 12, dur: 0.22, vel: 0.94, cut: 295, envPeak: 850, glide: 0.012 },
@@ -982,8 +970,6 @@
 
         // ---------------------------------------------------------------------
         // TRK 03: SQ-10 + MS-10 POLYMETRIC HOOK (Book II P-07 + Book I P-08)
-        // Enters in Movement II (Bars 16–31), filters in III (32–47), weaves under Vocoder in IV (48–63),
-        // shifts to D Dorian acid-funk in V (64–79), and lifts an octave in the Finale (80–95)
         // ---------------------------------------------------------------------
         if (sec.id !== 'PARIS_PULSE' && b < 95) {
           const highLift = (sec.id === 'HIGH_VOLTAGE' && b >= 84) ? 12 : 0;
@@ -1056,7 +1042,6 @@
         // ---------------------------------------------------------------------
         const detune = [-5, 0, 5];
         if (b === 95) {
-          // Final Bar 96 lush Ensemble chord hit
           [0, 1, 2].forEach(idx => {
             events.push({
               type: 'note', partId: 'part4', voiceId: `ens${idx + 1}`, rawBeatOff: 1.0, durBeats: 1.6,
@@ -1064,7 +1049,6 @@
             });
           });
         } else if ((sec.id === 'PARIS_PULSE' && b >= 8) || sec.id === 'ORBITAL_LOOP' || (sec.id === 'ROULE_BRIDGE' && b < 74)) {
-          // Crisp offbeat disco chord stabs in Bars 9–32 and Bars 65–74
           const stabPattern = isAnswerBar
             ? [
                 { off: 0.75, dur: 0.18, vel: 0.80 },
@@ -1099,7 +1083,6 @@
             });
           });
         } else if (sec.id === 'CHROME_DREAM' || sec.id === 'VOLTAGE_CIRCUIT' || (sec.id === 'ROULE_BRIDGE' && b >= 74) || sec.id === 'HIGH_VOLTAGE') {
-          // Click-free ~25ms smoothed MG VCA-chopped VC-10 Ensemble chords
           const chopBeats = [0, 0.75, 1.5, 2.25, 3.0, 3.5];
           const sweepProg = sec.id === 'CHROME_DREAM' ? ((b - 32) / 16) : 1.0;
           const ensCutoff = sec.id === 'CHROME_DREAM' ? (480 + sweepProg * 1950) : 2420;
@@ -1126,15 +1109,12 @@
         // TRK 05: VC-10 20-BAND VOCODER & V-02 NOISE CARRIER (Book III V-01, V-02, V-07)
         // ---------------------------------------------------------------------
         if (sec.id === 'PARIS_PULSE' && (b === 11 || b === 15)) {
-          // "RO - BOT" robotic callout at end of 4-bar phrases in Movement I
           events.push({ type: 'vocoder', partId: 'part5', voiceId: 'vocoder', rawBeatOff: 2.50, durBeats: 0.34, midi: 42, syllable: VC10_SYLLABLES.RO, glideSec: 0.015, vel: 0.92, label: 'V01 RO' });
           events.push({ type: 'vocoder', partId: 'part5', voiceId: 'vocoder', rawBeatOff: 3.25, durBeats: 0.38, midi: 45, syllable: VC10_SYLLABLES.BOT, glideSec: 0.015, vel: 0.96, label: 'V01 BOT' });
         } else if (sec.id === 'ORBITAL_LOOP' && (b === 19 || b === 23 || b === 27 || b === 31)) {
-          // "CIR - CUIT" robotic callout in Movement II
           events.push({ type: 'vocoder', partId: 'part5', voiceId: 'vocoder', rawBeatOff: 2.50, durBeats: 0.34, midi: 47, syllable: VC10_SYLLABLES.CIR, glideSec: 0.015, vel: 0.94, label: 'V01 CIR' });
           events.push({ type: 'vocoder', partId: 'part5', voiceId: 'vocoder', rawBeatOff: 3.25, durBeats: 0.38, midi: 45, syllable: VC10_SYLLABLES.CUIT, glideSec: 0.015, vel: 0.98, label: 'V01 CUIT' });
         } else if (sec.id === 'CHROME_DREAM') {
-          // 16-bar V-02 white-noise carrier sweep building into the Voltage Circuit climax
           const progress = (b - 32) / 16;
           const sweepHz = 440 + Math.pow(progress, 1.65) * 4400;
           events.push({
@@ -1163,11 +1143,9 @@
           }
         } else if (sec.id === 'VOLTAGE_CIRCUIT' || sec.id === 'HIGH_VOLTAGE') {
           if (b === 95) {
-            // Final Bar 96 robotic sign-off ("RO - BOT")
             events.push({ type: 'vocoder', partId: 'part5', voiceId: 'vocoder', rawBeatOff: 0.00, durBeats: 0.45, midi: 42, syllable: VC10_SYLLABLES.RO, glideSec: 0.015, vel: 1.0, label: 'V01 RO' });
             events.push({ type: 'vocoder', partId: 'part5', voiceId: 'vocoder', rawBeatOff: 1.00, durBeats: 1.40, midi: 42, syllable: VC10_SYLLABLES.BOT, glideSec: 0.015, vel: 1.0, label: 'V01 BOT' });
           } else {
-            // Beloved Iteration 2 Climax Vocoder Riff: F#2 -> F#2 -> A2 -> B2 -> C#3 -> A2
             const riffPhrase = (sec.id === 'HIGH_VOLTAGE' && isAnswerBar)
               ? [
                   { off: 0.00, midi: 42, dur: 0.45, vel: 1.0,  syl: VC10_SYLLABLES.HIGH },
@@ -1419,7 +1397,7 @@
     window.seekToBar = seekToBar;
 
     // =========================================================================
-    // 6. UI BUILDERS & LIVE RENDERING (VOLTAGE & WAVE ORIGINAL IDENTITY)
+    // 6. UI BUILDERS & LIVE RENDERING
     // =========================================================================
     function buildVoiceLedGrid() {
       const grid = document.getElementById('voiceLedGrid');
@@ -1496,7 +1474,7 @@
       container.querySelectorAll('[data-mute]').forEach(b => b.addEventListener('click', () => {
         const p = SCORE_PARTS.find(x => x.id === b.dataset.mute);
         p.muted = !p.muted;
-        b.classList.toggle('bg-red-600', p.muted);
+        b.classList.toggle('bg-orange-600', p.muted);
         b.classList.toggle('text-white', p.muted);
         b.classList.toggle('bg-midnight-900', !p.muted);
         applyMixerGains();
@@ -1603,7 +1581,7 @@
           });
         }
 
-        html += `<div id="playhead_${part.id}" class="absolute inset-y-0 w-0.5 bg-gold-400 shadow-[0_0_12px_#f59e0b] z-20 pointer-events-none" style="left: 0%;"><div class="w-2 h-2 -ml-[3px] bg-gold-400 rotate-45"></div></div>`;
+        html += `<div id="playhead_${part.id}" class="absolute inset-y-0 w-0.5 bg-gold-400 shadow-[0_0_12px_rgba(34,211,238,0.72)] z-20 pointer-events-none" style="left: 0%;"><div class="w-2 h-2 -ml-[3px] bg-gold-400 rotate-45"></div></div>`;
         lane.innerHTML = html;
       });
     }
@@ -1630,9 +1608,11 @@
         const activeSteps = sq10UserLocked ? sq10ResetSteps : (sec.id === 'ROULE_BRIDGE' ? 7 : 5);
         const globalStep = (barIdx * 16) + Math.floor(barProgress * 16);
         const isResetStep = (globalStep % activeSteps) === 0;
+        const trigPrimary = '#22d3ee';
+        const trigAlert = '#f97316';
         sqLed.style.opacity = (subNum % 2 === 1) ? '1' : '0.35';
-        sqLed.style.backgroundColor = isResetStep ? '#f59e0b' : '#a855f7';
-        sqLed.style.boxShadow = isResetStep ? '0 0 10px #f59e0b' : '0 0 8px #a855f7';
+        sqLed.style.backgroundColor = isResetStep ? trigAlert : trigPrimary;
+        sqLed.style.boxShadow = isResetStep ? `0 0 10px ${trigAlert}` : `0 0 8px ${trigPrimary}`;
       }
 
       document.querySelectorAll('.sec-pill').forEach(pill => {
@@ -1704,10 +1684,10 @@
       }
 
       scopeCtx.globalCompositeOperation = 'source-over';
-      scopeCtx.fillStyle = '#05040a';
+      scopeCtx.fillStyle = '#06090e';
       scopeCtx.fillRect(0, 0, w, h);
 
-      scopeCtx.strokeStyle = 'rgba(245, 158, 11, 0.12)';
+      scopeCtx.strokeStyle = 'rgba(34, 211, 238, 0.13)';
       scopeCtx.lineWidth = 1;
       scopeCtx.beginPath();
       for (let i = 1; i < 4; i++) {
@@ -1718,7 +1698,7 @@
       }
       scopeCtx.stroke();
 
-      scopeCtx.strokeStyle = 'rgba(168, 85, 247, 0.2)';
+      scopeCtx.strokeStyle = 'rgba(249, 115, 22, 0.24)';
       scopeCtx.beginPath();
       scopeCtx.moveTo(0, h / 2);
       scopeCtx.lineTo(w, h / 2);
@@ -1850,7 +1830,7 @@
 
       const exportList = document.getElementById('wavExportList');
       if (exportList) {
-        exportList.innerHTML = `<p class="col-span-full text-[11px] text-red-400 font-bold animate-pulse">● RECORDING ARMED TRACKS IN 24-BIT PCM WAV...</p>`;
+        exportList.innerHTML = `<p class="col-span-full text-[11px] text-orange-400 font-bold animate-pulse">● RECORDING ARMED TRACKS IN 24-BIT PCM WAV...</p>`;
       }
       document.getElementById('downloadAllWavBtn').disabled = true;
 
@@ -1877,7 +1857,7 @@
         renderedTakes.push({
           id: def.id,
           label: `${def.num}: ${def.name}`,
-          filename: `Paris_Circuit_Roule_Suite_${def.fileSlug}_124BPM_24bit.wav`,
+          filename: `Circuit_Suite_${def.fileSlug}_124BPM_24bit.wav`,
           url: URL.createObjectURL(wavBlob),
           durationSec: samples / sr,
           peakDb: pk > 0 ? (20 * Math.log10(pk)).toFixed(1) : '-inf',
@@ -1961,11 +1941,11 @@
       grid.innerHTML = '';
       DAW_TRACK_DEFS.forEach(def => {
         const card = document.createElement('div');
-        card.className = `bg-midnight-950 border ${def.armed ? 'border-red-500/60' : 'border-midnight-850'} p-2.5 rounded-sm flex flex-col justify-between gap-2 transition-colors`;
+        card.className = `bg-midnight-950 border ${def.armed ? 'border-orange-500/60' : 'border-midnight-850'} p-2.5 rounded-sm flex flex-col justify-between gap-2 transition-colors`;
         card.innerHTML = `
           <div class="flex items-center justify-between gap-1">
             <span class="text-[10px] font-bold" style="color:${def.color}">${def.num}</span>
-            <button type="button" data-arm-track="${def.id}" class="px-1.5 py-0.5 rounded-sm text-[9px] font-bold uppercase cursor-pointer transition-colors ${def.armed ? 'bg-red-600 text-white' : 'bg-midnight-900 border border-plum-700 text-plum-500 hover:text-plum-300'}">${def.armed ? '● ARM' : 'OFF'}</button>
+            <button type="button" data-arm-track="${def.id}" class="px-1.5 py-0.5 rounded-sm text-[9px] font-bold uppercase cursor-pointer transition-colors ${def.armed ? 'bg-orange-500 text-midnight-950' : 'bg-midnight-900 border border-plum-700 text-plum-500 hover:text-plum-300'}">${def.armed ? '● ARM' : 'OFF'}</button>
           </div>
           <div>
             <div class="text-[11px] font-bold text-plum-200 truncate">${def.name}</div>
@@ -2011,11 +1991,11 @@
     function updateRecTransportUI(active) {
       const liveBtn = document.getElementById('recLiveBtn'), liveLabel = document.getElementById('recLiveLabel'), led = document.getElementById('recHeaderLed');
       if (active) {
-        if (liveBtn) { liveBtn.classList.replace('bg-red-600', 'bg-gold-500'); liveBtn.classList.replace('text-white', 'text-midnight-950'); }
+        if (liveBtn) { liveBtn.classList.replace('bg-orange-500', 'bg-gold-500'); }
         if (liveLabel) liveLabel.textContent = 'Stop & Render';
-        if (led) led.className = 'w-2 h-2 rounded-full bg-red-500 animate-ping';
+        if (led) led.className = 'w-2 h-2 rounded-full bg-orange-500 animate-ping';
       } else {
-        if (liveBtn) { liveBtn.classList.replace('bg-gold-500', 'bg-red-600'); liveBtn.classList.replace('text-midnight-950', 'text-white'); }
+        if (liveBtn) { liveBtn.classList.replace('bg-gold-500', 'bg-orange-500'); }
         if (liveLabel) liveLabel.textContent = 'Rec Live';
         if (led) led.className = 'w-2 h-2 rounded-full bg-plum-600';
       }
