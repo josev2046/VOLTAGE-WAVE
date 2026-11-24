@@ -1,0 +1,2234 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interactive 96-bar browser DAW showcase of Nocturno // Madrid '82 (130 BPM, Dm9 -> Bbmaj7#11 -> Gm11 -> A7sus4), a sleek 1982 European synth-wave instrumental for Korg MS-10, SQ-10 and VC-10 by Voltage &amp; Wave.">
+  <meta name="theme-color" content="#03050a">
+  <title>NOCTURNO // MADRID '82 // VOLTAGE &amp; WAVE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    if (window.tailwind) {
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+            gridTemplateColumns: { '16': 'repeat(16, minmax(0, 1fr))' },
+            colors: {
+              gold: { 300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb' },
+              plum: { 200: '#f1f5f9', 300: '#cbd5e1', 400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155', 900: '#172554', 950: '#0f172a' },
+              midnight: { 850: '#0f172a', 900: '#080d1a', 950: '#03050a' }
+            }
+          }
+        }
+      };
+    }
+  </script>
+  <style>
+    body { background-color: #03050a; color: #f1f5f9; overflow-x: hidden; }
+    .scanlines::before {
+      content: " "; display: block; position: fixed; inset: 0;
+      background: linear-gradient(rgba(10, 15, 30, 0) 50%, rgba(0, 0, 0, 0.22) 50%),
+                  linear-gradient(90deg, rgba(59, 130, 246, 0.04), rgba(241, 245, 249, 0.01), rgba(14, 165, 233, 0.03));
+      z-index: 50; background-size: 100% 2px, 3px 100%; pointer-events: none; opacity: 0.38;
+    }
+    .bg-synth-grid {
+      background-image: linear-gradient(to right, rgba(96, 165, 250, 0.065) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(148, 163, 184, 0.045) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .glow-text { text-shadow: 0 0 14px rgba(96, 165, 250, 0.82); }
+    input[type="range"].vw-slider { -webkit-appearance: none; appearance: none; background: #0f172a; height: 4px; border-radius: 2px; outline: none; }
+    input[type="range"].vw-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 12px; height: 16px; background: #3b82f6; border: 1px solid #03050a; border-radius: 2px; cursor: pointer; box-shadow: 0 0 8px rgba(96, 165, 250, 0.8); }
+    input[type="range"].vw-slider::-moz-range-thumb { width: 12px; height: 16px; background: #3b82f6; border: 1px solid #03050a; border-radius: 2px; cursor: pointer; }
+    .score-note { transition: transform 0.05s ease, filter 0.05s ease, box-shadow 0.05s ease; }
+    .score-note.active { filter: brightness(1.32); transform: scaleY(1.06); box-shadow: 0 0 12px var(--note-glow, rgba(96, 165, 250, 0.82)); z-index: 15; }
+    input[type="range"].vw-slider:focus-visible { outline: 2px solid #60a5fa; outline-offset: 5px; }
+    button:focus-visible, a:focus-visible, select:focus-visible { outline: 2px solid #60a5fa; outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after { animation: none !important; transition: none !important; }
+    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #03050a; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+  </style>
+</head>
+<body class="antialiased relative selection:bg-gold-500 selection:text-midnight-950 flex flex-col min-h-screen">
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <!-- Fixed Telemetry & Transport Header -->
+  <header class="fixed w-full z-40 top-0 bg-midnight-950/95 backdrop-blur-md border-b border-midnight-900">
+    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-wrap justify-between items-center py-2.5 gap-3">
+        <div class="flex items-center gap-3">
+          <a href="../index.html" aria-label="Voltage &amp; Wave home" class="flex items-center gap-3 group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" aria-hidden="true" class="text-gold-500 w-6 h-6 shrink-0 group-hover:text-gold-400 transition-colors">
+              <path d="M2 12h4v-7h6v14h6v-7h4"/>
+            </svg>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-mono font-bold text-white tracking-widest text-sm sm:text-base">VOLTAGE &amp; WAVE</span>
+                <span class="hidden sm:inline-block font-mono text-[10px] text-gold-400 border border-gold-500/40 bg-gold-500/10 px-2 py-0.5 uppercase tracking-widest">Nocturno // Madrid '82 (02:57)</span>
+              </div>
+              <p class="font-mono text-[10px] text-plum-400 uppercase tracking-widest">MS-10 · SQ-10 · VC-10 // 130 BPM // Dm9 ↔ Fmaj9 // 96 BARS</p>
+            </div>
+          </a>
+        </div>
+
+        <!-- Telemetry HUD -->
+        <div class="flex items-center gap-2 sm:gap-4 bg-midnight-900/90 border border-midnight-850 px-3 py-1.5 rounded-sm font-mono">
+          <div class="text-center pr-2 sm:pr-4 border-r border-midnight-850">
+            <div class="text-[9px] text-plum-400 uppercase tracking-widest">Bar</div>
+            <div id="hudBar" class="text-base sm:text-xl font-bold text-gold-400 glow-text leading-none mt-0.5">01<span class="text-plum-500 text-xs">/96</span></div>
+          </div>
+          <div class="text-center pr-2 sm:pr-4 border-r border-midnight-850">
+            <div class="text-[9px] text-plum-400 uppercase tracking-widest">Beat</div>
+            <div id="hudBeat" class="text-base sm:text-xl font-bold text-white leading-none mt-0.5">1.1</div>
+          </div>
+          <div class="text-center pr-2 sm:pr-4 border-r border-midnight-850">
+            <div class="text-[9px] text-plum-400 uppercase tracking-widest">Section</div>
+            <div id="hudSection" class="text-xs sm:text-sm font-bold text-sky-400 leading-none mt-1">I. BLUE SIGNAL</div>
+          </div>
+          <div class="text-center pr-2 sm:pr-4 border-r border-midnight-850">
+            <div class="text-[9px] text-plum-400 uppercase tracking-widest">Chord</div>
+            <div id="hudChord" class="text-base sm:text-xl font-bold text-gold-400 leading-none mt-0.5">Dm9</div>
+          </div>
+          <div class="text-center hidden md:block">
+            <div class="text-[9px] text-plum-400 uppercase tracking-widest">Trig</div>
+            <div class="flex items-center justify-center mt-1.5">
+              <span id="sqTrigLed" class="w-2.5 h-2.5 rounded-full bg-gold-500/30 border border-gold-500/60 transition-all duration-75" title="SQ-10 Step Trigger / Reset Pulse"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transport Controls -->
+        <div class="flex flex-wrap items-center gap-2 font-mono text-xs">
+          <button id="playBtn" class="inline-flex items-center gap-1.5 bg-gold-500 hover:bg-gold-400 text-midnight-950 px-4 py-2 font-bold uppercase tracking-wider rounded-sm transition-all shadow-[0_0_15px_rgba(59,130,246,0.42)] cursor-pointer">
+            <span id="playIcon" aria-hidden="true">▶</span> <span id="playLabel">Play</span>
+          </button>
+          <button id="stopBtn" class="inline-flex items-center gap-1.5 bg-midnight-900 hover:bg-midnight-850 border border-plum-900 text-plum-300 px-3 py-2 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none" disabled>
+            <span aria-hidden="true">■</span> Stop
+          </button>
+          <button id="loopBtn" type="button" aria-pressed="true" title="Toggle 96-Bar Full Suite Loop" class="hidden sm:inline-block px-2.5 py-2 border border-gold-500/50 bg-gold-500/15 text-gold-400 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">
+            Loop: On
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="top" class="pt-28 sm:pt-20 pb-12 flex-1 relative z-10">
+    <div class="fixed inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10" aria-hidden="true"></div>
+    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-6 mt-4">
+
+      <!-- Arrangement & Protocol Matrix Section -->
+      <section class="bg-midnight-900/90 border border-midnight-850 rounded-sm p-4 sm:p-5 shadow-2xl">
+        <div class="mb-4 px-3 py-2 rounded-sm bg-midnight-950 border border-gold-500/35 flex items-start sm:items-center justify-between gap-2.5 font-mono text-[11px] text-plum-300">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2.5">
+            <span class="text-gold-400 font-bold uppercase shrink-0">[1982 Euro-Synth Instrumental Suite — 02:57]</span>
+            <span>Sleek, nocturnal 96-bar synth-wave instrumental and browser-based software emulation of Korg MS-10, SQ-10 &amp; VC-10 studio protocols from the Voltage &amp; Wave books.</span>
+          </div>
+          <span class="hidden xl:inline-block text-gold-400 font-bold shrink-0">96 BARS · 02:57.2</span>
+        </div>
+
+        <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-3 mb-4 pb-3 border-b border-midnight-850">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-gold-400 animate-pulse"></span>
+              <h1 class="font-mono text-xs sm:text-sm font-bold text-white uppercase tracking-widest">Nocturno // Madrid '82 — 6-Section Synth-Wave Arrangement</h1>
+            </div>
+            <div id="protocolCueBanner" class="mt-2.5 flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] bg-midnight-950 border border-midnight-850 text-plum-200 px-3 py-1.5 rounded-sm">
+              <div class="flex flex-col gap-0.5 min-w-0 flex-1">
+                <div>
+                  <span class="text-gold-400 font-bold">MANUAL CUE:</span>
+                  <span id="protocolCueText" aria-live="polite">Click any section pill, Voltage &amp; Wave protocol card, or bar cell below to navigate the 130 BPM nocturnal synth-wave suite.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-1.5 font-mono text-[10px] shrink-0" id="sectionNav">
+            <button data-jump="0"  class="sec-pill px-2 py-1 rounded-sm border border-gold-500 bg-gold-500/20 text-gold-400 font-bold uppercase tracking-wider cursor-pointer transition-colors">I. Blue Signal (1–16)</button>
+            <button data-jump="16" class="sec-pill px-2 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-400 hover:border-gold-500/50 hover:text-plum-200 uppercase tracking-wider cursor-pointer transition-colors">II. Night Highway (17–32)</button>
+            <button data-jump="32" class="sec-pill px-2 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-400 hover:border-gold-500/50 hover:text-plum-200 uppercase tracking-wider cursor-pointer transition-colors">III. Mercury Suspension (33–48)</button>
+            <button data-jump="48" class="sec-pill px-2 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-400 hover:border-gold-500/50 hover:text-plum-200 uppercase tracking-wider cursor-pointer transition-colors">IV. Silver Theme (49–64)</button>
+            <button data-jump="64" class="sec-pill px-2 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-400 hover:border-gold-500/50 hover:text-plum-200 uppercase tracking-wider cursor-pointer transition-colors">V. Horizon Shift (65–80)</button>
+            <button data-jump="80" class="sec-pill px-2 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-400 hover:border-gold-500/50 hover:text-plum-200 uppercase tracking-wider cursor-pointer transition-colors">VI. Cobalt Finale (81–96)</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-4 font-mono text-[10px]">
+          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="0" data-proto-note="Book I P-01 &amp; P-04 (Bars 01–16 — I. Blue Signal): Sleek, dark MS-10 octave sub-bass (16' Saw + 32' Triangle) locked to a tight 130 BPM electro-wave pulse over Dm9 -&gt; Bbmaj7#11 -&gt; Gm11 -&gt; A7sus4." class="text-left bg-midnight-950 border border-midnight-850 hover:border-blue-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-blue-400 font-bold block">BOOK I // P-01 &amp; P-04</span>
+            <span class="text-plum-300">MS-10 Dark Octave Pulse &amp; Drums</span>
+          </button>
+          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="16" data-proto-note="Book II P-07 &amp; Book I P-08 (Bars 17–32 — II. Night Highway &amp; Bars 49–64 — IV. Silver Theme): Crystalline 5-step SQ-10 sequence with dotted-eighth stereo delay, paired with a soaring, lyrical MS-10 portamento synth lead." class="text-left bg-midnight-950 border border-midnight-850 hover:border-sky-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-sky-400 font-bold block">BOOK II // P-07 &amp; P-08</span>
+            <span class="text-plum-300">5/7-Step SQ-10 &amp; Portamento Lead</span>
+          </button>
+          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="32" data-proto-note="Book III V-06 &amp; Book I P-03 (Bars 33–48 — III. Mercury Suspension): Atmospheric mid-suite breakdown — lush, detuned VC-10 string-ensemble chords blooming under a velvety Korg35 lowpass sweep and V-02 air texture." class="text-left bg-midnight-950 border border-midnight-850 hover:border-slate-300/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-slate-300 font-bold block">BOOK III // V-06 &amp; P-03</span>
+            <span class="text-plum-300">VC-10 String Ensemble &amp; Sweep</span>
+          </button>
+          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="64" data-proto-note="Section V: Horizon Shift (Bars 65–80): Radiant F Major / Dorian modulation (Fmaj9 -&gt; Dm11 -&gt; Bbmaj9 -&gt; C13sus4) featuring a 7-step SQ-10 polymeter, singing portamento lead, and wordless VC-10 formant choir pads." class="text-left bg-midnight-950 border border-midnight-850 hover:border-indigo-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-indigo-400 font-bold block">BOOK III // V-01 CHOIR PAD</span>
+            <span class="text-plum-300">F Major Lift &amp; Formant Choir</span>
+          </button>
+        </div>
+
+        <!-- 96-Bar Arrangement Matrix (6 rows of 16 bars on desktop) -->
+        <div id="barMatrix" class="grid grid-cols-6 sm:grid-cols-8 lg:grid-cols-16 gap-1"></div>
+      </section>
+
+      <!-- Partiture / Score Lanes Section -->
+      <section class="bg-midnight-900/90 border border-midnight-850 rounded-sm shadow-2xl overflow-hidden">
+        <div class="bg-midnight-950 border-b border-midnight-850 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <h2 class="font-mono text-xs font-bold text-plum-400 uppercase tracking-widest">Partiture / Score Lanes</h2>
+            <span id="systemBadge" class="font-mono text-[11px] bg-midnight-900 border border-plum-900 text-plum-300 px-2.5 py-0.5 rounded-sm">SYSTEM 01 // BARS 01–04 (I. BLUE SIGNAL)</span>
+          </div>
+          <div class="flex items-center gap-2 font-mono text-[11px]">
+            <button id="view4Btn" type="button" aria-pressed="true" class="px-2.5 py-1 rounded-sm border border-plum-400 bg-plum-500/15 text-plum-400 font-bold uppercase cursor-pointer">4-Bar System</button>
+            <button id="view16Btn" type="button" aria-pressed="false" class="px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-900 text-plum-400 hover:text-white uppercase cursor-pointer">16-Bar Section</button>
+            <button id="view96Btn" type="button" aria-pressed="false" class="px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-900 text-plum-400 hover:text-white uppercase cursor-pointer">96-Bar Score</button>
+          </div>
+        </div>
+        <div id="partitureBody" class="divide-y divide-midnight-850/90"></div>
+      </section>
+
+      <!-- Oscilloscope & Korg MS-10 / SQ-10 Hardware Panel -->
+      <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <div class="lg:col-span-7 bg-midnight-900/90 border border-midnight-850 rounded-sm p-4 flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-gold-400 animate-pulse"></span>
+              <h2 class="font-mono text-xs font-bold text-white uppercase tracking-widest">Oscilloscope Monitor</h2>
+            </div>
+            <div class="flex gap-1.5 font-mono text-[10px]">
+              <button id="scopeWaveBtn" type="button" aria-pressed="true" class="px-2.5 py-1 rounded-sm border border-gold-400 bg-gold-500/20 text-gold-400 font-bold uppercase cursor-pointer">Wave</button>
+              <button id="scopeFreqBtn" type="button" aria-pressed="false" class="px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-400 hover:text-white uppercase cursor-pointer">Freq</button>
+            </div>
+          </div>
+          <div class="relative flex-1 min-h-[160px] bg-midnight-950 border border-midnight-850 rounded-sm overflow-hidden">
+            <canvas id="scopeCanvas" role="img" aria-label="Oscilloscope showing the live output of each voice" class="absolute inset-0 w-full h-full block"></canvas>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 bg-midnight-900/90 border border-midnight-850 rounded-sm p-4 flex flex-col justify-between gap-3.5">
+          <div>
+            <div class="flex items-center justify-between mb-2.5">
+              <h2 class="font-mono text-xs font-bold text-white uppercase tracking-widest">Active Channels</h2>
+              <span id="elapsedClock" class="font-mono text-xs text-gold-400 font-bold">00:00.0 / 02:57.2</span>
+            </div>
+            <div id="voiceLedGrid" class="grid grid-cols-3 sm:grid-cols-4 gap-1.5 font-mono text-[10px]"></div>
+          </div>
+
+          <!-- Authentic MS-10 Korg35 VCF & SQ-10 Reset Patch Panel -->
+          <div class="bg-midnight-950 border border-midnight-850 p-3 rounded-sm flex flex-col gap-2.5">
+            <div class="flex items-center justify-between font-mono text-[10px]">
+              <span class="text-gold-400 font-bold uppercase tracking-wider">MS-10 Korg35 VCF Override</span>
+              <div class="flex items-center gap-2">
+                <span id="korgVcfReadout" class="text-plum-300 font-bold">AUTO // PEAK 3.8</span>
+                <button type="button" id="korgVcfResetBtn" class="px-1.5 py-0.5 rounded-sm bg-midnight-900 border border-plum-900 text-plum-300 hover:text-white text-[9px] uppercase cursor-pointer">Reset</button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 font-mono text-[9px]">
+              <div class="flex flex-col gap-1">
+                <div class="flex justify-between text-plum-300">
+                  <span>CUTOFF OFFSET</span>
+                  <span id="korgCutoffVal" class="text-gold-400 font-bold">0%</span>
+                </div>
+                <input id="korgCutoffSlider" type="range" min="-0.85" max="1.0" step="0.01" value="0" class="vw-slider w-full" aria-label="MS-10 Korg35 Cutoff Offset">
+              </div>
+              <div class="flex flex-col gap-1">
+                <div class="flex justify-between text-plum-300">
+                  <span>PEAK (RESONANCE)</span>
+                  <span id="korgPeakVal" class="text-gold-400 font-bold">3.8</span>
+                </div>
+                <input id="korgPeakSlider" type="range" min="1.0" max="9.6" step="0.1" value="3.8" class="vw-slider w-full" aria-label="MS-10 Korg35 Peak Resonance">
+              </div>
+            </div>
+
+            <!-- SQ-10 TRIG OUT -> RESET IN Step Length Selector -->
+            <div class="pt-1.5 border-t border-midnight-850 flex flex-wrap items-center justify-between gap-1.5 font-mono text-[9px]">
+              <span class="text-plum-400 uppercase">SQ-10 RESET IN:</span>
+              <div class="inline-flex rounded-sm border border-plum-900 bg-midnight-900 p-0.5" role="group" aria-label="SQ-10 Reset Step Length">
+                <button type="button" data-sq-steps="5" aria-pressed="true" class="sq-step-btn px-2 py-0.5 rounded-sm bg-gold-500/20 text-gold-400 font-bold cursor-pointer transition-colors">5-Step</button>
+                <button type="button" data-sq-steps="6" aria-pressed="false" class="sq-step-btn px-2 py-0.5 rounded-sm text-plum-400 hover:text-white cursor-pointer transition-colors">6-Step</button>
+                <button type="button" data-sq-steps="7" aria-pressed="false" class="sq-step-btn px-2 py-0.5 rounded-sm text-plum-400 hover:text-white cursor-pointer transition-colors">7-Step</button>
+                <button type="button" data-sq-steps="8" aria-pressed="false" class="sq-step-btn px-2 py-0.5 rounded-sm text-plum-400 hover:text-white cursor-pointer transition-colors">8-Step</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-midnight-950 border border-midnight-850 p-3 rounded-sm flex items-center justify-between gap-4">
+            <label for="masterGainSlider" class="font-mono text-xs text-plum-400 uppercase tracking-wider shrink-0">Master Out</label>
+            <input id="masterGainSlider" type="range" min="0" max="1.4" step="0.01" value="0.92" class="vw-slider w-full">
+            <span id="masterGainVal" class="font-mono text-xs text-gold-400 font-bold w-10 text-right">92%</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stem Exporter & Virtual Router Section -->
+      <section id="dawRecorderPanel" class="bg-midnight-900/90 border border-midnight-850 rounded-sm p-4 sm:p-5 shadow-2xl">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-4 mb-4 border-b border-midnight-850">
+          <div>
+            <div class="flex items-center gap-2">
+              <span id="recHeaderLed" class="w-2 h-2 rounded-full bg-plum-600"></span>
+              <h2 class="font-mono text-xs sm:text-sm font-bold text-white uppercase tracking-widest">Stem Exporter &amp; Virtual Router</h2>
+              <span id="recSampleRateBadge" class="font-mono text-[10px] bg-midnight-950 border border-plum-700 text-gold-400 px-2 py-0.5 rounded-sm">24-BIT PCM WAV</span>
+            </div>
+            <p class="text-xs text-plum-400 mt-1">Capture sample-aligned 24-bit WAV stems generated natively by the Web Audio API engine.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 font-mono text-xs shrink-0">
+            <div class="inline-flex rounded-sm border border-plum-900 bg-midnight-950 p-0.5" role="group" aria-label="Recording mode">
+              <button type="button" data-rec-mode="ALL" aria-pressed="true" class="rec-mode-btn disabled:opacity-40 disabled:pointer-events-none px-2.5 py-1 rounded-sm bg-gold-500/20 text-gold-400 font-bold uppercase cursor-pointer transition-colors">Master + Stems</button>
+              <button type="button" data-rec-mode="STEMS" aria-pressed="false" class="rec-mode-btn disabled:opacity-40 disabled:pointer-events-none px-2.5 py-1 rounded-sm text-plum-400 hover:text-white uppercase cursor-pointer transition-colors">Stems Only</button>
+            </div>
+            <button type="button" id="recLiveBtn" class="inline-flex items-center gap-1.5 bg-sky-500 hover:bg-sky-400 text-midnight-950 px-3.5 py-1.5 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer shadow-[0_0_12px_rgba(14,165,233,0.45)]">
+              <span id="recLiveIcon" aria-hidden="true">●</span> <span id="recLiveLabel">Rec Live</span>
+            </button>
+            <button type="button" id="printFullBtn" class="inline-flex items-center gap-1.5 bg-midnight-950 hover:bg-midnight-900 border border-gold-500/50 text-gold-400 px-3 py-1.5 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">⚡ Print 96-Bar Song</button>
+          </div>
+        </div>
+        <div id="dawTrackGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2.5 mb-4 font-mono"></div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 pt-3 border-t border-midnight-850/80">
+          <div class="lg:col-span-5 bg-midnight-950 border border-midnight-850 p-3 rounded-sm flex flex-col justify-between gap-2.5 font-mono">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[11px] font-bold text-white uppercase tracking-wider">Audio Interface Routing</span>
+              <span id="sinkChannelInfo" class="text-[10px] text-plum-400">2-Ch Stereo Out</span>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-2">
+              <select id="audioOutputSelect" aria-label="Audio Output Device" class="flex-1 bg-midnight-900 border border-plum-900 text-plum-200 text-[11px] px-2.5 py-1.5 rounded-sm outline-none focus:border-gold-500">
+                <option value="">System Default Audio Output</option>
+              </select>
+              <button type="button" id="refreshDevicesBtn" class="px-2.5 py-1.5 bg-midnight-900 hover:bg-midnight-850 border border-plum-700 text-plum-300 text-[10px] font-bold uppercase rounded-sm cursor-pointer">Scan Outs</button>
+            </div>
+          </div>
+          <div class="lg:col-span-7 bg-midnight-950 border border-midnight-850 p-3 rounded-sm flex flex-col justify-between gap-2 font-mono">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] font-bold text-white uppercase tracking-wider">Exported 24-Bit Stems</span>
+                <span id="recTimerLabel" class="text-[11px] text-plum-400">00:00.0</span>
+              </div>
+              <button type="button" id="downloadAllWavBtn" disabled class="px-3 py-1 rounded-sm bg-plum-500/20 border border-plum-500/50 text-plum-300 disabled:opacity-30 disabled:pointer-events-none hover:bg-plum-500/30 text-[10px] font-bold uppercase tracking-wider cursor-pointer transition-colors">↓ Download All</button>
+            </div>
+            <div id="wavExportList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 min-h-[54px] items-center">
+              <p class="col-span-full text-[11px] text-plum-400">Arm tracks above and press <span class="text-sky-400 font-bold">Rec Live</span> or <span class="text-gold-400 font-bold">Print 96-Bar Song</span>.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="py-6 text-center border-t border-midnight-850 bg-midnight-950 relative z-20">
+    <p class="font-mono text-xs text-plum-400 uppercase tracking-widest">VOLTAGE &amp; WAVE // NOCTURNO // MADRID '82 — KORG MS-10 · SQ-10 · VC-10 PROTOCOL</p>
+  </footer>
+
+  <script>
+    // =========================================================================
+    // 1. MUSICAL & KORG HARDWARE CONSTANTS (130 BPM, 96 BARS / ~02:57 SUITE)
+    // =========================================================================
+    function midiToFreq(m, cents = 0) {
+      return 440 * Math.pow(2, ((m - 69) + cents / 100) / 12);
+    }
+    const mapFc = v => 40 * Math.pow(2, v * 0.9);
+    const tm    = v => v <= 0 ? 0.003 : 0.003 * Math.pow(10, 0.36 * v);
+    const dm    = v => Math.max(0.06, tm(v));
+
+    let ac = null;
+    let masterGainValue = 0.92;
+    let korgCutoffOffset = 0.0; // -0.85 to +1.0 manual Korg35 cutoff offset
+    let korgPeakSetting = 3.8;  // Sleek, focused Korg35 resonance default (3.8)
+    let sq10ResetSteps = 5;     // Book II P-07 default: 5-step sequence (auto-shifts to 7 in Horizon Shift unless locked)
+    let sq10UserLocked = false;
+
+    function clampFreq(hz) {
+      return Math.max(20, Math.min(ac ? ac.sampleRate * 0.45 : 20000, hz));
+    }
+
+    const BPM = 130;
+    const BEAT_SEC = 60 / BPM;
+    const BAR_SEC = 4 * BEAT_SEC;
+    const TOTAL_BARS = 96; // 96 bars @ 130 BPM = 177.23 seconds (02:57.2)
+    const LOOP_SEC = TOTAL_BARS * BAR_SEC;
+
+    function formatClock(sec) {
+      const tenths = Math.floor(Math.max(0, sec) * 10 + 1e-6);
+      const mins = Math.floor(tenths / 600);
+      const rem = ((tenths % 600) / 10).toFixed(1).padStart(4, '0');
+      return `${String(mins).padStart(2, '0')}:${rem}`;
+    }
+
+    // 6-Section 96-Bar Euro-Synth Instrumental Suite
+    const SECTIONS = [
+      { id: 'BLUE_SIGNAL',        label: 'I. BLUE SIGNAL',        short: 'SIGNAL',  startBar: 0,  endBar: 15, desc: 'Sleek MS-10 octave sub-bass & tight 130 BPM electro-wave pulse expanding into offbeat synth chords' },
+      { id: 'NIGHT_HIGHWAY',      label: 'II. NIGHT HIGHWAY',     short: 'HIGHWAY', startBar: 16, endBar: 31, desc: 'Crystalline 5-step SQ-10 sequencer with dotted-eighth stereo delay over D Minor / Dorian' },
+      { id: 'MERCURY_SUSPENSION', label: 'III. MERCURY SUSPENSION',short:'MERCURY', startBar: 32, endBar: 47, desc: 'Atmospheric breakdown — lush VC-10 string ensemble blooming under a velvety Korg35 lowpass sweep' },
+      { id: 'SILVER_THEME',       label: 'IV. SILVER THEME',      short: 'SILVER',  startBar: 48, endBar: 63, desc: 'Soaring, lyrical MS-10 portamento synth lead singing over the driving nocturnal electro groove' },
+      { id: 'HORIZON_SHIFT',      label: 'V. HORIZON SHIFT',      short: 'HORIZON', startBar: 64, endBar: 79, desc: 'Radiant F Major modulation (Fmaj9 -> Dm11 -> Bbmaj9 -> C13sus4) with 7-step SQ-10 & formant choir' },
+      { id: 'COBALT_FINALE',      label: 'VI. COBALT FINALE',     short: 'COBALT',  startBar: 80, endBar: 95, desc: 'Widescreen synth-wave climax uniting octave-lifted portamento theme, upper SQ-10 & ensemble choir' }
+    ];
+
+    // Primary Harmonic Core in D Minor / Dorian (Sections I–IV & VI): Dm9 -> Bbmaj7#11 -> Gm11 -> A7sus4
+    const CHORDS_DM = [
+      { name: 'Dm9',        rootMidi: 26, chord: [53, 57, 64] }, // D1  (26), F3-A3-E4 (b3, 5, 9)
+      { name: 'Bbmaj7#11',  rootMidi: 34, chord: [53, 57, 64] }, // Bb1 (34), F3-A3-E4 (5, 7, #11)
+      { name: 'Gm11',       rootMidi: 31, chord: [53, 58, 60] }, // G1  (31), F3-Bb3-C4 (b7, b3, 11)
+      { name: 'A7sus4',     rootMidi: 33, chord: [55, 57, 62] }  // A1  (33), G3-A3-D4 (b7, 1, 4)
+    ];
+
+    // Bridge Harmonic Core in F Major / Lydian (Section V — Horizon Shift): Fmaj9 -> Dm11 -> Bbmaj9 -> C13sus4
+    const CHORDS_FM = [
+      { name: 'Fmaj9',      rootMidi: 29, chord: [55, 57, 60] }, // F1  (29), G3-A3-C4 (9, 3, 5)
+      { name: 'Dm11',       rootMidi: 26, chord: [53, 55, 60] }, // D1  (26), F3-G3-C4 (b3, 11, b7)
+      { name: 'Bbmaj9',     rootMidi: 34, chord: [53, 57, 60] }, // Bb1 (34), F3-A3-C4 (5, 7, 9)
+      { name: 'C13sus4',    rootMidi: 24, chord: [53, 57, 58] }  // C1  (24), F3-A3-Bb3 (4, 13, b7)
+    ];
+
+    // Korg VC-10 20-Band Analog Filter Bank Center Frequencies (125 Hz – 8 kHz)
+    const VC10_BAND_FREQS = [
+      125, 160, 200, 250, 315, 400, 500, 630, 800, 1000,
+      1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 7100, 8000
+    ];
+
+    // Pure wordless vowel formant pads for VC-10 20-Band Choir ("Aah" / "Ooh" / "Eeh")
+    const VC10_VOWELS = {
+      AAH: { name: 'AAH', f1: 720, f2: 1240, f3: 2500 },
+      OOH: { name: 'OOH', f1: 320, f2: 860,  f3: 2280 },
+      EEH: { name: 'EEH', f1: 380, f2: 1960, f3: 2680 }
+    };
+
+    function getSectionForBar(barIdx) {
+      return SECTIONS.find(s => barIdx >= s.startBar && barIdx <= s.endBar) || SECTIONS[0];
+    }
+
+    function getChordForBar(barIdx) {
+      const sec = getSectionForBar(barIdx);
+      const bank = (sec.id === 'HORIZON_SHIFT') ? CHORDS_FM : CHORDS_DM;
+      return bank[Math.floor(barIdx / 2) % 4];
+    }
+
+    // =========================================================================
+    // 2. KORG MS-10, SQ-10 & VC-10 PATCH DATA (VOLTAGE & WAVE PROTOCOLS)
+    // =========================================================================
+    const VC10_ENS_S = [8, 's', 0, null, 0, null, 0, 0, 5.8, 2.0, 0, 0, null, null, 0, 2.2, 2.2, 6.2, 2.8];
+
+    const PATCH_DATA = {
+      kick:    { name: "MS10 Kick",   rgb: "59, 130, 246",  s: [32,'t',0,2,0,null,0,0,4.2,7.2,0,0,null,null,0,0,1.20,0,0.80] },
+      snare:   { name: "Gated Snare", rgb: "14, 165, 233",  s: [16,'n',0,null,0,7.6,0,0,7.3,4.6,0,5.5,'s',0,0,0,0.78,0,0.34] },
+      hat:     { name: "16th Hat",    rgb: "148, 163, 184", s: [0,'n',0,null,0,0,0,0,9.2,2.8,0,1.0,'s',0,0,0,0.22,0,0.08] },
+      bass:    { name: "MS10 Bass",   rgb: "96, 165, 250",  s: [16,'s',0,null,0,null,0,0,4.4,3.8,0,6.0,null,null,0,0.01,1.24,1.4,0.20] },
+      arp:     { name: "SQ10 Seq",    rgb: "56, 189, 248",  s: [8,'s',0,null,0,null,0,0,6.4,3.8,0,0,null,null,0,0.02,1.35,0.6,0.30] },
+      lead:    { name: "MS10 Theme",  rgb: "226, 232, 240", s: [8,'s',0,null,0,null,0,0,6.2,3.8,0,0,null,null,0,0.12,2.00,6.8,0.85] },
+      ens1:    { name: "VC10 Str 1",  rgb: "129, 140, 248", s: VC10_ENS_S },
+      ens2:    { name: "VC10 Str 2",  rgb: "99, 102, 241",  s: VC10_ENS_S },
+      ens3:    { name: "VC10 Str 3",  rgb: "165, 180, 252", s: VC10_ENS_S },
+      vocoder: { name: "VC10 Choir",  rgb: "56, 189, 248",  s: [8,'s',0,null,0,null,0,0,6.6,3.4,0,0,null,null,0,0.45,2.20,6.4,1.20] },
+      whisper: { name: "Nocturne Air",rgb: "148, 163, 184", s: [0,'n',0,null,0,6.0,0,0,8.1,2.8,0,0,'s',0,0,0.8,2.1,3.8,0.90] }
+    };
+
+    const BASE_VOLUMES = {
+      kick: 1.22, snare: 0.72, hat: 0.38,
+      bass: 1.26,
+      arp: 0.64,
+      lead: 0.88,
+      ens1: 0.33, ens2: 0.33, ens3: 0.33,
+      vocoder: 0.72, whisper: 0.38
+    };
+
+    const SCORE_PARTS = [
+      { id: 'part1', num: 'TRK 01', title: 'MS-10 NOCTURNE THEME',  spec: 'BOOK I P-08 // LYRICAL PORTAMENTO LEAD',           color: '#e2e8f0', rgb: '226, 232, 240', voices: ['lead'], gain: 1.0, muted: false, solo: false },
+      { id: 'part2', num: 'TRK 02', title: 'SQ-10 5/7-STEP PULSE',  spec: 'BOOK II P-07 // DOTTED-8TH STEREO DELAY',         color: '#38bdf8', rgb: '56, 189, 248',  voices: ['arp'], gain: 1.0, muted: false, solo: false },
+      { id: 'part3', num: 'TRK 03', title: 'VC-10 STRING & CHOIR',  spec: 'BOOK III V-06 + V-01 // BBD ENSEMBLE & VOWELS',   color: '#818cf8', rgb: '129, 140, 248', voices: ['ens1', 'ens2', 'ens3', 'vocoder', 'whisper'], gain: 1.0, muted: false, solo: false },
+      { id: 'part4', num: 'TRK 04', title: 'MS-10 OCTAVE SUB BASS', spec: 'BOOK I P-01 // DARK 16\'/32\' SATURATED PULSE',    color: '#60a5fa', rgb: '96, 165, 250',  voices: ['bass'], gain: 1.0, muted: false, solo: false },
+      { id: 'part5', num: 'TRK 05', title: '130 BPM ELECTRO DRUMS', spec: 'BOOK I P-04 // PUNCH KICK + GATED SNARE + 16THS', color: '#0ea5e9', rgb: '14, 165, 233',  voices: ['kick', 'snare', 'hat'], gain: 1.0, muted: false, solo: false }
+    ];
+
+    const DAW_TRACK_DEFS = [
+      { id: 'master', num: 'MST', name: 'Master_Mix',           fileSlug: '00_Master_Mix',           channels: 2, color: '#60a5fa', armed: true },
+      { id: 'part1',  num: 'T01', name: 'MS10_Nocturne_Theme',  fileSlug: '01_MS10_Nocturne_Theme',  channels: 1, color: '#e2e8f0', armed: true },
+      { id: 'part2',  num: 'T02', name: 'SQ10_5_7Step_Pulse',   fileSlug: '02_SQ10_5_7Step_Pulse',   channels: 1, color: '#38bdf8', armed: true },
+      { id: 'part3',  num: 'T03', name: 'VC10_String_Choir',    fileSlug: '03_VC10_String_Choir',    channels: 1, color: '#818cf8', armed: true },
+      { id: 'part4',  num: 'T04', name: 'MS10_Octave_SubBass',  fileSlug: '04_MS10_Octave_SubBass',  channels: 1, color: '#3b82f6', armed: true },
+      { id: 'part5',  num: 'T05', name: 'Electro_Wave_Drums',   fileSlug: '05_Electro_Wave_Drums',   channels: 1, color: '#0ea5e9', armed: true }
+    ];
+
+    // =========================================================================
+    // 3. PURE KORG MS-10, SQ-10 & VC-10 WEB AUDIO CIRCUIT EMULATION
+    // =========================================================================
+    let masterOut = null, masterBus = null, masterAnalyser = null, stereoDelay = null;
+    let partBuses = {}, partAnalysers = {}, tracks = {};
+    let nW = null, nP = null;
+    let scopeMode = 'WAVE';
+    let recMode = 'ALL', isRecording = false, autoStopAtLoopEnd = false, recStartTime = 0;
+    let recNode = null, recBuffers = {}, recPeaks = {}, renderedTakes = [];
+
+    function initAudioEngine() {
+      if (ac) return;
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      ac = new AudioCtx();
+
+      const comp = ac.createDynamicsCompressor();
+      comp.threshold.value = -11;
+      comp.ratio.value = 3.2;
+      comp.attack.value = 0.008;
+      comp.release.value = 0.16;
+
+      masterOut = ac.createGain();
+      masterOut.gain.value = masterGainValue;
+      masterBus = ac.createGain();
+      masterBus.gain.value = 1.0;
+
+      masterAnalyser = ac.createAnalyser();
+      masterAnalyser.fftSize = 1024;
+      masterAnalyser.smoothingTimeConstant = 0.76;
+
+      // Dotted-eighth tape echo on TRK 01 (Lead) & TRK 02 (SQ-10 Sequence)
+      stereoDelay = ac.createDelay(1.5);
+      stereoDelay.delayTime.value = BEAT_SEC * 0.75;
+      const delayFilter = ac.createBiquadFilter();
+      delayFilter.type = 'lowpass';
+      delayFilter.frequency.value = 2100;
+      const delayFeedback = ac.createGain();
+      delayFeedback.gain.value = 0.32;
+      const delayWet = ac.createGain();
+      delayWet.gain.value = 0.34;
+
+      stereoDelay.connect(delayFilter);
+      delayFilter.connect(delayFeedback);
+      delayFeedback.connect(stereoDelay);
+      delayFilter.connect(delayWet);
+      delayWet.connect(comp);
+
+      SCORE_PARTS.forEach(part => {
+        const bus = ac.createGain();
+        bus.gain.value = 1.0;
+        bus.connect(comp);
+        if (part.id === 'part1' || part.id === 'part2') bus.connect(stereoDelay);
+        partBuses[part.id] = bus;
+
+        const an = ac.createAnalyser();
+        an.fftSize = 1024;
+        an.smoothingTimeConstant = 0.76;
+        bus.connect(an);
+        partAnalysers[part.id] = an;
+      });
+
+      comp.connect(masterOut);
+      masterOut.connect(masterBus);
+      masterBus.connect(masterAnalyser);
+      masterBus.connect(ac.destination);
+      ac.cp = comp;
+
+      const L = ac.sampleRate * 3;
+      nW = ac.createBuffer(1, L, ac.sampleRate);
+      nP = ac.createBuffer(1, L, ac.sampleRate);
+      const w = nW.getChannelData(0), p = nP.getChannelData(0);
+      let a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0;
+      for (let i = 0; i < L; i++) {
+        const x = Math.random() * 2 - 1;
+        w[i] = x;
+        a = 0.99886 * a + x * 0.0555179;
+        b = 0.99332 * b + x * 0.0750759;
+        c = 0.96900 * c + x * 0.1538520;
+        d = 0.86650 * d + x * 0.3104856;
+        e = 0.55000 * e + x * 0.5329522;
+        f = -0.7616 * f - x * 0.0168980;
+        p[i] = (a + b + c + d + e + f + g + x * 0.5362) * 0.12;
+        g = x * 0.115926;
+      }
+
+      Object.keys(PATCH_DATA).forEach(id => { tracks[id] = buildVoice(id, PATCH_DATA[id]); });
+      applyMixerGains();
+      applyKorgVcfOverride();
+
+      const srBadge = document.getElementById('recSampleRateBadge');
+      if (srBadge) srBadge.textContent = `${(ac.sampleRate / 1000).toFixed(1)} kHz // 24-BIT WAV`;
+      updateSinkChannelInfo();
+      setupDawCaptureTap();
+    }
+
+    function makeKorg35SaturationCurve(drive = 2.35) {
+      const n = 1024, curve = new Float32Array(n);
+      const norm = Math.tanh(drive);
+      for (let i = 0; i < n; i++) {
+        const x = (i / 512) - 1;
+        curve[i] = Math.tanh(x * drive + 0.06 * x * x) / norm;
+      }
+      return curve;
+    }
+
+    function buildVoice(id, pData) {
+      const s = pData.s, v = { all: [], P: pData }, N = (f, ...a) => ac[f](...a);
+      const src = (t, f) => { const o = N('createOscillator'); o.type = t; o.frequency.value = f; o.start(); v.all.push(o); return o; };
+      const G = (g = 1) => { const n = N('createGain'); n.gain.value = g; return n; };
+      const cs = () => { const o = N('createConstantSource'); o.offset.value = 0; o.start(); v.all.push(o); return o; };
+      const nz = b => { const o = N('createBufferSource'); o.buffer = b; o.loop = true; o.start(); v.all.push(o); return o; };
+
+      v.eg = cs();
+      v.vcf = N('createBiquadFilter');
+      v.vcf.type = 'lowpass';
+      const pre = G(0.55);
+      const vca = G(0);
+
+      if (id === 'snare') {
+        const wn = G(0.36);
+        nz(nW).connect(wn);
+        wn.connect(pre);
+
+        v.osc = src('triangle', 220);
+        v.osc2 = src('sine', 360);
+        const bodyGain = G(0.45);
+        const rimGain = G(0.22);
+        v.osc.connect(bodyGain); bodyGain.connect(pre);
+        v.osc2.connect(rimGain); rimGain.connect(pre);
+
+        pre.connect(v.vcf);
+        v.vcf.connect(vca);
+      } else if (id === 'hat') {
+        const wn = G(0.30);
+        nz(nW).connect(wn);
+
+        const hatHpf = N('createBiquadFilter');
+        hatHpf.type = 'highpass';
+        hatHpf.frequency.value = 5000;
+
+        wn.connect(hatHpf);
+        hatHpf.connect(pre);
+        pre.connect(v.vcf);
+        v.vcf.connect(vca);
+      } else if (id === 'whisper') {
+        const pn = G(0.46);
+        nz(nP).connect(pn);
+        pn.connect(pre);
+        pre.connect(v.vcf);
+        v.vcf.connect(vca);
+      } else if (id === 'bass') {
+        // Dark, tight MS-10 Octave Sub-Bass (16' Saw + 32' Triangle)
+        v.osc = src('sawtooth', 110);
+        v.osc2 = src('triangle', 55);
+        const sawGain = G(0.58);
+        const subGain = G(0.62);
+        v.osc.connect(sawGain); sawGain.connect(pre);
+        v.osc2.connect(subGain); subGain.connect(pre);
+        pre.connect(v.vcf);
+
+        const korg35WarmSat = N('createWaveShaper');
+        korg35WarmSat.curve = makeKorg35SaturationCurve(2.35);
+        korg35WarmSat.oversample = '2x';
+
+        const lowShelf = N('createBiquadFilter');
+        lowShelf.type = 'lowshelf';
+        lowShelf.frequency.value = 105;
+        lowShelf.gain.value = 4.5;
+
+        v.vcf.connect(korg35WarmSat);
+        korg35WarmSat.connect(lowShelf);
+        lowShelf.connect(vca);
+      } else if (id === 'arp') {
+        // Crystalline SQ-10 5/7-Step Sequencer (Sawtooth + Octave Sine chime + HPF at 260 Hz)
+        v.osc = src('sawtooth', 220);
+        v.osc2 = src('sine', 440);
+        const sawBlend = G(0.64);
+        const chimeBlend = G(0.36);
+        v.osc.connect(sawBlend); sawBlend.connect(pre);
+        v.osc2.connect(chimeBlend); chimeBlend.connect(pre);
+
+        const arpHpf = N('createBiquadFilter');
+        arpHpf.type = 'highpass';
+        arpHpf.frequency.value = 260;
+
+        pre.connect(arpHpf);
+        arpHpf.connect(v.vcf);
+        v.vcf.connect(vca);
+      } else if (id === 'lead') {
+        // Soaring, lyrical MS-10 Portamento Lead (Dual detuned Sawtooth + Triangle warmth)
+        v.osc = src('sawtooth', 220);
+        v.osc2 = src('sawtooth', 220.9);
+        v.osc3 = src('triangle', 110);
+        const l1 = G(0.48);
+        const l2 = G(0.48);
+        const l3 = G(0.28);
+        v.osc.connect(l1); l1.connect(pre);
+        v.osc2.connect(l2); l2.connect(pre);
+        v.osc3.connect(l3); l3.connect(pre);
+
+        const leadHpf = N('createBiquadFilter');
+        leadHpf.type = 'highpass';
+        leadHpf.frequency.value = 210;
+
+        pre.connect(leadHpf);
+        leadHpf.connect(v.vcf);
+        v.vcf.connect(vca);
+      } else if (id.startsWith('ens')) {
+        // Lush VC-10 String Ensemble Chorus (Book III V-06)
+        v.osc = src('sawtooth', 220);
+        v.osc2 = src('sawtooth', 221.1);
+        v.osc3 = src('triangle', 110);
+        const str1 = G(0.46);
+        const str2 = G(0.46);
+        const warmBody = G(0.30);
+        v.osc.connect(str1); str1.connect(pre);
+        v.osc2.connect(str2); str2.connect(pre);
+        v.osc3.connect(warmBody); warmBody.connect(pre);
+
+        const strHpf = N('createBiquadFilter');
+        strHpf.type = 'highpass';
+        strHpf.frequency.value = 190;
+
+        pre.connect(strHpf);
+        strHpf.connect(v.vcf);
+        v.vcf.connect(vca);
+      } else if (id === 'vocoder') {
+        // Wordless VC-10 20-Band Formant Choir Pad (Book III V-01)
+        v.osc = src('sawtooth', 110);
+        v.osc2 = src('sawtooth', 220.5);
+        const octGain = G(0.50);
+        v.osc.connect(pre);
+        v.osc2.connect(octGain);
+        octGain.connect(pre);
+
+        v.vcBands = [];
+        VC10_BAND_FREQS.forEach(centerHz => {
+          const bp = N('createBiquadFilter');
+          bp.type = 'bandpass';
+          bp.frequency.value = centerHz;
+          bp.Q.value = 8.4;
+
+          const bandVca = G(0.15);
+          pre.connect(bp);
+          bp.connect(bandVca);
+          bandVca.connect(vca);
+          v.vcBands.push({ hz: centerHz, bp, gain: bandVca });
+        });
+      } else {
+        // Punchy MS-10 32' Triangle Kick (Book I P-04)
+        v.osc = src('triangle', 120);
+        v.osc.connect(pre);
+        pre.connect(v.vcf);
+        v.vcf.connect(vca);
+      }
+
+      const vsum = G(0.5);
+      const clip = N('createWaveShaper');
+      clip.curve = new Float32Array([0, 0, 2]);
+      vsum.connect(clip);
+      clip.connect(vca.gain);
+      const ge = G(0.92);
+      v.eg.connect(ge);
+      ge.connect(vsum);
+
+      v.out = G(BASE_VOLUMES[id]);
+      vca.connect(v.out);
+
+      const ownerPart = SCORE_PARTS.find(p => p.voices.includes(id));
+      if (ownerPart && partBuses[ownerPart.id]) v.out.connect(partBuses[ownerPart.id]);
+      else v.out.connect(ac.cp);
+
+      v.an = ac.createAnalyser();
+      v.an.fftSize = 2048;
+      v.an.smoothingTimeConstant = 0.76;
+      v.out.connect(v.an);
+
+      const t = ac.currentTime;
+      v.vcf.frequency.setTargetAtTime(clampFreq(mapFc(s[8])), t, 0.02);
+      v.vcf.Q.setTargetAtTime(s[9] * 1.25, t, 0.02);
+      return v;
+    }
+
+    const hold = (o, t) => {
+      try { if (o.cancelAndHoldAtTime) { o.cancelAndHoldAtTime(t); return; } } catch (e) {}
+      o.cancelScheduledValues(t);
+    };
+
+    function schedOn(v, at, vel = 1.0, cleanMonoBreath = false, customAttack = null) {
+      const s = v.P.s, o = v.eg.offset;
+      const a = customAttack !== null ? customAttack : tm(s[15]);
+      const h = tm(s[14]);
+      const peak = Math.max(0.12, Math.min(1.0, vel));
+      hold(o, at);
+      if (cleanMonoBreath) {
+        o.setTargetAtTime(0, at, 0.0015);
+        o.setValueAtTime(0, at + 0.004);
+        o.linearRampToValueAtTime(peak, at + 0.004 + a);
+      } else {
+        o.setValueAtTime(0, at);
+        o.linearRampToValueAtTime(peak, at + a);
+      }
+      const startHold = at + (cleanMonoBreath ? 0.004 : 0) + a + (s[14] ? h : 0);
+      o.setValueAtTime(peak, startHold);
+      o.setTargetAtTime((s[17] / 10) * peak, startHold, dm(s[16]) / 3);
+    }
+
+    function schedOff(v, at, customRelease = null) {
+      const o = v.eg.offset;
+      hold(o, at);
+      const rel = customRelease !== null ? customRelease : Math.max(0.006, Math.min(0.45, dm(v.P.s[18]) / 3));
+      o.setTargetAtTime(0, at, rel);
+    }
+
+    function triggerVc10FormantBank(v, vowel, at) {
+      if (!v || !v.vcBands) return;
+      v.vcBands.forEach(band => {
+        const d1 = Math.log2(band.hz / vowel.f1);
+        const d2 = Math.log2(band.hz / vowel.f2);
+        const d3 = Math.log2(band.hz / vowel.f3);
+
+        const g1 = Math.exp(-(d1 * d1) / 0.16) * 1.15;
+        const g2 = Math.exp(-(d2 * d2) / 0.14) * 0.95;
+        const g3 = Math.exp(-(d3 * d3) / 0.20) * 0.55;
+        const targetGain = Math.min(1.30, 0.04 + g1 + g2 + g3);
+
+        hold(band.gain.gain, at);
+        band.gain.gain.setTargetAtTime(targetGain, at, 0.025);
+      });
+    }
+
+    function computeKorg35Cutoff(baseHz) {
+      const mult = Math.pow(4.2, korgCutoffOffset);
+      return clampFreq(baseHz * mult);
+    }
+
+    function applyKorgVcfOverride() {
+      const readout = document.getElementById('korgVcfReadout');
+      const cutValEl = document.getElementById('korgCutoffVal');
+      const peakValEl = document.getElementById('korgPeakVal');
+
+      if (cutValEl) cutValEl.textContent = `${korgCutoffOffset >= 0 ? '+' : ''}${Math.round(korgCutoffOffset * 100)}%`;
+      if (peakValEl) peakValEl.textContent = korgPeakSetting.toFixed(1);
+      if (readout) {
+        const modeTxt = Math.abs(korgCutoffOffset) < 0.02 ? 'AUTO' : `${korgCutoffOffset > 0 ? '+' : ''}${Math.round(korgCutoffOffset * 100)}%`;
+        readout.textContent = `${modeTxt} // PEAK ${korgPeakSetting.toFixed(1)}`;
+      }
+
+      if (!ac) return;
+      const now = ac.currentTime;
+      ['bass', 'arp', 'lead', 'ens1', 'ens2', 'ens3'].forEach(vid => {
+        const trk = tracks[vid];
+        if (trk && trk.vcf) {
+          const scale = vid === 'bass' ? 1.15 : (vid === 'arp' ? 1.25 : 1.0);
+          trk.vcf.Q.setTargetAtTime(korgPeakSetting * scale, now, 0.02);
+        }
+      });
+    }
+
+    function applyMixerGains() {
+      if (!ac) return;
+      const anySolo = SCORE_PARTS.some(p => p.solo);
+      SCORE_PARTS.forEach(part => {
+        const active = anySolo ? part.solo : !part.muted;
+        const mult = active ? part.gain : 0;
+        part.voices.forEach(vid => {
+          if (tracks[vid] && tracks[vid].out) {
+            tracks[vid].out.gain.setTargetAtTime(BASE_VOLUMES[vid] * mult, ac.currentTime, 0.02);
+          }
+        });
+      });
+    }
+
+    // =========================================================================
+    // 4. 96-BAR NOCTURNAL SYNTH-WAVE COMPOSITION (130 BPM · ~02:57 SUITE)
+    // =========================================================================
+    const BAR_EVENTS = [];
+
+    function buildScoreEvents() {
+      BAR_EVENTS.length = 0;
+
+      for (let b = 0; b < TOTAL_BARS; b++) {
+        const sec = getSectionForBar(b);
+        const chord = getChordForBar(b);
+        const isAnswerBar = (b % 2 === 1);
+        const isPhraseEnd8 = (b % 8 === 7);
+        const events = [];
+
+        // Effective SQ-10 Reset step count (auto-shifts to 7-step in Horizon Shift unless locked)
+        const effectiveSqSteps = sq10UserLocked ? sq10ResetSteps : (sec.id === 'HORIZON_SHIFT' ? 7 : 5);
+
+        // Lowpass filter tension multiplier for Mercury Suspension (Bars 32–47)
+        let filterTensionMult = 1.0;
+        if (sec.id === 'MERCURY_SUSPENSION') {
+          const p = (b - 32) / 16;
+          filterTensionMult = 0.38 + Math.pow(p, 1.55) * 0.72;
+        }
+
+        // ---------------------------------------------------------------------
+        // TRK 05: 130 BPM ELECTRO-WAVE DRUMS (Book I P-04)
+        // ---------------------------------------------------------------------
+        if (sec.id === 'MERCURY_SUSPENSION') {
+          // Atmospheric breakdown (Bars 32–47): heartbeat kick on 1 & 3, offbeat open hat, Bar 47 snare build
+          [0, 2].forEach(off => {
+            if (b === 47) return;
+            events.push({ type: 'kick', partId: 'part5', voiceId: 'kick', rawBeatOff: off, durSec: 0.16, vel: 0.88, label: 'SUB KIK' });
+          });
+          for (let h = 0; h < 16; h++) {
+            if (h % 4 !== 2) continue;
+            events.push({ type: 'hit', partId: 'part5', voiceId: 'hat', rawBeatOff: h * 0.25, durSec: 0.10, vel: 0.68, label: 'OPN HAT' });
+          }
+          if (b === 46) {
+            events.push({ type: 'snare', partId: 'part5', voiceId: 'snare', rawBeatOff: 3.50, durSec: 0.11, vel: 0.74, label: 'CUE SNR' });
+          } else if (b === 47) {
+            [2.0, 2.5, 3.0, 3.25, 3.5, 3.75].forEach((off, idx) => {
+              events.push({ type: 'snare', partId: 'part5', voiceId: 'snare', rawBeatOff: off, durSec: 0.10, vel: 0.65 + idx * 0.06, label: 'ROLL SNR' });
+            });
+          }
+        } else if (b === 95) {
+          events.push({ type: 'kick',  partId: 'part5', voiceId: 'kick',  rawBeatOff: 0.0, durSec: 0.20, vel: 1.0,  label: 'END KIK' });
+          events.push({ type: 'snare', partId: 'part5', voiceId: 'snare', rawBeatOff: 1.0, durSec: 0.20, vel: 0.92, label: 'END SNR' });
+        } else {
+          // Sleek, driving 130 BPM electro-wave 4/4 kick & gated snare
+          [0, 1, 2, 3].forEach(off => {
+            if (b === 79 && off === 3) return;
+            events.push({ type: 'kick', partId: 'part5', voiceId: 'kick', rawBeatOff: off, durSec: 0.15, vel: 1.0, label: 'MS10 KIK' });
+          });
+          if (b >= 2) {
+            [1, 3].forEach(off => {
+              if (b === 79 && off === 3) return;
+              events.push({ type: 'snare', partId: 'part5', voiceId: 'snare', rawBeatOff: off, durSec: 0.14, vel: 0.88, label: 'GATE SNR' });
+            });
+            if (b === 79) {
+              [3.0, 3.5, 3.75].forEach((off, idx) => {
+                events.push({ type: 'snare', partId: 'part5', voiceId: 'snare', rawBeatOff: off, durSec: 0.10, vel: 0.70 + idx * 0.09, label: 'TURN SNR' });
+              });
+            } else if (isPhraseEnd8) {
+              events.push({ type: 'snare', partId: 'part5', voiceId: 'snare', rawBeatOff: 3.50, durSec: 0.11, vel: 0.72, label: 'TURN SNR' });
+              events.push({ type: 'snare', partId: 'part5', voiceId: 'snare', rawBeatOff: 3.75, durSec: 0.11, vel: 0.86, label: 'TURN SNR' });
+            }
+          }
+          // Crisp 16th-note electro-wave hi-hats with offbeat open accents
+          for (let h = 0; h < 16; h++) {
+            const offbeat = (h % 4 === 2);
+            if (b < 2 && !offbeat) continue;
+            events.push({
+              type: 'hit', partId: 'part5', voiceId: 'hat', rawBeatOff: h * 0.25,
+              durSec: offbeat ? 0.11 : 0.032,
+              vel: offbeat ? 0.88 : 0.32,
+              label: offbeat ? 'OPN HAT' : '16TH HAT'
+            });
+          }
+        }
+
+        // ---------------------------------------------------------------------
+        // TRK 04: MS-10 DARK OCTAVE SUB-BASS (Book I P-01)
+        // ---------------------------------------------------------------------
+        const r = chord.rootMidi;
+        if (b === 95) {
+          events.push({
+            type: 'note', partId: 'part4', voiceId: 'bass', rawBeatOff: 0.00, durBeats: 3.85,
+            midi: 26, cutoffHz: 300, envPeakHz: 720, glideSec: 0.02, vel: 0.96, customRelease: 0.45, label: 'Dm9 END'
+          });
+        } else {
+          // Propulsive, dark rolling octave bassline with tight Korg35 envelope contour
+          for (let s = 0; s < 16; s += 2) {
+            const isHigh = (s % 4 === 2);
+            const melodicTurn = (isAnswerBar && s === 14) ? 10 : (isHigh ? 12 : 0);
+            const baseCut = isHigh ? 320 : 225;
+            const peakCut = isHigh ? 860 : 620;
+            events.push({
+              type: 'note', partId: 'part4', voiceId: 'bass', rawBeatOff: s * 0.25, durBeats: 0.28,
+              midi: r + melodicTurn,
+              cutoffHz: Math.max(145, baseCut * filterTensionMult),
+              envPeakHz: Math.max(250, peakCut * filterTensionMult),
+              glideSec: 0.010,
+              vel: isHigh ? 0.84 : 1.00,
+              cleanMonoBreath: true,
+              label: 'P-01 SUB'
+            });
+          }
+        }
+
+        // ---------------------------------------------------------------------
+        // TRK 02: SQ-10 5/7-STEP CRYSTALLINE SEQUENCER (Book II P-07)
+        // ---------------------------------------------------------------------
+        if (sec.id !== 'BLUE_SIGNAL' && b < 95) {
+          const highOct = (sec.id === 'COBALT_FINALE' && b >= 84) ? 12 : 0;
+          const seqPool = (sec.id === 'HORIZON_SHIFT')
+            ? [
+                chord.chord[2] + 12,
+                chord.chord[1] + 12,
+                chord.chord[0] + 12,
+                76, // E5 (Maj7)
+                74, // D5 (13th)
+                72, // C5
+                69, // A4
+                67  // G4 (9th)
+              ]
+            : [
+                chord.chord[2] + 12 + highOct,
+                chord.chord[1] + 12 + highOct,
+                chord.chord[0] + 12 + highOct,
+                76 + highOct, // E5 (9th)
+                74 + highOct, // D5
+                72 + highOct, // C5 (b7)
+                71 + highOct, // B4 (Dorian 6th!)
+                69 + highOct  // A4
+              ];
+
+          const stepCount = (sec.id === 'MERCURY_SUSPENSION') ? 8 : 16;
+          const baseCut = sec.id === 'MERCURY_SUSPENSION'
+            ? (680 + 2400 * ((b - 32) / 16))
+            : (1350 + 2100 * ((b % 8) / 8));
+          const seqVel = (sec.id === 'SILVER_THEME' || sec.id === 'COBALT_FINALE') ? 0.72 : 0.84;
+
+          for (let s = 0; s < stepCount; s++) {
+            if (sec.id === 'MERCURY_SUSPENSION' && s % 2 !== 0) continue;
+            const beatOff = (sec.id === 'MERCURY_SUSPENSION') ? s * 0.5 : s * 0.25;
+            const globalStep = (b * 16) + s;
+            const sqStep = globalStep % effectiveSqSteps;
+            const midi = seqPool[sqStep % seqPool.length];
+            events.push({
+              type: 'note', partId: 'part2', voiceId: 'arp', rawBeatOff: beatOff, durBeats: 0.14,
+              midi, cutoffHz: baseCut, envPeakHz: baseCut * 1.4,
+              vel: seqVel, label: `SQ-S${sqStep + 1}`
+            });
+          }
+        }
+
+        // ---------------------------------------------------------------------
+        // TRK 01: MS-10 LYRICAL PORTAMENTO THEME (Book I P-08)
+        // ---------------------------------------------------------------------
+        if (sec.id === 'SILVER_THEME' || sec.id === 'HORIZON_SHIFT' || sec.id === 'COBALT_FINALE') {
+          if (b === 95) {
+            events.push({
+              type: 'note', partId: 'part1', voiceId: 'lead', rawBeatOff: 0.00, durBeats: 3.85,
+              midi: 69, cutoffHz: 2200, envPeakHz: 3100, glideSec: 0.04, vel: 0.92,
+              customAttack: 0.14, customRelease: 0.65, label: 'END A4'
+            });
+          } else if (sec.id === 'HORIZON_SHIFT') {
+            // Soaring F Major / Dorian theme melody (C5 -> A4 -> G4 -> F4 -> G4 -> A4 -> C5 -> D5)
+            const horizonMelody = [
+              // Bar 0-1 (Fmaj9)
+              [{ off: 0.0, midi: 72, dur: 1.75, glide: 0.05 }, { off: 2.0, midi: 69, dur: 1.85, glide: 0.06 }],
+              [{ off: 0.0, midi: 67, dur: 1.40, glide: 0.05 }, { off: 1.5, midi: 65, dur: 1.10, glide: 0.05 }, { off: 2.75, midi: 67, dur: 1.10, glide: 0.05 }],
+              // Bar 2-3 (Dm11)
+              [{ off: 0.0, midi: 69, dur: 1.85, glide: 0.06 }, { off: 2.0, midi: 72, dur: 1.85, glide: 0.07 }],
+              [{ off: 0.0, midi: 74, dur: 1.75, glide: 0.07 }, { off: 2.0, midi: 72, dur: 1.85, glide: 0.06 }],
+              // Bar 4-5 (Bbmaj9)
+              [{ off: 0.0, midi: 77, dur: 1.75, glide: 0.07 }, { off: 2.0, midi: 76, dur: 1.85, glide: 0.06 }],
+              [{ off: 0.0, midi: 74, dur: 1.40, glide: 0.06 }, { off: 1.5, midi: 72, dur: 1.10, glide: 0.05 }, { off: 2.75, midi: 69, dur: 1.10, glide: 0.05 }],
+              // Bar 6-7 (C13sus4)
+              [{ off: 0.0, midi: 67, dur: 1.85, glide: 0.05 }, { off: 2.0, midi: 69, dur: 1.85, glide: 0.06 }],
+              [{ off: 0.0, midi: 72, dur: 2.20, glide: 0.07 }, { off: 2.5, midi: 74, dur: 1.35, glide: 0.06 }]
+            ];
+            horizonMelody[(b - 64) % 8].forEach(n => {
+              events.push({
+                type: 'note', partId: 'part1', voiceId: 'lead', rawBeatOff: n.off, durBeats: n.dur,
+                midi: n.midi, cutoffHz: 2150, envPeakHz: 3100, glideSec: n.glide,
+                vel: 0.94, customAttack: 0.08, customRelease: 0.28, label: 'P-08 THM'
+              });
+            });
+          } else {
+            // Nocturnal D Minor / Dorian theme melody (A4 -> F4 -> E4 -> D4 -> E4 -> F4 -> A4 -> B4 -> C#5)
+            const octLift = (sec.id === 'COBALT_FINALE' && b >= 88) ? 12 : 0;
+            const nocturneMelody = [
+              // Bar 0-1 (Dm9)
+              [{ off: 0.0, midi: 69 + octLift, dur: 1.75, glide: 0.05 }, { off: 2.0, midi: 65 + octLift, dur: 1.85, glide: 0.06 }],
+              [{ off: 0.0, midi: 64 + octLift, dur: 1.40, glide: 0.05 }, { off: 1.5, midi: 62 + octLift, dur: 1.10, glide: 0.05 }, { off: 2.75, midi: 64 + octLift, dur: 1.10, glide: 0.05 }],
+              // Bar 2-3 (Bbmaj7#11)
+              [{ off: 0.0, midi: 65 + octLift, dur: 1.85, glide: 0.06 }, { off: 2.0, midi: 69 + octLift, dur: 1.85, glide: 0.07 }],
+              [{ off: 0.0, midi: 76 + octLift, dur: 1.75, glide: 0.08 }, { off: 2.0, midi: 74 + octLift, dur: 1.85, glide: 0.06 }],
+              // Bar 4-5 (Gm11)
+              [{ off: 0.0, midi: 72 + octLift, dur: 1.75, glide: 0.06 }, { off: 2.0, midi: 71 + octLift, dur: 1.85, glide: 0.06 }],
+              [{ off: 0.0, midi: 69 + octLift, dur: 1.40, glide: 0.05 }, { off: 1.5, midi: 67 + octLift, dur: 1.10, glide: 0.05 }, { off: 2.75, midi: 65 + octLift, dur: 1.10, glide: 0.05 }],
+              // Bar 6-7 (A7sus4)
+              [{ off: 0.0, midi: 64 + octLift, dur: 1.85, glide: 0.05 }, { off: 2.0, midi: 67 + octLift, dur: 1.85, glide: 0.06 }],
+              [{ off: 0.0, midi: 69 + octLift, dur: 2.20, glide: 0.07 }, { off: 2.5, midi: 73 + octLift, dur: 1.35, glide: 0.06 }]
+            ];
+            nocturneMelody[b % 8].forEach(n => {
+              events.push({
+                type: 'note', partId: 'part1', voiceId: 'lead', rawBeatOff: n.off, durBeats: n.dur,
+                midi: n.midi, cutoffHz: 2250, envPeakHz: 3250, glideSec: n.glide,
+                vel: 0.94, customAttack: 0.08, customRelease: 0.28, label: 'P-08 THM'
+              });
+            });
+          }
+        }
+
+        // ---------------------------------------------------------------------
+        // TRK 03: VC-10 STRING ENSEMBLE & WORDLESS FORMANT CHOIR (Book III V-06 + V-01)
+        // ---------------------------------------------------------------------
+        const detune = [-6, 0, 6];
+        if (b === 95) {
+          // Lingering Dm9 final chord (F4, A4, E5)
+          const dm9Final = [65, 69, 76];
+          [0, 1, 2].forEach(idx => {
+            events.push({
+              type: 'note', partId: 'part3', voiceId: `ens${idx + 1}`, rawBeatOff: 0.0, durBeats: 3.85,
+              midi: dm9Final[idx], cents: detune[idx], cutoffHz: 2200, vel: 0.88,
+              customAttack: 0.18, customRelease: 0.65, label: 'Dm9 END'
+            });
+          });
+        } else if (sec.id === 'BLUE_SIGNAL' && b >= 8) {
+          // Subtle offbeat synth-string stabs entering at Bar 9
+          [1.5, 3.5].forEach(off => {
+            [0, 1, 2].forEach(idx => {
+              events.push({
+                type: 'note', partId: 'part3', voiceId: `ens${idx + 1}`, rawBeatOff: off, durBeats: 0.35,
+                midi: chord.chord[idx] + 12, cents: detune[idx], cutoffHz: 1450 + (b - 8) * 120,
+                vel: 0.74, customAttack: 0.03, customRelease: 0.22, label: 'V-06 STB'
+              });
+            });
+          });
+        } else if (sec.id === 'MERCURY_SUSPENSION' || sec.id === 'SILVER_THEME' || sec.id === 'HORIZON_SHIFT' || sec.id === 'COBALT_FINALE') {
+          // Lush, 2-bar blooming VC-10 string ensemble chords
+          if (b % 2 === 0) {
+            const sweepProg = sec.id === 'MERCURY_SUSPENSION' ? (0.4 + ((b - 32) / 16) * 0.6) : 1.0;
+            const strCut = 1150 + sweepProg * 1450;
+            [0, 1, 2].forEach(idx => {
+              events.push({
+                type: 'note', partId: 'part3', voiceId: `ens${idx + 1}`, rawBeatOff: 0.0, durBeats: 7.75,
+                midi: chord.chord[idx] + 12, cents: detune[idx], cutoffHz: strCut,
+                vel: 0.84, customAttack: 0.36, customRelease: 0.45, label: 'V-06 STR'
+              });
+            });
+          }
+        }
+
+        // Wordless VC-10 20-Band Formant Choir Pads in Sections III, V & VI (zero cheesy speech!)
+        if (sec.id === 'MERCURY_SUSPENSION') {
+          const progress = (b - 32) / 16;
+          events.push({
+            type: 'whisper', partId: 'part3', voiceId: 'whisper', rawBeatOff: 0, durBeats: 3.85,
+            sweepHz: 480 + Math.pow(progress, 1.6) * 3400, vel: 0.28 + progress * 0.52, label: 'V-02 AIR'
+          });
+        } else if ((sec.id === 'HORIZON_SHIFT' || sec.id === 'COBALT_FINALE') && (b % 2 === 0) && b < 94) {
+          const vowels = [VC10_VOWELS.AAH, VC10_VOWELS.EEH, VC10_VOWELS.OOH, VC10_VOWELS.AAH];
+          const vowel = vowels[Math.floor(b / 2) % 4];
+          events.push({
+            type: 'vocoder', partId: 'part3', voiceId: 'vocoder', rawBeatOff: 0.0, durBeats: 7.6,
+            midi: chord.chord[2], vowel, glideSec: 0.05, vel: 0.82, label: `V01:${vowel.name}`
+          });
+        }
+
+        events.forEach((ev, i) => {
+          ev.domKey = (ev.voiceId === 'ens2' || ev.voiceId === 'ens3') ? null : `bar${b}_ev${i}`;
+        });
+        BAR_EVENTS.push(events);
+      }
+    }
+
+    // =========================================================================
+    // 5. LOOKAHEAD SCHEDULER & KORG HARDWARE DISPATCHER
+    // =========================================================================
+    let isPlaying = false, loopEnabled = true, viewMode = '4BAR', displayedSystem = 0;
+    let anchorAudioTime = 0, anchorSongTime = 0, nextBarIndex = 0;
+    let schedulerTimer = null, rafId = null, visualQueue = [], endTimer = null;
+    function clearEndTimer() { if (endTimer) { clearTimeout(endTimer); endTimer = null; } }
+
+    function scheduleWindow() {
+      if (!isPlaying || !ac) return;
+      const now = ac.currentTime;
+      const currentSongTime = anchorSongTime + (now - anchorAudioTime);
+      const horizon = currentSongTime + 0.25;
+
+      while (nextBarIndex * BAR_SEC < horizon) {
+        const atPassBoundary = nextBarIndex >= TOTAL_BARS && nextBarIndex % TOTAL_BARS === 0;
+        if (atPassBoundary && (!loopEnabled || autoStopAtLoopEnd)) {
+          if (!endTimer) {
+            const stopDelay = Math.max(0, (nextBarIndex * BAR_SEC - currentSongTime) * 1000);
+            endTimer = setTimeout(() => {
+              endTimer = null;
+              if (!isPlaying || (loopEnabled && !autoStopAtLoopEnd)) return;
+              const autoP = autoStopAtLoopEnd;
+              autoStopAtLoopEnd = false;
+              if (autoP && isRecording) stopDawRecording();
+              stopPlayback();
+            }, stopDelay);
+          }
+          break;
+        }
+
+        const barIdx = nextBarIndex % TOTAL_BARS;
+        const barStartSongTime = nextBarIndex * BAR_SEC;
+        const events = BAR_EVENTS[barIdx];
+
+        for (let i = 0; i < events.length; i++) {
+          const ev = events[i];
+          const evSongTime = barStartSongTime + ev.rawBeatOff * BEAT_SEC;
+          if (evSongTime >= anchorSongTime - 1e-6) {
+            triggerAudioEvent(ev, Math.max(now, anchorAudioTime + (evSongTime - anchorSongTime)));
+          }
+        }
+        nextBarIndex++;
+      }
+    }
+
+    function triggerAudioEvent(ev, at) {
+      const v = tracks[ev.voiceId];
+      if (!v) return;
+      const durSec = ev.durSec || (ev.durBeats * BEAT_SEC);
+      const vel = ev.vel !== undefined ? ev.vel : 1.0;
+
+      if (ev.type === 'note') {
+        const scaleMult = (v.P.s[0] === 32 ? 0.25 : (v.P.s[0] === 16 ? 0.5 : 1));
+        const freq = midiToFreq(ev.midi, ev.cents || 0) * scaleMult;
+        if (v.osc) {
+          v.osc.frequency.cancelScheduledValues(at);
+          if (ev.glideSec && ev.glideSec > 0) v.osc.frequency.setTargetAtTime(freq, at, ev.glideSec);
+          else v.osc.frequency.setValueAtTime(freq, at);
+        }
+        if (v.osc2) {
+          v.osc2.frequency.cancelScheduledValues(at);
+          if (ev.voiceId === 'bass') {
+            if (ev.glideSec && ev.glideSec > 0) v.osc2.frequency.setTargetAtTime(freq * 0.5, at, ev.glideSec);
+            else v.osc2.frequency.setValueAtTime(freq * 0.5, at);
+          } else if (ev.voiceId === 'arp') {
+            if (ev.glideSec && ev.glideSec > 0) v.osc2.frequency.setTargetAtTime(freq * 2.0, at, ev.glideSec);
+            else v.osc2.frequency.setValueAtTime(freq * 2.0, at);
+          } else {
+            if (ev.glideSec && ev.glideSec > 0) v.osc2.frequency.setTargetAtTime(freq * 1.0045, at, ev.glideSec);
+            else v.osc2.frequency.setValueAtTime(freq * 1.0045, at);
+          }
+        }
+        if (v.osc3) {
+          v.osc3.frequency.cancelScheduledValues(at);
+          if (ev.glideSec && ev.glideSec > 0) v.osc3.frequency.setTargetAtTime(freq * 0.5, at, ev.glideSec);
+          else v.osc3.frequency.setValueAtTime(freq * 0.5, at);
+        }
+        if (ev.cutoffHz && v.vcf) {
+          v.vcf.frequency.cancelScheduledValues(at);
+          if (ev.envPeakHz) {
+            v.vcf.frequency.setValueAtTime(computeKorg35Cutoff(ev.envPeakHz), at);
+            v.vcf.frequency.exponentialRampToValueAtTime(computeKorg35Cutoff(ev.cutoffHz), at + Math.min(0.14, durSec * 0.85));
+          } else {
+            v.vcf.frequency.setTargetAtTime(computeKorg35Cutoff(ev.cutoffHz), at, 0.025);
+          }
+        }
+        schedOn(v, at, vel, Boolean(ev.cleanMonoBreath), ev.customAttack !== undefined ? ev.customAttack : null);
+        schedOff(v, at + durSec, ev.customRelease !== undefined ? ev.customRelease : null);
+      } else if (ev.type === 'vocoder') {
+        const freq = midiToFreq(ev.midi, 0) * 0.5;
+        if (v.osc) {
+          v.osc.frequency.cancelScheduledValues(at);
+          if (ev.glideSec) v.osc.frequency.setTargetAtTime(freq, at, ev.glideSec);
+          else v.osc.frequency.setValueAtTime(freq, at);
+        }
+        if (v.osc2) {
+          v.osc2.frequency.cancelScheduledValues(at);
+          if (ev.glideSec) v.osc2.frequency.setTargetAtTime(freq * 2.004, at, ev.glideSec);
+          else v.osc2.frequency.setValueAtTime(freq * 2.004, at);
+        }
+        if (ev.vowel) triggerVc10FormantBank(v, ev.vowel, at);
+        schedOn(v, at, vel, false, 0.28);
+        schedOff(v, at + durSec, 0.42);
+      } else if (ev.type === 'kick') {
+        if (v.osc) {
+          v.osc.frequency.cancelScheduledValues(at);
+          v.osc.frequency.setValueAtTime(138, at);
+          v.osc.frequency.exponentialRampToValueAtTime(44, at + 0.05);
+        }
+        schedOn(v, at, vel);
+        schedOff(v, at + durSec);
+      } else if (ev.type === 'snare') {
+        if (v.osc) {
+          v.osc.frequency.cancelScheduledValues(at);
+          v.osc.frequency.setValueAtTime(240, at);
+          v.osc.frequency.exponentialRampToValueAtTime(130, at + 0.045);
+        }
+        if (v.osc2) {
+          v.osc2.frequency.cancelScheduledValues(at);
+          v.osc2.frequency.setValueAtTime(380, at);
+          v.osc2.frequency.exponentialRampToValueAtTime(200, at + 0.04);
+        }
+        schedOn(v, at, vel);
+        schedOff(v, at + durSec);
+      } else if (ev.type === 'whisper') {
+        if (v.vcf && ev.sweepHz) {
+          v.vcf.frequency.cancelScheduledValues(at);
+          v.vcf.frequency.setValueAtTime(computeKorg35Cutoff(ev.sweepHz), at);
+          v.vcf.frequency.linearRampToValueAtTime(computeKorg35Cutoff(ev.sweepHz + 650), at + durSec);
+        }
+        schedOn(v, at, vel);
+        schedOff(v, at + durSec);
+      } else if (ev.type === 'hit') {
+        schedOn(v, at, vel);
+        schedOff(v, at + durSec);
+      }
+
+      if (!document.hidden) visualQueue.push({
+        time: at,
+        offTime: at + durSec,
+        partId: ev.partId,
+        voiceId: ev.voiceId,
+        label: ev.label,
+        domKey: ev.domKey
+      });
+    }
+
+    function silenceAllVoices() {
+      if (!ac) return;
+      const now = ac.currentTime;
+      Object.values(tracks).forEach(v => {
+        if (v && v.eg) {
+          v.eg.offset.cancelScheduledValues(now);
+          v.eg.offset.setValueAtTime(0, now);
+        }
+      });
+      visualQueue = [];
+      const trigLed = document.getElementById('sqTrigLed');
+      if (trigLed) { trigLed.style.opacity = ''; trigLed.style.backgroundColor = ''; trigLed.style.boxShadow = ''; }
+      document.querySelectorAll('.score-note.active').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('[data-voice-led]').forEach(el => {
+        el.style.opacity = '0.25';
+        el.style.boxShadow = 'none';
+      });
+    }
+
+    function startPlayback() {
+      initAudioEngine();
+      if (ac.state === 'suspended') ac.resume();
+      if (isPlaying) {
+        const elapsed = Math.max(0, ac.currentTime - anchorAudioTime);
+        anchorSongTime = (anchorSongTime + elapsed) % LOOP_SEC;
+        isPlaying = false;
+        clearInterval(schedulerTimer);
+        clearEndTimer();
+        silenceAllVoices();
+        updateTransportUI();
+        return;
+      }
+      isPlaying = true;
+      anchorAudioTime = ac.currentTime + 0.03;
+      nextBarIndex = Math.floor(anchorSongTime / BAR_SEC);
+      clearInterval(schedulerTimer);
+      clearEndTimer();
+      scheduleWindow();
+      schedulerTimer = setInterval(scheduleWindow, 25);
+      updateTransportUI();
+      if (!rafId) rafId = requestAnimationFrame(renderLoop);
+    }
+
+    function stopPlayback() {
+      isPlaying = false;
+      autoStopAtLoopEnd = false;
+      clearInterval(schedulerTimer);
+      clearEndTimer();
+      anchorSongTime = 0;
+      nextBarIndex = 0;
+      silenceAllVoices();
+      if (isRecording) stopDawRecording();
+      updateTransportUI();
+      updatePositionUI(0);
+    }
+
+    function seekToBar(barIdx) {
+      const clamped = Math.max(0, Math.min(TOTAL_BARS - 1, barIdx));
+      anchorSongTime = clamped * BAR_SEC;
+      nextBarIndex = clamped;
+      clearEndTimer();
+      if (isPlaying && ac) {
+        silenceAllVoices();
+        anchorAudioTime = ac.currentTime + 0.02;
+        scheduleWindow();
+      } else {
+        updatePositionUI(anchorSongTime);
+        updateTransportUI();
+      }
+    }
+    window.seekToBar = seekToBar;
+
+    // =========================================================================
+    // 6. UI BUILDERS & LIVE RENDERING
+    // =========================================================================
+    function buildVoiceLedGrid() {
+      const grid = document.getElementById('voiceLedGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      Object.entries(PATCH_DATA).forEach(([id, data]) => {
+        const item = document.createElement('div');
+        item.className = 'bg-midnight-950 border border-midnight-850 px-2 py-1.5 rounded-sm flex items-center gap-2';
+        item.innerHTML = `<span data-voice-led="${id}" class="w-2 h-2 rounded-full shrink-0 transition-opacity" style="background: rgb(${data.rgb}); opacity: 0.25;"></span><span class="text-plum-300 truncate">${data.name}</span>`;
+        grid.appendChild(item);
+      });
+    }
+
+    function buildBarMatrix() {
+      const matrix = document.getElementById('barMatrix');
+      if (!matrix) return;
+      matrix.innerHTML = '';
+      for (let b = 0; b < TOTAL_BARS; b++) {
+        const sec = getSectionForBar(b), chord = getChordForBar(b);
+        const cell = document.createElement('button');
+        cell.id = `barCell_${b}`;
+        cell.dataset.bar = b;
+        cell.title = `Bar ${String(b + 1).padStart(2, '0')} (${sec.label} · ${chord.name})`;
+        cell.className = 'relative text-left bg-midnight-950 border border-midnight-850 hover:border-gold-500/70 px-1.5 py-1 rounded-sm transition-all overflow-hidden cursor-pointer group';
+        cell.innerHTML = `
+          <div id="barFill_${b}" class="absolute inset-y-0 left-0 bg-gold-500/20 pointer-events-none" style="width: 0%"></div>
+          <div class="relative z-10 flex items-center justify-between font-mono text-[9px] leading-tight">
+            <span class="text-plum-400 group-hover:text-plum-200 font-bold">${String(b + 1).padStart(2, '0')}</span>
+            <span class="text-[8px] text-plum-400 truncate ml-1">${sec.short}</span>
+          </div>
+          <div class="relative z-10 font-mono text-[10px] font-bold text-plum-200 truncate leading-tight mt-0.5">${chord.name}</div>`;
+        cell.addEventListener('click', () => seekToBar(b));
+        matrix.appendChild(cell);
+      }
+    }
+
+    function buildPartitureShell() {
+      const container = document.getElementById('partitureBody');
+      if (!container) return;
+      container.innerHTML = '';
+
+      SCORE_PARTS.forEach(part => {
+        const row = document.createElement('div');
+        row.id = `partRow_${part.id}`;
+        row.className = 'grid grid-cols-1 lg:grid-cols-12 bg-midnight-900/60 hover:bg-midnight-900/90 transition-all';
+        row.innerHTML = `
+          <div class="lg:col-span-3 p-3 sm:px-4 sm:py-2.5 border-b lg:border-b-0 lg:border-r border-midnight-850 flex flex-col justify-between gap-1.5 bg-midnight-950/60">
+            <div class="flex items-start justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2 font-mono text-[10px] tracking-widest">
+                  <span class="font-bold shrink-0" style="color: ${part.color}">${part.num}</span>
+                  <span class="text-plum-400 shrink-0">//</span>
+                  <span id="partStatus_${part.id}" class="text-plum-400 font-bold truncate">READY</span>
+                </div>
+                <h3 class="font-mono text-sm font-bold text-white tracking-wide mt-0.5 truncate">${part.title}</h3>
+                <p class="font-mono text-[10px] text-plum-400 truncate">${part.spec}</p>
+              </div>
+              <div class="flex items-center gap-1 font-mono text-[10px] shrink-0">
+                <button type="button" data-mute="${part.id}" aria-pressed="false" aria-label="Mute ${part.title}" class="w-6 h-6 rounded-sm border border-midnight-850 bg-midnight-900 text-plum-400 hover:text-white font-bold cursor-pointer transition-colors" title="Mute Part">M</button>
+                <button type="button" data-solo="${part.id}" aria-pressed="false" aria-label="Solo ${part.title}" class="w-6 h-6 rounded-sm border border-midnight-850 bg-midnight-900 text-plum-400 hover:text-white font-bold cursor-pointer transition-colors" title="Solo Part">S</button>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 pt-0.5">
+              <span class="font-mono text-[9px] text-plum-400 uppercase">LVL</span>
+              <input type="range" data-gain="${part.id}" aria-label="${part.title} level" min="0" max="1.5" step="0.01" value="1" class="vw-slider w-full">
+            </div>
+          </div>
+          <div class="lg:col-span-9 relative overflow-x-auto overflow-y-hidden bg-midnight-950/30">
+            <div id="lane_${part.id}" class="relative h-24 min-w-[600px] select-none"></div>
+          </div>`;
+        container.appendChild(row);
+      });
+
+      container.querySelectorAll('[data-mute]').forEach(b => b.addEventListener('click', () => {
+        const p = SCORE_PARTS.find(x => x.id === b.dataset.mute);
+        p.muted = !p.muted;
+        b.classList.toggle('bg-sky-600', p.muted);
+        b.classList.toggle('text-white', p.muted);
+        b.classList.toggle('text-plum-400', !p.muted);
+        b.classList.toggle('bg-midnight-900', !p.muted);
+        b.setAttribute('aria-pressed', String(p.muted));
+        applyMixerGains();
+      }));
+
+      container.querySelectorAll('[data-solo]').forEach(b => b.addEventListener('click', () => {
+        const p = SCORE_PARTS.find(x => x.id === b.dataset.solo);
+        p.solo = !p.solo;
+        b.classList.toggle('bg-gold-500', p.solo);
+        b.classList.toggle('text-midnight-950', p.solo);
+        b.classList.toggle('text-plum-400', !p.solo);
+        b.classList.toggle('bg-midnight-900', !p.solo);
+        b.setAttribute('aria-pressed', String(p.solo));
+        applyMixerGains();
+      }));
+
+      container.querySelectorAll('[data-gain]').forEach(s => s.addEventListener('input', () => {
+        const p = SCORE_PARTS.find(x => x.id === s.dataset.gain);
+        p.gain = parseFloat(s.value);
+        applyMixerGains();
+      }));
+    }
+
+    function renderScoreLanes(systemIdx) {
+      displayedSystem = systemIdx;
+      const barsPerView = viewMode === '4BAR' ? 4 : (viewMode === '16BAR' ? 16 : TOTAL_BARS);
+      const startBar = viewMode === '96BAR' ? 0 : systemIdx * barsPerView;
+      const numBars = barsPerView;
+      const sec = getSectionForBar(startBar);
+      const sysBadge = document.getElementById('systemBadge');
+      if (sysBadge) {
+        if (viewMode === '4BAR') {
+          sysBadge.textContent = `SYSTEM ${String(systemIdx + 1).padStart(2, '0')} // BARS ${String(startBar + 1).padStart(2, '0')}–${String(startBar + 4).padStart(2, '0')} (${sec.label})`;
+        } else if (viewMode === '16BAR') {
+          sysBadge.textContent = `SECTION ${systemIdx + 1} // BARS ${String(startBar + 1).padStart(2, '0')}–${String(startBar + 16).padStart(2, '0')} (${sec.label})`;
+        } else {
+          sysBadge.textContent = `FULL SUITE // BARS 01–96 (ALL 6 SECTIONS · 02:57)`;
+        }
+      }
+
+      SCORE_PARTS.forEach(part => {
+        const lane = document.getElementById(`lane_${part.id}`);
+        if (!lane) return;
+        lane.style.width = viewMode === '96BAR' ? '6400px' : (viewMode === '16BAR' ? '1400px' : '100%');
+        let html = '';
+
+        for (let i = 0; i < numBars; i++) {
+          const b = startBar + i, leftPct = (i / numBars) * 100, widthPct = (1 / numBars) * 100, chord = getChordForBar(b);
+          html += `<div onclick="seekToBar(${b})" class="absolute inset-y-0 border-r border-midnight-850 hover:bg-gold-500/5 cursor-pointer transition-colors" style="left:${leftPct}%; width:${widthPct}%;">
+            <div class="flex items-center justify-between px-1.5 pt-1 font-mono text-[10px]">
+              <span class="text-plum-400 font-bold">${viewMode === '4BAR' ? 'BAR ' : ''}${String(b + 1).padStart(2, '0')}</span>
+              <span class="text-gold-400/85 font-bold">${chord.name}</span>
+            </div>
+            <div class="absolute inset-x-0 top-6 bottom-2 flex flex-col justify-between opacity-15 pointer-events-none">
+              <div class="border-t border-plum-400"></div>
+              <div class="border-t border-plum-400"></div>
+              <div class="border-t border-plum-400"></div>
+              <div class="border-t border-plum-400"></div>
+              <div class="border-t border-plum-400"></div>
+            </div>
+            <div class="absolute inset-y-6 left-1/4 border-l border-dashed border-midnight-850/70 pointer-events-none"></div>
+            <div class="absolute inset-y-6 left-2/4 border-l border-dashed border-midnight-850/70 pointer-events-none"></div>
+            <div class="absolute inset-y-6 left-3/4 border-l border-dashed border-midnight-850/70 pointer-events-none"></div>
+          </div>`;
+        }
+
+        for (let i = 0; i < numBars; i++) {
+          const b = startBar + i, barLeftPct = (i / numBars) * 100, barWidthPct = (1 / numBars) * 100;
+          const evs = BAR_EVENTS[b].filter(e => e.partId === part.id && e.domKey);
+          if (evs.length === 0) {
+            html += `<div class="absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center pointer-events-none px-2" style="left:${barLeftPct}%; width:${barWidthPct}%;"><span class="font-mono text-[9px] text-plum-500 tracking-widest uppercase">REST</span></div>`;
+            continue;
+          }
+          evs.forEach(ev => {
+            const evLeftPct = barLeftPct + (ev.rawBeatOff / 4) * barWidthPct;
+            const durBeats = ev.durBeats || (ev.durSec ? ev.durSec / BEAT_SEC : 0.25);
+            const evWidthPct = Math.max(0.18, (durBeats / 4) * barWidthPct * 0.94);
+
+            let topPct = 34, heightPct = 52;
+            if (part.id === 'part1') {
+              const norm = Math.max(0, Math.min(1, (ev.midi - 60) / 30));
+              topPct = Math.round(70 - norm * 42);
+              heightPct = 21;
+            } else if (part.id === 'part2') {
+              const norm = Math.max(0, Math.min(1, (ev.midi - 62) / 30));
+              topPct = Math.round(70 - norm * 42);
+              heightPct = 21;
+            } else if (part.id === 'part3') {
+              if (ev.type === 'vocoder' || ev.type === 'whisper') {
+                topPct = 24;
+                heightPct = 24;
+              } else {
+                topPct = 46;
+                heightPct = 36;
+              }
+            } else if (part.id === 'part4') {
+              const norm = Math.max(0, Math.min(1, (ev.midi - 24) / 24));
+              topPct = Math.round(70 - norm * 42);
+              heightPct = 21;
+            } else if (part.id === 'part5') {
+              topPct = ev.voiceId === 'kick' ? 68 : (ev.voiceId === 'snare' ? 48 : 28);
+              heightPct = 20;
+            }
+
+            html += `<div id="note_${ev.domKey}" style="left:${evLeftPct}%; width:${evWidthPct}%; top:${topPct}%; height:${heightPct}%; background: rgba(${part.rgb}, 0.25); border-color: rgba(${part.rgb}, 0.85); --note-glow: rgba(${part.rgb}, 0.9);" class="score-note absolute border rounded-[2px] pointer-events-none"></div>`;
+          });
+        }
+
+        html += `<div id="playhead_${part.id}" class="absolute inset-y-0 w-0.5 bg-gold-400 shadow-[0_0_12px_rgba(96,165,250,0.82)] z-20 pointer-events-none" style="left: 0%;"><div class="w-2 h-2 -ml-[3px] bg-gold-400 rotate-45"></div></div>`;
+        lane.innerHTML = html;
+      });
+    }
+
+    let lastBarShown = -1, lastBeatTxt = '', lastClockTxt = '';
+    function updatePositionUI(songTime) {
+      const posInLoop = ((songTime % LOOP_SEC) + LOOP_SEC) % LOOP_SEC;
+      const barIdx = Math.min(TOTAL_BARS - 1, Math.floor(posInLoop / BAR_SEC));
+      const barProgress = (posInLoop - barIdx * BAR_SEC) / BAR_SEC;
+      const beatFloat = barProgress * 4;
+      const beatNum = Math.floor(beatFloat) + 1;
+      const subNum = Math.floor((beatFloat % 1) * 4) + 1;
+      const sec = getSectionForBar(barIdx);
+      const chord = getChordForBar(barIdx);
+
+      const barChanged = barIdx !== lastBarShown;
+      if (barChanged) {
+        document.getElementById('hudBar').innerHTML = `${String(barIdx + 1).padStart(2, '0')}<span class="text-plum-500 text-xs">/96</span>`;
+        document.getElementById('hudSection').textContent = sec.label;
+        document.getElementById('hudChord').textContent = chord.name;
+        lastBarShown = barIdx;
+      }
+      const beatTxt = `${beatNum}.${subNum}`;
+      if (beatTxt !== lastBeatTxt) { document.getElementById('hudBeat').textContent = beatTxt; lastBeatTxt = beatTxt; }
+      const clockTxt = `${formatClock(posInLoop)} / ${formatClock(LOOP_SEC)}`;
+      if (clockTxt !== lastClockTxt) { document.getElementById('elapsedClock').textContent = clockTxt; lastClockTxt = clockTxt; }
+
+      const sqLed = document.getElementById('sqTrigLed');
+      if (sqLed && isPlaying) {
+        const activeSteps = sq10UserLocked ? sq10ResetSteps : (sec.id === 'HORIZON_SHIFT' ? 7 : 5);
+        const globalStep = (barIdx * 16) + Math.floor(barProgress * 16);
+        const isResetStep = (globalStep % activeSteps) === 0;
+        const trigPrimary = '#60a5fa';
+        const trigAlert = '#38bdf8';
+        sqLed.style.opacity = (subNum % 2 === 1) ? '1' : '0.35';
+        sqLed.style.backgroundColor = isResetStep ? trigAlert : trigPrimary;
+        sqLed.style.boxShadow = isResetStep ? `0 0 10px ${trigAlert}` : `0 0 8px ${trigPrimary}`;
+      }
+
+      if (barChanged) document.querySelectorAll('.sec-pill').forEach(pill => {
+        const start = parseInt(pill.dataset.jump, 10);
+        const isCurrent = barIdx >= start && barIdx < start + 16;
+        pill.className = `sec-pill px-2 py-1 rounded-sm border uppercase tracking-wider cursor-pointer transition-colors ${
+          isCurrent
+            ? 'border-gold-500 bg-gold-500/20 text-gold-400 font-bold'
+            : 'border-plum-900 bg-midnight-950 text-plum-400 hover:border-gold-500/50 hover:text-plum-200'
+        }`;
+      });
+
+      for (let b = barChanged ? 0 : barIdx; b < (barChanged ? TOTAL_BARS : barIdx + 1); b++) {
+        const cell = document.getElementById(`barCell_${b}`), fill = document.getElementById(`barFill_${b}`);
+        if (!cell || !fill) continue;
+        if (b < barIdx) {
+          cell.classList.remove('border-gold-500', 'ring-1', 'ring-gold-500/50');
+          cell.classList.add('border-midnight-850');
+          fill.style.width = '100%';
+        } else if (b === barIdx) {
+          cell.classList.add('border-gold-500', 'ring-1', 'ring-gold-500/50');
+          cell.classList.remove('border-midnight-850');
+          fill.style.width = `${(barProgress * 100).toFixed(1)}%`;
+        } else {
+          cell.classList.remove('border-gold-500', 'ring-1', 'ring-gold-500/50');
+          cell.classList.add('border-midnight-850');
+          fill.style.width = '0%';
+        }
+      }
+
+      if (viewMode === '4BAR') {
+        const targetSystem = Math.floor(barIdx / 4);
+        if (targetSystem !== displayedSystem) renderScoreLanes(targetSystem);
+        const playheadPct = (((barIdx % 4) + barProgress) / 4) * 100;
+        SCORE_PARTS.forEach(part => {
+          const ph = document.getElementById(`playhead_${part.id}`);
+          if (ph) ph.style.left = `${playheadPct.toFixed(2)}%`;
+        });
+      } else if (viewMode === '16BAR') {
+        const targetSystem = Math.floor(barIdx / 16);
+        if (targetSystem !== displayedSystem) renderScoreLanes(targetSystem);
+        const playheadPct = (((barIdx % 16) + barProgress) / 16) * 100;
+        SCORE_PARTS.forEach(part => {
+          const ph = document.getElementById(`playhead_${part.id}`);
+          if (ph) ph.style.left = `${playheadPct.toFixed(2)}%`;
+        });
+      } else {
+        const playheadPct = ((barIdx + barProgress) / TOTAL_BARS) * 100;
+        SCORE_PARTS.forEach(part => {
+          const ph = document.getElementById(`playhead_${part.id}`);
+          if (ph) ph.style.left = `${playheadPct.toFixed(2)}%`;
+        });
+      }
+    }
+
+    function drawScope() {
+      const scopeCanvas = document.getElementById('scopeCanvas');
+      if (!scopeCanvas) return;
+      const scopeCtx = scopeCanvas.getContext('2d');
+      if (!scopeCtx) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      const w = Math.round(scopeCanvas.clientWidth * dpr);
+      const h = Math.round(scopeCanvas.clientHeight * dpr);
+      if (w === 0 || h === 0) return;
+      if (scopeCanvas.width !== w || scopeCanvas.height !== h) {
+        scopeCanvas.width = w;
+        scopeCanvas.height = h;
+      }
+
+      scopeCtx.globalCompositeOperation = 'source-over';
+      scopeCtx.fillStyle = '#03050a';
+      scopeCtx.fillRect(0, 0, w, h);
+
+      scopeCtx.strokeStyle = 'rgba(96, 165, 250, 0.14)';
+      scopeCtx.lineWidth = 1;
+      scopeCtx.beginPath();
+      for (let i = 1; i < 4; i++) {
+        scopeCtx.moveTo(0, (h * i) / 4);
+        scopeCtx.lineTo(w, (h * i) / 4);
+        scopeCtx.moveTo((w * i) / 4, 0);
+        scopeCtx.lineTo((w * i) / 4, h);
+      }
+      scopeCtx.stroke();
+
+      scopeCtx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+      scopeCtx.beginPath();
+      scopeCtx.moveTo(0, h / 2);
+      scopeCtx.lineTo(w, h / 2);
+      scopeCtx.stroke();
+
+      if (!isPlaying || !ac) return;
+
+      scopeCtx.globalCompositeOperation = 'screen';
+      scopeCtx.lineWidth = 2 * dpr;
+
+      Object.keys(tracks).forEach(id => {
+        const track = tracks[id];
+        if (!track || !track.an) return;
+        scopeCtx.strokeStyle = `rgba(${PATCH_DATA[id].rgb}, 0.9)`;
+        scopeCtx.fillStyle = `rgba(${PATCH_DATA[id].rgb}, 0.7)`;
+
+        if (scopeMode === 'FREQ') {
+          const bins = track.binBuf || (track.binBuf = new Uint8Array(track.an.frequencyBinCount));
+          track.an.getByteFrequencyData(bins);
+          let active = false;
+          for (let j = 0; j < 50; j += 5) if (bins[j] > 5) { active = true; break; }
+          if (!active) return;
+          const count = 96;
+          for (let i = 0; i < count; i++) {
+            const k = Math.floor(Math.pow(bins.length * 0.55, i / count));
+            const val = bins[k] / 255;
+            if (val > 0.01) scopeCtx.fillRect((i * w) / count + 1, h - val * h, w / count - 2, val * h);
+          }
+        } else {
+          const buf = track.timeBuf || (track.timeBuf = new Float32Array(track.an.fftSize));
+          track.an.getFloatTimeDomainData(buf);
+          let active = false;
+          for (let j = 0; j < 256; j += 8) if (Math.abs(buf[j]) > 0.01) { active = true; break; }
+          if (!active) return;
+          let offset = 0;
+          for (let i = 1; i < buf.length / 2; i++) if (buf[i - 1] < 0 && buf[i] >= 0) { offset = i; break; }
+          scopeCtx.beginPath();
+          for (let i = 0; i < 1024; i++) {
+            const x = (i * w) / 1024;
+            const y = h / 2 - buf[offset + i] * h * 0.85;
+            i === 0 ? scopeCtx.moveTo(x, y) : scopeCtx.lineTo(x, y);
+          }
+          scopeCtx.stroke();
+        }
+      });
+    }
+
+    // =========================================================================
+    // 7. 24-BIT PCM WAV MULTI-STEM EXPORTER & VIRTUAL ROUTER
+    // =========================================================================
+    function setupDawCaptureTap() {
+      if (!ac || recNode) return;
+      const merger = ac.createChannelMerger(8);
+      const splitter = ac.createChannelSplitter(2);
+      masterBus.connect(splitter);
+      splitter.connect(merger, 0, 0);
+      splitter.connect(merger, 1, 1);
+      SCORE_PARTS.forEach((part, idx) => {
+        if (partBuses[part.id]) partBuses[part.id].connect(merger, 0, idx + 2);
+      });
+
+      recNode = ac.createScriptProcessor(4096, 8, 8);
+      const silentSink = ac.createGain();
+      silentSink.gain.value = 0;
+
+      recNode.onaudioprocess = (e) => {
+        if (!isRecording) return;
+        const inBuf = e.inputBuffer, len = inBuf.length;
+        const mL = inBuf.getChannelData(0), mR = inBuf.getChannelData(1);
+        if (isTrackArmed('master')) {
+          recBuffers.masterL.push(new Float32Array(mL));
+          recBuffers.masterR.push(new Float32Array(mR));
+          for (let i = 0; i < len; i += 4) {
+            const abs = Math.max(Math.abs(mL[i]), Math.abs(mR[i]));
+            if (abs > recPeaks.master) recPeaks.master = abs;
+          }
+        }
+        SCORE_PARTS.forEach((part, idx) => {
+          if (!isTrackArmed(part.id)) return;
+          const chData = inBuf.getChannelData(idx + 2);
+          recBuffers[part.id].push(new Float32Array(chData));
+          for (let i = 0; i < len; i += 4) {
+            const abs = Math.abs(chData[i]);
+            if (abs > recPeaks[part.id]) recPeaks[part.id] = abs;
+          }
+        });
+      };
+
+      merger.connect(recNode);
+      recNode.connect(silentSink);
+      silentSink.connect(ac.destination);
+    }
+
+    function isTrackArmed(trackId) {
+      const def = DAW_TRACK_DEFS.find(t => t.id === trackId);
+      return def ? def.armed : false;
+    }
+
+    function setRecordingMode(mode) {
+      if (isRecording) return;
+      recMode = mode;
+      DAW_TRACK_DEFS.forEach(t => {
+        if (mode === 'ALL') t.armed = true;
+        else if (mode === 'STEMS') t.armed = (t.id !== 'master');
+      });
+      document.querySelectorAll('.rec-mode-btn').forEach(btn => {
+        const active = btn.dataset.recMode === mode;
+        btn.setAttribute('aria-pressed', String(active));
+        btn.classList.toggle('bg-gold-500/20', active);
+        btn.classList.toggle('text-gold-400', active);
+        btn.classList.toggle('font-bold', active);
+        btn.classList.toggle('text-plum-400', !active);
+      });
+      renderDawTrackGrid();
+    }
+
+    function startDawRecording(autoFullSong = false) {
+      initAudioEngine();
+      if (ac.state === 'suspended') ac.resume();
+      if (!DAW_TRACK_DEFS.some(t => t.armed)) setRecordingMode('ALL');
+
+      renderedTakes.forEach(t => URL.revokeObjectURL(t.url));
+      renderedTakes = [];
+      recBuffers = { masterL: [], masterR: [] };
+      recPeaks = { master: 0 };
+      SCORE_PARTS.forEach(p => { recBuffers[p.id] = []; recPeaks[p.id] = 0; });
+
+      isRecording = true;
+      recStartTime = ac.currentTime;
+      updateRecTransportUI(true);
+
+      const exportList = document.getElementById('wavExportList');
+      if (exportList) {
+        exportList.innerHTML = `<p class="col-span-full text-[11px] text-sky-400 font-bold animate-pulse">● RECORDING ARMED TRACKS IN 24-BIT PCM WAV...</p>`;
+      }
+      document.getElementById('downloadAllWavBtn').disabled = true;
+
+      if (autoFullSong) {
+        autoStopAtLoopEnd = true;
+        if (isPlaying) seekToBar(0);
+        else { anchorSongTime = 0; nextBarIndex = 0; startPlayback(); }
+      } else if (!isPlaying) {
+        startPlayback();
+      }
+    }
+
+    function stopDawRecording() {
+      if (!isRecording) return;
+      isRecording = false;
+      autoStopAtLoopEnd = false;
+      updateRecTransportUI(false);
+
+      const sr = ac ? ac.sampleRate : 48000;
+      renderedTakes = [];
+      const take = (def, chans, samples) => {
+        const wavBlob = encodeWav24(chans, sr);
+        const pk = recPeaks[def.id];
+        renderedTakes.push({
+          id: def.id,
+          label: `${def.num}: ${def.name}`,
+          filename: `Nocturno_Madrid82_${def.fileSlug}_130BPM_24bit.wav`,
+          url: URL.createObjectURL(wavBlob),
+          durationSec: samples / sr,
+          peakDb: pk > 0 ? (20 * Math.log10(pk)).toFixed(1) : '-inf',
+          channels: chans.length,
+          color: def.color
+        });
+      };
+
+      DAW_TRACK_DEFS.forEach(def => {
+        if (!def.armed) return;
+        if (def.id === 'master') {
+          if (recBuffers.masterL.length === 0) return;
+          const left = mergeFloatChunks(recBuffers.masterL), right = mergeFloatChunks(recBuffers.masterR);
+          take(def, [left, right], left.length);
+        } else {
+          const chunks = recBuffers[def.id];
+          if (!chunks || chunks.length === 0) return;
+          const mono = mergeFloatChunks(chunks);
+          take(def, [mono], mono.length);
+        }
+      });
+      renderExportedTakes();
+    }
+
+    function mergeFloatChunks(chunks) {
+      let totalLen = 0;
+      for (let i = 0; i < chunks.length; i++) totalLen += chunks[i].length;
+      const result = new Float32Array(totalLen);
+      let offset = 0;
+      for (let i = 0; i < chunks.length; i++) {
+        result.set(chunks[i], offset);
+        offset += chunks[i].length;
+      }
+      return result;
+    }
+
+    function encodeWav24(channelBuffers, sampleRate) {
+      const numChannels = channelBuffers.length;
+      const numSamples = channelBuffers[0].length;
+      const blockAlign = numChannels * 3;
+      const dataSize = numSamples * blockAlign;
+      const buffer = new ArrayBuffer(44 + dataSize);
+      const view = new DataView(buffer);
+      const writeStr = (off, str) => { for (let i = 0; i < str.length; i++) view.setUint8(off + i, str.charCodeAt(i)); };
+
+      writeStr(0, 'RIFF');
+      view.setUint32(4, 36 + dataSize, true);
+      writeStr(8, 'WAVE');
+      writeStr(12, 'fmt ');
+      view.setUint32(16, 16, true);
+      view.setUint16(20, 1, true);
+      view.setUint16(22, numChannels, true);
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, sampleRate * blockAlign, true);
+      view.setUint16(32, blockAlign, true);
+      view.setUint16(34, 24, true);
+      writeStr(36, 'data');
+      view.setUint32(40, dataSize, true);
+
+      let offset = 44;
+      for (let i = 0; i < numSamples; i++) {
+        for (let ch = 0; ch < numChannels; ch++) {
+          let s = channelBuffers[ch][i];
+          if (s > 1) s = 1; else if (s < -1) s = -1;
+          let val = s < 0 ? Math.round(s * 0x800000) : Math.round(s * 0x7fffff);
+          if (val > 0x7fffff) val = 0x7fffff;
+          if (val < -0x800000) val = -0x800000;
+          if (val < 0) val += 0x1000000;
+          view.setUint8(offset, val & 0xff);
+          view.setUint8(offset + 1, (val >> 8) & 0xff);
+          view.setUint8(offset + 2, (val >> 16) & 0xff);
+          offset += 3;
+        }
+      }
+      return new Blob([buffer], { type: 'audio/wav' });
+    }
+
+    function renderDawTrackGrid() {
+      const grid = document.getElementById('dawTrackGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      DAW_TRACK_DEFS.forEach(def => {
+        const card = document.createElement('div');
+        card.className = `bg-midnight-950 border ${def.armed ? 'border-sky-500/60' : 'border-midnight-850'} p-2.5 rounded-sm flex flex-col justify-between gap-2 transition-colors`;
+        card.innerHTML = `
+          <div class="flex items-center justify-between gap-1">
+            <span class="text-[10px] font-bold" style="color:${def.color}">${def.num}</span>
+            <button type="button" data-arm-track="${def.id}" aria-pressed="${def.armed}" aria-label="Arm ${def.name} for recording" ${isRecording ? 'disabled' : ''} class="disabled:opacity-60 disabled:cursor-not-allowed px-1.5 py-0.5 rounded-sm text-[9px] font-bold uppercase cursor-pointer transition-colors ${def.armed ? 'bg-sky-500 text-midnight-950' : 'bg-midnight-900 border border-plum-700 text-plum-400 hover:text-plum-300'}">${def.armed ? '● ARM' : 'OFF'}</button>
+          </div>
+          <div>
+            <div class="text-[11px] font-bold text-plum-200 truncate">${def.name}</div>
+            <div class="text-[9px] text-plum-400">${def.channels === 2 ? 'Stereo 24-bit' : 'Mono 24-bit'}</div>
+          </div>
+          <div>
+            <div class="w-full h-1.5 bg-midnight-900 rounded-sm overflow-hidden">
+              <div id="dawMeter_${def.id}" class="h-full transition-all duration-75" style="width:0%; background:${def.color}"></div>
+            </div>
+            <div class="flex justify-between text-[9px] text-plum-400 mt-1">
+              <span>PEAK</span>
+              <span id="dawDb_${def.id}">-∞ dB</span>
+            </div>
+          </div>`;
+        grid.appendChild(card);
+      });
+
+      grid.querySelectorAll('[data-arm-track]').forEach(btn => btn.addEventListener('click', () => {
+        const def = DAW_TRACK_DEFS.find(t => t.id === btn.dataset.armTrack);
+        if (def && !isRecording) { def.armed = !def.armed; renderDawTrackGrid(); }
+      }));
+    }
+
+    function renderExportedTakes() {
+      const list = document.getElementById('wavExportList'), dlAllBtn = document.getElementById('downloadAllWavBtn');
+      if (!list) return;
+      if (renderedTakes.length === 0) {
+        list.innerHTML = `<p class="col-span-full text-[11px] text-plum-400">No armed audio captured. Arm at least one track and press Rec Live.</p>`;
+        if (dlAllBtn) dlAllBtn.disabled = true;
+        return;
+      }
+      if (dlAllBtn) dlAllBtn.disabled = false;
+      list.innerHTML = renderedTakes.map(t => `
+        <a href="${t.url}" download="${t.filename}" class="flex items-center justify-between gap-2 bg-midnight-900 hover:bg-midnight-850 border border-plum-700 hover:border-gold-500/60 px-2.5 py-1.5 rounded-sm transition-colors group">
+          <div class="min-w-0">
+            <div class="text-[10px] font-bold truncate" style="color:${t.color}">${t.label}</div>
+            <div class="text-[9px] text-plum-400">${t.durationSec.toFixed(1)}s · ${t.peakDb} dBFS</div>
+          </div>
+          <span class="text-[10px] font-bold text-gold-400 group-hover:text-gold-300 shrink-0">↓ WAV</span>
+        </a>`).join('');
+    }
+
+    function updateRecTransportUI(active) {
+      renderDawTrackGrid();
+      document.querySelectorAll('.rec-mode-btn').forEach(b => { b.disabled = active; });
+      const liveBtn = document.getElementById('recLiveBtn'), liveLabel = document.getElementById('recLiveLabel'), led = document.getElementById('recHeaderLed');
+      if (active) {
+        if (liveBtn) { liveBtn.classList.replace('bg-sky-500', 'bg-gold-500'); }
+        if (liveLabel) liveLabel.textContent = 'Stop & Render';
+        if (led) led.className = 'w-2 h-2 rounded-full bg-sky-500 animate-ping';
+      } else {
+        if (liveBtn) { liveBtn.classList.replace('bg-gold-500', 'bg-sky-500'); }
+        if (liveLabel) liveLabel.textContent = 'Rec Live';
+        if (led) led.className = 'w-2 h-2 rounded-full bg-plum-600';
+      }
+    }
+
+    function updateDawMeters() {
+      if (!ac) return;
+      if (isRecording) {
+        const elapsed = Math.max(0, ac.currentTime - recStartTime);
+        const timerEl = document.getElementById('recTimerLabel');
+        if (timerEl) timerEl.textContent = `REC ${formatClock(elapsed)}`;
+      }
+      const measurePeak = (analyser) => {
+        if (!analyser || !isPlaying) return 0;
+        const buf = analyser._buf || (analyser._buf = new Float32Array(analyser.fftSize));
+        analyser.getFloatTimeDomainData(buf);
+        let peak = 0;
+        for (let i = 0; i < buf.length; i += 8) {
+          const a = Math.abs(buf[i]);
+          if (a > peak) peak = a;
+        }
+        return peak;
+      };
+      DAW_TRACK_DEFS.forEach(def => {
+        const an = def.id === 'master' ? masterAnalyser : partAnalysers[def.id];
+        const peak = measurePeak(an);
+        const meterEl = document.getElementById(`dawMeter_${def.id}`);
+        const dbEl = document.getElementById(`dawDb_${def.id}`);
+        if (meterEl) meterEl.style.width = `${Math.min(100, Math.round(peak * 115))}%`;
+        if (dbEl) dbEl.textContent = peak > 0.0005 ? `${(20 * Math.log10(peak)).toFixed(1)} dB` : '-∞ dB';
+      });
+    }
+
+    async function refreshAudioOutputs() {
+      const sel = document.getElementById('audioOutputSelect');
+      if (!sel || !navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const outs = devices.filter(d => d.kind === 'audiooutput');
+        const prev = sel.value;
+        sel.innerHTML = '<option value="">System Default Audio Output</option>';
+        outs.forEach((dev, idx) => {
+          const opt = document.createElement('option');
+          opt.value = dev.deviceId;
+          opt.textContent = dev.label || `Audio Output ${idx + 1}`;
+          sel.appendChild(opt);
+        });
+        if (prev) sel.value = prev;
+      } catch (err) {}
+    }
+
+    function updateSinkChannelInfo() {
+      const info = document.getElementById('sinkChannelInfo');
+      if (!info || !ac) return;
+      info.textContent = `${ac.destination.maxChannelCount || 2}-Ch Interface Available`;
+    }
+
+    function renderLoop() {
+      if (isPlaying && ac) {
+        const now = ac.currentTime;
+        const songTime = anchorSongTime + (now - anchorAudioTime);
+        updatePositionUI(songTime);
+
+        for (let i = visualQueue.length - 1; i >= 0; i--) {
+          const ev = visualQueue[i];
+          if (now >= ev.time && now <= ev.offTime) {
+            if (ev.domKey) {
+              const el = document.getElementById(`note_${ev.domKey}`);
+              if (el) el.classList.add('active');
+            }
+            const statusEl = document.getElementById(`partStatus_${ev.partId}`);
+            if (statusEl) statusEl.textContent = ev.label;
+            const led = document.querySelector(`[data-voice-led="${ev.voiceId}"]`);
+            if (led) {
+              led.style.opacity = '1';
+              led.style.boxShadow = `0 0 8px rgb(${PATCH_DATA[ev.voiceId].rgb})`;
+            }
+          } else if (now > ev.offTime) {
+            if (ev.domKey) {
+              const el = document.getElementById(`note_${ev.domKey}`);
+              if (el) el.classList.remove('active');
+            }
+            const led = document.querySelector(`[data-voice-led="${ev.voiceId}"]`);
+            if (led) {
+              led.style.opacity = '0.25';
+              led.style.boxShadow = 'none';
+            }
+            visualQueue.splice(i, 1);
+          }
+        }
+      }
+      drawScope();
+      updateDawMeters();
+      rafId = requestAnimationFrame(renderLoop);
+    }
+
+    function updateTransportUI() {
+      const playBtn = document.getElementById('playBtn'), playIcon = document.getElementById('playIcon'), playLabel = document.getElementById('playLabel'), stopBtn = document.getElementById('stopBtn');
+      if (isPlaying) {
+        playIcon.textContent = '⏸';
+        playLabel.textContent = 'Pause';
+        playBtn.classList.replace('bg-gold-500', 'bg-gold-400');
+      } else {
+        playIcon.textContent = '▶';
+        playLabel.textContent = anchorSongTime > 0 ? 'Resume' : 'Play';
+        playBtn.classList.replace('bg-gold-400', 'bg-gold-500');
+      }
+      if (stopBtn) stopBtn.disabled = !isPlaying && anchorSongTime === 0;
+    }
+
+    function jumpToProtocolCue(el) {
+      const cueNote = el.dataset.protoNote || '';
+      const cueText = document.getElementById('protocolCueText');
+      if (cueText && cueNote) cueText.textContent = cueNote;
+      if (el.dataset.protoBar !== undefined) {
+        seekToBar(parseInt(el.dataset.protoBar, 10) || 0);
+        if (!isPlaying) startPlayback();
+      }
+    }
+    window.jumpToProtocolCue = jumpToProtocolCue;
+
+    // =========================================================================
+    // 8. BOOTSTRAP & EVENT LISTENERS
+    // =========================================================================
+    function setScoreViewMode(mode) {
+      viewMode = mode;
+      const activeCls = 'px-2.5 py-1 rounded-sm border border-plum-400 bg-plum-500/15 text-plum-400 font-bold uppercase cursor-pointer';
+      const inactiveCls = 'px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-900 text-plum-400 hover:text-white uppercase cursor-pointer';
+      document.getElementById('view4Btn').className = mode === '4BAR' ? activeCls : inactiveCls;
+      document.getElementById('view16Btn').className = mode === '16BAR' ? activeCls : inactiveCls;
+      document.getElementById('view96Btn').className = mode === '96BAR' ? activeCls : inactiveCls;
+      ['4BAR', '16BAR', '96BAR'].forEach(m => document.getElementById(`view${m.replace('BAR', '')}Btn`).setAttribute('aria-pressed', String(m === mode)));
+
+      const curSong = anchorSongTime + (isPlaying && ac ? ac.currentTime - anchorAudioTime : 0);
+      const curBar = Math.floor((((curSong % LOOP_SEC) + LOOP_SEC) % LOOP_SEC) / BAR_SEC);
+      if (mode === '4BAR') renderScoreLanes(Math.floor(curBar / 4));
+      else if (mode === '16BAR') renderScoreLanes(Math.floor(curBar / 16));
+      else renderScoreLanes(0);
+    }
+
+    function syncHeaderOffset() {
+      const hd = document.querySelector('header'), mn = document.querySelector('main');
+      if (hd && mn) mn.style.paddingTop = `${hd.offsetHeight}px`;
+    }
+
+    function initApp() {
+      document.getElementById('playBtn')?.addEventListener('click', startPlayback);
+      document.getElementById('stopBtn')?.addEventListener('click', stopPlayback);
+
+      const toggleRec = () => isRecording ? stopDawRecording() : startDawRecording(false);
+      document.getElementById('recLiveBtn')?.addEventListener('click', toggleRec);
+      document.getElementById('printFullBtn')?.addEventListener('click', () => startDawRecording(true));
+
+      document.getElementById('loopBtn')?.addEventListener('click', (e) => {
+        const btn = e.currentTarget;
+        loopEnabled = !loopEnabled;
+        btn.textContent = `Loop: ${loopEnabled ? 'On' : 'Off'}`;
+        btn.setAttribute('aria-pressed', String(loopEnabled));
+        btn.classList.toggle('border-gold-500/50', loopEnabled);
+        btn.classList.toggle('bg-gold-500/15', loopEnabled);
+        btn.classList.toggle('text-gold-400', loopEnabled);
+        btn.classList.toggle('border-plum-900', !loopEnabled);
+        btn.classList.toggle('bg-midnight-900', !loopEnabled);
+        btn.classList.toggle('text-plum-400', !loopEnabled);
+      });
+
+      document.querySelectorAll('.rec-mode-btn').forEach(btn => btn.addEventListener('click', () => setRecordingMode(btn.dataset.recMode)));
+      document.getElementById('downloadAllWavBtn')?.addEventListener('click', () => {
+        renderedTakes.forEach((take, idx) => setTimeout(() => {
+          const a = document.createElement('a');
+          a.href = take.url;
+          a.download = take.filename;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        }, idx * 180));
+      });
+
+      document.getElementById('refreshDevicesBtn')?.addEventListener('click', refreshAudioOutputs);
+      document.getElementById('audioOutputSelect')?.addEventListener('change', async (e) => {
+        initAudioEngine();
+        if (ac && typeof ac.setSinkId === 'function') {
+          try { await ac.setSinkId(e.target.value); updateSinkChannelInfo(); } catch (err) {}
+        }
+      });
+
+      document.querySelectorAll('.sec-pill').forEach(pill => pill.addEventListener('click', () => seekToBar(parseInt(pill.dataset.jump, 10))));
+
+      document.getElementById('view4Btn')?.addEventListener('click', () => setScoreViewMode('4BAR'));
+      document.getElementById('view16Btn')?.addEventListener('click', () => setScoreViewMode('16BAR'));
+      document.getElementById('view96Btn')?.addEventListener('click', () => setScoreViewMode('96BAR'));
+
+      document.getElementById('scopeWaveBtn')?.addEventListener('click', () => {
+        scopeMode = 'WAVE';
+        document.getElementById('scopeWaveBtn').setAttribute('aria-pressed', 'true');
+        document.getElementById('scopeFreqBtn').setAttribute('aria-pressed', 'false');
+        document.getElementById('scopeWaveBtn').className = 'px-2.5 py-1 rounded-sm border border-gold-400 bg-gold-500/20 text-gold-400 font-bold uppercase cursor-pointer';
+        document.getElementById('scopeFreqBtn').className = 'px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-400 hover:text-white uppercase cursor-pointer';
+      });
+
+      document.getElementById('scopeFreqBtn')?.addEventListener('click', () => {
+        scopeMode = 'FREQ';
+        document.getElementById('scopeFreqBtn').setAttribute('aria-pressed', 'true');
+        document.getElementById('scopeWaveBtn').setAttribute('aria-pressed', 'false');
+        document.getElementById('scopeFreqBtn').className = 'px-2.5 py-1 rounded-sm border border-gold-400 bg-gold-500/20 text-gold-400 font-bold uppercase cursor-pointer';
+        document.getElementById('scopeWaveBtn').className = 'px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-400 hover:text-white uppercase cursor-pointer';
+      });
+
+      const cutSlider = document.getElementById('korgCutoffSlider');
+      const peakSlider = document.getElementById('korgPeakSlider');
+
+      cutSlider?.addEventListener('input', (e) => {
+        korgCutoffOffset = parseFloat(e.target.value);
+        applyKorgVcfOverride();
+      });
+
+      peakSlider?.addEventListener('input', (e) => {
+        korgPeakSetting = parseFloat(e.target.value);
+        applyKorgVcfOverride();
+      });
+
+      document.getElementById('korgVcfResetBtn')?.addEventListener('click', () => {
+        korgCutoffOffset = 0.0;
+        korgPeakSetting = 3.8;
+        if (cutSlider) cutSlider.value = '0';
+        if (peakSlider) peakSlider.value = '3.8';
+        applyKorgVcfOverride();
+      });
+
+      document.querySelectorAll('.sq-step-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          sq10UserLocked = true;
+          sq10ResetSteps = parseInt(btn.dataset.sqSteps, 10) || 5;
+          document.querySelectorAll('.sq-step-btn').forEach(b => {
+            const active = parseInt(b.dataset.sqSteps, 10) === sq10ResetSteps;
+            b.setAttribute('aria-pressed', String(active));
+            b.className = active
+              ? 'sq-step-btn px-2 py-0.5 rounded-sm bg-gold-500/20 text-gold-400 font-bold cursor-pointer transition-colors'
+              : 'sq-step-btn px-2 py-0.5 rounded-sm text-plum-400 hover:text-white cursor-pointer transition-colors';
+          });
+          buildScoreEvents();
+          renderScoreLanes(displayedSystem);
+          const cueText = document.getElementById('protocolCueText');
+          if (cueText) {
+            cueText.textContent = `BOOK II // P-07 PATCHED: SQ-10 TRIG OUT ${sq10ResetSteps} -> RESET IN locked across all 96 bars (cycles every ${sq10ResetSteps} steps against 130 BPM electro-wave).`;
+          }
+        });
+      });
+
+      document.getElementById('masterGainSlider')?.addEventListener('input', (e) => {
+        masterGainValue = parseFloat(e.target.value);
+        document.getElementById('masterGainVal').textContent = `${Math.round(masterGainValue * 100)}%`;
+        if (masterOut && ac) masterOut.gain.setTargetAtTime(masterGainValue, ac.currentTime, 0.02);
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.code !== 'Space' || e.ctrlKey || e.metaKey || e.altKey) return;
+        const t = e.target;
+        if (t && (['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'A'].includes(t.tagName) || t.isContentEditable)) return;
+        e.preventDefault();
+        if (!e.repeat) startPlayback();
+      });
+
+      syncHeaderOffset();
+      if ('ResizeObserver' in window) new ResizeObserver(syncHeaderOffset).observe(document.querySelector('header'));
+      else window.addEventListener('resize', syncHeaderOffset);
+
+      buildScoreEvents();
+      buildBarMatrix();
+      buildVoiceLedGrid();
+      buildPartitureShell();
+      renderDawTrackGrid();
+      refreshAudioOutputs();
+      applyKorgVcfOverride();
+      renderScoreLanes(0);
+      updatePositionUI(0);
+      rafId = requestAnimationFrame(renderLoop);
+    }
+
+    if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', initApp);
+    else initApp();
+  </script>
+</body>
+</html>
