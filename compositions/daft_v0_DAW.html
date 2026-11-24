@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en-GB">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interactive browser DAW showcase of Circuit Suite, a 96-bar, 124 BPM composition for Korg MS-10, SQ-10 and VC-10 by Voltage &amp; Wave.">
+  <meta name="theme-color" content="#06090e">
   <title>CIRCUIT SUITE // VOLTAGE &amp; WAVE</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <script>
     if (window.tailwind) {
       tailwind.config = {
@@ -44,6 +46,11 @@
     input[type="range"].vw-slider::-moz-range-thumb { width: 12px; height: 16px; background: #06b6d4; border: 1px solid #06090e; border-radius: 2px; cursor: pointer; }
     .score-note { transition: transform 0.05s ease, filter 0.05s ease, box-shadow 0.05s ease; }
     .score-note.active { filter: brightness(1.3); transform: scaleY(1.05); box-shadow: 0 0 12px var(--note-glow, rgba(34, 211, 238, 0.72)); z-index: 15; }
+    input[type="range"].vw-slider:focus-visible { outline: 2px solid #22d3ee; outline-offset: 5px; }
+    button:focus-visible, a:focus-visible, select:focus-visible { outline: 2px solid #22d3ee; outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after { animation: none !important; transition: none !important; }
+    }
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: #06090e; }
     ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
@@ -51,15 +58,15 @@
   </style>
 </head>
 <body class="antialiased relative selection:bg-gold-500 selection:text-midnight-950 flex flex-col min-h-screen">
-  <div class="scanlines"></div>
+  <div class="scanlines" aria-hidden="true"></div>
 
   <!-- Fixed Telemetry & Transport Header -->
   <header class="fixed w-full z-40 top-0 bg-midnight-950/95 backdrop-blur-md border-b border-midnight-900">
     <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex flex-wrap justify-between items-center py-2.5 gap-3">
         <div class="flex items-center gap-3">
-          <a href="../index.html" class="flex items-center gap-3 group">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" class="text-gold-500 w-6 h-6 shrink-0 group-hover:text-gold-400 transition-colors">
+          <a href="../index.html" aria-label="Voltage &amp; Wave home" class="flex items-center gap-3 group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" aria-hidden="true" class="text-gold-500 w-6 h-6 shrink-0 group-hover:text-gold-400 transition-colors">
               <path d="M2 12h4v-7h6v14h6v-7h4"/>
             </svg>
             <div>
@@ -76,7 +83,7 @@
         <div class="flex items-center gap-2 sm:gap-4 bg-midnight-900/90 border border-midnight-850 px-3 py-1.5 rounded-sm font-mono">
           <div class="text-center pr-2 sm:pr-4 border-r border-midnight-850">
             <div class="text-[9px] text-plum-400 uppercase tracking-widest">Bar</div>
-            <div id="hudBar" class="text-base sm:text-xl font-bold text-gold-500 glow-text leading-none mt-0.5">01<span class="text-plum-600 text-xs">/96</span></div>
+            <div id="hudBar" class="text-base sm:text-xl font-bold text-gold-500 glow-text leading-none mt-0.5">01<span class="text-plum-500 text-xs">/96</span></div>
           </div>
           <div class="text-center pr-2 sm:pr-4 border-r border-midnight-850">
             <div class="text-[9px] text-plum-400 uppercase tracking-widest">Beat</div>
@@ -101,12 +108,12 @@
         <!-- Transport Controls -->
         <div class="flex flex-wrap items-center gap-2 font-mono text-xs">
           <button id="playBtn" class="inline-flex items-center gap-1.5 bg-gold-500 hover:bg-gold-400 text-midnight-950 px-4 py-2 font-bold uppercase tracking-wider rounded-sm transition-all shadow-[0_0_15px_rgba(6,182,212,0.35)] cursor-pointer">
-            <span id="playIcon">▶</span> <span id="playLabel">Play</span>
+            <span id="playIcon" aria-hidden="true">▶</span> <span id="playLabel">Play</span>
           </button>
           <button id="stopBtn" class="inline-flex items-center gap-1.5 bg-midnight-900 hover:bg-midnight-850 border border-plum-900 text-plum-300 px-3 py-2 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none" disabled>
-            ■ Stop
+            <span aria-hidden="true">■</span> Stop
           </button>
-          <button id="loopBtn" title="Toggle 96-Bar Full Suite Loop" class="hidden sm:inline-block px-2.5 py-2 border border-gold-500/50 bg-gold-500/15 text-gold-400 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">
+          <button id="loopBtn" type="button" aria-pressed="true" title="Toggle 96-Bar Full Suite Loop" class="hidden sm:inline-block px-2.5 py-2 border border-gold-500/50 bg-gold-500/15 text-gold-400 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">
             Loop: On
           </button>
         </div>
@@ -115,20 +122,20 @@
   </header>
 
   <main id="top" class="pt-28 sm:pt-20 pb-12 flex-1 relative z-10">
-    <div class="fixed inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10"></div>
+    <div class="fixed inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10" aria-hidden="true"></div>
     <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-6 mt-4">
 
       <!-- Arrangement & Protocol Matrix Section -->
       <section class="bg-midnight-900/90 border border-midnight-850 rounded-sm p-4 sm:p-5 shadow-2xl">
         <div class="mb-4 px-3 py-2 rounded-sm bg-midnight-950 border border-gold-500/30 flex items-start sm:items-center justify-between gap-2.5 font-mono text-[11px] text-plum-300">
-          <div class="flex items-start sm:items-center gap-2.5">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2.5">
             <span class="text-gold-400 font-bold uppercase shrink-0">[1978 Studio Standard Suite — 03:06]</span>
-            <span>Full-length 96-bar composition and browser-based software emulation of studio techniques from the Voltage &amp; Wave books. It does not control the original Korg hardware..</span>
+            <span>Full-length 96-bar composition and browser-based software emulation of studio techniques from the Voltage &amp; Wave books. It does not control the original Korg hardware.</span>
           </div>
           <span class="hidden xl:inline-block text-gold-400 font-bold shrink-0">96 BARS · 03:05.8</span>
         </div>
 
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-4 pb-3 border-b border-midnight-850">
+        <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-3 mb-4 pb-3 border-b border-midnight-850">
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-gold-500 animate-pulse"></span>
@@ -138,7 +145,7 @@
               <div class="flex flex-col gap-0.5 min-w-0 flex-1">
                 <div>
                   <span class="text-gold-500 font-bold">MANUAL CUE:</span>
-                  <span id="protocolCueText">Click any movement pill, protocol card, or bar cell below to jump across the 3-minute arrangement.</span>
+                  <span id="protocolCueText" aria-live="polite">Click any movement pill, protocol card, or bar cell below to jump across the 3-minute arrangement.</span>
                 </div>
               </div>
             </div>
@@ -181,13 +188,13 @@
       <section class="bg-midnight-900/90 border border-midnight-850 rounded-sm shadow-2xl overflow-hidden">
         <div class="bg-midnight-950 border-b border-midnight-850 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
           <div class="flex items-center gap-3">
-            <span class="font-mono text-xs font-bold text-plum-400 uppercase tracking-widest">Partiture / Score Lanes</span>
+            <h2 class="font-mono text-xs font-bold text-plum-400 uppercase tracking-widest">Partiture / Score Lanes</h2>
             <span id="systemBadge" class="font-mono text-[11px] bg-midnight-900 border border-plum-900 text-plum-300 px-2.5 py-0.5 rounded-sm">SYSTEM 01 // BARS 01–04 (I. PARIS PULSE)</span>
           </div>
           <div class="flex items-center gap-2 font-mono text-[11px]">
-            <button id="view4Btn" class="px-2.5 py-1 rounded-sm border border-plum-400 bg-plum-500/15 text-plum-400 font-bold uppercase cursor-pointer">4-Bar System</button>
-            <button id="view16Btn" class="px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-900 text-plum-400 hover:text-white uppercase cursor-pointer">16-Bar Movement</button>
-            <button id="view96Btn" class="px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-900 text-plum-400 hover:text-white uppercase cursor-pointer">96-Bar Score</button>
+            <button id="view4Btn" type="button" aria-pressed="true" class="px-2.5 py-1 rounded-sm border border-plum-400 bg-plum-500/15 text-plum-400 font-bold uppercase cursor-pointer">4-Bar System</button>
+            <button id="view16Btn" type="button" aria-pressed="false" class="px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-900 text-plum-400 hover:text-white uppercase cursor-pointer">16-Bar Movement</button>
+            <button id="view96Btn" type="button" aria-pressed="false" class="px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-900 text-plum-400 hover:text-white uppercase cursor-pointer">96-Bar Score</button>
           </div>
         </div>
         <div id="partitureBody" class="divide-y divide-midnight-850/90"></div>
@@ -199,22 +206,22 @@
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-gold-400 animate-pulse"></span>
-              <span class="font-mono text-xs font-bold text-white uppercase tracking-widest">Oscilloscope Monitor</span>
+              <h2 class="font-mono text-xs font-bold text-white uppercase tracking-widest">Oscilloscope Monitor</h2>
             </div>
             <div class="flex gap-1.5 font-mono text-[10px]">
-              <button id="scopeWaveBtn" class="px-2.5 py-1 rounded-sm border border-gold-400 bg-gold-500/20 text-gold-400 font-bold uppercase cursor-pointer">Wave</button>
-              <button id="scopeFreqBtn" class="px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-400 hover:text-white uppercase cursor-pointer">Freq</button>
+              <button id="scopeWaveBtn" type="button" aria-pressed="true" class="px-2.5 py-1 rounded-sm border border-gold-400 bg-gold-500/20 text-gold-400 font-bold uppercase cursor-pointer">Wave</button>
+              <button id="scopeFreqBtn" type="button" aria-pressed="false" class="px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-400 hover:text-white uppercase cursor-pointer">Freq</button>
             </div>
           </div>
           <div class="relative flex-1 min-h-[160px] bg-midnight-950 border border-midnight-850 rounded-sm overflow-hidden">
-            <canvas id="scopeCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+            <canvas id="scopeCanvas" role="img" aria-label="Oscilloscope showing the live output of each voice" class="absolute inset-0 w-full h-full block"></canvas>
           </div>
         </div>
 
         <div class="lg:col-span-5 bg-midnight-900/90 border border-midnight-850 rounded-sm p-4 flex flex-col justify-between gap-3.5">
           <div>
             <div class="flex items-center justify-between mb-2.5">
-              <span class="font-mono text-xs font-bold text-white uppercase tracking-widest">Active Channels</span>
+              <h2 class="font-mono text-xs font-bold text-white uppercase tracking-widest">Active Channels</h2>
               <span id="elapsedClock" class="font-mono text-xs text-gold-400 font-bold">00:00.0 / 03:05.8</span>
             </div>
             <div id="voiceLedGrid" class="grid grid-cols-3 sm:grid-cols-4 gap-1.5 font-mono text-[10px]"></div>
@@ -251,10 +258,10 @@
             <div class="pt-1.5 border-t border-midnight-850 flex flex-wrap items-center justify-between gap-1.5 font-mono text-[9px]">
               <span class="text-plum-400 uppercase">SQ-10 RESET IN:</span>
               <div class="inline-flex rounded-sm border border-plum-900 bg-midnight-900 p-0.5" role="group" aria-label="SQ-10 Reset Step Length">
-                <button type="button" data-sq-steps="5" class="sq-step-btn px-2 py-0.5 rounded-sm bg-gold-500/20 text-gold-400 font-bold cursor-pointer transition-colors">5-Step</button>
-                <button type="button" data-sq-steps="6" class="sq-step-btn px-2 py-0.5 rounded-sm text-plum-400 hover:text-white cursor-pointer transition-colors">6-Step</button>
-                <button type="button" data-sq-steps="7" class="sq-step-btn px-2 py-0.5 rounded-sm text-plum-400 hover:text-white cursor-pointer transition-colors">7-Step</button>
-                <button type="button" data-sq-steps="8" class="sq-step-btn px-2 py-0.5 rounded-sm text-plum-400 hover:text-white cursor-pointer transition-colors">8-Step</button>
+                <button type="button" data-sq-steps="5" aria-pressed="true" class="sq-step-btn px-2 py-0.5 rounded-sm bg-gold-500/20 text-gold-400 font-bold cursor-pointer transition-colors">5-Step</button>
+                <button type="button" data-sq-steps="6" aria-pressed="false" class="sq-step-btn px-2 py-0.5 rounded-sm text-plum-400 hover:text-white cursor-pointer transition-colors">6-Step</button>
+                <button type="button" data-sq-steps="7" aria-pressed="false" class="sq-step-btn px-2 py-0.5 rounded-sm text-plum-400 hover:text-white cursor-pointer transition-colors">7-Step</button>
+                <button type="button" data-sq-steps="8" aria-pressed="false" class="sq-step-btn px-2 py-0.5 rounded-sm text-plum-400 hover:text-white cursor-pointer transition-colors">8-Step</button>
               </div>
             </div>
           </div>
@@ -279,12 +286,12 @@
             <p class="text-xs text-plum-400 mt-1">Capture sample-aligned 24-bit WAV stems generated natively by the Web Audio API engine.</p>
           </div>
           <div class="flex flex-wrap items-center gap-2 font-mono text-xs shrink-0">
-            <div class="inline-flex rounded-sm border border-plum-900 bg-midnight-950 p-0.5" role="group">
-              <button type="button" data-rec-mode="ALL" class="rec-mode-btn px-2.5 py-1 rounded-sm bg-gold-500/20 text-gold-400 font-bold uppercase cursor-pointer transition-colors">Master + Stems</button>
-              <button type="button" data-rec-mode="STEMS" class="rec-mode-btn px-2.5 py-1 rounded-sm text-plum-400 hover:text-white uppercase cursor-pointer transition-colors">Stems Only</button>
+            <div class="inline-flex rounded-sm border border-plum-900 bg-midnight-950 p-0.5" role="group" aria-label="Recording mode">
+              <button type="button" data-rec-mode="ALL" aria-pressed="true" class="rec-mode-btn disabled:opacity-40 disabled:pointer-events-none px-2.5 py-1 rounded-sm bg-gold-500/20 text-gold-400 font-bold uppercase cursor-pointer transition-colors">Master + Stems</button>
+              <button type="button" data-rec-mode="STEMS" aria-pressed="false" class="rec-mode-btn disabled:opacity-40 disabled:pointer-events-none px-2.5 py-1 rounded-sm text-plum-400 hover:text-white uppercase cursor-pointer transition-colors">Stems Only</button>
             </div>
             <button type="button" id="recLiveBtn" class="inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-400 text-midnight-950 px-3.5 py-1.5 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer shadow-[0_0_12px_rgba(249,115,22,0.4)]">
-              <span id="recLiveIcon">●</span> <span id="recLiveLabel">Rec Live</span>
+              <span id="recLiveIcon" aria-hidden="true">●</span> <span id="recLiveLabel">Rec Live</span>
             </button>
             <button type="button" id="printFullBtn" class="inline-flex items-center gap-1.5 bg-midnight-950 hover:bg-midnight-900 border border-gold-500/50 text-gold-400 px-3 py-1.5 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">⚡ Print 96-Bar Song</button>
           </div>
@@ -307,12 +314,12 @@
             <div class="flex items-center justify-between gap-2">
               <div class="flex items-center gap-2">
                 <span class="text-[11px] font-bold text-white uppercase tracking-wider">Exported 24-Bit Stems</span>
-                <span id="recTimerLabel" class="text-[11px] text-plum-500">00:00.0</span>
+                <span id="recTimerLabel" class="text-[11px] text-plum-400">00:00.0</span>
               </div>
               <button type="button" id="downloadAllWavBtn" disabled class="px-3 py-1 rounded-sm bg-plum-500/20 border border-plum-500/50 text-plum-300 disabled:opacity-30 disabled:pointer-events-none hover:bg-plum-500/30 text-[10px] font-bold uppercase tracking-wider cursor-pointer transition-colors">↓ Download All</button>
             </div>
             <div id="wavExportList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 min-h-[54px] items-center">
-              <p class="col-span-full text-[11px] text-plum-500">Arm tracks above and press <span class="text-orange-400 font-bold">Rec Live</span> or <span class="text-gold-400 font-bold">Print 96-Bar Song</span>.</p>
+              <p class="col-span-full text-[11px] text-plum-400">Arm tracks above and press <span class="text-orange-400 font-bold">Rec Live</span> or <span class="text-gold-400 font-bold">Print 96-Bar Song</span>.</p>
             </div>
           </div>
         </div>
@@ -322,7 +329,7 @@
   </main>
 
   <footer class="py-6 text-center border-t border-midnight-850 bg-midnight-950 relative z-20">
-    <p class="font-mono text-xs text-plum-500 uppercase tracking-widest">VOLTAGE &amp; WAVE // CIRCUIT SUITE — KORG MS-10 · SQ-10 · VC-10 PROTOCOL</p>
+    <p class="font-mono text-xs text-plum-400 uppercase tracking-widest">VOLTAGE &amp; WAVE // CIRCUIT SUITE — KORG MS-10 · SQ-10 · VC-10 PROTOCOL</p>
   </footer>
 
   <script>
@@ -354,9 +361,10 @@
     const LOOP_SEC = TOTAL_BARS * BAR_SEC;
 
     function formatClock(sec) {
-      const s = Math.max(0, sec);
-      const mins = Math.floor(s / 60);
-      const rem = (s % 60).toFixed(1).padStart(4, '0');
+      // Work in whole tenths so 59.96 s can never render as "00:60.0".
+      const tenths = Math.floor(Math.max(0, sec) * 10 + 1e-6);
+      const mins = Math.floor(tenths / 600);
+      const rem = ((tenths % 600) / 10).toFixed(1).padStart(4, '0');
       return `${String(mins).padStart(2, '0')}:${rem}`;
     }
 
@@ -842,6 +850,7 @@
 
         if (b >= 3 && b < 95) {
           [1, 3].forEach(off => {
+            if ((b === 47 || b === 79) && off === 3) return; // the roll below supplies the beat-3 hit
             events.push({
               type: 'snare',
               partId: 'part2',
@@ -1193,7 +1202,8 @@
     // =========================================================================
     let isPlaying = false, loopEnabled = true, viewMode = '4BAR', displayedSystem = 0;
     let anchorAudioTime = 0, anchorSongTime = 0, nextBarIndex = 0;
-    let schedulerTimer = null, rafId = null, visualQueue = [];
+    let schedulerTimer = null, rafId = null, visualQueue = [], endTimer = null;
+    function clearEndTimer() { if (endTimer) { clearTimeout(endTimer); endTimer = null; } }
 
     function scheduleWindow() {
       if (!isPlaying || !ac) return;
@@ -1202,18 +1212,21 @@
       const horizon = currentSongTime + 0.25;
 
       while (nextBarIndex * BAR_SEC < horizon) {
-        const cycleIdx = Math.floor(nextBarIndex / TOTAL_BARS);
-        if ((!loopEnabled || autoStopAtLoopEnd) && cycleIdx >= 1) {
-          const stopDelay = Math.max(0, (LOOP_SEC - currentSongTime) * 1000);
-          setTimeout(() => {
-            if (isPlaying && (!loopEnabled || autoStopAtLoopEnd)) {
+        // First bar of a new pass: finish the current pass and stop, unless looping.
+        // (Works from any pass, so switching Loop off during a repeat ends at the next pass boundary.)
+        const atPassBoundary = nextBarIndex >= TOTAL_BARS && nextBarIndex % TOTAL_BARS === 0;
+        if (atPassBoundary && (!loopEnabled || autoStopAtLoopEnd)) {
+          if (!endTimer) {
+            const stopDelay = Math.max(0, (nextBarIndex * BAR_SEC - currentSongTime) * 1000);
+            endTimer = setTimeout(() => {
+              endTimer = null;
+              if (!isPlaying || (loopEnabled && !autoStopAtLoopEnd)) return;
               const autoP = autoStopAtLoopEnd;
               autoStopAtLoopEnd = false;
               if (autoP && isRecording) stopDawRecording();
               stopPlayback();
-            }
-          }, stopDelay);
-          nextBarIndex++;
+            }, stopDelay);
+          }
           break;
         }
 
@@ -1321,7 +1334,7 @@
         schedOff(v, at + durSec);
       }
 
-      visualQueue.push({
+      if (!document.hidden) visualQueue.push({ // skip while hidden: rAF is paused, so the queue would only grow
         time: at,
         offTime: at + durSec,
         partId: ev.partId,
@@ -1341,6 +1354,8 @@
         }
       });
       visualQueue = [];
+      const trigLed = document.getElementById('sqTrigLed');
+      if (trigLed) { trigLed.style.opacity = ''; trigLed.style.backgroundColor = ''; trigLed.style.boxShadow = ''; }
       document.querySelectorAll('.score-note.active').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('[data-voice-led]').forEach(el => {
         el.style.opacity = '0.25';
@@ -1352,10 +1367,11 @@
       initAudioEngine();
       if (ac.state === 'suspended') ac.resume();
       if (isPlaying) {
-        const elapsed = ac.currentTime - anchorAudioTime;
+        const elapsed = Math.max(0, ac.currentTime - anchorAudioTime); // negative inside the 30 ms start offset
         anchorSongTime = (anchorSongTime + elapsed) % LOOP_SEC;
         isPlaying = false;
         clearInterval(schedulerTimer);
+        clearEndTimer();
         silenceAllVoices();
         updateTransportUI();
         return;
@@ -1363,6 +1379,8 @@
       isPlaying = true;
       anchorAudioTime = ac.currentTime + 0.03;
       nextBarIndex = Math.floor(anchorSongTime / BAR_SEC);
+      clearInterval(schedulerTimer);
+      clearEndTimer();
       scheduleWindow();
       schedulerTimer = setInterval(scheduleWindow, 25);
       updateTransportUI();
@@ -1373,6 +1391,7 @@
       isPlaying = false;
       autoStopAtLoopEnd = false;
       clearInterval(schedulerTimer);
+      clearEndTimer();
       anchorSongTime = 0;
       nextBarIndex = 0;
       silenceAllVoices();
@@ -1385,6 +1404,7 @@
       const clamped = Math.max(0, Math.min(TOTAL_BARS - 1, barIdx));
       anchorSongTime = clamped * BAR_SEC;
       nextBarIndex = clamped;
+      clearEndTimer();
       if (isPlaying && ac) {
         silenceAllVoices();
         anchorAudioTime = ac.currentTime + 0.02;
@@ -1426,7 +1446,7 @@
           <div id="barFill_${b}" class="absolute inset-y-0 left-0 bg-gold-500/20 pointer-events-none" style="width: 0%"></div>
           <div class="relative z-10 flex items-center justify-between font-mono text-[9px] leading-tight">
             <span class="text-plum-400 group-hover:text-plum-200 font-bold">${String(b + 1).padStart(2, '0')}</span>
-            <span class="text-[8px] text-plum-500 truncate ml-1">${sec.short}</span>
+            <span class="text-[8px] text-plum-400 truncate ml-1">${sec.short}</span>
           </div>
           <div class="relative z-10 font-mono text-[10px] font-bold text-plum-200 truncate leading-tight mt-0.5">${chord.name}</div>`;
         cell.addEventListener('click', () => seekToBar(b));
@@ -1449,20 +1469,20 @@
               <div class="min-w-0 flex-1">
                 <div class="flex items-center gap-2 font-mono text-[10px] tracking-widest">
                   <span class="font-bold shrink-0" style="color: ${part.color}">${part.num}</span>
-                  <span class="text-plum-500 shrink-0">//</span>
+                  <span class="text-plum-400 shrink-0">//</span>
                   <span id="partStatus_${part.id}" class="text-plum-400 font-bold truncate">READY</span>
                 </div>
-                <h2 class="font-mono text-sm font-bold text-white tracking-wide mt-0.5 truncate">${part.title}</h2>
+                <h3 class="font-mono text-sm font-bold text-white tracking-wide mt-0.5 truncate">${part.title}</h3>
                 <p class="font-mono text-[10px] text-plum-400 truncate">${part.spec}</p>
               </div>
               <div class="flex items-center gap-1 font-mono text-[10px] shrink-0">
-                <button data-mute="${part.id}" class="w-6 h-6 rounded-sm border border-midnight-850 bg-midnight-900 text-plum-400 hover:text-white font-bold cursor-pointer transition-colors" title="Mute Part">M</button>
-                <button data-solo="${part.id}" class="w-6 h-6 rounded-sm border border-midnight-850 bg-midnight-900 text-plum-400 hover:text-white font-bold cursor-pointer transition-colors" title="Solo Part">S</button>
+                <button type="button" data-mute="${part.id}" aria-pressed="false" aria-label="Mute ${part.title}" class="w-6 h-6 rounded-sm border border-midnight-850 bg-midnight-900 text-plum-400 hover:text-white font-bold cursor-pointer transition-colors" title="Mute Part">M</button>
+                <button type="button" data-solo="${part.id}" aria-pressed="false" aria-label="Solo ${part.title}" class="w-6 h-6 rounded-sm border border-midnight-850 bg-midnight-900 text-plum-400 hover:text-white font-bold cursor-pointer transition-colors" title="Solo Part">S</button>
               </div>
             </div>
             <div class="flex items-center gap-2 pt-0.5">
-              <span class="font-mono text-[9px] text-plum-500 uppercase">LVL</span>
-              <input type="range" data-gain="${part.id}" min="0" max="1.5" step="0.01" value="1" class="vw-slider w-full">
+              <span class="font-mono text-[9px] text-plum-400 uppercase">LVL</span>
+              <input type="range" data-gain="${part.id}" aria-label="${part.title} level" min="0" max="1.5" step="0.01" value="1" class="vw-slider w-full">
             </div>
           </div>
           <div class="lg:col-span-9 relative overflow-x-auto overflow-y-hidden bg-midnight-950/30">
@@ -1476,7 +1496,9 @@
         p.muted = !p.muted;
         b.classList.toggle('bg-orange-600', p.muted);
         b.classList.toggle('text-white', p.muted);
+        b.classList.toggle('text-plum-400', !p.muted);
         b.classList.toggle('bg-midnight-900', !p.muted);
+        b.setAttribute('aria-pressed', String(p.muted));
         applyMixerGains();
       }));
 
@@ -1485,7 +1507,9 @@
         p.solo = !p.solo;
         b.classList.toggle('bg-gold-500', p.solo);
         b.classList.toggle('text-midnight-950', p.solo);
+        b.classList.toggle('text-plum-400', !p.solo);
         b.classList.toggle('bg-midnight-900', !p.solo);
+        b.setAttribute('aria-pressed', String(p.solo));
         applyMixerGains();
       }));
 
@@ -1523,7 +1547,7 @@
           const b = startBar + i, leftPct = (i / numBars) * 100, widthPct = (1 / numBars) * 100, chord = getChordForBar(b);
           html += `<div onclick="seekToBar(${b})" class="absolute inset-y-0 border-r border-midnight-850 hover:bg-gold-500/5 cursor-pointer transition-colors" style="left:${leftPct}%; width:${widthPct}%;">
             <div class="flex items-center justify-between px-1.5 pt-1 font-mono text-[10px]">
-              <span class="text-plum-500 font-bold">${viewMode === '4BAR' ? 'BAR ' : ''}${String(b + 1).padStart(2, '0')}</span>
+              <span class="text-plum-400 font-bold">${viewMode === '4BAR' ? 'BAR ' : ''}${String(b + 1).padStart(2, '0')}</span>
               <span class="text-gold-500/80 font-bold">${chord.name}</span>
             </div>
             <div class="absolute inset-x-0 top-6 bottom-2 flex flex-col justify-between opacity-15 pointer-events-none">
@@ -1543,7 +1567,7 @@
           const b = startBar + i, barLeftPct = (i / numBars) * 100, barWidthPct = (1 / numBars) * 100;
           const evs = BAR_EVENTS[b].filter(e => e.partId === part.id && e.domKey);
           if (evs.length === 0) {
-            html += `<div class="absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center pointer-events-none px-2" style="left:${barLeftPct}%; width:${barWidthPct}%;"><span class="font-mono text-[9px] text-plum-600 tracking-widest uppercase">REST</span></div>`;
+            html += `<div class="absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center pointer-events-none px-2" style="left:${barLeftPct}%; width:${barWidthPct}%;"><span class="font-mono text-[9px] text-plum-500 tracking-widest uppercase">REST</span></div>`;
             continue;
           }
           evs.forEach(ev => {
@@ -1586,6 +1610,7 @@
       });
     }
 
+    let lastBarShown = -1, lastBeatTxt = '', lastClockTxt = '';
     function updatePositionUI(songTime) {
       const posInLoop = ((songTime % LOOP_SEC) + LOOP_SEC) % LOOP_SEC;
       const barIdx = Math.min(TOTAL_BARS - 1, Math.floor(posInLoop / BAR_SEC));
@@ -1596,12 +1621,18 @@
       const sec = getSectionForBar(barIdx);
       const chord = getChordForBar(barIdx);
 
-      document.getElementById('hudBar').innerHTML = `${String(barIdx + 1).padStart(2, '0')}<span class="text-plum-600 text-xs">/96</span>`;
-      document.getElementById('hudBeat').textContent = `${beatNum}.${subNum}`;
-      document.getElementById('hudSection').textContent = sec.label;
-      document.getElementById('hudChord').textContent = chord.name;
-
-      document.getElementById('elapsedClock').textContent = `${formatClock(posInLoop)} / ${formatClock(LOOP_SEC)}`;
+      // Only touch the DOM when something visible changed (this runs every animation frame).
+      const barChanged = barIdx !== lastBarShown;
+      if (barChanged) {
+        document.getElementById('hudBar').innerHTML = `${String(barIdx + 1).padStart(2, '0')}<span class="text-plum-500 text-xs">/96</span>`;
+        document.getElementById('hudSection').textContent = sec.label;
+        document.getElementById('hudChord').textContent = chord.name;
+        lastBarShown = barIdx;
+      }
+      const beatTxt = `${beatNum}.${subNum}`;
+      if (beatTxt !== lastBeatTxt) { document.getElementById('hudBeat').textContent = beatTxt; lastBeatTxt = beatTxt; }
+      const clockTxt = `${formatClock(posInLoop)} / ${formatClock(LOOP_SEC)}`;
+      if (clockTxt !== lastClockTxt) { document.getElementById('elapsedClock').textContent = clockTxt; lastClockTxt = clockTxt; }
 
       const sqLed = document.getElementById('sqTrigLed');
       if (sqLed && isPlaying) {
@@ -1615,7 +1646,7 @@
         sqLed.style.boxShadow = isResetStep ? `0 0 10px ${trigAlert}` : `0 0 8px ${trigPrimary}`;
       }
 
-      document.querySelectorAll('.sec-pill').forEach(pill => {
+      if (barChanged) document.querySelectorAll('.sec-pill').forEach(pill => {
         const start = parseInt(pill.dataset.jump, 10);
         const isCurrent = barIdx >= start && barIdx < start + 16;
         pill.className = `sec-pill px-2 py-1 rounded-sm border uppercase tracking-wider cursor-pointer transition-colors ${
@@ -1625,7 +1656,8 @@
         }`;
       });
 
-      for (let b = 0; b < TOTAL_BARS; b++) {
+      // Full pass only on a bar change; otherwise just advance the current bar's fill.
+      for (let b = barChanged ? 0 : barIdx; b < (barChanged ? TOTAL_BARS : barIdx + 1); b++) {
         const cell = document.getElementById(`barCell_${b}`), fill = document.getElementById(`barFill_${b}`);
         if (!cell || !fill) continue;
         if (b < barIdx) {
@@ -1675,8 +1707,8 @@
       if (!scopeCtx) return;
 
       const dpr = window.devicePixelRatio || 1;
-      const w = scopeCanvas.clientWidth * dpr;
-      const h = scopeCanvas.clientHeight * dpr;
+      const w = Math.round(scopeCanvas.clientWidth * dpr);   // integers: a fractional size never equals canvas.width,
+      const h = Math.round(scopeCanvas.clientHeight * dpr);  // which re-allocated the canvas every frame at 125%/150% DPI
       if (w === 0 || h === 0) return;
       if (scopeCanvas.width !== w || scopeCanvas.height !== h) {
         scopeCanvas.width = w;
@@ -1716,7 +1748,7 @@
         scopeCtx.fillStyle = `rgba(${PATCH_DATA[id].rgb}, 0.7)`;
 
         if (scopeMode === 'FREQ') {
-          const bins = new Uint8Array(track.an.frequencyBinCount);
+          const bins = track.binBuf || (track.binBuf = new Uint8Array(track.an.frequencyBinCount));
           track.an.getByteFrequencyData(bins);
           let active = false;
           for (let j = 0; j < 50; j += 5) if (bins[j] > 5) { active = true; break; }
@@ -1728,7 +1760,7 @@
             if (val > 0.01) scopeCtx.fillRect((i * w) / count + 1, h - val * h, w / count - 2, val * h);
           }
         } else {
-          const buf = new Float32Array(track.an.fftSize);
+          const buf = track.timeBuf || (track.timeBuf = new Float32Array(track.an.fftSize));
           track.an.getFloatTimeDomainData(buf);
           let active = false;
           for (let j = 0; j < 256; j += 8) if (Math.abs(buf[j]) > 0.01) { active = true; break; }
@@ -1798,6 +1830,7 @@
     }
 
     function setRecordingMode(mode) {
+      if (isRecording) return; // changing armed tracks mid-take would give stems of different lengths
       recMode = mode;
       DAW_TRACK_DEFS.forEach(t => {
         if (mode === 'ALL') t.armed = true;
@@ -1805,6 +1838,7 @@
       });
       document.querySelectorAll('.rec-mode-btn').forEach(btn => {
         const active = btn.dataset.recMode === mode;
+        btn.setAttribute('aria-pressed', String(active));
         btn.classList.toggle('bg-gold-500/20', active);
         btn.classList.toggle('text-gold-400', active);
         btn.classList.toggle('font-bold', active);
@@ -1945,17 +1979,17 @@
         card.innerHTML = `
           <div class="flex items-center justify-between gap-1">
             <span class="text-[10px] font-bold" style="color:${def.color}">${def.num}</span>
-            <button type="button" data-arm-track="${def.id}" class="px-1.5 py-0.5 rounded-sm text-[9px] font-bold uppercase cursor-pointer transition-colors ${def.armed ? 'bg-orange-500 text-midnight-950' : 'bg-midnight-900 border border-plum-700 text-plum-500 hover:text-plum-300'}">${def.armed ? '● ARM' : 'OFF'}</button>
+            <button type="button" data-arm-track="${def.id}" aria-pressed="${def.armed}" aria-label="Arm ${def.name} for recording" ${isRecording ? 'disabled' : ''} class="disabled:opacity-60 disabled:cursor-not-allowed px-1.5 py-0.5 rounded-sm text-[9px] font-bold uppercase cursor-pointer transition-colors ${def.armed ? 'bg-orange-500 text-midnight-950' : 'bg-midnight-900 border border-plum-700 text-plum-400 hover:text-plum-300'}">${def.armed ? '● ARM' : 'OFF'}</button>
           </div>
           <div>
             <div class="text-[11px] font-bold text-plum-200 truncate">${def.name}</div>
-            <div class="text-[9px] text-plum-500">${def.channels === 2 ? 'Stereo 24-bit' : 'Mono 24-bit'}</div>
+            <div class="text-[9px] text-plum-400">${def.channels === 2 ? 'Stereo 24-bit' : 'Mono 24-bit'}</div>
           </div>
           <div>
             <div class="w-full h-1.5 bg-midnight-900 rounded-sm overflow-hidden">
               <div id="dawMeter_${def.id}" class="h-full transition-all duration-75" style="width:0%; background:${def.color}"></div>
             </div>
-            <div class="flex justify-between text-[9px] text-plum-500 mt-1">
+            <div class="flex justify-between text-[9px] text-plum-400 mt-1">
               <span>PEAK</span>
               <span id="dawDb_${def.id}">-∞ dB</span>
             </div>
@@ -1965,7 +1999,7 @@
 
       grid.querySelectorAll('[data-arm-track]').forEach(btn => btn.addEventListener('click', () => {
         const def = DAW_TRACK_DEFS.find(t => t.id === btn.dataset.armTrack);
-        if (def) { def.armed = !def.armed; renderDawTrackGrid(); }
+        if (def && !isRecording) { def.armed = !def.armed; renderDawTrackGrid(); }
       }));
     }
 
@@ -1973,7 +2007,7 @@
       const list = document.getElementById('wavExportList'), dlAllBtn = document.getElementById('downloadAllWavBtn');
       if (!list) return;
       if (renderedTakes.length === 0) {
-        list.innerHTML = `<p class="col-span-full text-[11px] text-plum-500">No armed audio captured. Arm at least one track and press Rec Live.</p>`;
+        list.innerHTML = `<p class="col-span-full text-[11px] text-plum-400">No armed audio captured. Arm at least one track and press Rec Live.</p>`;
         if (dlAllBtn) dlAllBtn.disabled = true;
         return;
       }
@@ -1989,6 +2023,8 @@
     }
 
     function updateRecTransportUI(active) {
+      renderDawTrackGrid(); // refresh the locked / unlocked arm buttons
+      document.querySelectorAll('.rec-mode-btn').forEach(b => { b.disabled = active; });
       const liveBtn = document.getElementById('recLiveBtn'), liveLabel = document.getElementById('recLiveLabel'), led = document.getElementById('recHeaderLed');
       if (active) {
         if (liveBtn) { liveBtn.classList.replace('bg-orange-500', 'bg-gold-500'); }
@@ -2010,7 +2046,7 @@
       }
       const measurePeak = (analyser) => {
         if (!analyser || !isPlaying) return 0;
-        const buf = new Float32Array(analyser.fftSize);
+        const buf = analyser._buf || (analyser._buf = new Float32Array(analyser.fftSize));
         analyser.getFloatTimeDomainData(buf);
         let peak = 0;
         for (let i = 0; i < buf.length; i += 8) {
@@ -2127,12 +2163,19 @@
       document.getElementById('view4Btn').className = mode === '4BAR' ? activeCls : inactiveCls;
       document.getElementById('view16Btn').className = mode === '16BAR' ? activeCls : inactiveCls;
       document.getElementById('view96Btn').className = mode === '96BAR' ? activeCls : inactiveCls;
+      ['4BAR', '16BAR', '96BAR'].forEach(m => document.getElementById(`view${m.replace('BAR', '')}Btn`).setAttribute('aria-pressed', String(m === mode)));
 
       const curSong = anchorSongTime + (isPlaying && ac ? ac.currentTime - anchorAudioTime : 0);
       const curBar = Math.floor((((curSong % LOOP_SEC) + LOOP_SEC) % LOOP_SEC) / BAR_SEC);
       if (mode === '4BAR') renderScoreLanes(Math.floor(curBar / 4));
       else if (mode === '16BAR') renderScoreLanes(Math.floor(curBar / 16));
       else renderScoreLanes(0);
+    }
+
+    // The fixed header wraps to 2-3 rows below desktop widths; pad <main> to match instead of a fixed guess.
+    function syncHeaderOffset() {
+      const hd = document.querySelector('header'), mn = document.querySelector('main');
+      if (hd && mn) mn.style.paddingTop = `${hd.offsetHeight}px`;
     }
 
     function initApp() {
@@ -2144,14 +2187,16 @@
       document.getElementById('printFullBtn')?.addEventListener('click', () => startDawRecording(true));
 
       document.getElementById('loopBtn')?.addEventListener('click', (e) => {
+        const btn = e.currentTarget;
         loopEnabled = !loopEnabled;
-        e.target.textContent = `Loop: ${loopEnabled ? 'On' : 'Off'}`;
-        e.target.classList.toggle('border-gold-500/50', loopEnabled);
-        e.target.classList.toggle('bg-gold-500/15', loopEnabled);
-        e.target.classList.toggle('text-gold-400', loopEnabled);
-        e.target.classList.toggle('border-plum-900', !loopEnabled);
-        e.target.classList.toggle('bg-midnight-900', !loopEnabled);
-        e.target.classList.toggle('text-plum-400', !loopEnabled);
+        btn.textContent = `Loop: ${loopEnabled ? 'On' : 'Off'}`;
+        btn.setAttribute('aria-pressed', String(loopEnabled));
+        btn.classList.toggle('border-gold-500/50', loopEnabled);
+        btn.classList.toggle('bg-gold-500/15', loopEnabled);
+        btn.classList.toggle('text-gold-400', loopEnabled);
+        btn.classList.toggle('border-plum-900', !loopEnabled);
+        btn.classList.toggle('bg-midnight-900', !loopEnabled);
+        btn.classList.toggle('text-plum-400', !loopEnabled);
       });
 
       document.querySelectorAll('.rec-mode-btn').forEach(btn => btn.addEventListener('click', () => setRecordingMode(btn.dataset.recMode)));
@@ -2182,12 +2227,16 @@
 
       document.getElementById('scopeWaveBtn')?.addEventListener('click', () => {
         scopeMode = 'WAVE';
+        document.getElementById('scopeWaveBtn').setAttribute('aria-pressed', 'true');
+        document.getElementById('scopeFreqBtn').setAttribute('aria-pressed', 'false');
         document.getElementById('scopeWaveBtn').className = 'px-2.5 py-1 rounded-sm border border-gold-400 bg-gold-500/20 text-gold-400 font-bold uppercase cursor-pointer';
         document.getElementById('scopeFreqBtn').className = 'px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-400 hover:text-white uppercase cursor-pointer';
       });
 
       document.getElementById('scopeFreqBtn')?.addEventListener('click', () => {
         scopeMode = 'FREQ';
+        document.getElementById('scopeFreqBtn').setAttribute('aria-pressed', 'true');
+        document.getElementById('scopeWaveBtn').setAttribute('aria-pressed', 'false');
         document.getElementById('scopeFreqBtn').className = 'px-2.5 py-1 rounded-sm border border-gold-400 bg-gold-500/20 text-gold-400 font-bold uppercase cursor-pointer';
         document.getElementById('scopeWaveBtn').className = 'px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-400 hover:text-white uppercase cursor-pointer';
       });
@@ -2220,6 +2269,7 @@
           sq10ResetSteps = parseInt(btn.dataset.sqSteps, 10) || 5;
           document.querySelectorAll('.sq-step-btn').forEach(b => {
             const active = parseInt(b.dataset.sqSteps, 10) === sq10ResetSteps;
+            b.setAttribute('aria-pressed', String(active));
             b.className = active
               ? 'sq-step-btn px-2 py-0.5 rounded-sm bg-gold-500/20 text-gold-400 font-bold cursor-pointer transition-colors'
               : 'sq-step-btn px-2 py-0.5 rounded-sm text-plum-400 hover:text-white cursor-pointer transition-colors';
@@ -2240,11 +2290,16 @@
       });
 
       window.addEventListener('keydown', (e) => {
-        if (e.code === 'Space' && !['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) {
-          e.preventDefault();
-          startPlayback();
-        }
+        if (e.code !== 'Space' || e.ctrlKey || e.metaKey || e.altKey) return;
+        const t = e.target;
+        if (t && (['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'A'].includes(t.tagName) || t.isContentEditable)) return;
+        e.preventDefault();               // also stops Space scrolling the page
+        if (!e.repeat) startPlayback();   // a held key must not flap play/pause
       });
+
+      syncHeaderOffset();
+      if ('ResizeObserver' in window) new ResizeObserver(syncHeaderOffset).observe(document.querySelector('header'));
+      else window.addEventListener('resize', syncHeaderOffset);
 
       buildScoreEvents();
       buildBarMatrix();
