@@ -75,112 +75,398 @@
     <!-- Main Content -->
     <main id="main" class="pt-32 pb-24 flex-1 relative z-10">
         <div class="fixed inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10" aria-hidden="true"></div>
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="mb-12">
                 <h1 class="font-mono text-3xl font-bold text-white uppercase tracking-widest mb-4">Compositions &amp; Showcases</h1>
                 <p class="text-zinc-400 max-w-2xl leading-relaxed">
-                    An archive of original works composed specifically to demonstrate the hardware protocols detailed in the <a href="https://www.amazon.co.uk/dp/B0HPNXKYZ9/ref=tmm_pap_swatch_0?th=1" target="_blank" rel="noopener" class="text-amber-400 font-medium underline decoration-amber-500/40 underline-offset-4 hover:text-amber-300 hover:decoration-amber-300 transition-colors">Voltage, Sequence &amp; Speech<span class="sr-only"> (opens in new tab)</span></a> studio manual series. Each entry includes interactive DAW showcases and engraved PDF scores.
+                    An archive of original works composed specifically to explore the hardware protocols detailed in the <a href="https://www.amazon.co.uk/dp/B0HPNXKYZ9/ref=tmm_pap_swatch_0?th=1" target="_blank" rel="noopener" class="text-amber-400 font-medium underline decoration-amber-500/40 underline-offset-4 hover:text-amber-300 hover:decoration-amber-300 transition-colors">Voltage, Sequence &amp; Speech<span class="sr-only"> (opens in new tab)</span></a> studio manual series. Each entry includes interactive DAW showcases and engraved PDF scores.
                 </p>
             </div>
 
-            <div class="grid gap-6">
-                <!-- CIRCUIT SUITE (Phosphor Cyan #06b6d4 / #22d3ee) -->
-                <article class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col md:flex-row hover:border-cyan-500/50 focus-within:border-cyan-500/50 transition-all group overflow-hidden">
-                    <div class="md:w-1/3 bg-zinc-950/50 p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-zinc-800 relative">
+            <!-- 2x6 Grid (12 Cards) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 1. THOUSAND CUTS (Crimson / Red #ef4444) -->
+                <article class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col hover:border-red-500/50 focus-within:border-red-500/50 transition-all group overflow-hidden">
+                    <div class="h-40 bg-zinc-950/50 p-6 flex items-center justify-center border-b border-zinc-800 relative shrink-0">
                         <div class="absolute inset-0 bg-synth-grid opacity-20 pointer-events-none"></div>
-                        <div class="w-32 h-32 relative z-10 group-hover:scale-110 transition-transform duration-500">
-                            <!-- Concept D: Analog VU Needle & Twin Stereo Carrier Waves SVG -->
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="w-full h-full text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]">
-                                <!-- Rounded VU Meter Housing -->
-                                <rect x="10" y="10" width="80" height="54" rx="6" stroke-width="3"/>
-                                <!-- Curved VU Scale Arc -->
-                                <path d="M 22 43 A 34 34 0 0 1 78 43" stroke-width="2.5" stroke-linecap="round"/>
-                                <!-- 5 Radial Scale Ticks -->
-                                <line x1="25" y1="39" x2="22" y2="35" stroke-width="2.2" stroke-linecap="round"/>
-                                <line x1="36" y1="31" x2="34" y2="26" stroke-width="2.2" stroke-linecap="round"/>
-                                <line x1="50" y1="28" x2="50" y2="22" stroke-width="2.2" stroke-linecap="round"/>
-                                <line x1="64" y1="31" x2="66" y2="26" stroke-width="2.2" stroke-linecap="round"/>
-                                <line x1="75" y1="39" x2="78" y2="35" stroke-width="2.2" stroke-linecap="round"/>
-                                <!-- Bold Sweeping VU Needle & Pivot Dot -->
-                                <line x1="50" y1="53" x2="69" y2="26" stroke-width="3" stroke-linecap="round"/>
-                                <circle cx="50" cy="53" r="4" fill="currentColor"/>
-                                <!-- Twin Parallel Stereo Carrier Waves -->
-                                <path d="M 13 77 C 21 69, 29 69, 37 77 C 45 85, 53 85, 61 77 C 69 69, 77 69, 87 77" stroke-width="2.75" stroke-linecap="round"/>
-                                <path d="M 13 87 C 21 79, 29 79, 37 87 C 45 95, 53 95, 61 87 C 69 79, 77 79, 87 87" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+                        <div class="w-24 h-24 relative z-10 group-hover:scale-110 transition-transform duration-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="w-full h-full text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]">
+                                <line x1="28" y1="12" x2="18" y2="88" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.55"/>
+                                <line x1="54" y1="12" x2="44" y2="88" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.55"/>
+                                <line x1="80" y1="12" x2="70" y2="88" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.55"/>
+                                <path d="M 8 52 L 16 24 L 22 66" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter"/>
+                                <path d="M 29 36 L 37 16 L 44 74 L 49 44" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter"/>
+                                <path d="M 55 60 L 63 20 L 70 80 L 75 48" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter"/>
+                                <path d="M 81 34 L 88 18 L 93 52" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter"/>
+                                <path d="M 12 88 V 82 H 16 V 88 M 34 88 V 82 H 39 V 88 M 58 88 V 82 H 62 V 88 M 78 88 V 82 H 84 V 88" stroke-width="2" opacity="0.8"/>
                             </svg>
                         </div>
                     </div>
-                    <div class="md:w-2/3 p-6 flex flex-col justify-center">
-                        <div class="flex items-center gap-3 mb-2">
-                            <span class="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.8)]" aria-hidden="true"></span>
-                            <h2 class="font-mono text-xl font-bold text-white uppercase tracking-widest">Circuit Suite</h2>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]" aria-hidden="true"></span>
+                                <h2 class="font-mono text-lg font-bold text-white uppercase tracking-widest">Thousand Cuts</h2>
+                            </div>
+                            <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide leading-relaxed">
+                                Surgical VCA gate slicing and rapid-fire envelope re-triggering, carving dense harmonic oscillators into razor-sharp rhythmic shards.
+                            </p>
                         </div>
-                        <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide leading-relaxed">
-                            A 96-bar suite at 124 BPM, uniting funky MS-10 slap-bass octaves, SQ-10 polymetric hooks, and a 20-band VC-10 vocoder climax.
-                        </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div class="flex flex-col gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-zinc-800/80">
+                            <div class="flex flex-col gap-2.5">
                                 <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Interactive</h3>
-                                <a href="https://voltageandwave.co.uk/compositions/daft_v0_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-cyan-400 transition-colors flex items-center gap-2 group/link">
-                                    <svg class="w-3 h-3 shrink-0 group-hover/link:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    <span>DAW Demo<span class="sr-only"> for Circuit Suite</span></span>
+                                <a href="https://voltageandwave.co.uk/compositions/thousandcuts_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-red-400 transition-colors flex items-center gap-2 group/link">
+                                    <svg class="w-3 h-3 shrink-0 group-hover/link:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span>DAW Demo<span class="sr-only"> for Thousand Cuts</span></span>
                                 </a>
                             </div>
-                            <div class="flex flex-col gap-3">
+                            <div class="flex flex-col gap-2.5">
                                 <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Engraved Scores (PDF)</h3>
                                 <span class="font-mono text-xs text-zinc-500 flex items-center gap-2 cursor-not-allowed select-none" title="Score engraving in progress">
                                     <svg class="w-3 h-3 shrink-0 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                                    Master Musical Score <span class="text-[10px] uppercase tracking-widest border border-zinc-800 bg-zinc-950 px-1.5 py-0.5 text-zinc-400">Forthcoming</span>
+                                    <span>Master Score <span class="text-[10px] uppercase tracking-widest border border-zinc-800 bg-zinc-950 px-1.5 py-0.5 text-zinc-400">Forthcoming</span></span>
                                 </span>
                                 <span class="font-mono text-xs text-zinc-500 flex items-center gap-2 cursor-not-allowed select-none" title="Parts book engraving in progress">
                                     <svg class="w-3 h-3 shrink-0 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                                    Performing Parts Book <span class="text-[10px] uppercase tracking-widest border border-zinc-800 bg-zinc-950 px-1.5 py-0.5 text-zinc-400">Forthcoming</span>
+                                    <span>Parts Book <span class="text-[10px] uppercase tracking-widest border border-zinc-800 bg-zinc-950 px-1.5 py-0.5 text-zinc-400">Forthcoming</span></span>
                                 </span>
                             </div>
                         </div>
                     </div>
                 </article>
 
-                <!-- MORODER POLYMETER (Gold / Amber #f59e0b / #fbbf24) -->
-                <article class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col md:flex-row hover:border-amber-500/50 focus-within:border-amber-500/50 transition-all group overflow-hidden">
-                    <div class="md:w-1/3 bg-zinc-950/50 p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-zinc-800 relative">
+                <!-- 2. HYPERACTIVE (Lime #84cc16) -->
+                <article class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col hover:border-lime-500/50 focus-within:border-lime-500/50 transition-all group overflow-hidden">
+                    <div class="h-40 bg-zinc-950/50 p-6 flex items-center justify-center border-b border-zinc-800 relative shrink-0">
                         <div class="absolute inset-0 bg-synth-grid opacity-20 pointer-events-none"></div>
-                        <div class="w-32 h-32 relative z-10 group-hover:scale-110 transition-transform duration-500">
-                            <!-- Silhouette Aviators & Moustache SVG -->
+                        <div class="w-24 h-24 relative z-10 group-hover:scale-110 transition-transform duration-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="w-full h-full text-lime-400 drop-shadow-[0_0_8px_rgba(132,204,22,0.8)]">
+                                <circle cx="50" cy="50" r="38" stroke-width="2" stroke-dasharray="14 6 4 6 2 6" opacity="0.65"/>
+                                <path d="M 12 52 H 26 L 33 22 L 42 78 L 51 14 L 60 84 L 68 28 L 74 52 H 88" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter"/>
+                                <circle cx="51" cy="14" r="3" fill="currentColor"/>
+                                <circle cx="60" cy="84" r="3" fill="currentColor"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="w-2 h-2 rounded-full bg-lime-400 shadow-[0_0_8px_rgba(132,204,22,0.8)]" aria-hidden="true"></span>
+                                <h2 class="font-mono text-lg font-bold text-white uppercase tracking-widest">Hyperactive</h2>
+                            </div>
+                            <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide leading-relaxed">
+                                High-velocity clock multiplication and restless cross-modulation, pushing LFO slew rates and sequencer step density to the edge.
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-zinc-800/80">
+                            <div class="flex flex-col gap-2.5">
+                                <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Interactive</h3>
+                                <a href="https://voltageandwave.co.uk/compositions/hyperactive_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-lime-400 transition-colors flex items-center gap-2 group/link">
+                                    <svg class="w-3 h-3 shrink-0 group-hover/link:text-lime-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span>DAW Demo<span class="sr-only"> for Hyperactive</span></span>
+                                </a>
+                            </div>
+                            <div class="flex flex-col gap-2.5">
+                                <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Engraved Scores (PDF)</h3>
+                                <span class="font-mono text-xs text-zinc-500 flex items-center gap-2 cursor-not-allowed select-none" title="Score engraving in progress">
+                                    <svg class="w-3 h-3 shrink-0 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    <span>Master Score <span class="text-[10px] uppercase tracking-widest border border-zinc-800 bg-zinc-950 px-1.5 py-0.5 text-zinc-400">Forthcoming</span></span>
+                                </span>
+                                <span class="font-mono text-xs text-zinc-500 flex items-center gap-2 cursor-not-allowed select-none" title="Parts book engraving in progress">
+                                    <svg class="w-3 h-3 shrink-0 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    <span>Parts Book <span class="text-[10px] uppercase tracking-widest border border-zinc-800 bg-zinc-950 px-1.5 py-0.5 text-zinc-400">Forthcoming</span></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 3. KINETIC FRACTURE (Tangerine / Orange #f97316) -->
+                <article class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col hover:border-orange-500/50 focus-within:border-orange-500/50 transition-all group overflow-hidden">
+                    <div class="h-40 bg-zinc-950/50 p-6 flex items-center justify-center border-b border-zinc-800 relative shrink-0">
+                        <div class="absolute inset-0 bg-synth-grid opacity-20 pointer-events-none"></div>
+                        <div class="w-24 h-24 relative z-10 group-hover:scale-110 transition-transform duration-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="w-full h-full text-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.8)]">
+                                <polygon points="18,22 52,14 44,46 14,42" stroke-width="2.75" stroke-linejoin="miter"/>
+                                <polygon points="58,18 86,28 74,52 50,44" stroke-width="2.75" stroke-linejoin="miter"/>
+                                <polygon points="22,52 64,56 82,82 32,84" stroke-width="2.75" stroke-linejoin="miter"/>
+                                <path d="M 48 48 L 56 40 M 56 40 H 50 M 56 40 V 46" stroke-width="2" stroke-linecap="square"/>
+                                <path d="M 42 54 L 34 62 M 34 62 H 40 M 34 62 V 56" stroke-width="2" stroke-linecap="square"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.8)]" aria-hidden="true"></span>
+                                <h2 class="font-mono text-lg font-bold text-white uppercase tracking-widest">Kinetic Fracture</h2>
+                            </div>
+                            <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide leading-relaxed">
+                                Asymmetric clock resets and Sample &amp; Hold voltage leaps fracturing steady pulse trains into propulsive, angular syncopation.
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-zinc-800/80">
+                            <div class="flex flex-col gap-2.5">
+                                <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Interactive</h3>
+                                <a href="https://voltageandwave.co.uk/compositions/kinetic_fracture_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-orange-400 transition-colors flex items-center gap-2 group/link">
+                                    <svg class="w-3 h-3 shrink-0 group-hover/link:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span>DAW Demo<span class="sr-only"> for Kinetic Fracture</span></span>
+                                </a>
+                            </div>
+                            <div class="flex flex-col gap-2.5">
+                                <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Engraved Scores (PDF)</h3>
+                                <span class="font-mono text-xs text-zinc-500 flex items-center gap-2 cursor-not-allowed select-none" title="Score engraving in progress">
+                                    <svg class="w-3 h-3 shrink-0 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    <span>Master Score <span class="text-[10px] uppercase tracking-widest border border-zinc-800 bg-zinc-950 px-1.5 py-0.5 text-zinc-400">Forthcoming</span></span>
+                                </span>
+                                <span class="font-mono text-xs text-zinc-500 flex items-center gap-2 cursor-not-allowed select-none" title="Parts book engraving in progress">
+                                    <svg class="w-3 h-3 shrink-0 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    <span>Parts Book <span class="text-[10px] uppercase tracking-widest border border-zinc-800 bg-zinc-950 px-1.5 py-0.5 text-zinc-400">Forthcoming</span></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 4. NOCTURNO (Indigo #6366f1) -->
+                <article class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col hover:border-indigo-500/50 focus-within:border-indigo-500/50 transition-all group overflow-hidden">
+                    <div class="h-40 bg-zinc-950/50 p-6 flex items-center justify-center border-b border-zinc-800 relative shrink-0">
+                        <div class="absolute inset-0 bg-synth-grid opacity-20 pointer-events-none"></div>
+                        <div class="w-24 h-24 relative z-10 group-hover:scale-110 transition-transform duration-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="w-full h-full text-indigo-400 drop-shadow-[0_0_8px_rgba(99,102,241,0.8)]">
+                                <path d="M 48 16 A 24 24 0 1 0 72 48 A 19 19 0 1 1 48 16 Z" stroke-width="2.75" stroke-linejoin="round"/>
+                                <circle cx="72" cy="24" r="2" fill="currentColor"/>
+                                <circle cx="82" cy="36" r="1.5" fill="currentColor" opacity="0.7"/>
+                                <circle cx="24" cy="28" r="1.5" fill="currentColor" opacity="0.7"/>
+                                <path d="M 10 74 C 26 62, 38 62, 50 74 C 62 86, 74 86, 90 74" stroke-width="2.75" stroke-linecap="round"/>
+                                <path d="M 10 84 C 26 76, 38 76, 50 84 C 62 92, 74 92, 90 84" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="w-2 h-2 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(99,102,241,0.8)]" aria-hidden="true"></span>
+                                <h2 class="font-mono text-lg font-bold text-white uppercase tracking-widest">Nocturno</h2>
+                            </div>
+                            <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide leading-relaxed">
+                                A nocturnal study in low-pass filter resonance, slow triangle LFO drift, and warm analogue chorus voicings after midnight.
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-zinc-800/80">
+                            <div class="flex flex-col gap-2.5">
+                                <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Interactive</h3>
+                                <a href="https://voltageandwave.co.uk/compositions/nocturno_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-indigo-400 transition-colors flex items-center gap-2 group/link">
+                                    <svg class="w-3 h-3 shrink-0 group-hover/link:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span>DAW Demo<span class="sr-only"> for Nocturno</span></span>
+                                </a>
+                            </div>
+                            <div class="flex flex-col gap-2.5">
+                                <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Engraved Scores (PDF)</h3>
+                                <span class="font-mono text-xs text-zinc-500 flex items-center gap-2 cursor-not-allowed select-none" title="Score engraving in progress">
+                                    <svg class="w-3 h-3 shrink-0 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    <span>Master Score <span class="text-[10px] uppercase tracking-widest border border-zinc-800 bg-zinc-950 px-1.5 py-0.5 text-zinc-400">Forthcoming</span></span>
+                                </span>
+                                <span class="font-mono text-xs text-zinc-500 flex items-center gap-2 cursor-not-allowed select-none" title="Parts book engraving in progress">
+                                    <svg class="w-3 h-3 shrink-0 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    <span>Parts Book <span class="text-[10px] uppercase tracking-widest border border-zinc-800 bg-zinc-950 px-1.5 py-0.5 text-zinc-400">Forthcoming</span></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 5. VALSE DU JOUET (Pink #ec4899) -->
+                <article class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col hover:border-pink-500/50 focus-within:border-pink-500/50 transition-all group overflow-hidden">
+                    <div class="h-40 bg-zinc-950/50 p-6 flex items-center justify-center border-b border-zinc-800 relative shrink-0">
+                        <div class="absolute inset-0 bg-synth-grid opacity-20 pointer-events-none"></div>
+                        <div class="w-24 h-24 relative z-10 group-hover:scale-110 transition-transform duration-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="w-full h-full text-pink-400 drop-shadow-[0_0_8px_rgba(236,72,153,0.8)]">
+                                <circle cx="38" cy="24" r="10" stroke-width="2.75"/>
+                                <circle cx="62" cy="24" r="10" stroke-width="2.75"/>
+                                <line x1="50" y1="24" x2="50" y2="48" stroke-width="3"/>
+                                <rect x="20" y="48" width="60" height="32" rx="4" stroke-width="2.75"/>
+                                <circle cx="32" cy="57" r="2.2" fill="currentColor"/>
+                                <circle cx="50" cy="64" r="2.2" fill="currentColor"/>
+                                <circle cx="68" cy="71" r="2.2" fill="currentColor"/>
+                                <circle cx="32" cy="71" r="2.2" fill="currentColor" opacity="0.55"/>
+                                <circle cx="68" cy="57" r="2.2" fill="currentColor" opacity="0.55"/>
+                                <path d="M 28 80 V 88 M 39 80 V 88 M 50 80 V 88 M 61 80 V 88 M 72 80 V 88" stroke-width="2" stroke-linecap="square"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="w-2 h-2 rounded-full bg-pink-400 shadow-[0_0_8px_rgba(236,72,153,0.8)]" aria-hidden="true"></span>
+                                <h2 class="font-mono text-lg font-bold text-white uppercase tracking-widest">Valse du Jouet</h2>
+                            </div>
+                            <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide leading-relaxed">
+                                A clockwork 3/4 miniature pairing delicate chime-like ring modulation with spring-wound step-sequencer accompaniment.
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-zinc-800/80">
+                            <div class="flex flex-col gap-2.5">
+                                <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Interactive</h3>
+                                <a href="https://voltageandwave.co.uk/compositions/valse_du_jouet_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-pink-400 transition-colors flex items-center gap-2 group/link">
+                                    <svg class="w-3 h-3 shrink-0 group-hover/link:text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span>DAW Demo<span class="sr-only"> for Valse du Jouet</span></span>
+                                </a>
+                            </div>
+                            <div class="flex flex-col gap-2.5">
+                                <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Engraved Scores (PDF)</h3>
+                                <span class="font-mono text-xs text-zinc-500 flex items-center gap-2 cursor-not-allowed select-none" title="Score engraving in progress">
+                                    <svg class="w-3 h-3 shrink-0 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    <span>Master Score <span class="text-[10px] uppercase tracking-widest border border-zinc-800 bg-zinc-950 px-1.5 py-0.5 text-zinc-400">Forthcoming</span></span>
+                                </span>
+                                <span class="font-mono text-xs text-zinc-500 flex items-center gap-2 cursor-not-allowed select-none" title="Parts book engraving in progress">
+                                    <svg class="w-3 h-3 shrink-0 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    <span>Parts Book <span class="text-[10px] uppercase tracking-widest border border-zinc-800 bg-zinc-950 px-1.5 py-0.5 text-zinc-400">Forthcoming</span></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 6. WALTZ (Teal #14b8a6) -->
+                <article class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col hover:border-teal-500/50 focus-within:border-teal-500/50 transition-all group overflow-hidden">
+                    <div class="h-40 bg-zinc-950/50 p-6 flex items-center justify-center border-b border-zinc-800 relative shrink-0">
+                        <div class="absolute inset-0 bg-synth-grid opacity-20 pointer-events-none"></div>
+                        <div class="w-24 h-24 relative z-10 group-hover:scale-110 transition-transform duration-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="w-full h-full text-teal-400 drop-shadow-[0_0_8px_rgba(20,184,166,0.8)]">
+                                <path d="M 50 14 C 76 14, 88 52, 66 74 C 44 96, 12 72, 24 44 C 36 16, 78 24, 78 54 C 78 84, 34 90, 22 64 C 10 38, 24 14, 50 14 Z" stroke-width="2.5" opacity="0.85"/>
+                                <polygon points="50,22 76,68 24,68" stroke-width="2" stroke-dasharray="4 4" opacity="0.7"/>
+                                <circle cx="50" cy="22" r="4.5" fill="currentColor"/>
+                                <circle cx="76" cy="68" r="3" fill="currentColor"/>
+                                <circle cx="24" cy="68" r="3" fill="currentColor"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="w-2 h-2 rounded-full bg-teal-400 shadow-[0_0_8px_rgba(20,184,166,0.8)]" aria-hidden="true"></span>
+                                <h2 class="font-mono text-lg font-bold text-white uppercase tracking-widest">Waltz</h2>
+                            </div>
+                            <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide leading-relaxed">
+                                A lilting triple-meter study exploring 3-step and 6-step analogue sequencer phrasing over sweeping portamento counter-melodies.
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-zinc-800/80">
+                            <div class="flex flex-col gap-2.5">
+                                <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Interactive</h3>
+                                <a href="https://voltageandwave.co.uk/compositions/waltz_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-teal-400 transition-colors flex items-center gap-2 group/link">
+                                    <svg class="w-3 h-3 shrink-0 group-hover/link:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span>DAW Demo<span class="sr-only"> for Waltz</span></span>
+                                </a>
+                            </div>
+                            <div class="flex flex-col gap-2.5">
+                                <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Engraved Scores (PDF)</h3>
+                                <span class="font-mono text-xs text-zinc-500 flex items-center gap-2 cursor-not-allowed select-none" title="Score engraving in progress">
+                                    <svg class="w-3 h-3 shrink-0 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    <span>Master Score <span class="text-[10px] uppercase tracking-widest border border-zinc-800 bg-zinc-950 px-1.5 py-0.5 text-zinc-400">Forthcoming</span></span>
+                                </span>
+                                <span class="font-mono text-xs text-zinc-500 flex items-center gap-2 cursor-not-allowed select-none" title="Parts book engraving in progress">
+                                    <svg class="w-3 h-3 shrink-0 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    <span>Parts Book <span class="text-[10px] uppercase tracking-widest border border-zinc-800 bg-zinc-950 px-1.5 py-0.5 text-zinc-400">Forthcoming</span></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 7. CIRCUIT SUITE (Phosphor Cyan #06b6d4) -->
+                <article class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col hover:border-cyan-500/50 focus-within:border-cyan-500/50 transition-all group overflow-hidden">
+                    <div class="h-40 bg-zinc-950/50 p-6 flex items-center justify-center border-b border-zinc-800 relative shrink-0">
+                        <div class="absolute inset-0 bg-synth-grid opacity-20 pointer-events-none"></div>
+                        <div class="w-24 h-24 relative z-10 group-hover:scale-110 transition-transform duration-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="w-full h-full text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]">
+                                <rect x="10" y="10" width="80" height="54" rx="6" stroke-width="3"/>
+                                <path d="M 22 43 A 34 34 0 0 1 78 43" stroke-width="2.5" stroke-linecap="round"/>
+                                <line x1="25" y1="39" x2="22" y2="35" stroke-width="2.2" stroke-linecap="round"/>
+                                <line x1="36" y1="31" x2="34" y2="26" stroke-width="2.2" stroke-linecap="round"/>
+                                <line x1="50" y1="28" x2="50" y2="22" stroke-width="2.2" stroke-linecap="round"/>
+                                <line x1="64" y1="31" x2="66" y2="26" stroke-width="2.2" stroke-linecap="round"/>
+                                <line x1="75" y1="39" x2="78" y2="35" stroke-width="2.2" stroke-linecap="round"/>
+                                <line x1="50" y1="53" x2="69" y2="26" stroke-width="3" stroke-linecap="round"/>
+                                <circle cx="50" cy="53" r="4" fill="currentColor"/>
+                                <path d="M 13 77 C 21 69, 29 69, 37 77 C 45 85, 53 85, 61 77 C 69 69, 77 69, 87 77" stroke-width="2.75" stroke-linecap="round"/>
+                                <path d="M 13 87 C 21 79, 29 79, 37 87 C 45 95, 53 95, 61 87 C 69 79, 77 79, 87 87" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.8)]" aria-hidden="true"></span>
+                                <h2 class="font-mono text-lg font-bold text-white uppercase tracking-widest">Circuit Suite</h2>
+                            </div>
+                            <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide leading-relaxed">
+                                A 96-bar suite at 124 BPM, uniting funky MS-10 slap-bass octaves, SQ-10 polymetric hooks, and a 20-band VC-10 vocoder climax.
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-zinc-800/80">
+                            <div class="flex flex-col gap-2.5">
+                                <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Interactive</h3>
+                                <a href="https://voltageandwave.co.uk/compositions/daft_v0_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-cyan-400 transition-colors flex items-center gap-2 group/link">
+                                    <svg class="w-3 h-3 shrink-0 group-hover/link:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span>DAW Demo<span class="sr-only"> for Circuit Suite</span></span>
+                                </a>
+                            </div>
+                            <div class="flex flex-col gap-2.5">
+                                <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Engraved Scores (PDF)</h3>
+                                <span class="font-mono text-xs text-zinc-500 flex items-center gap-2 cursor-not-allowed select-none" title="Score engraving in progress">
+                                    <svg class="w-3 h-3 shrink-0 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    <span>Master Score <span class="text-[10px] uppercase tracking-widest border border-zinc-800 bg-zinc-950 px-1.5 py-0.5 text-zinc-400">Forthcoming</span></span>
+                                </span>
+                                <span class="font-mono text-xs text-zinc-500 flex items-center gap-2 cursor-not-allowed select-none" title="Parts book engraving in progress">
+                                    <svg class="w-3 h-3 shrink-0 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    <span>Parts Book <span class="text-[10px] uppercase tracking-widest border border-zinc-800 bg-zinc-950 px-1.5 py-0.5 text-zinc-400">Forthcoming</span></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 8. MORODER POLYMETER (Gold / Amber #f59e0b) -->
+                <article class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col hover:border-amber-500/50 focus-within:border-amber-500/50 transition-all group overflow-hidden">
+                    <div class="h-40 bg-zinc-950/50 p-6 flex items-center justify-center border-b border-zinc-800 relative shrink-0">
+                        <div class="absolute inset-0 bg-synth-grid opacity-20 pointer-events-none"></div>
+                        <div class="w-24 h-24 relative z-10 group-hover:scale-110 transition-transform duration-500">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true" class="w-full h-full text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]">
-                                <!-- Top bar -->
                                 <rect x="36" y="32" width="28" height="1.5" />
-                                <!-- Lower Bridge -->
                                 <path d="M 44 40 C 47 37.5 53 37.5 56 40 L 55 42 C 52 39.5 48 39.5 45 42 Z" />
-                                <!-- Left Lens -->
                                 <path d="M 44 33 C 25 32 13 34 10 42 C 7 53 14 68 27 68 C 40 68 47 50 44 33 Z" />
-                                <!-- Right Lens -->
                                 <path d="M 56 33 C 75 32 87 34 90 42 C 93 53 86 68 73 68 C 60 68 53 50 56 33 Z" />
-                                <!-- Hinges -->
                                 <circle cx="8.5" cy="44" r="2.5" />
                                 <circle cx="91.5" cy="44" r="2.5" />
-                                <!-- Handlebar Moustache -->
                                 <path d="M 30 75 Q 50 65 70 75 Q 85 85 80 70 Q 85 85 70 82 Q 50 80 30 82 Q 15 85 20 70 Q 15 85 30 75 Z" />
                             </svg>
                         </div>
                     </div>
-                    <div class="md:w-2/3 p-6 flex flex-col justify-center">
-                        <div class="flex items-center gap-3 mb-2">
-                            <span class="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]" aria-hidden="true"></span>
-                            <h2 class="font-mono text-xl font-bold text-white uppercase tracking-widest">Moroder Polymeter</h2>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]" aria-hidden="true"></span>
+                                <h2 class="font-mono text-lg font-bold text-white uppercase tracking-widest">Moroder Polymeter</h2>
+                            </div>
+                            <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide leading-relaxed">
+                                A driving 126 BPM homage to late-70s Munich disco, adhering strictly to the "art of the possible."
+                            </p>
                         </div>
-                        <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide leading-relaxed">
-                            A driving 126 BPM homage to late-70s Munich disco, adhering strictly to the "art of the possible."
-                        </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div class="flex flex-col gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-zinc-800/80">
+                            <div class="flex flex-col gap-2.5">
                                 <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Interactive</h3>
                                 <a href="https://voltageandwave.co.uk/compositions/Moroder_Polymeter_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-amber-400 transition-colors flex items-center gap-2 group/link">
                                     <svg class="w-3 h-3 shrink-0 group-hover/link:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    <span>DAW Demo<span class="sr-only"> for Moroder Polymeter</span></span>
+                                    <span>DAW Demo<span class="sr-only"> for Moroder Polymeter (Showcase)</span></span>
+                                </a>
+                                <a href="https://voltageandwave.co.uk/compositions/Moroder_Polymeter_Extended_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-amber-400 transition-colors flex items-center gap-2 group/link">
+                                    <svg class="w-3 h-3 shrink-0 group-hover/link:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span>DAW Demo (Extended)<span class="sr-only"> for Moroder Polymeter</span></span>
                                 </a>
                             </div>
-                            <div class="flex flex-col gap-3">
+                            <div class="flex flex-col gap-2.5">
                                 <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Engraved Scores (PDF)</h3>
                                 <a href="https://voltageandwave.co.uk/compositions/Moroder_Polymeter___Master_Musical_Score.pdf" target="_blank" rel="noopener" class="font-mono text-xs text-zinc-300 hover:text-amber-400 transition-colors flex items-center gap-2 group/link">
                                     <svg class="w-3 h-3 shrink-0 group-hover/link:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -195,12 +481,11 @@
                     </div>
                 </article>
 
-                <!-- CIRCUIT BOOGIE & OMNIBUS (Emerald #10b981 / #34d399) -->
-                <article class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col md:flex-row hover:border-emerald-500/50 focus-within:border-emerald-500/50 transition-all group overflow-hidden">
-                    <div class="md:w-1/3 bg-zinc-950/50 p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-zinc-800 relative">
+                <!-- 9. CIRCUIT BOOGIE (Emerald #10b981) -->
+                <article class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col hover:border-emerald-500/50 focus-within:border-emerald-500/50 transition-all group overflow-hidden">
+                    <div class="h-40 bg-zinc-950/50 p-6 flex items-center justify-center border-b border-zinc-800 relative shrink-0">
                         <div class="absolute inset-0 bg-synth-grid opacity-20 pointer-events-none"></div>
-                        <div class="w-32 h-32 relative z-10 group-hover:scale-110 transition-transform duration-500">
-                            <!-- Dancing Resistor / Circuit Boogie SVG -->
+                        <div class="w-24 h-24 relative z-10 group-hover:scale-110 transition-transform duration-500">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="w-full h-full text-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]">
                                 <rect x="40" y="30" width="20" height="40" rx="4" stroke-width="3"/>
                                 <path d="M40 40 L 60 40 M 40 50 L 60 50 M 40 60 L 60 60" stroke-width="3" />
@@ -215,23 +500,25 @@
                             </svg>
                         </div>
                     </div>
-                    <div class="md:w-2/3 p-6 flex flex-col justify-center">
-                        <div class="flex items-center gap-3 mb-2">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" aria-hidden="true"></span>
-                            <h2 class="font-mono text-xl font-bold text-white uppercase tracking-widest">Circuit Boogie</h2>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" aria-hidden="true"></span>
+                                <h2 class="font-mono text-lg font-bold text-white uppercase tracking-widest">Circuit Boogie</h2>
+                            </div>
+                            <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide leading-relaxed">
+                                An analogue boogie driving the hardware circuitry into harmonic overdrive and VCA-chopped stutters.
+                            </p>
                         </div>
-                        <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide leading-relaxed">
-                            An analogue boogie driving the hardware circuitry into harmonic overdrive and VCA-chopped stutters.
-                        </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div class="flex flex-col gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-zinc-800/80">
+                            <div class="flex flex-col gap-2.5">
                                 <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Interactive</h3>
                                 <a href="https://voltageandwave.co.uk/compositions/omnibus_showcase_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-emerald-400 transition-colors flex items-center gap-2 group/link">
                                     <svg class="w-3 h-3 shrink-0 group-hover/link:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     <span>DAW Demo<span class="sr-only"> for Circuit Boogie</span></span>
                                 </a>
                             </div>
-                            <div class="flex flex-col gap-3">
+                            <div class="flex flex-col gap-2.5">
                                 <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Engraved Scores (PDF)</h3>
                                 <a href="https://voltageandwave.co.uk/compositions/Circuit%20Boogie%20%20Master%20Musical%20Score.pdf" target="_blank" rel="noopener" class="font-mono text-xs text-zinc-300 hover:text-emerald-400 transition-colors flex items-center gap-2 group/link">
                                     <svg class="w-3 h-3 shrink-0 group-hover/link:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -246,11 +533,11 @@
                     </div>
                 </article>
 
-                <!-- GUMMITWIST (Amber #f59e0b / #fbbf24) -->
-                <article class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col md:flex-row hover:border-amber-500/50 focus-within:border-amber-500/50 transition-all group overflow-hidden">
-                    <div class="md:w-1/3 bg-zinc-950/50 p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-zinc-800 relative">
+                <!-- 10. GUMMITWIST (Amber #f59e0b) -->
+                <article class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col hover:border-amber-500/50 focus-within:border-amber-500/50 transition-all group overflow-hidden">
+                    <div class="h-40 bg-zinc-950/50 p-6 flex items-center justify-center border-b border-zinc-800 relative shrink-0">
                         <div class="absolute inset-0 bg-synth-grid opacity-20 pointer-events-none"></div>
-                        <div class="w-32 h-32 relative z-10 group-hover:scale-110 transition-transform duration-500">
+                        <div class="w-24 h-24 relative z-10 group-hover:scale-110 transition-transform duration-500">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="w-full h-full text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]">
                                 <rect x="20" y="20" width="6" height="60" rx="3" stroke-width="2"/>
                                 <rect x="74" y="20" width="6" height="60" rx="3" stroke-width="2"/>
@@ -263,23 +550,29 @@
                             </svg>
                         </div>
                     </div>
-                    <div class="md:w-2/3 p-6 flex flex-col justify-center">
-                        <div class="flex items-center gap-3 mb-2">
-                            <span class="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]" aria-hidden="true"></span>
-                            <h2 class="font-mono text-xl font-bold text-white uppercase tracking-widest">Gummitwist</h2>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]" aria-hidden="true"></span>
+                                <h2 class="font-mono text-lg font-bold text-white uppercase tracking-widest">Gummitwist</h2>
+                            </div>
+                            <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide leading-relaxed">
+                                An elastic, bouncing polyrhythmic sequence, pushing and pulling time off the rigid grid.
+                            </p>
                         </div>
-                        <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide leading-relaxed">
-                            An elastic, bouncing polyrhythmic sequence, pushing and pulling time off the rigid grid.
-                        </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div class="flex flex-col gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-zinc-800/80">
+                            <div class="flex flex-col gap-2.5">
                                 <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Interactive</h3>
                                 <a href="https://voltageandwave.co.uk/compositions/gummitwist_showcase_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-amber-400 transition-colors flex items-center gap-2 group/link">
                                     <svg class="w-3 h-3 shrink-0 group-hover/link:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    <span>DAW Demo<span class="sr-only"> for Gummitwist</span></span>
+                                    <span>DAW Demo<span class="sr-only"> for Gummitwist (Showcase)</span></span>
+                                </a>
+                                <a href="https://voltageandwave.co.uk/compositions/gummitwist_extended_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-amber-400 transition-colors flex items-center gap-2 group/link">
+                                    <svg class="w-3 h-3 shrink-0 group-hover/link:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span>DAW Demo (Extended)<span class="sr-only"> for Gummitwist</span></span>
                                 </a>
                             </div>
-                            <div class="flex flex-col gap-3">
+                            <div class="flex flex-col gap-2.5">
                                 <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Engraved Scores (PDF)</h3>
                                 <a href="https://voltageandwave.co.uk/compositions/Gummitwist%20Protocol%20%E2%80%94%20Master%20Musical%20Score.pdf" target="_blank" rel="noopener" class="font-mono text-xs text-zinc-300 hover:text-amber-400 transition-colors flex items-center gap-2 group/link">
                                     <svg class="w-3 h-3 shrink-0 group-hover/link:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -294,11 +587,11 @@
                     </div>
                 </article>
 
-                <!-- UPBEAT ELECTRO (Rose #f43f5e / #fb7185) -->
-                <article class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col md:flex-row hover:border-rose-500/50 focus-within:border-rose-500/50 transition-all group overflow-hidden">
-                    <div class="md:w-1/3 bg-zinc-950/50 p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-zinc-800 relative">
+                <!-- 11. UPBEAT ELECTRO (Rose #f43f5e) -->
+                <article class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col hover:border-rose-500/50 focus-within:border-rose-500/50 transition-all group overflow-hidden">
+                    <div class="h-40 bg-zinc-950/50 p-6 flex items-center justify-center border-b border-zinc-800 relative shrink-0">
                         <div class="absolute inset-0 bg-synth-grid opacity-20 pointer-events-none"></div>
-                        <div class="w-32 h-32 relative z-10 group-hover:scale-110 transition-transform duration-500">
+                        <div class="w-24 h-24 relative z-10 group-hover:scale-110 transition-transform duration-500">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="w-full h-full text-rose-500 drop-shadow-[0_0_8px_rgba(244,63,94,0.8)]">
                                 <path d="M 50 35 L 10 90 M 50 35 L 90 90" stroke-width="4"/>
                                 <path d="M 50 35 L 50 90" stroke-width="2" stroke-dasharray="6 6"/>
@@ -308,23 +601,25 @@
                             </svg>
                         </div>
                     </div>
-                    <div class="md:w-2/3 p-6 flex flex-col justify-center">
-                        <div class="flex items-center gap-3 mb-2">
-                            <span class="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]" aria-hidden="true"></span>
-                            <h2 class="font-mono text-xl font-bold text-white uppercase tracking-widest">Upbeat Electro</h2>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]" aria-hidden="true"></span>
+                                <h2 class="font-mono text-lg font-bold text-white uppercase tracking-widest">Upbeat Electro</h2>
+                            </div>
+                            <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide leading-relaxed">
+                                A rigid, optimistic homage to classic Düsseldorf synth-pop, featuring mechanical, quantized sequencer drive.
+                            </p>
                         </div>
-                        <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide leading-relaxed">
-                            A rigid, optimistic homage to classic Düsseldorf synth-pop, featuring mechanical, quantized sequencer drive.
-                        </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div class="flex flex-col gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-zinc-800/80">
+                            <div class="flex flex-col gap-2.5">
                                 <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Interactive</h3>
                                 <a href="https://voltageandwave.co.uk/compositions/autopop_showcase_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-rose-400 transition-colors flex items-center gap-2 group/link">
                                     <svg class="w-3 h-3 shrink-0 group-hover/link:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     <span>DAW Demo<span class="sr-only"> for Upbeat Electro</span></span>
                                 </a>
                             </div>
-                            <div class="flex flex-col gap-3">
+                            <div class="flex flex-col gap-2.5">
                                 <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Engraved Scores (PDF)</h3>
                                 <a href="https://voltageandwave.co.uk/compositions/Upbeat_Electro_Master_Score.pdf" target="_blank" rel="noopener" class="font-mono text-xs text-zinc-300 hover:text-rose-400 transition-colors flex items-center gap-2 group/link">
                                     <svg class="w-3 h-3 shrink-0 group-hover/link:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -339,11 +634,11 @@
                     </div>
                 </article>
 
-                <!-- WHY-EM-O (Violet #8b5cf6 / #a78bfa) -->
-                <article class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col md:flex-row hover:border-violet-500/50 focus-within:border-violet-500/50 transition-all group overflow-hidden">
-                    <div class="md:w-1/3 bg-zinc-950/50 p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-zinc-800 relative">
+                <!-- 12. WHY-EM-O (Violet #8b5cf6) -->
+                <article class="bg-zinc-900/90 border border-zinc-800 rounded-sm flex flex-col hover:border-violet-500/50 focus-within:border-violet-500/50 transition-all group overflow-hidden">
+                    <div class="h-40 bg-zinc-950/50 p-6 flex items-center justify-center border-b border-zinc-800 relative shrink-0">
                         <div class="absolute inset-0 bg-synth-grid opacity-20 pointer-events-none"></div>
-                        <div class="w-32 h-32 relative z-10 group-hover:scale-110 transition-transform duration-500">
+                        <div class="w-24 h-24 relative z-10 group-hover:scale-110 transition-transform duration-500">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="w-full h-full text-violet-500 drop-shadow-[0_0_8px_rgba(139,92,246,0.8)]">
                                 <path d="M 10 50 C 20 20, 30 80, 40 50" stroke-width="3" stroke-linecap="round"/>
                                 <path d="M 15 50 C 22.5 35, 27.5 65, 35 50" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
@@ -358,23 +653,29 @@
                             </svg>
                         </div>
                     </div>
-                    <div class="md:w-2/3 p-6 flex flex-col justify-center">
-                        <div class="flex items-center gap-3 mb-2">
-                            <span class="w-2 h-2 rounded-full bg-violet-500 shadow-[0_0_8px_rgba(139,92,246,0.8)]" aria-hidden="true"></span>
-                            <h2 class="font-mono text-xl font-bold text-white uppercase tracking-widest">Why-Em-O</h2>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="w-2 h-2 rounded-full bg-violet-500 shadow-[0_0_8px_rgba(139,92,246,0.8)]" aria-hidden="true"></span>
+                                <h2 class="font-mono text-lg font-bold text-white uppercase tracking-widest">Why-Em-O</h2>
+                            </div>
+                            <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide leading-relaxed">
+                                My humble homage to the YMO. It showcases the VC-10 not as a traditional voice processor, but as a rigid 400¢/V sequencer target, synthetic choir, and rhythmic noise generator.
+                            </p>
                         </div>
-                        <p class="font-mono text-xs text-zinc-400 mb-6 tracking-wide leading-relaxed">
-                            My humble homage to the YMO. It showcases the VC-10 not as a traditional voice processor, but as a rigid 400¢/V sequencer target, synthetic choir, and rhythmic noise generator.
-                        </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div class="flex flex-col gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-zinc-800/80">
+                            <div class="flex flex-col gap-2.5">
                                 <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Interactive</h3>
                                 <a href="https://voltageandwave.co.uk/compositions/why-em-o_showcase_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-violet-400 transition-colors flex items-center gap-2 group/link">
                                     <svg class="w-3 h-3 shrink-0 group-hover/link:text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    <span>DAW Demo<span class="sr-only"> for Why-Em-O</span></span>
+                                    <span>DAW Demo<span class="sr-only"> for Why-Em-O (Showcase)</span></span>
+                                </a>
+                                <a href="https://voltageandwave.co.uk/compositions/why-em-o_extended_DAW.html" class="font-mono text-xs text-zinc-300 hover:text-violet-400 transition-colors flex items-center gap-2 group/link">
+                                    <svg class="w-3 h-3 shrink-0 group-hover/link:text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span>DAW Demo (Extended)<span class="sr-only"> for Why-Em-O</span></span>
                                 </a>
                             </div>
-                            <div class="flex flex-col gap-3">
+                            <div class="flex flex-col gap-2.5">
                                 <h3 class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest">Engraved Scores (PDF)</h3>
                                 <a href="https://voltageandwave.co.uk/compositions/Why-Em-O%20%E2%80%94%20Master%20Musical%20Score.pdf" target="_blank" rel="noopener" class="font-mono text-xs text-zinc-300 hover:text-violet-400 transition-colors flex items-center gap-2 group/link">
                                     <svg class="w-3 h-3 shrink-0 group-hover/link:text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -388,13 +689,12 @@
                         </div>
                     </div>
                 </article>
-
             </div>
         </div>
     </main>
 
     <footer class="py-12 border-t border-zinc-800 bg-zinc-950 relative z-20">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
                 <h2 class="font-mono text-xs text-white uppercase tracking-widest mb-4">Voltage &amp; Wave Studio</h2>
                 <p class="text-sm text-zinc-400 leading-relaxed mb-4">
