@@ -1,0 +1,2271 @@
+<!DOCTYPE html>
+<html lang="en-GB" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interactive browser DAW showcase of Totem Cabaret // Primitivist Exotica Protocol, a 96-bar, 124 BPM asymmetric composition for Korg MS-10, SQ-10 &amp; VC-10 by Voltage &amp; Wave.">
+  <meta name="theme-color" content="#07050a">
+  <title>TOTEM CABARET // PRIMITIVIST EXOTICA PROTOCOL // VOLTAGE &amp; WAVE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    if (window.tailwind) {
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+            gridTemplateColumns: { '16': 'repeat(16, minmax(0, 1fr))' },
+            colors: {
+              gold: { 300: '#bef264', 400: '#a3e635', 500: '#84cc16', 600: '#65a30d' },
+              plum: { 200: '#ffe4e6', 300: '#fda4af', 400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c', 900: '#881337', 950: '#4c0519' },
+              midnight: { 850: '#19131c', 900: '#100c14', 950: '#07050a' }
+            }
+          }
+        }
+      };
+    }
+  </script>
+  <style>
+    body { background-color: #07050a; color: #f1f5f9; overflow-x: hidden; }
+    .scanlines::before {
+      content: " "; display: block; position: fixed; inset: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.22) 50%),
+                  linear-gradient(90deg, rgba(163, 230, 53, 0.04), rgba(244, 63, 94, 0.015), rgba(34, 211, 238, 0.035));
+      z-index: 50; background-size: 100% 2px, 3px 100%; pointer-events: none; opacity: 0.42;
+    }
+    .bg-synth-grid {
+      background-image: linear-gradient(to right, rgba(163, 230, 53, 0.06) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(244, 63, 94, 0.05) 1px, transparent 1px);
+      background-size: 36px 36px;
+    }
+    .glow-text { text-shadow: 0 0 14px rgba(163, 230, 53, 0.78); }
+    input[type="range"].vw-slider { -webkit-appearance: none; appearance: none; background: #4c0519; height: 4px; border-radius: 2px; outline: none; }
+    input[type="range"].vw-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 12px; height: 16px; background: #a3e635; border: 1px solid #07050a; border-radius: 2px; cursor: pointer; box-shadow: 0 0 8px rgba(163, 230, 53, 0.7); }
+    input[type="range"].vw-slider::-moz-range-thumb { width: 12px; height: 16px; background: #a3e635; border: 1px solid #07050a; border-radius: 2px; cursor: pointer; }
+    .score-note { transition: transform 0.05s ease, filter 0.05s ease, box-shadow 0.05s ease; }
+    .score-note.active { filter: brightness(1.32); transform: scaleY(1.06); box-shadow: 0 0 12px var(--note-glow, rgba(163, 230, 53, 0.85)); z-index: 15; }
+    input[type="range"].vw-slider:focus-visible { outline: 2px solid #a3e635; outline-offset: 5px; }
+    button:focus-visible, a:focus-visible, select:focus-visible { outline: 2px solid #a3e635; outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after { animation: none !important; transition: none !important; }
+    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #07050a; }
+    ::-webkit-scrollbar-thumb { background: #881337; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #a3e635; }
+  </style>
+</head>
+<body class="antialiased relative selection:bg-gold-400 selection:text-midnight-950 flex flex-col min-h-screen">
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <!-- Fixed Telemetry & Transport Header -->
+  <header class="fixed w-full z-40 top-0 bg-midnight-950/95 backdrop-blur-md border-b border-midnight-900">
+    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-wrap justify-between items-center py-2.5 gap-3">
+        <div class="flex items-center gap-3">
+          <a href="../index.html" aria-label="Voltage &amp; Wave home" class="flex items-center gap-3 group">
+            <!-- Totem Cabaret Eyeball-Idol Emblem -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" aria-hidden="true" class="text-gold-400 w-6 h-6 shrink-0 group-hover:text-plum-400 transition-colors">
+              <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/>
+              <circle cx="12" cy="12" r="2.5" fill="currentColor"/>
+            </svg>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-mono font-bold text-white tracking-widest text-sm sm:text-base">VOLTAGE &amp; WAVE</span>
+                <span class="hidden sm:inline-block font-mono text-[10px] text-gold-400 border border-gold-500/40 bg-gold-500/10 px-2 py-0.5 uppercase tracking-widest">Totem Cabaret (03:05)</span>
+              </div>
+              <p class="font-mono text-[10px] text-plum-400 uppercase tracking-widest">KORG MS-10 · SQ-10 · VC-10 + AERIAL THEREMIN // 124 BPM // EXOTICA 96 BARS</p>
+            </div>
+          </a>
+        </div>
+
+        <!-- Telemetry HUD -->
+        <div class="flex items-center gap-2 sm:gap-4 bg-midnight-900/90 border border-midnight-850 px-3 py-1.5 rounded-sm font-mono">
+          <div class="text-center pr-2 sm:pr-4 border-r border-midnight-850">
+            <div class="text-[9px] text-plum-400 uppercase tracking-widest">Bar</div>
+            <div id="hudBar" class="text-base sm:text-xl font-bold text-gold-400 glow-text leading-none mt-0.5">01<span class="text-plum-600 text-xs">/96</span></div>
+          </div>
+          <div class="text-center pr-2 sm:pr-4 border-r border-midnight-850">
+            <div class="text-[9px] text-plum-400 uppercase tracking-widest">Beat</div>
+            <div id="hudBeat" class="text-base sm:text-xl font-bold text-white leading-none mt-0.5">1.1</div>
+          </div>
+          <div class="text-center pr-2 sm:pr-4 border-r border-midnight-850">
+            <div class="text-[9px] text-plum-400 uppercase tracking-widest">Act</div>
+            <div id="hudSection" class="text-xs sm:text-sm font-bold text-plum-300 leading-none mt-1">I. JUNGLE PULSE</div>
+          </div>
+          <div class="text-center pr-2 sm:pr-4 border-r border-midnight-850">
+            <div class="text-[9px] text-plum-400 uppercase tracking-widest">Chord</div>
+            <div id="hudChord" class="text-base sm:text-xl font-bold text-gold-400 leading-none mt-0.5">Dm9</div>
+          </div>
+          <div class="text-center hidden md:block">
+            <div class="text-[9px] text-plum-400 uppercase tracking-widest">SQ-10 Trig</div>
+            <div class="flex items-center justify-center mt-1.5">
+              <span id="sqTrigLed" class="w-2.5 h-2.5 rounded-full bg-gold-500/30 border border-gold-500/60 transition-all duration-75" title="SQ-10 Polymetric Reset Pulse"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transport Controls -->
+        <div class="flex flex-wrap items-center gap-2 font-mono text-xs">
+          <button id="playBtn" class="inline-flex items-center gap-1.5 bg-gold-500 hover:bg-gold-400 text-midnight-950 px-4 py-2 font-bold uppercase tracking-wider rounded-sm transition-all shadow-[0_0_15px_rgba(163,230,53,0.38)] cursor-pointer">
+            <span id="playIcon" aria-hidden="true">▶</span> <span id="playLabel">Play</span>
+          </button>
+          <button id="stopBtn" class="inline-flex items-center gap-1.5 bg-midnight-900 hover:bg-midnight-850 border border-plum-900 text-plum-300 px-3 py-2 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none" disabled>
+            <span aria-hidden="true">■</span> Stop
+          </button>
+          <button id="loopBtn" type="button" aria-pressed="true" title="Toggle 96-Bar Suite Loop" class="hidden sm:inline-block px-2.5 py-2 border border-gold-500/50 bg-gold-500/15 text-gold-400 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">
+            Loop: On
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="top" class="pt-28 sm:pt-20 pb-12 flex-1 relative z-10">
+    <div class="fixed inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10" aria-hidden="true"></div>
+    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-6 mt-4">
+
+      <!-- Arrangement & Protocol Matrix Section -->
+      <section class="bg-midnight-900/90 border border-midnight-850 rounded-sm p-4 sm:p-5 shadow-2xl">
+        <div class="mb-4 px-3 py-2 rounded-sm bg-midnight-950 border border-gold-500/35 flex items-start sm:items-center justify-between gap-2.5 font-mono text-[11px] text-plum-200">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2.5">
+            <span class="text-gold-400 font-bold uppercase shrink-0">[Voltage, Sequence &amp; Speech // Primitivist Exotica Cabaret — 03:05]</span>
+            <span>Asymmetric 6-act suite (12 + 14 + 18 + 16 + 14 + 22 bars) constrained to Korg MS-10, SQ-10 &amp; VC-10 + Aerial Theremin: stop-time ritual drops, 3-bar tritone exotica cycles, 5/7/11-step SQ-10 bamboo-bell resets, and through-composed theremin acrobatics.</span>
+          </div>
+          <span class="hidden xl:inline-block text-gold-400 font-bold shrink-0">96 BARS · 03:05.8</span>
+        </div>
+
+        <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-3 mb-4 pb-3 border-b border-midnight-850">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-gold-400 animate-pulse"></span>
+              <h1 class="font-mono text-xs sm:text-sm font-bold text-white uppercase tracking-widest">Totem Cabaret // Irregular 96-Bar Exotica &amp; Theremin Suite</h1>
+            </div>
+            <div id="protocolCueBanner" class="mt-2.5 flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] bg-midnight-950 border border-midnight-850 text-plum-200 px-3 py-1.5 rounded-sm">
+              <div class="flex flex-col gap-0.5 min-w-0 flex-1">
+                <div>
+                  <span class="text-gold-400 font-bold">MANUAL CUE:</span>
+                  <span id="protocolCueText" aria-live="polite">Click any act pill, protocol card, or bar cell below to jump across the irregular 12/14/18/16/14/22-bar acts, stop-time ritual drops, and through-composed exotica theremin solos.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-1.5 font-mono text-[10px] shrink-0" id="sectionNav">
+            <button data-jump="0"  class="sec-pill px-2 py-1 rounded-sm border border-gold-500 bg-gold-500/20 text-gold-400 font-bold uppercase tracking-wider cursor-pointer transition-colors">I. Jungle Pulse (1–12)</button>
+            <button data-jump="12" class="sec-pill px-2 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-300 hover:border-gold-500/50 hover:text-white uppercase tracking-wider cursor-pointer transition-colors">II. Siren Totem (13–26)</button>
+            <button data-jump="26" class="sec-pill px-2 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-300 hover:border-gold-500/50 hover:text-white uppercase tracking-wider cursor-pointer transition-colors">III. Bamboo Strut (27–44)</button>
+            <button data-jump="44" class="sec-pill px-2 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-300 hover:border-gold-500/50 hover:text-white uppercase tracking-wider cursor-pointer transition-colors">IV. Eyeball Waltz (45–60)</button>
+            <button data-jump="60" class="sec-pill px-2 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-300 hover:border-gold-500/50 hover:text-white uppercase tracking-wider cursor-pointer transition-colors">V. Voodoo Vacuum (61–74)</button>
+            <button data-jump="74" class="sec-pill px-2 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-300 hover:border-gold-500/50 hover:text-white uppercase tracking-wider cursor-pointer transition-colors">VI. Exotica Riot (75–96)</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-4 font-mono text-[10px]">
+          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="0" data-proto-note="Book I P-01 &amp; P-04 (Bars 01–12 — Act I: Jungle Pulse, 12 Bars): MS-10 saturated rubber slap bass, ritual pulse kick, and a cheeky opening bird-call theremin whistle enter on Bar 1, snapping into a sudden stop-time break at Bar 12." class="text-left bg-midnight-950 border border-midnight-850 hover:border-cyan-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-cyan-400 font-bold block">BOOK I // P-01 &amp; P-04</span>
+            <span class="text-plum-200">12-Bar Jungle Hook &amp; Drop</span>
+          </button>
+          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="12" data-proto-note="Book I P-08 &amp; P-10 (Bars 13–26 — Act II: Siren Totem, 14 Bars): Through-composed Aerial Theremin solo with exotic bird-cry swoops, laughing staccato trills, and microtonal bends over a 3-bar Dm9 -&gt; Ab13 -&gt; G7#9 primitivist funk cycle." class="text-left bg-midnight-950 border border-midnight-850 hover:border-fuchsia-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-fuchsia-400 font-bold block">BOOK I // P-08 &amp; P-10</span>
+            <span class="text-plum-200">Through-Composed Exotica Solo</span>
+          </button>
+          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="26" data-proto-note="Book II P-07 &amp; P-09 (Bars 27–44 &amp; 45–60 — Acts III &amp; IV): SQ-10 TRIG OUT -&gt; RESET IN shifts from 5-step bamboo-marimba bell syncopation (Act III) to a crooked 7-step detuned carnival-organ waltz (Act IV) with dramatic stop-time breaks." class="text-left bg-midnight-950 border border-midnight-850 hover:border-gold-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-gold-400 font-bold block">BOOK II // P-07 &amp; P-09</span>
+            <span class="text-plum-200">5/7/11-Step Bamboo-Bell Reset</span>
+          </button>
+          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="60" data-proto-note="Book III V-03 &amp; V-05 (Bars 61–74 — Act V: Voodoo Vacuum, 14 Bars): VC-10 20-Band Filter Bank (125 Hz – 8 kHz) shapes pink/white noise into talking tribal droplets, hollow wood-block pops, and spectral hits around beat-drop silences." class="text-left bg-midnight-950 border border-midnight-850 hover:border-amber-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-amber-400 font-bold block">BOOK III // V-03 &amp; V-05</span>
+            <span class="text-plum-200">VC-10 Talking Droplets &amp; Drops</span>
+          </button>
+        </div>
+
+        <!-- 96-Bar Arrangement Matrix (6 rows of 16 bars on desktop) -->
+        <div id="barMatrix" class="grid grid-cols-6 sm:grid-cols-8 lg:grid-cols-16 gap-1"></div>
+      </section>
+
+      <!-- Partiture / Score Lanes Section -->
+      <section class="bg-midnight-900/90 border border-midnight-850 rounded-sm shadow-2xl overflow-hidden">
+        <div class="bg-midnight-950 border-b border-midnight-850 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <h2 class="font-mono text-xs font-bold text-plum-400 uppercase tracking-widest">Partiture / Score Lanes</h2>
+            <span id="systemBadge" class="font-mono text-[11px] bg-midnight-900 border border-plum-900 text-plum-200 px-2.5 py-0.5 rounded-sm">SYSTEM 01 // BARS 01–04 (I. JUNGLE PULSE)</span>
+          </div>
+          <div class="flex items-center gap-2 font-mono text-[11px]">
+            <button id="view4Btn" type="button" aria-pressed="true" class="px-2.5 py-1 rounded-sm border border-gold-400 bg-gold-500/15 text-gold-400 font-bold uppercase cursor-pointer">4-Bar System</button>
+            <button id="view16Btn" type="button" aria-pressed="false" class="px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-900 text-plum-300 hover:text-white uppercase cursor-pointer">16-Bar Window</button>
+            <button id="view96Btn" type="button" aria-pressed="false" class="px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-900 text-plum-300 hover:text-white uppercase cursor-pointer">96-Bar Score</button>
+          </div>
+        </div>
+        <div id="partitureBody" class="divide-y divide-midnight-850/90"></div>
+      </section>
+
+      <!-- Oscilloscope & Korg MS-10 / SQ-10 Hardware Panel -->
+      <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <div class="lg:col-span-7 bg-midnight-900/90 border border-midnight-850 rounded-sm p-4 flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-gold-400 animate-pulse"></span>
+              <h2 class="font-mono text-xs font-bold text-white uppercase tracking-widest">Oscilloscope Monitor</h2>
+            </div>
+            <div class="flex gap-1.5 font-mono text-[10px]">
+              <button id="scopeWaveBtn" type="button" aria-pressed="true" class="px-2.5 py-1 rounded-sm border border-gold-400 bg-gold-500/20 text-gold-400 font-bold uppercase cursor-pointer">Wave</button>
+              <button id="scopeFreqBtn" type="button" aria-pressed="false" class="px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-300 hover:text-white uppercase cursor-pointer">Freq</button>
+            </div>
+          </div>
+          <div class="relative flex-1 min-h-[160px] bg-midnight-950 border border-midnight-850 rounded-sm overflow-hidden">
+            <canvas id="scopeCanvas" role="img" aria-label="Oscilloscope showing the live output of each voice" class="absolute inset-0 w-full h-full block"></canvas>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 bg-midnight-900/90 border border-midnight-850 rounded-sm p-4 flex flex-col justify-between gap-3.5">
+          <div>
+            <div class="flex items-center justify-between mb-2.5">
+              <h2 class="font-mono text-xs font-bold text-white uppercase tracking-widest">Active Channels</h2>
+              <span id="elapsedClock" class="font-mono text-xs text-gold-400 font-bold">00:00.0 / 03:05.8</span>
+            </div>
+            <div id="voiceLedGrid" class="grid grid-cols-3 sm:grid-cols-4 gap-1.5 font-mono text-[10px]"></div>
+          </div>
+
+          <!-- Authentic MS-10 Korg35 VCF & SQ-10 Reset Patch Panel -->
+          <div class="bg-midnight-950 border border-midnight-850 p-3 rounded-sm flex flex-col gap-2.5">
+            <div class="flex items-center justify-between font-mono text-[10px]">
+              <span class="text-gold-400 font-bold uppercase tracking-wider">MS-10 Korg35 VCF &amp; Totem Bite</span>
+              <div class="flex items-center gap-2">
+                <span id="korgVcfReadout" class="text-plum-300 font-bold">AUTO // PEAK 5.0</span>
+                <button type="button" id="korgVcfResetBtn" class="px-1.5 py-0.5 rounded-sm bg-midnight-900 border border-plum-900 text-plum-300 hover:text-white text-[9px] uppercase cursor-pointer">Reset</button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 font-mono text-[9px]">
+              <div class="flex flex-col gap-1">
+                <div class="flex justify-between text-plum-200">
+                  <span>CUTOFF OFFSET</span>
+                  <span id="korgCutoffVal" class="text-gold-400 font-bold">0%</span>
+                </div>
+                <input id="korgCutoffSlider" type="range" min="-0.85" max="1.0" step="0.01" value="0" class="vw-slider w-full" aria-label="MS-10 Korg35 Cutoff Offset">
+              </div>
+              <div class="flex flex-col gap-1">
+                <div class="flex justify-between text-plum-200">
+                  <span>PEAK (RUBBER Q)</span>
+                  <span id="korgPeakVal" class="text-gold-400 font-bold">5.0</span>
+                </div>
+                <input id="korgPeakSlider" type="range" min="1.0" max="9.6" step="0.1" value="5.0" class="vw-slider w-full" aria-label="MS-10 Korg35 Peak Resonance">
+              </div>
+            </div>
+
+            <!-- SQ-10 TRIG OUT -> RESET IN Step Length Selector -->
+            <div class="pt-1.5 border-t border-midnight-850 flex flex-wrap items-center justify-between gap-1.5 font-mono text-[9px]">
+              <span class="text-plum-300 uppercase">SQ-10 RESET IN:</span>
+              <div class="inline-flex rounded-sm border border-plum-900 bg-midnight-900 p-0.5" role="group" aria-label="SQ-10 Reset Step Length">
+                <button type="button" data-sq-steps="5" aria-pressed="true" class="sq-step-btn px-2 py-0.5 rounded-sm bg-gold-500/20 text-gold-400 font-bold cursor-pointer transition-colors">5-Step</button>
+                <button type="button" data-sq-steps="7" aria-pressed="false" class="sq-step-btn px-2 py-0.5 rounded-sm text-plum-300 hover:text-white cursor-pointer transition-colors">7-Step</button>
+                <button type="button" data-sq-steps="11" aria-pressed="false" class="sq-step-btn px-2 py-0.5 rounded-sm text-plum-300 hover:text-white cursor-pointer transition-colors">11-Step</button>
+                <button type="button" data-sq-steps="8" aria-pressed="false" class="sq-step-btn px-2 py-0.5 rounded-sm text-plum-300 hover:text-white cursor-pointer transition-colors">8-Step</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-midnight-950 border border-midnight-850 p-3 rounded-sm flex items-center justify-between gap-4">
+            <label for="masterGainSlider" class="font-mono text-xs text-plum-300 uppercase tracking-wider shrink-0">Master Out</label>
+            <input id="masterGainSlider" type="range" min="0" max="1.4" step="0.01" value="0.92" class="vw-slider w-full">
+            <span id="masterGainVal" class="font-mono text-xs text-gold-400 font-bold w-10 text-right">92%</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stem Exporter & Virtual Router Section -->
+      <section id="dawRecorderPanel" class="bg-midnight-900/90 border border-midnight-850 rounded-sm p-4 sm:p-5 shadow-2xl">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-4 mb-4 border-b border-midnight-850">
+          <div>
+            <div class="flex items-center gap-2">
+              <span id="recHeaderLed" class="w-2 h-2 rounded-full bg-plum-600"></span>
+              <h2 class="font-mono text-xs sm:text-sm font-bold text-white uppercase tracking-widest">Stem Exporter &amp; Virtual Router</h2>
+              <span id="recSampleRateBadge" class="font-mono text-[10px] bg-midnight-950 border border-plum-700 text-gold-400 px-2 py-0.5 rounded-sm">24-BIT PCM WAV</span>
+            </div>
+            <p class="text-xs text-plum-300 mt-1">Capture sample-aligned 24-bit WAV stems generated natively by the Web Audio API engine.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 font-mono text-xs shrink-0">
+            <div class="inline-flex rounded-sm border border-plum-900 bg-midnight-950 p-0.5" role="group" aria-label="Recording mode">
+              <button type="button" data-rec-mode="ALL" aria-pressed="true" class="rec-mode-btn disabled:opacity-40 disabled:pointer-events-none px-2.5 py-1 rounded-sm bg-gold-500/20 text-gold-400 font-bold uppercase cursor-pointer transition-colors">Master + Stems</button>
+              <button type="button" data-rec-mode="STEMS" aria-pressed="false" class="rec-mode-btn disabled:opacity-40 disabled:pointer-events-none px-2.5 py-1 rounded-sm text-plum-300 hover:text-white uppercase cursor-pointer transition-colors">Stems Only</button>
+            </div>
+            <button type="button" id="recLiveBtn" class="inline-flex items-center gap-1.5 bg-red-600 hover:bg-red-500 text-white px-3.5 py-1.5 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer shadow-[0_0_12px_rgba(220,38,38,0.35)]">
+              <span id="recLiveIcon" aria-hidden="true">●</span> <span id="recLiveLabel">Rec Live</span>
+            </button>
+            <button type="button" id="printFullBtn" class="inline-flex items-center gap-1.5 bg-midnight-950 hover:bg-midnight-900 border border-gold-500/50 text-gold-400 px-3 py-1.5 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">⚡ Print 96-Bar Song</button>
+          </div>
+        </div>
+        <div id="dawTrackGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 mb-4 font-mono"></div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 pt-3 border-t border-midnight-850/80">
+          <div class="lg:col-span-5 bg-midnight-950 border border-midnight-850 p-3 rounded-sm flex flex-col justify-between gap-2.5 font-mono">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[11px] font-bold text-white uppercase tracking-wider">Audio Interface Routing</span>
+              <span id="sinkChannelInfo" class="text-[10px] text-plum-300">2-Ch Stereo Out</span>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-2">
+              <select id="audioOutputSelect" aria-label="Audio Output Device" class="flex-1 bg-midnight-900 border border-plum-900 text-plum-200 text-[11px] px-2.5 py-1.5 rounded-sm outline-none focus:border-gold-500">
+                <option value="">System Default Audio Output</option>
+              </select>
+              <button type="button" id="refreshDevicesBtn" class="px-2.5 py-1.5 bg-midnight-900 hover:bg-midnight-850 border border-plum-700 text-plum-200 text-[10px] font-bold uppercase rounded-sm cursor-pointer">Scan Outs</button>
+            </div>
+          </div>
+          <div class="lg:col-span-7 bg-midnight-950 border border-midnight-850 p-3 rounded-sm flex flex-col justify-between gap-2 font-mono">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] font-bold text-white uppercase tracking-wider">Exported 24-Bit Stems</span>
+                <span id="recTimerLabel" class="text-[11px] text-plum-400">00:00.0</span>
+              </div>
+              <button type="button" id="downloadAllWavBtn" disabled class="px-3 py-1 rounded-sm bg-plum-500/20 border border-plum-500/50 text-plum-200 disabled:opacity-30 disabled:pointer-events-none hover:bg-plum-500/30 text-[10px] font-bold uppercase tracking-wider cursor-pointer transition-colors">↓ Download All</button>
+            </div>
+            <div id="wavExportList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 min-h-[54px] items-center">
+              <p class="col-span-full text-[11px] text-plum-400">Arm tracks above and press <span class="text-red-400 font-bold">Rec Live</span> or <span class="text-gold-400 font-bold">Print 96-Bar Song</span>.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="py-6 text-center border-t border-midnight-850 bg-midnight-950 relative z-20">
+    <p class="font-mono text-xs text-plum-400 uppercase tracking-widest">VOLTAGE &amp; WAVE // TOTEM CABARET // PRIMITIVIST EXOTICA PROTOCOL — KORG MS-10 · SQ-10 · VC-10 + AERIAL THEREMIN</p>
+  </footer>
+
+  <script>
+    // =========================================================================
+    // 1. MUSICAL & KORG HARDWARE CONSTANTS (124 BPM, ASYMMETRIC 96-BAR SUITE)
+    // =========================================================================
+    function midiToFreq(m, cents = 0) {
+      return 440 * Math.pow(2, ((m - 69) + cents / 100) / 12);
+    }
+    const mapFc = v => 40 * Math.pow(2, v * 0.9);
+    const tm    = v => v <= 0 ? 0.003 : 0.003 * Math.pow(10, 0.36 * v);
+    const dm    = v => Math.max(0.06, tm(v));
+
+    let ac = null;
+    let masterGainValue = 0.92;
+    let korgCutoffOffset = 0.0; // -0.85 to +1.0 manual Korg35 cutoff offset
+    let korgPeakSetting = 5.0;  // Rubberized Exotica/Dada Korg35 resonance default (5.0)
+    let sq10ResetSteps = 5;     // Book II P-07 default: 5-step polymeter (auto-shifts per act unless locked)
+    let sq10UserLocked = false;
+
+    function clampFreq(hz) {
+      return Math.max(20, Math.min(ac ? ac.sampleRate * 0.45 : 20000, hz));
+    }
+
+    const BPM = 124; // Crisp, propulsive Primitivist Exotica groove tempo
+    const BEAT_SEC = 60 / BPM;
+    const BAR_SEC = 4 * BEAT_SEC;
+    const TOTAL_BARS = 96; // 96 bars @ 124 BPM = 185.81 seconds (03:05.8)
+    const LOOP_SEC = TOTAL_BARS * BAR_SEC;
+
+    function formatClock(sec) {
+      const tenths = Math.floor(Math.max(0, sec) * 10 + 1e-6);
+      const mins = Math.floor(tenths / 600);
+      const rem = ((tenths % 600) / 10).toFixed(1).padStart(4, '0');
+      return `${String(mins).padStart(2, '0')}:${rem}`;
+    }
+
+    // Asymmetric 6-Act Architecture (12 + 14 + 18 + 16 + 14 + 22 = 96 Bars)
+    const SECTIONS = [
+      { id: 'JUNGLE_PULSE',  label: 'I. JUNGLE PULSE',     short: 'JUNGLE',  startBar: 0,  endBar: 11, desc: '12 Bars // Book I P-01 & P-04: immediate rubber slap hook, ritual pulse & Bar 12 stop-time drop' },
+      { id: 'SIREN_TOTEM',   label: 'II. SIREN TOTEM',     short: 'SIREN',   startBar: 12, endBar: 25, desc: '14 Bars // Book I P-10: through-composed Aerial Theremin solo over a 3-bar Dm9 -> Ab13 -> G7#9 cycle' },
+      { id: 'BAMBOO_STRUT',  label: 'III. BAMBOO STRUT',   short: 'BAMBOO',  startBar: 26, endBar: 43, desc: '18 Bars // Book II P-07: 5-step SQ-10 bamboo-bell polymeter & syncopated stop-time exotica breaks' },
+      { id: 'EYEBALL_WALTZ', label: 'IV. EYEBALL WALTZ',   short: 'EYEBALL', startBar: 44, endBar: 59, desc: '16 Bars // Book II P-09 & P-10: crooked 7-step detuned carnival-organ waltz & drunk theremin bends' },
+      { id: 'VOODOO_VACUUM', label: 'V. VOODOO VACUUM',    short: 'VOODOO',  startBar: 60, endBar: 73, desc: '14 Bars // Book III V-03 & V-05: VC-10 20-band talking noise percussion & beat-drop suspense' },
+      { id: 'EXOTICA_RIOT',  label: 'VI. EXOTICA RIOT',    short: 'EXOTICA', startBar: 74, endBar: 95, desc: '22 Bars // Full Primitivist Cabaret finale with 11-step SQ-10 polymeter, VC-10 droplets & acrobatic theremin' }
+    ];
+
+    // Act I & III Harmonic Core: D Dorian / Exotica-Funk (Dm9 -> G13 -> Bbmaj7#11 -> A7alt)
+    const CHORDS_DM = [
+      { name: 'Dm9',        rootMidi: 38, chord: [60, 64, 65, 69] }, // D2 (38), C4-E4-F4-A4
+      { name: 'G13',        rootMidi: 43, chord: [59, 64, 65, 69] }, // G2 (43), B3-E4-F4-A4
+      { name: 'Bbmaj7#11',  rootMidi: 34, chord: [62, 64, 65, 69] }, // Bb1 (34), D4-E4-F4-A4
+      { name: 'A7alt',      rootMidi: 45, chord: [60, 65, 67, 73] }  // A2 (45), C4-F4-G4-C#5
+    ];
+
+    // Act II & VI Asymmetric 3-Bar Tritone-Sub Exotica Cycle (Dm9 -> Ab13 -> G7#9)
+    const CHORDS_TRITONE = [
+      { name: 'Dm9',        rootMidi: 38, chord: [60, 64, 65, 69] }, // D2 (38)
+      { name: 'Ab13',       rootMidi: 44, chord: [60, 65, 66, 70] }, // Ab2 (44), C4-F4-Gb4-Bb4
+      { name: 'G7#9',       rootMidi: 43, chord: [59, 65, 68, 70] }  // G2 (43), B3-F4-G#4-Bb4
+    ];
+
+    // Act IV Eyeball-Cabaret Bridge (Fmaj9 -> B7#11 -> Em11 -> Bb13sus4)
+    const CHORDS_CABARET = [
+      { name: 'Fmaj9',      rootMidi: 41, chord: [60, 64, 67, 69] }, // F2 (41)
+      { name: 'B7#11',      rootMidi: 35, chord: [63, 65, 69, 71] }, // B1 (35), D#4-F4-A4-B4
+      { name: 'Em11',       rootMidi: 40, chord: [62, 66, 67, 71] }, // E2 (40), D4-F#4-G4-B4
+      { name: 'Bb13sus4',   rootMidi: 34, chord: [60, 63, 67, 72] }  // Bb1 (34), C4-Eb4-G4-C5
+    ];
+
+    // Korg VC-10 20-Band Analog Filter Bank Center Frequencies (125 Hz – 8 kHz)
+    const VC10_BAND_FREQS = [
+      125, 160, 200, 250, 315, 400, 500, 630, 800, 1000,
+      1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 7100, 8000
+    ];
+
+    function getSectionForBar(barIdx) {
+      return SECTIONS.find(s => barIdx >= s.startBar && barIdx <= s.endBar) || SECTIONS[0];
+    }
+
+    function getChordForBar(barIdx) {
+      const sec = getSectionForBar(barIdx);
+      const localBar = barIdx - sec.startBar;
+      if (sec.id === 'SIREN_TOTEM' || sec.id === 'EXOTICA_RIOT') {
+        return CHORDS_TRITONE[localBar % 3]; // 3-bar asymmetric harmonic loop!
+      }
+      if (sec.id === 'EYEBALL_WALTZ') {
+        return CHORDS_CABARET[localBar % 4];
+      }
+      return CHORDS_DM[Math.floor(localBar / 2) % 4];
+    }
+
+    // =========================================================================
+    // 2. KORG MS-10, SQ-10 & VC-10 + AERIAL THEREMIN PATCH DATA
+    // =========================================================================
+    const PATCH_DATA = {
+      kick:     { name: "P-04 TomKick",  rgb: "244, 63, 94",  s: [32,'t',0,2,0,null,0,0,4.5,7.8,0,0,null,null,0,0,1.1,0,0.85] },
+      snare:    { name: "P-05 WoodRim",  rgb: "251, 146, 60", s: [0,'n',0,null,0,8.2,0,0,7.4,4.4,0,6.0,'s',0,0,0,0.65,0,0.32] },
+      hat:      { name: "P-04 Shaker",   rgb: "250, 204, 21", s: [0,'n',0,null,0,0,0,0,9.3,1.8,0,1.0,'s',0,0,0,0.24,0,0.09] },
+      bass:     { name: "P-01 Rubber",   rgb: "34, 211, 238", s: [16,'s',0,null,0,null,0,0,4.8,5.0,0,6.0,null,null,0,0,1.05,1.0,0.14] },
+      arp:      { name: "P-07 Bamboo",   rgb: "163, 230, 53", s: [8,'s',0,null,0,null,0,0,6.4,5.2,0,0,null,null,0,0.02,1.25,0.3,0.22] },
+      theremin: { name: "P-10 Theremin", rgb: "232, 121, 249",s: [4,'s',0,null,0,null,0,0,7.6,2.2,0,0,null,null,0,0.12,1.9,6.8,0.35] },
+      vcNoise:  { name: "V-05 Spectral", rgb: "249, 115, 22", s: [0,'n',0,null,0,6.2,0,0,8.4,7.8,0,0,'s',0,0,0.03,0.75,0.2,0.28] }
+    };
+
+    const BASE_VOLUMES = {
+      kick: 1.24, snare: 0.70, hat: 0.44,
+      bass: 1.28,
+      arp: 0.74,
+      theremin: 0.96, vcNoise: 0.66
+    };
+
+    const SCORE_PARTS = [
+      { id: 'part1', num: 'TRK 01', title: 'MS-10 TOTEM RUBBER BASS',spec: 'BOOK I P-01 // SATURATED 3+3+2 SLAP & STOP-TIME POPS',   color: '#22d3ee', rgb: '34, 211, 238',  voices: ['bass'], gain: 1.0, muted: false, solo: false },
+      { id: 'part2', num: 'TRK 02', title: 'MS-10 RITUAL PERCUSSION',spec: 'BOOK I P-04 & P-05 // TOM-KICK + RING-MOD WOODBLOCK',   color: '#f43f5e', rgb: '244, 63, 94',   voices: ['kick', 'snare', 'hat'], gain: 1.0, muted: false, solo: false },
+      { id: 'part3', num: 'TRK 03', title: 'SQ-10 BAMBOO MARIMBA',   spec: 'BOOK II P-07 & P-09 // 5/7/11-STEP RESET + CALLIOPE',   color: '#a3e635', rgb: '163, 230, 53',  voices: ['arp'], gain: 1.0, muted: false, solo: false },
+      { id: 'part5', num: 'TRK 04', title: 'THEREMIN & VC-10 NOISE', spec: 'BOOK I P-10 & BOOK III V-05 // EXOTICA SOLO + 20-BND',  color: '#e879f9', rgb: '232, 121, 249', voices: ['theremin', 'vcNoise'], gain: 1.0, muted: false, solo: false }
+    ];
+
+    const DAW_TRACK_DEFS = [
+      { id: 'master', num: 'MST', name: 'Master_Mix',            fileSlug: '00_Master_Mix',            channels: 2, color: '#a3e635', armed: true },
+      { id: 'part1',  num: 'T01', name: 'MS10_Totem_Rubber_Bass',fileSlug: '01_MS10_Totem_Rubber_Bass',channels: 1, color: '#22d3ee', armed: true },
+      { id: 'part2',  num: 'T02', name: 'MS10_Ritual_Percussion',fileSlug: '02_MS10_Ritual_Percussion',channels: 1, color: '#f43f5e', armed: true },
+      { id: 'part3',  num: 'T03', name: 'SQ10_Bamboo_Marimba',   fileSlug: '03_SQ10_Bamboo_Marimba',   channels: 1, color: '#a3e635', armed: true },
+      { id: 'part5',  num: 'T04', name: 'Theremin_VC10_Spectral',fileSlug: '04_Theremin_VC10_Spectral',channels: 1, color: '#e879f9', armed: true }
+    ];
+
+    // =========================================================================
+    // 3. KORG MS-10, SQ-10 & VC-10 + AERIAL THEREMIN CIRCUIT EMULATION
+    // =========================================================================
+    let masterOut = null, masterBus = null, masterAnalyser = null;
+    let partBuses = {}, partAnalysers = {}, tracks = {};
+    let nW = null, nP = null, arpDelay = null, arpDelayGain = null, thereminDelay = null;
+    let scopeMode = 'WAVE';
+    let recMode = 'ALL', isRecording = false, autoStopAtLoopEnd = false, recStartTime = 0;
+    let recNode = null, recBuffers = {}, recPeaks = {}, renderedTakes = [];
+
+    function initAudioEngine() {
+      if (ac) return;
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      ac = new AudioCtx();
+
+      const comp = ac.createDynamicsCompressor();
+      comp.threshold.value = -10.5;
+      comp.ratio.value = 3.8;
+      comp.attack.value = 0.005;
+      comp.release.value = 0.14;
+
+      masterOut = ac.createGain();
+      masterOut.gain.value = masterGainValue;
+      masterBus = ac.createGain();
+      masterBus.gain.value = 1.0;
+
+      masterAnalyser = ac.createAnalyser();
+      masterAnalyser.fftSize = 1024;
+      masterAnalyser.smoothingTimeConstant = 0.74;
+
+      // Dotted-eighth exotica echo on TRK 03 (SQ-10 Bamboo Marimba)
+      arpDelay = ac.createDelay(1.0);
+      arpDelay.delayTime.value = BEAT_SEC * 0.75;
+      const arpDelayFilter = ac.createBiquadFilter();
+      arpDelayFilter.type = 'bandpass';
+      arpDelayFilter.frequency.value = 1750;
+      arpDelayFilter.Q.value = 1.1;
+      const arpFeedback = ac.createGain();
+      arpFeedback.gain.value = 0.28;
+      arpDelayGain = ac.createGain();
+      arpDelayGain.gain.value = 0.34;
+      arpDelay.connect(arpDelayFilter);
+      arpDelayFilter.connect(arpFeedback);
+      arpFeedback.connect(arpDelay);
+      arpDelayFilter.connect(arpDelayGain);
+      arpDelayGain.connect(comp);
+
+      // Slapback jungle echo on TRK 04 (Aerial Theremin & VC-10 Spectral)
+      thereminDelay = ac.createDelay(1.0);
+      thereminDelay.delayTime.value = BEAT_SEC * 0.375;
+      const thFilter = ac.createBiquadFilter();
+      thFilter.type = 'lowpass';
+      thFilter.frequency.value = 2600;
+      const thFb = ac.createGain();
+      thFb.gain.value = 0.28;
+      const thSend = ac.createGain();
+      thSend.gain.value = 0.26;
+      thereminDelay.connect(thFilter);
+      thFilter.connect(thFb);
+      thFb.connect(thereminDelay);
+      thFilter.connect(thSend);
+      thSend.connect(comp);
+
+      SCORE_PARTS.forEach(part => {
+        const bus = ac.createGain();
+        bus.gain.value = 1.0;
+        bus.connect(comp);
+        if (part.id === 'part3') bus.connect(arpDelay);
+        if (part.id === 'part5') bus.connect(thereminDelay);
+        partBuses[part.id] = bus;
+
+        const an = ac.createAnalyser();
+        an.fftSize = 1024;
+        an.smoothingTimeConstant = 0.74;
+        bus.connect(an);
+        partAnalysers[part.id] = an;
+      });
+
+      comp.connect(masterOut);
+      masterOut.connect(masterBus);
+      masterBus.connect(masterAnalyser);
+      masterBus.connect(ac.destination);
+      ac.cp = comp;
+
+      const L = ac.sampleRate * 3;
+      nW = ac.createBuffer(1, L, ac.sampleRate);
+      nP = ac.createBuffer(1, L, ac.sampleRate);
+      const w = nW.getChannelData(0), p = nP.getChannelData(0);
+      let a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0;
+      for (let i = 0; i < L; i++) {
+        const x = Math.random() * 2 - 1;
+        w[i] = x;
+        a = 0.99886 * a + x * 0.0555179;
+        b = 0.99332 * b + x * 0.0750759;
+        c = 0.96900 * c + x * 0.1538520;
+        d = 0.86650 * d + x * 0.3104856;
+        e = 0.55000 * e + x * 0.5329522;
+        f = -0.7616 * f - x * 0.0168980;
+        p[i] = (a + b + c + d + e + f + g + x * 0.5362) * 0.12;
+        g = x * 0.115926;
+      }
+
+      Object.keys(PATCH_DATA).forEach(id => { tracks[id] = buildVoice(id, PATCH_DATA[id]); });
+      applyMixerGains();
+      applyKorgVcfOverride();
+
+      const srBadge = document.getElementById('recSampleRateBadge');
+      if (srBadge) srBadge.textContent = `${(ac.sampleRate / 1000).toFixed(1)} kHz // 24-BIT WAV`;
+      updateSinkChannelInfo();
+      setupDawCaptureTap();
+    }
+
+    function makeKorg35SaturationCurve(drive = 2.9) {
+      const n = 1024, curve = new Float32Array(n);
+      const norm = Math.tanh(drive);
+      for (let i = 0; i < n; i++) {
+        const x = (i / 512) - 1;
+        curve[i] = Math.tanh(x * drive + 0.09 * x * x) / norm;
+      }
+      return curve;
+    }
+
+    function makeThereminWarmthCurve() {
+      const n = 1024, curve = new Float32Array(n);
+      for (let i = 0; i < n; i++) {
+        const x = (i / 512) - 1;
+        curve[i] = Math.tanh(x * 1.55 + 0.16 * x * x) / Math.tanh(1.71);
+      }
+      return curve;
+    }
+
+    function buildVoice(id, pData) {
+      const s = pData.s, v = { all: [], P: pData }, N = (f, ...a) => ac[f](...a);
+      const src = (t, f) => { const o = N('createOscillator'); o.type = t; o.frequency.value = f; o.start(); v.all.push(o); return o; };
+      const G = (g = 1) => { const n = N('createGain'); n.gain.value = g; return n; };
+      const cs = () => { const o = N('createConstantSource'); o.offset.value = 0; o.start(); v.all.push(o); return o; };
+      const nz = b => { const o = N('createBufferSource'); o.buffer = b; o.loop = true; o.start(); v.all.push(o); return o; };
+
+      v.eg = cs();
+      v.vcf = N('createBiquadFilter');
+      v.vcf.type = 'lowpass';
+      const pre = G(0.54);
+      const vca = G(0);
+
+      if (id === 'vcNoise') {
+        // Book III V-03 & V-05: VC-10 20-Band Filter Bank gating Pink/White Noise into Talking Tribal Droplets
+        const pinkGain = G(0.72);
+        const whiteGain = G(0.36);
+        nz(nP).connect(pinkGain); pinkGain.connect(pre);
+        nz(nW).connect(whiteGain); whiteGain.connect(pre);
+
+        v.vcBands = [];
+        VC10_BAND_FREQS.forEach(centerHz => {
+          const bp = N('createBiquadFilter');
+          bp.type = 'bandpass';
+          bp.frequency.value = centerHz;
+          bp.Q.value = 14.5;
+
+          const bandVca = G(0.05);
+          pre.connect(bp);
+          bp.connect(bandVca);
+          bandVca.connect(vca);
+          v.vcBands.push({ hz: centerHz, bp, gain: bandVca });
+        });
+      } else if (id === 'snare') {
+        // Book I P-05: Metallic ring-mod woodblock + crisp snare noise
+        const wn = G(0.24);
+        nz(nW).connect(wn);
+        wn.connect(pre);
+        v.osc = src('triangle', 225);
+        v.osc2 = src('square', 540);
+        const bodyGain = G(0.38);
+        const rimGain = G(0.22);
+        v.osc.connect(bodyGain); bodyGain.connect(pre);
+        v.osc2.connect(rimGain); rimGain.connect(pre);
+        pre.connect(v.vcf);
+        v.vcf.connect(vca);
+      } else if (s[1] === 'n') {
+        const wn = G(0.25);
+        nz(nW).connect(wn);
+        const hatHpf = N('createBiquadFilter');
+        hatHpf.type = 'highpass';
+        hatHpf.frequency.value = 5200;
+        wn.connect(hatHpf);
+        hatHpf.connect(pre);
+        pre.connect(v.vcf);
+        v.vcf.connect(vca);
+      } else if (id === 'bass') {
+        // Book I P-01: Elastic MS-10 Saw + Pulse sub-octave with tanh saturation & Korg35 bite
+        v.osc = src('sawtooth', 110);
+        v.osc2 = src('square', 55);
+        const sawGain = G(0.64);
+        const subGain = G(0.54);
+        v.osc.connect(sawGain); sawGain.connect(pre);
+        v.osc2.connect(subGain); subGain.connect(pre);
+        pre.connect(v.vcf);
+
+        const sat = N('createWaveShaper');
+        sat.curve = makeKorg35SaturationCurve(3.0);
+        sat.oversample = '2x';
+        const lowShelf = N('createBiquadFilter');
+        lowShelf.type = 'lowshelf';
+        lowShelf.frequency.value = 115;
+        lowShelf.gain.value = 4.6;
+
+        v.vcf.connect(sat);
+        sat.connect(lowShelf);
+        lowShelf.connect(vca);
+      } else if (id === 'arp') {
+        // Book II P-07 & Book I P-06: MS-10 Pulse/Triangle Bamboo-Marimba Oscillator Pair
+        v.osc = src('square', 440);
+        v.osc2 = src('triangle', 622.25);
+        const sqBlend = G(0.54);
+        const bellBlend = G(0.46);
+        v.osc.connect(sqBlend); sqBlend.connect(pre);
+        v.osc2.connect(bellBlend); bellBlend.connect(pre);
+
+        const arpHpf = N('createBiquadFilter');
+        arpHpf.type = 'highpass';
+        arpHpf.frequency.value = 280;
+        pre.connect(arpHpf);
+        arpHpf.connect(v.vcf);
+        v.vcf.connect(vca);
+      } else if (id === 'theremin') {
+        // Book I P-08 & P-10: MS-10 Self-Oscillating Aerial Theremin Emulation
+        v.osc = src('sine', 440);
+        v.osc2 = src('triangle', 440);
+        const sineGain = G(0.76);
+        const triGain = G(0.26);
+        v.osc.connect(sineGain); sineGain.connect(pre);
+        v.osc2.connect(triGain); triGain.connect(pre);
+
+        // Dedicated 6.8 Hz Hand-Vibrato MG LFO modulating both oscillators in Hz
+        v.vibOsc = src('sine', 6.8);
+        v.vibGain = G(0);
+        v.vibOsc.connect(v.vibGain);
+        v.vibGain.connect(v.osc.frequency);
+        v.vibGain.connect(v.osc2.frequency);
+
+        const tube = N('createWaveShaper');
+        tube.curve = makeThereminWarmthCurve();
+        tube.oversample = '2x';
+
+        const thLowpass = N('createBiquadFilter');
+        thLowpass.type = 'lowpass';
+        thLowpass.frequency.value = 3400;
+        thLowpass.Q.value = 1.8;
+
+        pre.connect(tube);
+        tube.connect(thLowpass);
+        thLowpass.connect(vca);
+      } else {
+        // Book I P-04: Punchy Tom-Kick voice
+        v.osc = src('triangle', 200);
+        v.osc.connect(pre);
+        pre.connect(v.vcf);
+        v.vcf.connect(vca);
+      }
+
+      const vsum = G(0.5), clip = N('createWaveShaper');
+      clip.curve = new Float32Array([0, 0, 2]);
+      vsum.connect(clip);
+      clip.connect(vca.gain);
+      const ge = G(0.92);
+      v.eg.connect(ge);
+      ge.connect(vsum);
+
+      v.out = G(BASE_VOLUMES[id]);
+      vca.connect(v.out);
+      const ownerPart = SCORE_PARTS.find(p => p.voices.includes(id));
+      if (ownerPart && partBuses[ownerPart.id]) v.out.connect(partBuses[ownerPart.id]);
+      else v.out.connect(ac.cp);
+
+      v.an = ac.createAnalyser();
+      v.an.fftSize = 2048;
+      v.an.smoothingTimeConstant = 0.74;
+      v.out.connect(v.an);
+
+      const t = ac.currentTime;
+      v.vcf.frequency.setTargetAtTime(clampFreq(mapFc(s[8])), t, 0.02);
+      v.vcf.Q.setTargetAtTime(s[9] * 1.45, t, 0.02);
+      return v;
+    }
+
+    const hold = (o, t) => {
+      try { if (o.cancelAndHoldAtTime) { o.cancelAndHoldAtTime(t); return; } } catch (e) {}
+      o.cancelScheduledValues(t);
+    };
+
+    function schedOn(v, at, vel = 1.0, cleanMonoBreath = false, customAttack = null) {
+      const s = v.P.s, o = v.eg.offset;
+      const a = customAttack !== null ? customAttack : tm(s[15]);
+      const h = tm(s[14]);
+      const peak = Math.max(0.12, Math.min(1.0, vel));
+      hold(o, at);
+      if (cleanMonoBreath) {
+        o.setTargetAtTime(0, at, 0.0014);
+        o.setValueAtTime(0, at + 0.004);
+        o.linearRampToValueAtTime(peak, at + 0.004 + a);
+      } else {
+        o.setValueAtTime(0, at);
+        o.linearRampToValueAtTime(peak, at + a);
+      }
+      const startHold = at + (cleanMonoBreath ? 0.004 : 0) + a + (s[14] ? h : 0);
+      o.setValueAtTime(peak, startHold);
+      o.setTargetAtTime((s[17] / 10) * peak, startHold, dm(s[16]) / 3);
+    }
+
+    function schedOff(v, at, customRelease = null) {
+      const o = v.eg.offset;
+      hold(o, at);
+      const rel = customRelease !== null ? customRelease : Math.max(0.005, Math.min(0.45, dm(v.P.s[18]) / 3));
+      o.setTargetAtTime(0, at, rel);
+    }
+
+    function triggerVc10SpectralDrop(v, centerHz, at) {
+      if (!v || !v.vcBands) return;
+      const targetHz = computeKorg35Cutoff(centerHz);
+      v.vcBands.forEach(band => {
+        const dist = Math.log2(band.hz / targetHz);
+        const g = Math.exp(-(dist * dist) / 0.07) * 1.50;
+        const val = Math.min(1.5, 0.012 + g);
+        hold(band.gain.gain, at);
+        band.gain.gain.setTargetAtTime(val, at, 0.007);
+      });
+    }
+
+    function computeKorg35Cutoff(baseHz) {
+      const mult = Math.pow(4.2, korgCutoffOffset);
+      return clampFreq(baseHz * mult);
+    }
+
+    function applyKorgVcfOverride() {
+      const readout = document.getElementById('korgVcfReadout');
+      const cutValEl = document.getElementById('korgCutoffVal');
+      const peakValEl = document.getElementById('korgPeakVal');
+
+      if (cutValEl) cutValEl.textContent = `${korgCutoffOffset >= 0 ? '+' : ''}${Math.round(korgCutoffOffset * 100)}%`;
+      if (peakValEl) peakValEl.textContent = korgPeakSetting.toFixed(1);
+      if (readout) {
+        const modeTxt = Math.abs(korgCutoffOffset) < 0.02 ? 'AUTO' : `${korgCutoffOffset > 0 ? '+' : ''}${Math.round(korgCutoffOffset * 100)}%`;
+        readout.textContent = `${modeTxt} // PEAK ${korgPeakSetting.toFixed(1)}`;
+      }
+
+      if (!ac) return;
+      const now = ac.currentTime;
+      ['bass', 'arp'].forEach(vid => {
+        const trk = tracks[vid];
+        if (trk && trk.vcf) {
+          const scale = vid === 'bass' ? 1.25 : 1.35;
+          trk.vcf.Q.setTargetAtTime(korgPeakSetting * scale, now, 0.02);
+        }
+      });
+    }
+
+    function applyMixerGains() {
+      if (!ac) return;
+      const anySolo = SCORE_PARTS.some(p => p.solo);
+      SCORE_PARTS.forEach(part => {
+        const active = anySolo ? part.solo : !part.muted;
+        const mult = active ? part.gain : 0;
+        part.voices.forEach(vid => {
+          if (tracks[vid] && tracks[vid].out) tracks[vid].out.gain.setTargetAtTime(BASE_VOLUMES[vid] * mult, ac.currentTime, 0.02);
+        });
+      });
+    }
+
+    // =========================================================================
+    // 4. 96-BAR UN-CORSETED PRIMITIVIST EXOTICA & THEREMIN SCORE
+    // =========================================================================
+    const BAR_EVENTS = [];
+
+    function buildScoreEvents() {
+      BAR_EVENTS.length = 0;
+
+      for (let b = 0; b < TOTAL_BARS; b++) {
+        const sec = getSectionForBar(b);
+        const chord = getChordForBar(b);
+        const localBar = b - sec.startBar;
+        const isAnswerBar = (localBar % 2 === 1);
+        const isLastBarOfAct = (b === sec.endBar);
+        // Dramatic Stop-Time Vacuum Bars where the groove cuts out for theatrical tension!
+        const isVacuumBar = (b === 11 || b === 35 || b === 55 || b === 67 || b === 85);
+        const events = [];
+
+        // Dynamic SQ-10 Reset step length per act (5 -> 7 -> 11) unless locked by user
+        const defaultActSteps = sec.id === 'EYEBALL_WALTZ' ? 7 : (sec.id === 'EXOTICA_RIOT' ? 11 : 5);
+        const effectiveSqSteps = sq10UserLocked ? sq10ResetSteps : defaultActSteps;
+
+        // ---------------------------------------------------------------------
+        // TRK 02: MS-10 RITUAL PERCUSSION (Book I P-04 & P-05)
+        // ---------------------------------------------------------------------
+        if (isVacuumBar) {
+          // Stop-time vacuum drop: punchy downbeat hit, then sudden silence for beat 2–4!
+          events.push({ type: 'kick', partId: 'part2', voiceId: 'kick',  rawBeatOff: 0.00, durSec: 0.16, vel: 1.0,  label: 'STOP TOM' });
+          events.push({ type: 'hit',  partId: 'part2', voiceId: 'snare', rawBeatOff: 0.00, durSec: 0.14, vel: 0.92, label: 'STOP BLK' });
+          if (b === 11 || b === 85) {
+            events.push({ type: 'hit', partId: 'part2', voiceId: 'snare', rawBeatOff: 3.75, durSec: 0.09, vel: 0.88, label: 'SNAP BLK' });
+          }
+        } else if (sec.id === 'VOODOO_VACUUM') {
+          // Act V (Bars 60–73): fractured syncopated tom-kick + woodblock rimshots + Bar 73 roll
+          [0, 1.75, 2.5].forEach(off => {
+            if (b === 73 && off > 1.0) return;
+            events.push({ type: 'kick', partId: 'part2', voiceId: 'kick', rawBeatOff: off, durSec: 0.15, vel: 0.94, label: 'TOTEM TOM' });
+          });
+          [1.0, 2.25, 3.0, 3.5].forEach((off, idx) => {
+            if (b === 73) return;
+            events.push({ type: 'hit', partId: 'part2', voiceId: 'snare', rawBeatOff: off, durSec: 0.09, vel: 0.72 + (idx % 2) * 0.18, label: 'P-05 BLK' });
+          });
+          if (b === 73) {
+            [2.0, 2.5, 3.0, 3.25, 3.5, 3.75].forEach((off, idx) => {
+              events.push({ type: 'hit', partId: 'part2', voiceId: 'snare', rawBeatOff: off, durSec: 0.09, vel: 0.66 + idx * 0.06, label: 'ROLL BLK' });
+            });
+          }
+          for (let h = 0; h < 16; h++) {
+            if (h % 4 !== 2) continue;
+            events.push({ type: 'hit', partId: 'part2', voiceId: 'hat', rawBeatOff: h * 0.25, durSec: 0.10, vel: 0.78, label: 'OPN SHK' });
+          }
+        } else if (b === 95) {
+          events.push({ type: 'kick', partId: 'part2', voiceId: 'kick',  rawBeatOff: 0.0, durSec: 0.18, vel: 1.0,  label: 'END TOM' });
+          events.push({ type: 'hit',  partId: 'part2', voiceId: 'snare', rawBeatOff: 1.0, durSec: 0.16, vel: 0.95, label: 'END BLK' });
+        } else {
+          // Inviting four-on-the-floor ritual pulse with syncopated pickup on answer bars
+          [0, 1, 2, 3].forEach(off => {
+            events.push({ type: 'kick', partId: 'part2', voiceId: 'kick', rawBeatOff: off, durSec: 0.14, vel: 1.0, label: 'P-04 TOM' });
+          });
+          if (isAnswerBar) {
+            events.push({ type: 'kick', partId: 'part2', voiceId: 'kick', rawBeatOff: 3.75, durSec: 0.11, vel: 0.80, label: 'SYNC TOM' });
+          }
+          [1, 3].forEach(off => {
+            events.push({ type: 'hit', partId: 'part2', voiceId: 'snare', rawBeatOff: off, durSec: 0.12, vel: 0.88, label: 'P-05 BLK' });
+          });
+          if (isLastBarOfAct || localBar % 4 === 3) {
+            events.push({ type: 'hit', partId: 'part2', voiceId: 'snare', rawBeatOff: 3.50, durSec: 0.09, vel: 0.76, label: 'TICK BLK' });
+            events.push({ type: 'hit', partId: 'part2', voiceId: 'snare', rawBeatOff: 3.75, durSec: 0.09, vel: 0.88, label: 'TOCK BLK' });
+          }
+          for (let h = 0; h < 16; h++) {
+            const offbeat = (h % 4 === 2);
+            events.push({
+              type: 'hit', partId: 'part2', voiceId: 'hat', rawBeatOff: h * 0.25,
+              durSec: offbeat ? 0.11 : 0.032,
+              vel: offbeat ? 0.94 : 0.34,
+              label: offbeat ? 'OPN SHK' : 'P-04 SHK'
+            });
+          }
+        }
+
+        // ---------------------------------------------------------------------
+        // TRK 01: MS-10 TOTEM RUBBER BASS (Book I P-01)
+        // ---------------------------------------------------------------------
+        const r = chord.rootMidi;
+        if (b === 95) {
+          events.push({
+            type: 'note', partId: 'part1', voiceId: 'bass', rawBeatOff: 0.00, durBeats: 3.60,
+            midi: 38, cutoffHz: 340, envPeakHz: 1020, glideSec: 0.025, vel: 0.98, customRelease: 0.42, label: 'P-01 END'
+          });
+        } else if (isVacuumBar) {
+          events.push({
+            type: 'note', partId: 'part1', voiceId: 'bass', rawBeatOff: 0.00, durBeats: 0.30,
+            midi: r, cutoffHz: 260, envPeakHz: 940, glideSec: 0, vel: 1.0, cleanMonoBreath: true, label: 'P-01 STOP'
+          });
+          events.push({
+            type: 'note', partId: 'part1', voiceId: 'bass', rawBeatOff: 2.25, durBeats: 0.24,
+            midi: r + 12, cutoffHz: 420, envPeakHz: 1450, glideSec: 0.02, vel: 0.94, cleanMonoBreath: true, label: 'P-01 POP!'
+          });
+          events.push({
+            type: 'note', partId: 'part1', voiceId: 'bass', rawBeatOff: 3.00, durBeats: 0.24,
+            midi: r + 6, cutoffHz: 360, envPeakHz: 1260, glideSec: 0.02, vel: 0.92, cleanMonoBreath: true, label: 'P-01 #4'
+          });
+          events.push({
+            type: 'note', partId: 'part1', voiceId: 'bass', rawBeatOff: 3.50, durBeats: 0.35,
+            midi: r + 10, cutoffHz: 440, envPeakHz: 1480, glideSec: 0.025, vel: 0.96, cleanMonoBreath: true, label: 'P-01 SLIDE'
+          });
+        } else if (sec.id === 'EYEBALL_WALTZ') {
+          const cabaretBass = [
+            { off: 0.00, midi: r,      dur: 0.24, vel: 1.00, cut: 250, envPeak: 880,  glide: 0 },
+            { off: 0.75, midi: r + 12, dur: 0.20, vel: 0.86, cut: 360, envPeak: 1180, glide: 0.018 },
+            { off: 1.50, midi: r + 6,  dur: 0.22, vel: 0.92, cut: 290, envPeak: 960,  glide: 0.015 },
+            { off: 2.00, midi: r,      dur: 0.24, vel: 0.98, cut: 250, envPeak: 880,  glide: 0 },
+            { off: 2.75, midi: r + 12, dur: 0.20, vel: 0.88, cut: 380, envPeak: 1240, glide: 0.018 },
+            { off: 3.25, midi: r + 10, dur: 0.20, vel: 0.90, cut: 340, envPeak: 1120, glide: 0.015 },
+            { off: 3.50, midi: r + 12, dur: 0.22, vel: 0.95, cut: 400, envPeak: 1320, glide: 0.018 }
+          ];
+          cabaretBass.forEach(n => {
+            events.push({
+              type: 'note', partId: 'part1', voiceId: 'bass', rawBeatOff: n.off, durBeats: n.dur,
+              midi: n.midi, cutoffHz: n.cut, envPeakHz: n.envPeak, glideSec: n.glide,
+              vel: n.vel, cleanMonoBreath: true, label: 'P-01 WBL'
+            });
+          });
+        } else {
+          const funkSlapPattern = isAnswerBar
+            ? [
+                { off: 0.00, interval: 0,  dur: 0.16, vel: 1.00, cut: 260, peak: 920,  glide: 0 },
+                { off: 0.75, interval: 12, dur: 0.14, vel: 0.90, cut: 390, peak: 1340, glide: 0.012 },
+                { off: 1.25, interval: 6,  dur: 0.12, vel: 0.82, cut: 330, peak: 1120, glide: 0.010 },
+                { off: 1.50, interval: 7,  dur: 0.16, vel: 0.92, cut: 350, peak: 1180, glide: 0.012 },
+                { off: 2.00, interval: 0,  dur: 0.16, vel: 0.98, cut: 260, peak: 920,  glide: 0 },
+                { off: 2.50, interval: 10, dur: 0.14, vel: 0.88, cut: 370, peak: 1260, glide: 0.012 },
+                { off: 2.75, interval: 11, dur: 0.12, vel: 0.84, cut: 385, peak: 1300, glide: 0.010 },
+                { off: 3.00, interval: 12, dur: 0.16, vel: 0.95, cut: 420, peak: 1420, glide: 0.014 },
+                { off: 3.50, interval: 3,  dur: 0.16, vel: 0.90, cut: 310, peak: 1040, glide: 0.012 }
+              ]
+            : [
+                { off: 0.00, interval: 0,  dur: 0.16, vel: 1.00, cut: 260, peak: 920,  glide: 0 },
+                { off: 0.75, interval: 12, dur: 0.14, vel: 0.90, cut: 390, peak: 1340, glide: 0.012 },
+                { off: 1.50, interval: 10, dur: 0.16, vel: 0.92, cut: 360, peak: 1220, glide: 0.014 },
+                { off: 2.00, interval: 0,  dur: 0.16, vel: 0.98, cut: 260, peak: 920,  glide: 0 },
+                { off: 2.50, interval: 12, dur: 0.14, vel: 0.88, cut: 390, peak: 1340, glide: 0.012 },
+                { off: 3.00, interval: 6,  dur: 0.14, vel: 0.86, cut: 340, peak: 1160, glide: 0.012 },
+                { off: 3.25, interval: 7,  dur: 0.14, vel: 0.90, cut: 360, peak: 1220, glide: 0.010 },
+                { off: 3.50, interval: 12, dur: 0.16, vel: 0.96, cut: 420, peak: 1400, glide: 0.014 }
+              ];
+
+          funkSlapPattern.forEach(n => {
+            events.push({
+              type: 'note', partId: 'part1', voiceId: 'bass', rawBeatOff: n.off, durBeats: n.dur,
+              midi: r + n.interval, cutoffHz: n.cut, envPeakHz: n.peak, glideSec: n.glide,
+              vel: n.vel, cleanMonoBreath: true, label: 'P-01 SLP'
+            });
+          });
+        }
+
+        // ---------------------------------------------------------------------
+        // TRK 03: SQ-10 BAMBOO MARIMBA & CALLIOPE (Book II P-07 & P-09)
+        // ---------------------------------------------------------------------
+        if (b >= 4 && b < 95 && !isVacuumBar) {
+          if (sec.id === 'BAMBOO_STRUT' || sec.id === 'EXOTICA_RIOT') {
+            const strutMotif = [
+              chord.chord[3] + 12,
+              chord.chord[1] + 12,
+              chord.rootMidi + 24,
+              chord.chord[0] + 12,
+              chord.chord[2] + 24,
+              chord.chord[3] + 24
+            ];
+            const syncopatedGrid = [0.00, 0.50, 0.75, 1.25, 1.75, 2.00, 2.50, 3.00, 3.25, 3.75];
+            syncopatedGrid.forEach((off, idx) => {
+              const globalStep = (b * syncopatedGrid.length) + idx;
+              const sqStep = globalStep % effectiveSqSteps;
+              const midi = strutMotif[sqStep % strutMotif.length];
+              events.push({
+                type: 'note', partId: 'part3', voiceId: 'arp', rawBeatOff: off, durBeats: 0.14,
+                midi, cutoffHz: 2550, envPeakHz: 3800,
+                vel: (idx % 3 === 0) ? 0.94 : 0.80,
+                label: `P-07 S${sqStep + 1}`
+              });
+            });
+          } else {
+            const isCabaret = (sec.id === 'EYEBALL_WALTZ');
+            const polyPattern = [
+              chord.chord[0] + 12,
+              chord.chord[2] + 12,
+              chord.chord[1] + 12,
+              chord.chord[3] + 12,
+              chord.rootMidi + 24,
+              chord.chord[2] + 12,
+              chord.chord[0] + 24
+            ];
+            const detuneTable = isCabaret ? [-24, 19, -26, 17, -15, 23, -18] : [0, 0, 0, 0, 0, 0, 0];
+            const stepStride = isCabaret ? 0.5 : 0.25;
+            const numSteps = isCabaret ? 8 : 16;
+
+            for (let s = 0; s < numSteps; s++) {
+              const globalStep = (b * numSteps) + s;
+              const sqStep = globalStep % effectiveSqSteps;
+              const midi = polyPattern[sqStep % polyPattern.length];
+              const cents = detuneTable[sqStep % detuneTable.length];
+              events.push({
+                type: 'note', partId: 'part3', voiceId: 'arp', rawBeatOff: s * stepStride,
+                durBeats: isCabaret ? 0.28 : 0.14,
+                midi, cents,
+                cutoffHz: isCabaret ? 1850 : 2100,
+                envPeakHz: isCabaret ? 2900 : 3200,
+                glideSec: isCabaret ? 0.024 : 0,
+                vel: isCabaret ? 0.88 : 0.78,
+                label: isCabaret ? `P-09 EYE${sqStep + 1}` : `P-07 S${sqStep + 1}`
+              });
+            }
+          }
+        }
+
+        // ---------------------------------------------------------------------
+        // TRK 04 (part5): THROUGH-COMPOSED MS-10 AERIAL THEREMIN & VC-10 NOISE
+        // ---------------------------------------------------------------------
+        if (sec.id === 'JUNGLE_PULSE') {
+          if (localBar === 2 || localBar === 6) {
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 2.50, durBeats: 0.40, midi: 74, scoopFromMidi: 69, glideSec: 0.025, vibDepthHz: 8,  vel: 0.86, label: 'P-10 D5' });
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 3.00, durBeats: 0.80, midi: 81, scoopFromMidi: 74, glideSec: 0.045, vibDepthHz: 18, vel: 0.92, label: 'P-10 BIRD' });
+          } else if (localBar === 10) {
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 1.50, durBeats: 0.45, midi: 77, scoopFromMidi: 72, glideSec: 0.025, vibDepthHz: 10, vel: 0.88, label: 'P-10 F5' });
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 2.25, durBeats: 1.60, midi: 86, scoopFromMidi: 77, glideSec: 0.075, vibDepthHz: 24, vel: 0.96, label: 'P-10 D6!' });
+          } else if (localBar === 11) {
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.50, durBeats: 1.85, midi: 62, scoopFromMidi: 86, glideSec: 0.145, vibDepthHz: 14, vel: 0.94, label: 'P-10 DIVE' });
+          }
+        } else if (sec.id === 'SIREN_TOTEM') {
+          const pIdx = localBar % 14;
+          if (pIdx === 0) {
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 0.85, midi: 62, scoopFromMidi: 55, glideSec: 0.045, vibDepthHz: 10, vel: 0.92, label: 'P-10 D4' });
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 1.25, durBeats: 0.40, midi: 69, scoopFromMidi: 62, glideSec: 0.025, vibDepthHz: 8,  vel: 0.90, label: 'P-10 A4' });
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 1.75, durBeats: 0.40, midi: 74, scoopFromMidi: 69, glideSec: 0.025, vibDepthHz: 8,  vel: 0.92, label: 'P-10 D5' });
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 2.50, durBeats: 1.35, midi: 80, scoopFromMidi: 74, glideSec: 0.055, vibDepthHz: 20, vel: 0.96, label: 'P-10 Ab5' });
+          } else if (pIdx === 1) {
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.25, durBeats: 0.55, midi: 78, scoopFromMidi: 80, glideSec: 0.025, vibDepthHz: 10, vel: 0.90, label: 'P-10 Gb5' });
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 1.00, durBeats: 0.55, midi: 75, scoopFromMidi: 78, glideSec: 0.025, vibDepthHz: 10, vel: 0.90, label: 'P-10 Eb5' });
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 1.75, durBeats: 0.40, midi: 72, scoopFromMidi: 75, glideSec: 0.020, vibDepthHz: 8,  vel: 0.88, label: 'P-10 C5' });
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 2.25, durBeats: 1.55, midi: 71, scoopFromMidi: 72, glideSec: 0.045, vibDepthHz: 22, vel: 0.95, label: 'P-10 B4' });
+          } else if (pIdx === 2) {
+            [0.00, 0.375, 0.75, 1.125].forEach((off, k) => {
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: off, durBeats: 0.24, midi: k % 2 === 0 ? 82 : 79, scoopFromMidi: k % 2 === 0 ? 79 : 82, glideSec: 0.012, vibDepthHz: 4, vel: 0.90, label: 'P-10 TRILL' });
+            });
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 1.75, durBeats: 2.00, midi: 86, scoopFromMidi: 74, glideSec: 0.085, vibDepthHz: 26, vel: 0.98, label: 'P-10 D6!' });
+          } else if (pIdx === 4 || pIdx === 5) {
+            if (pIdx === 4) {
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.50, durBeats: 0.65, midi: 65, scoopFromMidi: 60, glideSec: 0.030, vibDepthHz: 10, vel: 0.90, label: 'P-10 F4' });
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 1.50, durBeats: 0.65, midi: 77, scoopFromMidi: 65, glideSec: 0.040, vibDepthHz: 14, vel: 0.94, label: 'P-10 F5' });
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 2.50, durBeats: 1.35, midi: 89, scoopFromMidi: 77, glideSec: 0.060, vibDepthHz: 24, vel: 0.98, label: 'P-10 F6!' });
+            } else {
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 1.40, midi: 88, cents: -28, scoopFromMidi: 89, glideSec: 0.055, vibDepthHz: 22, vel: 0.94, label: 'P-10 BEND' });
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 1.75, durBeats: 1.95, midi: 74, scoopFromMidi: 88, glideSec: 0.115, vibDepthHz: 20, vel: 0.92, label: 'P-10 GLIDE' });
+            }
+          } else if (pIdx >= 7 && pIdx <= 10) {
+            if (pIdx === 7 || pIdx === 9) {
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.75, durBeats: 0.35, midi: 81, scoopFromMidi: 76, glideSec: 0.020, vibDepthHz: 8, vel: 0.92, label: 'P-10 CALL' });
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 1.50, durBeats: 0.35, midi: 84, scoopFromMidi: 81, glideSec: 0.020, vibDepthHz: 8, vel: 0.94, label: 'P-10 CALL' });
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 2.25, durBeats: 0.35, midi: 80, scoopFromMidi: 84, glideSec: 0.020, vibDepthHz: 8, vel: 0.92, label: 'P-10 CALL' });
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 3.00, durBeats: 0.85, midi: 86, scoopFromMidi: 74, glideSec: 0.045, vibDepthHz: 22, vel: 0.96, label: 'P-10 D6' });
+            } else {
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.25, durBeats: 1.65, midi: 79, scoopFromMidi: 86, glideSec: 0.070, vibDepthHz: 20, vel: 0.92, label: 'P-10 G5' });
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 2.50, durBeats: 1.25, midi: 72, scoopFromMidi: 79, glideSec: 0.055, vibDepthHz: 18, vel: 0.90, label: 'P-10 C5' });
+            }
+          } else if (pIdx === 12 || pIdx === 13) {
+            if (pIdx === 12) {
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 1.85, midi: 74, scoopFromMidi: 62, glideSec: 0.080, vibDepthHz: 16, vel: 0.92, label: 'P-10 RISE' });
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 2.00, durBeats: 1.85, midi: 81, scoopFromMidi: 74, glideSec: 0.080, vibDepthHz: 22, vel: 0.95, label: 'P-10 RISE' });
+            } else {
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 3.60, midi: 91, scoopFromMidi: 81, glideSec: 0.140, vibDepthHz: 28, vel: 0.98, label: 'P-10 G6!' });
+            }
+          }
+        } else if (sec.id === 'BAMBOO_STRUT') {
+          if (isVacuumBar) {
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.75, durBeats: 1.25, midi: 88, scoopFromMidi: 69, glideSec: 0.065, vibDepthHz: 22, vel: 0.95, label: 'P-10 E6!' });
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 2.25, durBeats: 1.45, midi: 74, scoopFromMidi: 88, glideSec: 0.095, vibDepthHz: 18, vel: 0.92, label: 'P-10 DIVE' });
+          } else if (localBar % 3 === 1) {
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 1.50, durBeats: 0.42, midi: 81, scoopFromMidi: 74, glideSec: 0.025, vibDepthHz: 10, vel: 0.88, label: 'P-10 STAB' });
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 2.25, durBeats: 0.65, midi: 84, scoopFromMidi: 81, glideSec: 0.025, vibDepthHz: 16, vel: 0.92, label: 'P-10 C6' });
+          } else if (localBar % 3 === 2) {
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 2.50, durBeats: 0.42, midi: 86, scoopFromMidi: 79, glideSec: 0.030, vibDepthHz: 12, vel: 0.90, label: 'P-10 D6' });
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 3.00, durBeats: 0.85, midi: 74, scoopFromMidi: 86, glideSec: 0.060, vibDepthHz: 18, vel: 0.92, label: 'P-10 DROP' });
+          }
+        } else if (sec.id === 'EYEBALL_WALTZ') {
+          if (isVacuumBar) {
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 1.00, durBeats: 2.50, midi: 89, cents: 24, scoopFromMidi: 71, glideSec: 0.110, vibDepthHz: 26, vel: 0.96, label: 'P-10 WOBBLE' });
+          } else if (localBar % 4 === 0 || localBar % 4 === 2) {
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 0.68, midi: 77, scoopFromMidi: 72, glideSec: 0.045, vibDepthHz: 16, vel: 0.90, label: 'P-10 F5' });
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.75, durBeats: 0.68, midi: 83, scoopFromMidi: 77, glideSec: 0.055, vibDepthHz: 18, vel: 0.92, label: 'P-10 B5' });
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 1.50, durBeats: 0.42, midi: 84, scoopFromMidi: 83, glideSec: 0.020, vibDepthHz: 10, vel: 0.90, label: 'P-10 C6' });
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 2.25, durBeats: 1.50, midi: 79, scoopFromMidi: 84, glideSec: 0.075, vibDepthHz: 24, vel: 0.94, label: 'P-10 G5' });
+          } else {
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 0.35, midi: 81, scoopFromMidi: 79, glideSec: 0.020, vibDepthHz: 8,  vel: 0.88, label: 'P-10 A5' });
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.50, durBeats: 0.35, midi: 84, scoopFromMidi: 81, glideSec: 0.020, vibDepthHz: 8,  vel: 0.90, label: 'P-10 C6' });
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 1.00, durBeats: 0.65, midi: 88, scoopFromMidi: 84, glideSec: 0.045, vibDepthHz: 20, vel: 0.94, label: 'P-10 E6' });
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 2.00, durBeats: 1.75, midi: 77, scoopFromMidi: 88, glideSec: 0.095, vibDepthHz: 26, vel: 0.95, label: 'P-10 SWOOP' });
+          }
+        } else if (sec.id === 'VOODOO_VACUUM') {
+          const dropFreqs = [630, 2000, 1000, 3150, 800, 2500, 1250, 4000];
+          [0.25, 0.75, 1.50, 2.25, 2.75, 3.50].forEach((off, idx) => {
+            const hz = dropFreqs[(b * 6 + idx) % dropFreqs.length];
+            events.push({ type: 'vcNoise', partId: 'part5', voiceId: 'vcNoise', rawBeatOff: off, durBeats: 0.14, centerHz: hz, vel: 0.88, label: `V-05 ${hz}` });
+          });
+          if (localBar % 3 === 1) {
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.50, durBeats: 0.85, midi: 86, scoopFromMidi: 74, glideSec: 0.055, vibDepthHz: 20, vel: 0.92, label: 'P-10 D6' });
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 1.75, durBeats: 1.65, midi: 69, scoopFromMidi: 86, glideSec: 0.110, vibDepthHz: 18, vel: 0.90, label: 'P-10 DIVE' });
+          }
+        } else if (sec.id === 'EXOTICA_RIOT') {
+          if (b === 95) {
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 3.40, midi: 86, scoopFromMidi: 74, glideSec: 0.085, vibDepthHz: 28, vel: 0.98, label: 'P-10 FINALE' });
+          } else if (isVacuumBar) {
+            events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.50, durBeats: 2.80, midi: 91, scoopFromMidi: 62, glideSec: 0.130, vibDepthHz: 28, vel: 0.98, label: 'P-10 G6!' });
+          } else {
+            events.push({ type: 'vcNoise', partId: 'part5', voiceId: 'vcNoise', rawBeatOff: 1.75, durBeats: 0.12, centerHz: isAnswerBar ? 3150 : 2000, vel: 0.84, label: 'V-05 DRP' });
+            events.push({ type: 'vcNoise', partId: 'part5', voiceId: 'vcNoise', rawBeatOff: 3.75, durBeats: 0.12, centerHz: isAnswerBar ? 4000 : 2500, vel: 0.88, label: 'V-05 DRP' });
+
+            const triPhase = localBar % 3;
+            if (triPhase === 0) {
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 0.42, midi: 74, scoopFromMidi: 69, glideSec: 0.025, vibDepthHz: 8,  vel: 0.92, label: 'P-10 D5' });
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.75, durBeats: 0.38, midi: 77, scoopFromMidi: 74, glideSec: 0.020, vibDepthHz: 8,  vel: 0.90, label: 'P-10 F5' });
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 1.50, durBeats: 0.90, midi: 81, scoopFromMidi: 77, glideSec: 0.030, vibDepthHz: 18, vel: 0.96, label: 'P-10 A5' });
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 2.75, durBeats: 0.95, midi: 84, scoopFromMidi: 81, glideSec: 0.040, vibDepthHz: 20, vel: 0.96, label: 'P-10 C6' });
+            } else if (triPhase === 1) {
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 0.65, midi: 80, scoopFromMidi: 84, glideSec: 0.030, vibDepthHz: 12, vel: 0.94, label: 'P-10 Ab5' });
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 1.00, durBeats: 0.65, midi: 78, scoopFromMidi: 80, glideSec: 0.025, vibDepthHz: 14, vel: 0.92, label: 'P-10 Gb5' });
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 2.00, durBeats: 1.75, midi: 86, scoopFromMidi: 75, glideSec: 0.065, vibDepthHz: 24, vel: 0.98, label: 'P-10 D6!' });
+            } else {
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 0.35, midi: 83, scoopFromMidi: 86, glideSec: 0.018, vibDepthHz: 8,  vel: 0.92, label: 'P-10 B5' });
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 0.50, durBeats: 0.35, midi: 86, scoopFromMidi: 83, glideSec: 0.018, vibDepthHz: 8,  vel: 0.94, label: 'P-10 D6' });
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 1.00, durBeats: 1.25, midi: 89, scoopFromMidi: 86, glideSec: 0.045, vibDepthHz: 26, vel: 0.98, label: 'P-10 F6!' });
+              events.push({ type: 'theremin', partId: 'part5', voiceId: 'theremin', rawBeatOff: 2.50, durBeats: 1.25, midi: 74, scoopFromMidi: 89, glideSec: 0.085, vibDepthHz: 18, vel: 0.94, label: 'P-10 SWOOP' });
+            }
+          }
+        }
+
+        events.forEach((ev, i) => {
+          ev.domKey = `bar${b}_ev${i}`;
+        });
+        BAR_EVENTS.push(events);
+      }
+    }
+
+    // =========================================================================
+    // 5. LOOKAHEAD SCHEDULER & KORG HARDWARE DISPATCHER
+    // =========================================================================
+    let isPlaying = false, loopEnabled = true, viewMode = '4BAR', displayedSystem = 0;
+    let anchorAudioTime = 0, anchorSongTime = 0, nextBarIndex = 0;
+    let schedulerTimer = null, rafId = null, visualQueue = [], endTimer = null;
+    function clearEndTimer() { if (endTimer) { clearTimeout(endTimer); endTimer = null; } }
+
+    function scheduleWindow() {
+      if (!isPlaying || !ac) return;
+      const now = ac.currentTime;
+      const currentSongTime = anchorSongTime + (now - anchorAudioTime);
+      const horizon = currentSongTime + 0.25;
+
+      while (nextBarIndex * BAR_SEC < horizon) {
+        const atPassBoundary = nextBarIndex >= TOTAL_BARS && nextBarIndex % TOTAL_BARS === 0;
+        if (atPassBoundary && (!loopEnabled || autoStopAtLoopEnd)) {
+          if (!endTimer) {
+            const stopDelay = Math.max(0, (nextBarIndex * BAR_SEC - currentSongTime) * 1000);
+            endTimer = setTimeout(() => {
+              endTimer = null;
+              if (!isPlaying || (loopEnabled && !autoStopAtLoopEnd)) return;
+              const autoP = autoStopAtLoopEnd;
+              autoStopAtLoopEnd = false;
+              if (autoP && isRecording) stopDawRecording();
+              stopPlayback();
+            }, stopDelay);
+          }
+          break;
+        }
+
+        const barIdx = nextBarIndex % TOTAL_BARS;
+        const barStartSongTime = nextBarIndex * BAR_SEC;
+        const events = BAR_EVENTS[barIdx];
+
+        for (let i = 0; i < events.length; i++) {
+          const ev = events[i];
+          const evSongTime = barStartSongTime + ev.rawBeatOff * BEAT_SEC;
+          if (evSongTime >= anchorSongTime - 1e-6) {
+            triggerAudioEvent(ev, Math.max(now, anchorAudioTime + (evSongTime - anchorSongTime)));
+          }
+        }
+        nextBarIndex++;
+      }
+    }
+
+    function triggerAudioEvent(ev, at) {
+      const v = tracks[ev.voiceId];
+      if (!v) return;
+      const durSec = ev.durSec || (ev.durBeats * BEAT_SEC);
+      const vel = ev.vel !== undefined ? ev.vel : 1.0;
+
+      if (ev.type === 'note') {
+        const scaleMult = (v.P.s[0] === 32 ? 0.25 : (v.P.s[0] === 16 ? 0.5 : 1));
+        const freq = midiToFreq(ev.midi, ev.cents || 0) * scaleMult;
+        if (v.osc) {
+          v.osc.frequency.cancelScheduledValues(at);
+          if (ev.glideSec && ev.glideSec > 0) v.osc.frequency.setTargetAtTime(freq, at, ev.glideSec);
+          else v.osc.frequency.setValueAtTime(freq, at);
+        }
+        if (v.osc2) {
+          v.osc2.frequency.cancelScheduledValues(at);
+          if (ev.voiceId === 'bass') {
+            if (ev.glideSec && ev.glideSec > 0) v.osc2.frequency.setTargetAtTime(freq * 0.5, at, ev.glideSec);
+            else v.osc2.frequency.setValueAtTime(freq * 0.5, at);
+          } else if (ev.voiceId === 'arp') {
+            if (ev.glideSec && ev.glideSec > 0) v.osc2.frequency.setTargetAtTime(freq * 1.414, at, ev.glideSec);
+            else v.osc2.frequency.setValueAtTime(freq * 1.414, at);
+          }
+        }
+        if (ev.cutoffHz && v.vcf) {
+          v.vcf.frequency.cancelScheduledValues(at);
+          if (ev.envPeakHz) {
+            v.vcf.frequency.setValueAtTime(computeKorg35Cutoff(ev.envPeakHz), at);
+            v.vcf.frequency.exponentialRampToValueAtTime(computeKorg35Cutoff(ev.cutoffHz), at + Math.min(0.11, durSec * 0.85));
+          } else {
+            v.vcf.frequency.setTargetAtTime(computeKorg35Cutoff(ev.cutoffHz), at, 0.015);
+          }
+        }
+        schedOn(v, at, vel, Boolean(ev.cleanMonoBreath), ev.customAttack !== undefined ? ev.customAttack : null);
+        schedOff(v, at + durSec, ev.customRelease !== undefined ? ev.customRelease : null);
+      } else if (ev.type === 'theremin') {
+        const targetFreq = midiToFreq(ev.midi, ev.cents || 0);
+        const glide = ev.glideSec || 0.035;
+        if (v.osc) {
+          v.osc.frequency.cancelScheduledValues(at);
+          if (ev.scoopFromMidi) {
+            v.osc.frequency.setValueAtTime(midiToFreq(ev.scoopFromMidi, 0), at);
+          }
+          v.osc.frequency.setTargetAtTime(targetFreq, at, glide);
+        }
+        if (v.osc2) {
+          v.osc2.frequency.cancelScheduledValues(at);
+          if (ev.scoopFromMidi) {
+            v.osc2.frequency.setValueAtTime(midiToFreq(ev.scoopFromMidi, 0), at);
+          }
+          v.osc2.frequency.setTargetAtTime(targetFreq, at, glide);
+        }
+        if (v.vibGain) {
+          const depth = ev.vibDepthHz || 14;
+          hold(v.vibGain.gain, at);
+          v.vibGain.gain.setValueAtTime(1.0, at);
+          v.vibGain.gain.setTargetAtTime(depth, at + Math.min(0.10, durSec * 0.25), 0.06);
+        }
+        schedOn(v, at, vel, false, 0.022);
+        schedOff(v, at + durSec, 0.09);
+      } else if (ev.type === 'vcNoise') {
+        triggerVc10SpectralDrop(v, ev.centerHz || 2000, at);
+        schedOn(v, at, vel, false, 0.004);
+        schedOff(v, at + durSec, 0.05);
+      } else if (ev.type === 'kick') {
+        if (v.osc) {
+          v.osc.frequency.cancelScheduledValues(at);
+          v.osc.frequency.setValueAtTime(138, at);
+          v.osc.frequency.exponentialRampToValueAtTime(46, at + 0.048);
+        }
+        schedOn(v, at, vel);
+        schedOff(v, at + durSec);
+      } else if (ev.type === 'hit') {
+        schedOn(v, at, vel);
+        schedOff(v, at + durSec);
+      }
+
+      if (!document.hidden) visualQueue.push({
+        time: at,
+        offTime: at + durSec,
+        partId: ev.partId,
+        voiceId: ev.voiceId,
+        label: ev.label,
+        domKey: ev.domKey
+      });
+    }
+
+    function silenceAllVoices() {
+      if (!ac) return;
+      const now = ac.currentTime;
+      Object.values(tracks).forEach(v => {
+        if (v && v.eg) {
+          v.eg.offset.cancelScheduledValues(now);
+          v.eg.offset.setValueAtTime(0, now);
+        }
+      });
+      visualQueue = [];
+      const trigLed = document.getElementById('sqTrigLed');
+      if (trigLed) { trigLed.style.opacity = ''; trigLed.style.backgroundColor = ''; trigLed.style.boxShadow = ''; }
+      document.querySelectorAll('.score-note.active').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('[data-voice-led]').forEach(el => {
+        el.style.opacity = '0.25';
+        el.style.boxShadow = 'none';
+      });
+    }
+
+    function startPlayback() {
+      initAudioEngine();
+      if (ac.state === 'suspended') ac.resume();
+      if (isPlaying) {
+        const elapsed = Math.max(0, ac.currentTime - anchorAudioTime);
+        anchorSongTime = (anchorSongTime + elapsed) % LOOP_SEC;
+        isPlaying = false;
+        clearInterval(schedulerTimer);
+        clearEndTimer();
+        silenceAllVoices();
+        updateTransportUI();
+        return;
+      }
+      isPlaying = true;
+      anchorAudioTime = ac.currentTime + 0.03;
+      nextBarIndex = Math.floor(anchorSongTime / BAR_SEC);
+      clearInterval(schedulerTimer);
+      clearEndTimer();
+      scheduleWindow();
+      schedulerTimer = setInterval(scheduleWindow, 25);
+      updateTransportUI();
+      if (!rafId) rafId = requestAnimationFrame(renderLoop);
+    }
+
+    function stopPlayback() {
+      isPlaying = false;
+      autoStopAtLoopEnd = false;
+      clearInterval(schedulerTimer);
+      clearEndTimer();
+      anchorSongTime = 0;
+      nextBarIndex = 0;
+      silenceAllVoices();
+      if (isRecording) stopDawRecording();
+      updateTransportUI();
+      updatePositionUI(0);
+    }
+
+    function seekToBar(barIdx) {
+      const clamped = Math.max(0, Math.min(TOTAL_BARS - 1, barIdx));
+      anchorSongTime = clamped * BAR_SEC;
+      nextBarIndex = clamped;
+      clearEndTimer();
+      if (isPlaying && ac) {
+        silenceAllVoices();
+        anchorAudioTime = ac.currentTime + 0.02;
+        scheduleWindow();
+      } else {
+        updatePositionUI(anchorSongTime);
+        updateTransportUI();
+      }
+    }
+    window.seekToBar = seekToBar;
+
+    // =========================================================================
+    // 6. UI BUILDERS & LIVE RENDERING
+    // =========================================================================
+    function buildVoiceLedGrid() {
+      const grid = document.getElementById('voiceLedGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      Object.entries(PATCH_DATA).forEach(([id, data]) => {
+        const item = document.createElement('div');
+        item.className = 'bg-midnight-950 border border-midnight-850 px-2 py-1.5 rounded-sm flex items-center gap-2';
+        item.innerHTML = `<span data-voice-led="${id}" class="w-2 h-2 rounded-full shrink-0 transition-opacity" style="background: rgb(${data.rgb}); opacity: 0.25;"></span><span class="text-plum-200 truncate">${data.name}</span>`;
+        grid.appendChild(item);
+      });
+    }
+
+    function buildBarMatrix() {
+      const matrix = document.getElementById('barMatrix');
+      if (!matrix) return;
+      matrix.innerHTML = '';
+      for (let b = 0; b < TOTAL_BARS; b++) {
+        const sec = getSectionForBar(b), chord = getChordForBar(b);
+        const cell = document.createElement('button');
+        cell.id = `barCell_${b}`;
+        cell.dataset.bar = b;
+        cell.title = `Bar ${String(b + 1).padStart(2, '0')} (${sec.label} · ${chord.name})`;
+        cell.className = 'relative text-left bg-midnight-950 border border-midnight-850 hover:border-gold-500/70 px-1.5 py-1 rounded-sm transition-all overflow-hidden cursor-pointer group';
+        cell.innerHTML = `
+          <div id="barFill_${b}" class="absolute inset-y-0 left-0 bg-gold-500/20 pointer-events-none" style="width: 0%"></div>
+          <div class="relative z-10 flex items-center justify-between font-mono text-[9px] leading-tight">
+            <span class="text-plum-400 group-hover:text-plum-200 font-bold">${String(b + 1).padStart(2, '0')}</span>
+            <span class="text-[8px] text-plum-300 truncate ml-1">${sec.short}</span>
+          </div>
+          <div class="relative z-10 font-mono text-[10px] font-bold text-plum-200 truncate leading-tight mt-0.5">${chord.name}</div>`;
+        cell.addEventListener('click', () => seekToBar(b));
+        matrix.appendChild(cell);
+      }
+    }
+
+    function buildPartitureShell() {
+      const container = document.getElementById('partitureBody');
+      if (!container) return;
+      container.innerHTML = '';
+      SCORE_PARTS.forEach(part => {
+        const row = document.createElement('div');
+        row.id = `partRow_${part.id}`;
+        row.className = 'grid grid-cols-1 lg:grid-cols-12 bg-midnight-900/60 hover:bg-midnight-900/90 transition-all';
+        row.innerHTML = `
+          <div class="lg:col-span-3 p-3 sm:px-4 sm:py-2.5 border-b lg:border-b-0 lg:border-r border-midnight-850 flex flex-col justify-between gap-1.5 bg-midnight-950/60">
+            <div class="flex items-start justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2 font-mono text-[10px] tracking-widest">
+                  <span class="font-bold shrink-0" style="color: ${part.color}">${part.num}</span>
+                  <span class="text-plum-500 shrink-0">//</span>
+                  <span id="partStatus_${part.id}" class="text-plum-300 font-bold truncate">READY</span>
+                </div>
+                <h3 class="font-mono text-sm font-bold text-white tracking-wide mt-0.5 truncate">${part.title}</h3>
+                <p class="font-mono text-[10px] text-plum-300 truncate">${part.spec}</p>
+              </div>
+              <div class="flex items-center gap-1 font-mono text-[10px] shrink-0">
+                <button type="button" data-mute="${part.id}" aria-pressed="false" aria-label="Mute ${part.title}" class="w-6 h-6 rounded-sm border border-midnight-850 bg-midnight-900 text-plum-300 hover:text-white font-bold cursor-pointer transition-colors" title="Mute Part">M</button>
+                <button type="button" data-solo="${part.id}" aria-pressed="false" aria-label="Solo ${part.title}" class="w-6 h-6 rounded-sm border border-midnight-850 bg-midnight-900 text-plum-300 hover:text-white font-bold cursor-pointer transition-colors" title="Solo Part">S</button>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 pt-0.5">
+              <span class="font-mono text-[9px] text-plum-400 uppercase">LVL</span>
+              <input type="range" data-gain="${part.id}" aria-label="${part.title} level" min="0" max="1.5" step="0.01" value="1" class="vw-slider w-full">
+            </div>
+          </div>
+          <div class="lg:col-span-9 relative overflow-x-auto overflow-y-hidden bg-midnight-950/30">
+            <div id="lane_${part.id}" class="relative h-24 min-w-[600px] select-none"></div>
+          </div>`;
+        container.appendChild(row);
+      });
+
+      container.querySelectorAll('[data-mute]').forEach(b => b.addEventListener('click', () => {
+        const p = SCORE_PARTS.find(x => x.id === b.dataset.mute);
+        p.muted = !p.muted;
+        b.classList.toggle('bg-red-600', p.muted);
+        b.classList.toggle('text-white', p.muted);
+        b.classList.toggle('text-plum-300', !p.muted);
+        b.classList.toggle('bg-midnight-900', !p.muted);
+        b.setAttribute('aria-pressed', String(p.muted));
+        applyMixerGains();
+      }));
+
+      container.querySelectorAll('[data-solo]').forEach(b => b.addEventListener('click', () => {
+        const p = SCORE_PARTS.find(x => x.id === b.dataset.solo);
+        p.solo = !p.solo;
+        b.classList.toggle('bg-gold-500', p.solo);
+        b.classList.toggle('text-midnight-950', p.solo);
+        b.classList.toggle('text-plum-300', !p.solo);
+        b.classList.toggle('bg-midnight-900', !p.solo);
+        b.setAttribute('aria-pressed', String(p.solo));
+        applyMixerGains();
+      }));
+
+      container.querySelectorAll('[data-gain]').forEach(s => s.addEventListener('input', () => {
+        const p = SCORE_PARTS.find(x => x.id === s.dataset.gain);
+        p.gain = parseFloat(s.value);
+        applyMixerGains();
+      }));
+    }
+
+    function renderScoreLanes(systemIdx) {
+      displayedSystem = systemIdx;
+      const barsPerView = viewMode === '4BAR' ? 4 : (viewMode === '16BAR' ? 16 : TOTAL_BARS);
+      const startBar = viewMode === '96BAR' ? 0 : systemIdx * barsPerView;
+      const numBars = barsPerView;
+      const sec = getSectionForBar(startBar);
+      const sysBadge = document.getElementById('systemBadge');
+      if (sysBadge) {
+        if (viewMode === '4BAR') {
+          sysBadge.textContent = `SYSTEM ${String(systemIdx + 1).padStart(2, '0')} // BARS ${String(startBar + 1).padStart(2, '0')}–${String(startBar + 4).padStart(2, '0')} (${sec.label})`;
+        } else if (viewMode === '16BAR') {
+          sysBadge.textContent = `WINDOW ${systemIdx + 1} // BARS ${String(startBar + 1).padStart(2, '0')}–${String(startBar + 16).padStart(2, '0')} (${sec.label})`;
+        } else {
+          sysBadge.textContent = `FULL SCORE // BARS 01–96 (ALL 6 ASYMMETRIC ACTS · 03:05)`;
+        }
+      }
+
+      SCORE_PARTS.forEach(part => {
+        const lane = document.getElementById(`lane_${part.id}`);
+        if (!lane) return;
+        lane.style.width = viewMode === '96BAR' ? '6400px' : (viewMode === '16BAR' ? '1400px' : '100%');
+        let html = '';
+
+        for (let i = 0; i < numBars; i++) {
+          const b = startBar + i, leftPct = (i / numBars) * 100, widthPct = (1 / numBars) * 100, chord = getChordForBar(b);
+          html += `<div onclick="seekToBar(${b})" class="absolute inset-y-0 border-r border-midnight-850 hover:bg-gold-500/5 cursor-pointer transition-colors" style="left:${leftPct}%; width:${widthPct}%;">
+            <div class="flex items-center justify-between px-1.5 pt-1 font-mono text-[10px]">
+              <span class="text-plum-400 font-bold">${viewMode === '4BAR' ? 'BAR ' : ''}${String(b + 1).padStart(2, '0')}</span>
+              <span class="text-gold-400/85 font-bold">${chord.name}</span>
+            </div>
+            <div class="absolute inset-x-0 top-6 bottom-2 flex flex-col justify-between opacity-15 pointer-events-none">
+              <div class="border-t border-plum-400"></div>
+              <div class="border-t border-plum-400"></div>
+              <div class="border-t border-plum-400"></div>
+              <div class="border-t border-plum-400"></div>
+              <div class="border-t border-plum-400"></div>
+            </div>
+            <div class="absolute inset-y-6 left-1/4 border-l border-dashed border-midnight-850/70 pointer-events-none"></div>
+            <div class="absolute inset-y-6 left-2/4 border-l border-dashed border-midnight-850/70 pointer-events-none"></div>
+            <div class="absolute inset-y-6 left-3/4 border-l border-dashed border-midnight-850/70 pointer-events-none"></div>
+          </div>`;
+        }
+
+        for (let i = 0; i < numBars; i++) {
+          const b = startBar + i, barLeftPct = (i / numBars) * 100, barWidthPct = (1 / numBars) * 100;
+          const evs = BAR_EVENTS[b].filter(e => e.partId === part.id && e.domKey);
+          if (evs.length === 0) {
+            html += `<div class="absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center pointer-events-none px-2" style="left:${barLeftPct}%; width:${barWidthPct}%;"><span class="font-mono text-[9px] text-plum-500 tracking-widest uppercase">REST</span></div>`;
+            continue;
+          }
+          evs.forEach(ev => {
+            const evLeftPct = barLeftPct + (ev.rawBeatOff / 4) * barWidthPct;
+            const durBeats = ev.durBeats || (ev.durSec ? ev.durSec / BEAT_SEC : 0.25);
+            const evWidthPct = Math.max(0.18, (durBeats / 4) * barWidthPct * 0.94);
+
+            let topPct = 34, heightPct = 52;
+            if (part.id === 'part1') {
+              const norm = Math.max(0, Math.min(1, (ev.midi - 32) / 26));
+              topPct = Math.round(70 - norm * 42);
+              heightPct = 21;
+            } else if (part.id === 'part3') {
+              const norm = Math.max(0, Math.min(1, (ev.midi - 68) / 30));
+              topPct = Math.round(70 - norm * 42);
+              heightPct = 21;
+            } else if (part.id === 'part2') {
+              topPct = ev.voiceId === 'kick' ? 68 : (ev.voiceId === 'snare' ? 48 : 28);
+              heightPct = 20;
+            } else if (part.id === 'part5') {
+              if (ev.type === 'vcNoise') {
+                topPct = 24;
+                heightPct = 20;
+              } else {
+                const norm = Math.max(0, Math.min(1, (ev.midi - 60) / 32));
+                topPct = Math.round(72 - norm * 44);
+                heightPct = 22;
+              }
+            }
+
+            html += `<div id="note_${ev.domKey}" style="left:${evLeftPct}%; width:${evWidthPct}%; top:${topPct}%; height:${heightPct}%; background: rgba(${part.rgb}, 0.26); border-color: rgba(${part.rgb}, 0.88); --note-glow: rgba(${part.rgb}, 0.9);" class="score-note absolute border rounded-[2px] pointer-events-none"></div>`;
+          });
+        }
+
+        html += `<div id="playhead_${part.id}" class="absolute inset-y-0 w-0.5 bg-gold-400 shadow-[0_0_12px_#a3e635] z-20 pointer-events-none" style="left: 0%;"><div class="w-2 h-2 -ml-[3px] bg-gold-400 rotate-45"></div></div>`;
+        lane.innerHTML = html;
+      });
+    }
+
+    let lastBarShown = -1, lastBeatTxt = '', lastClockTxt = '';
+    function updatePositionUI(songTime) {
+      const posInLoop = ((songTime % LOOP_SEC) + LOOP_SEC) % LOOP_SEC;
+      const barIdx = Math.min(TOTAL_BARS - 1, Math.floor(posInLoop / BAR_SEC));
+      const barProgress = (posInLoop - barIdx * BAR_SEC) / BAR_SEC;
+      const beatFloat = barProgress * 4;
+      const beatNum = Math.floor(beatFloat) + 1;
+      const subNum = Math.floor((beatFloat % 1) * 4) + 1;
+      const sec = getSectionForBar(barIdx);
+      const chord = getChordForBar(barIdx);
+
+      const barChanged = barIdx !== lastBarShown;
+      if (barChanged) {
+        document.getElementById('hudBar').innerHTML = `${String(barIdx + 1).padStart(2, '0')}<span class="text-plum-600 text-xs">/96</span>`;
+        document.getElementById('hudSection').textContent = sec.label;
+        document.getElementById('hudChord').textContent = chord.name;
+        lastBarShown = barIdx;
+      }
+      const beatTxt = `${beatNum}.${subNum}`;
+      if (beatTxt !== lastBeatTxt) { document.getElementById('hudBeat').textContent = beatTxt; lastBeatTxt = beatTxt; }
+      const clockTxt = `${formatClock(posInLoop)} / ${formatClock(LOOP_SEC)}`;
+      if (clockTxt !== lastClockTxt) { document.getElementById('elapsedClock').textContent = clockTxt; lastClockTxt = clockTxt; }
+
+      const sqLed = document.getElementById('sqTrigLed');
+      if (sqLed && isPlaying) {
+        const defaultActSteps = sec.id === 'EYEBALL_WALTZ' ? 7 : (sec.id === 'EXOTICA_RIOT' ? 11 : 5);
+        const activeSteps = sq10UserLocked ? sq10ResetSteps : defaultActSteps;
+        const globalStep = (barIdx * 16) + Math.floor(barProgress * 16);
+        const isResetStep = (globalStep % activeSteps) === 0;
+        const trigPrimary = '#a3e635';
+        const trigAlert = '#f43f5e';
+        sqLed.style.opacity = (subNum % 2 === 1) ? '1' : '0.35';
+        sqLed.style.backgroundColor = isResetStep ? trigAlert : trigPrimary;
+        sqLed.style.boxShadow = isResetStep ? `0 0 10px ${trigAlert}` : `0 0 8px ${trigPrimary}`;
+      }
+
+      if (barChanged) document.querySelectorAll('.sec-pill').forEach(pill => {
+        const start = parseInt(pill.dataset.jump, 10);
+        const pillSec = getSectionForBar(start);
+        const isCurrent = barIdx >= pillSec.startBar && barIdx <= pillSec.endBar;
+        pill.className = `sec-pill px-2 py-1 rounded-sm border uppercase tracking-wider cursor-pointer transition-colors ${
+          isCurrent
+            ? 'border-gold-500 bg-gold-500/20 text-gold-400 font-bold'
+            : 'border-plum-900 bg-midnight-950 text-plum-300 hover:border-gold-500/50 hover:text-white'
+        }`;
+      });
+
+      for (let b = barChanged ? 0 : barIdx; b < (barChanged ? TOTAL_BARS : barIdx + 1); b++) {
+        const cell = document.getElementById(`barCell_${b}`), fill = document.getElementById(`barFill_${b}`);
+        if (!cell || !fill) continue;
+        if (b < barIdx) {
+          cell.classList.remove('border-gold-500', 'ring-1', 'ring-gold-500/50');
+          cell.classList.add('border-midnight-850');
+          fill.style.width = '100%';
+        } else if (b === barIdx) {
+          cell.classList.add('border-gold-500', 'ring-1', 'ring-gold-500/50');
+          cell.classList.remove('border-midnight-850');
+          fill.style.width = `${(barProgress * 100).toFixed(1)}%`;
+        } else {
+          cell.classList.remove('border-gold-500', 'ring-1', 'ring-gold-500/50');
+          cell.classList.add('border-midnight-850');
+          fill.style.width = '0%';
+        }
+      }
+
+      if (viewMode === '4BAR') {
+        const targetSystem = Math.floor(barIdx / 4);
+        if (targetSystem !== displayedSystem) renderScoreLanes(targetSystem);
+        const playheadPct = (((barIdx % 4) + barProgress) / 4) * 100;
+        SCORE_PARTS.forEach(part => {
+          const ph = document.getElementById(`playhead_${part.id}`);
+          if (ph) ph.style.left = `${playheadPct.toFixed(2)}%`;
+        });
+      } else if (viewMode === '16BAR') {
+        const targetSystem = Math.floor(barIdx / 16);
+        if (targetSystem !== displayedSystem) renderScoreLanes(targetSystem);
+        const playheadPct = (((barIdx % 16) + barProgress) / 16) * 100;
+        SCORE_PARTS.forEach(part => {
+          const ph = document.getElementById(`playhead_${part.id}`);
+          if (ph) ph.style.left = `${playheadPct.toFixed(2)}%`;
+        });
+      } else {
+        const playheadPct = ((barIdx + barProgress) / TOTAL_BARS) * 100;
+        SCORE_PARTS.forEach(part => {
+          const ph = document.getElementById(`playhead_${part.id}`);
+          if (ph) ph.style.left = `${playheadPct.toFixed(2)}%`;
+        });
+      }
+    }
+
+    function drawScope() {
+      const scopeCanvas = document.getElementById('scopeCanvas');
+      if (!scopeCanvas) return;
+      const scopeCtx = scopeCanvas.getContext('2d');
+      if (!scopeCtx) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      const w = Math.round(scopeCanvas.clientWidth * dpr);
+      const h = Math.round(scopeCanvas.clientHeight * dpr);
+      if (w === 0 || h === 0) return;
+      if (scopeCanvas.width !== w || scopeCanvas.height !== h) {
+        scopeCanvas.width = w;
+        scopeCanvas.height = h;
+      }
+
+      scopeCtx.globalCompositeOperation = 'source-over';
+      scopeCtx.fillStyle = '#07050a';
+      scopeCtx.fillRect(0, 0, w, h);
+
+      scopeCtx.strokeStyle = 'rgba(163, 230, 53, 0.12)';
+      scopeCtx.lineWidth = 1;
+      scopeCtx.beginPath();
+      for (let i = 1; i < 4; i++) {
+        scopeCtx.moveTo(0, (h * i) / 4);
+        scopeCtx.lineTo(w, (h * i) / 4);
+        scopeCtx.moveTo((w * i) / 4, 0);
+        scopeCtx.lineTo((w * i) / 4, h);
+      }
+      scopeCtx.stroke();
+
+      scopeCtx.strokeStyle = 'rgba(244, 63, 94, 0.24)';
+      scopeCtx.beginPath();
+      scopeCtx.moveTo(0, h / 2);
+      scopeCtx.lineTo(w, h / 2);
+      scopeCtx.stroke();
+
+      if (!isPlaying || !ac) return;
+
+      scopeCtx.globalCompositeOperation = 'screen';
+      scopeCtx.lineWidth = 2 * dpr;
+
+      Object.keys(tracks).forEach(id => {
+        const track = tracks[id];
+        if (!track || !track.an) return;
+        scopeCtx.strokeStyle = `rgba(${PATCH_DATA[id].rgb}, 0.92)`;
+        scopeCtx.fillStyle = `rgba(${PATCH_DATA[id].rgb}, 0.72)`;
+
+        if (scopeMode === 'FREQ') {
+          const bins = track.binBuf || (track.binBuf = new Uint8Array(track.an.frequencyBinCount));
+          track.an.getByteFrequencyData(bins);
+          let active = false;
+          for (let j = 0; j < 50; j += 5) if (bins[j] > 5) { active = true; break; }
+          if (!active) return;
+          const count = 96;
+          for (let i = 0; i < count; i++) {
+            const k = Math.floor(Math.pow(bins.length * 0.55, i / count));
+            const val = bins[k] / 255;
+            if (val > 0.01) scopeCtx.fillRect((i * w) / count + 1, h - val * h, w / count - 2, val * h);
+          }
+        } else {
+          const buf = track.timeBuf || (track.timeBuf = new Float32Array(track.an.fftSize));
+          track.an.getFloatTimeDomainData(buf);
+          let active = false;
+          for (let j = 0; j < 256; j += 8) if (Math.abs(buf[j]) > 0.01) { active = true; break; }
+          if (!active) return;
+          let offset = 0;
+          for (let i = 1; i < buf.length / 2; i++) if (buf[i - 1] < 0 && buf[i] >= 0) { offset = i; break; }
+          scopeCtx.beginPath();
+          for (let i = 0; i < 1024; i++) {
+            const x = (i * w) / 1024;
+            const y = h / 2 - buf[offset + i] * h * 0.85;
+            i === 0 ? scopeCtx.moveTo(x, y) : scopeCtx.lineTo(x, y);
+          }
+          scopeCtx.stroke();
+        }
+      });
+    }
+
+    // =========================================================================
+    // 7. 24-BIT PCM WAV MULTI-STEM EXPORTER & VIRTUAL ROUTER
+    // =========================================================================
+    function setupDawCaptureTap() {
+      if (!ac || recNode) return;
+      const merger = ac.createChannelMerger(8);
+      const splitter = ac.createChannelSplitter(2);
+      masterBus.connect(splitter);
+      splitter.connect(merger, 0, 0);
+      splitter.connect(merger, 1, 1);
+      SCORE_PARTS.forEach((part, idx) => {
+        if (partBuses[part.id]) partBuses[part.id].connect(merger, 0, idx + 2);
+      });
+
+      recNode = ac.createScriptProcessor(4096, 8, 8);
+      const silentSink = ac.createGain();
+      silentSink.gain.value = 0;
+
+      recNode.onaudioprocess = (e) => {
+        if (!isRecording) return;
+        const inBuf = e.inputBuffer, len = inBuf.length;
+        const mL = inBuf.getChannelData(0), mR = inBuf.getChannelData(1);
+        if (isTrackArmed('master')) {
+          recBuffers.masterL.push(new Float32Array(mL));
+          recBuffers.masterR.push(new Float32Array(mR));
+          for (let i = 0; i < len; i += 4) {
+            const abs = Math.max(Math.abs(mL[i]), Math.abs(mR[i]));
+            if (abs > recPeaks.master) recPeaks.master = abs;
+          }
+        }
+        SCORE_PARTS.forEach((part, idx) => {
+          if (!isTrackArmed(part.id)) return;
+          const chData = inBuf.getChannelData(idx + 2);
+          recBuffers[part.id].push(new Float32Array(chData));
+          for (let i = 0; i < len; i += 4) {
+            const abs = Math.abs(chData[i]);
+            if (abs > recPeaks[part.id]) recPeaks[part.id] = abs;
+          }
+        });
+      };
+
+      merger.connect(recNode);
+      recNode.connect(silentSink);
+      silentSink.connect(ac.destination);
+    }
+
+    function isTrackArmed(trackId) {
+      const def = DAW_TRACK_DEFS.find(t => t.id === trackId);
+      return def ? def.armed : false;
+    }
+
+    function setRecordingMode(mode) {
+      if (isRecording) return;
+      recMode = mode;
+      DAW_TRACK_DEFS.forEach(t => {
+        if (mode === 'ALL') t.armed = true;
+        else if (mode === 'STEMS') t.armed = (t.id !== 'master');
+      });
+      document.querySelectorAll('.rec-mode-btn').forEach(btn => {
+        const active = btn.dataset.recMode === mode;
+        btn.setAttribute('aria-pressed', String(active));
+        btn.classList.toggle('bg-gold-500/20', active);
+        btn.classList.toggle('text-gold-400', active);
+        btn.classList.toggle('font-bold', active);
+        btn.classList.toggle('text-plum-300', !active);
+      });
+      renderDawTrackGrid();
+    }
+
+    function startDawRecording(autoFullSong = false) {
+      initAudioEngine();
+      if (ac.state === 'suspended') ac.resume();
+      if (!DAW_TRACK_DEFS.some(t => t.armed)) setRecordingMode('ALL');
+
+      renderedTakes.forEach(t => URL.revokeObjectURL(t.url));
+      renderedTakes = [];
+      recBuffers = { masterL: [], masterR: [] };
+      recPeaks = { master: 0 };
+      SCORE_PARTS.forEach(p => { recBuffers[p.id] = []; recPeaks[p.id] = 0; });
+
+      isRecording = true;
+      recStartTime = ac.currentTime;
+      updateRecTransportUI(true);
+
+      const exportList = document.getElementById('wavExportList');
+      if (exportList) {
+        exportList.innerHTML = `<p class="col-span-full text-[11px] text-red-400 font-bold animate-pulse">● RECORDING ARMED TRACKS IN 24-BIT PCM WAV...</p>`;
+      }
+      document.getElementById('downloadAllWavBtn').disabled = true;
+
+      if (autoFullSong) {
+        autoStopAtLoopEnd = true;
+        if (isPlaying) seekToBar(0);
+        else { anchorSongTime = 0; nextBarIndex = 0; startPlayback(); }
+      } else if (!isPlaying) {
+        startPlayback();
+      }
+    }
+
+    function stopDawRecording() {
+      if (!isRecording) return;
+      isRecording = false;
+      autoStopAtLoopEnd = false;
+      updateRecTransportUI(false);
+
+      const sr = ac ? ac.sampleRate : 48000;
+      renderedTakes = [];
+      const take = (def, chans, samples) => {
+        const wavBlob = encodeWav24(chans, sr);
+        const pk = recPeaks[def.id];
+        renderedTakes.push({
+          id: def.id,
+          label: `${def.num}: ${def.name}`,
+          filename: `Totem_Cabaret_Exotica_${def.fileSlug}_124BPM_24bit.wav`,
+          url: URL.createObjectURL(wavBlob),
+          durationSec: samples / sr,
+          peakDb: pk > 0 ? (20 * Math.log10(pk)).toFixed(1) : '-inf',
+          channels: chans.length,
+          color: def.color
+        });
+      };
+
+      DAW_TRACK_DEFS.forEach(def => {
+        if (!def.armed) return;
+        if (def.id === 'master') {
+          if (recBuffers.masterL.length === 0) return;
+          const left = mergeFloatChunks(recBuffers.masterL), right = mergeFloatChunks(recBuffers.masterR);
+          take(def, [left, right], left.length);
+        } else {
+          const chunks = recBuffers[def.id];
+          if (!chunks || chunks.length === 0) return;
+          const mono = mergeFloatChunks(chunks);
+          take(def, [mono], mono.length);
+        }
+      });
+      renderExportedTakes();
+    }
+
+    function mergeFloatChunks(chunks) {
+      let totalLen = 0;
+      for (let i = 0; i < chunks.length; i++) totalLen += chunks[i].length;
+      const result = new Float32Array(totalLen);
+      let offset = 0;
+      for (let i = 0; i < chunks.length; i++) {
+        result.set(chunks[i], offset);
+        offset += chunks[i].length;
+      }
+      return result;
+    }
+
+    function encodeWav24(channelBuffers, sampleRate) {
+      const numChannels = channelBuffers.length;
+      const numSamples = channelBuffers[0].length;
+      const blockAlign = numChannels * 3;
+      const dataSize = numSamples * blockAlign;
+      const buffer = new ArrayBuffer(44 + dataSize);
+      const view = new DataView(buffer);
+      const writeStr = (off, str) => { for (let i = 0; i < str.length; i++) view.setUint8(off + i, str.charCodeAt(i)); };
+
+      writeStr(0, 'RIFF');
+      view.setUint32(4, 36 + dataSize, true);
+      writeStr(8, 'WAVE');
+      writeStr(12, 'fmt ');
+      view.setUint32(16, 16, true);
+      view.setUint16(20, 1, true);
+      view.setUint16(22, numChannels, true);
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, sampleRate * blockAlign, true);
+      view.setUint16(32, blockAlign, true);
+      view.setUint16(34, 24, true);
+      writeStr(36, 'data');
+      view.setUint32(40, dataSize, true);
+
+      let offset = 44;
+      for (let i = 0; i < numSamples; i++) {
+        for (let ch = 0; ch < numChannels; ch++) {
+          let s = channelBuffers[ch][i];
+          if (s > 1) s = 1; else if (s < -1) s = -1;
+          let val = s < 0 ? Math.round(s * 0x800000) : Math.round(s * 0x7fffff);
+          if (val > 0x7fffff) val = 0x7fffff;
+          if (val < -0x800000) val = -0x800000;
+          if (val < 0) val += 0x1000000;
+          view.setUint8(offset, val & 0xff);
+          view.setUint8(offset + 1, (val >> 8) & 0xff);
+          view.setUint8(offset + 2, (val >> 16) & 0xff);
+          offset += 3;
+        }
+      }
+      return new Blob([buffer], { type: 'audio/wav' });
+    }
+
+    function renderDawTrackGrid() {
+      const grid = document.getElementById('dawTrackGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      DAW_TRACK_DEFS.forEach(def => {
+        const card = document.createElement('div');
+        card.className = `bg-midnight-950 border ${def.armed ? 'border-red-500/60' : 'border-midnight-850'} p-2.5 rounded-sm flex flex-col justify-between gap-2 transition-colors`;
+        card.innerHTML = `
+          <div class="flex items-center justify-between gap-1">
+            <span class="text-[10px] font-bold" style="color:${def.color}">${def.num}</span>
+            <button type="button" data-arm-track="${def.id}" aria-pressed="${def.armed}" aria-label="Arm ${def.name} for recording" ${isRecording ? 'disabled' : ''} class="disabled:opacity-60 disabled:cursor-not-allowed px-1.5 py-0.5 rounded-sm text-[9px] font-bold uppercase cursor-pointer transition-colors ${def.armed ? 'bg-red-600 text-white' : 'bg-midnight-900 border border-plum-700 text-plum-400 hover:text-plum-200'}">${def.armed ? '● ARM' : 'OFF'}</button>
+          </div>
+          <div>
+            <div class="text-[11px] font-bold text-plum-200 truncate">${def.name}</div>
+            <div class="text-[9px] text-plum-400">${def.channels === 2 ? 'Stereo 24-bit' : 'Mono 24-bit'}</div>
+          </div>
+          <div>
+            <div class="w-full h-1.5 bg-midnight-900 rounded-sm overflow-hidden">
+              <div id="dawMeter_${def.id}" class="h-full transition-all duration-75" style="width:0%; background:${def.color}"></div>
+            </div>
+            <div class="flex justify-between text-[9px] text-plum-400 mt-1">
+              <span>PEAK</span>
+              <span id="dawDb_${def.id}">-∞ dB</span>
+            </div>
+          </div>`;
+        grid.appendChild(card);
+      });
+
+      grid.querySelectorAll('[data-arm-track]').forEach(btn => btn.addEventListener('click', () => {
+        const def = DAW_TRACK_DEFS.find(t => t.id === btn.dataset.armTrack);
+        if (def && !isRecording) { def.armed = !def.armed; renderDawTrackGrid(); }
+      }));
+    }
+
+    function renderExportedTakes() {
+      const list = document.getElementById('wavExportList'), dlAllBtn = document.getElementById('downloadAllWavBtn');
+      if (!list) return;
+      if (renderedTakes.length === 0) {
+        list.innerHTML = `<p class="col-span-full text-[11px] text-plum-400">No armed audio captured. Arm at least one track and press Rec Live.</p>`;
+        if (dlAllBtn) dlAllBtn.disabled = true;
+        return;
+      }
+      if (dlAllBtn) dlAllBtn.disabled = false;
+      list.innerHTML = renderedTakes.map(t => `
+        <a href="${t.url}" download="${t.filename}" class="flex items-center justify-between gap-2 bg-midnight-900 hover:bg-midnight-850 border border-plum-700 hover:border-gold-500/60 px-2.5 py-1.5 rounded-sm transition-colors group">
+          <div class="min-w-0">
+            <div class="text-[10px] font-bold truncate" style="color:${t.color}">${t.label}</div>
+            <div class="text-[9px] text-plum-300">${t.durationSec.toFixed(1)}s · ${t.peakDb} dBFS</div>
+          </div>
+          <span class="text-[10px] font-bold text-gold-400 group-hover:text-gold-300 shrink-0">↓ WAV</span>
+        </a>`).join('');
+    }
+
+    function updateRecTransportUI(active) {
+      renderDawTrackGrid();
+      document.querySelectorAll('.rec-mode-btn').forEach(b => { b.disabled = active; });
+      const liveBtn = document.getElementById('recLiveBtn'), liveLabel = document.getElementById('recLiveLabel'), led = document.getElementById('recHeaderLed');
+      if (active) {
+        if (liveBtn) { liveBtn.classList.replace('bg-red-600', 'bg-gold-500'); liveBtn.classList.replace('text-white', 'text-midnight-950'); }
+        if (liveLabel) liveLabel.textContent = 'Stop & Render';
+        if (led) led.className = 'w-2 h-2 rounded-full bg-red-500 animate-ping';
+      } else {
+        if (liveBtn) { liveBtn.classList.replace('bg-gold-500', 'bg-red-600'); liveBtn.classList.replace('text-midnight-950', 'text-white'); }
+        if (liveLabel) liveLabel.textContent = 'Rec Live';
+        if (led) led.className = 'w-2 h-2 rounded-full bg-plum-600';
+      }
+    }
+
+    function updateDawMeters() {
+      if (!ac) return;
+      if (isRecording) {
+        const elapsed = Math.max(0, ac.currentTime - recStartTime);
+        const timerEl = document.getElementById('recTimerLabel');
+        if (timerEl) timerEl.textContent = `REC ${formatClock(elapsed)}`;
+      }
+      const measurePeak = (analyser) => {
+        if (!analyser || !isPlaying) return 0;
+        const buf = analyser._buf || (analyser._buf = new Float32Array(analyser.fftSize));
+        analyser.getFloatTimeDomainData(buf);
+        let peak = 0;
+        for (let i = 0; i < buf.length; i += 8) {
+          const a = Math.abs(buf[i]);
+          if (a > peak) peak = a;
+        }
+        return peak;
+      };
+      DAW_TRACK_DEFS.forEach(def => {
+        const an = def.id === 'master' ? masterAnalyser : partAnalysers[def.id];
+        const peak = measurePeak(an);
+        const meterEl = document.getElementById(`dawMeter_${def.id}`);
+        const dbEl = document.getElementById(`dawDb_${def.id}`);
+        if (meterEl) meterEl.style.width = `${Math.min(100, Math.round(peak * 115))}%`;
+        if (dbEl) dbEl.textContent = peak > 0.0005 ? `${(20 * Math.log10(peak)).toFixed(1)} dB` : '-∞ dB';
+      });
+    }
+
+    async function refreshAudioOutputs() {
+      const sel = document.getElementById('audioOutputSelect');
+      if (!sel || !navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const outs = devices.filter(d => d.kind === 'audiooutput');
+        const prev = sel.value;
+        sel.innerHTML = '<option value="">System Default Audio Output</option>';
+        outs.forEach((dev, idx) => {
+          const opt = document.createElement('option');
+          opt.value = dev.deviceId;
+          opt.textContent = dev.label || `Audio Output ${idx + 1}`;
+          sel.appendChild(opt);
+        });
+        if (prev) sel.value = prev;
+      } catch (err) {}
+    }
+
+    function updateSinkChannelInfo() {
+      const info = document.getElementById('sinkChannelInfo');
+      if (!info || !ac) return;
+      info.textContent = `${ac.destination.maxChannelCount || 2}-Ch Interface Available`;
+    }
+
+    function renderLoop() {
+      if (isPlaying && ac) {
+        const now = ac.currentTime;
+        const songTime = anchorSongTime + (now - anchorAudioTime);
+        updatePositionUI(songTime);
+
+        for (let i = visualQueue.length - 1; i >= 0; i--) {
+          const ev = visualQueue[i];
+          if (now >= ev.time && now <= ev.offTime) {
+            if (ev.domKey) {
+              const el = document.getElementById(`note_${ev.domKey}`);
+              if (el) el.classList.add('active');
+            }
+            const statusEl = document.getElementById(`partStatus_${ev.partId}`);
+            if (statusEl) statusEl.textContent = ev.label;
+            const led = document.querySelector(`[data-voice-led="${ev.voiceId}"]`);
+            if (led) {
+              led.style.opacity = '1';
+              led.style.boxShadow = `0 0 8px rgb(${PATCH_DATA[ev.voiceId].rgb})`;
+            }
+          } else if (now > ev.offTime) {
+            if (ev.domKey) {
+              const el = document.getElementById(`note_${ev.domKey}`);
+              if (el) el.classList.remove('active');
+            }
+            const led = document.querySelector(`[data-voice-led="${ev.voiceId}"]`);
+            if (led) {
+              led.style.opacity = '0.25';
+              led.style.boxShadow = 'none';
+            }
+            visualQueue.splice(i, 1);
+          }
+        }
+      }
+      drawScope();
+      updateDawMeters();
+      rafId = requestAnimationFrame(renderLoop);
+    }
+
+    function updateTransportUI() {
+      const playBtn = document.getElementById('playBtn'), playIcon = document.getElementById('playIcon'), playLabel = document.getElementById('playLabel'), stopBtn = document.getElementById('stopBtn');
+      if (isPlaying) {
+        playIcon.textContent = '⏸';
+        playLabel.textContent = 'Pause';
+        playBtn.classList.replace('bg-gold-500', 'bg-gold-400');
+      } else {
+        playIcon.textContent = '▶';
+        playLabel.textContent = anchorSongTime > 0 ? 'Resume' : 'Play';
+        playBtn.classList.replace('bg-gold-400', 'bg-gold-500');
+      }
+      if (stopBtn) stopBtn.disabled = !isPlaying && anchorSongTime === 0;
+    }
+
+    function jumpToProtocolCue(el) {
+      const cueNote = el.dataset.protoNote || '';
+      const cueText = document.getElementById('protocolCueText');
+      if (cueText && cueNote) cueText.textContent = cueNote;
+      if (el.dataset.protoBar !== undefined) {
+        seekToBar(parseInt(el.dataset.protoBar, 10) || 0);
+        if (!isPlaying) startPlayback();
+      }
+    }
+    window.jumpToProtocolCue = jumpToProtocolCue;
+
+    // =========================================================================
+    // 8. BOOTSTRAP & EVENT LISTENERS
+    // =========================================================================
+    function setScoreViewMode(mode) {
+      viewMode = mode;
+      const activeCls = 'px-2.5 py-1 rounded-sm border border-gold-400 bg-gold-500/15 text-gold-400 font-bold uppercase cursor-pointer';
+      const inactiveCls = 'px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-900 text-plum-300 hover:text-white uppercase cursor-pointer';
+      document.getElementById('view4Btn').className = mode === '4BAR' ? activeCls : inactiveCls;
+      document.getElementById('view16Btn').className = mode === '16BAR' ? activeCls : inactiveCls;
+      document.getElementById('view96Btn').className = mode === '96BAR' ? activeCls : inactiveCls;
+      ['4BAR', '16BAR', '96BAR'].forEach(m => document.getElementById(`view${m.replace('BAR', '')}Btn`).setAttribute('aria-pressed', String(m === mode)));
+
+      const curSong = anchorSongTime + (isPlaying && ac ? ac.currentTime - anchorAudioTime : 0);
+      const curBar = Math.floor((((curSong % LOOP_SEC) + LOOP_SEC) % LOOP_SEC) / BAR_SEC);
+      if (mode === '4BAR') renderScoreLanes(Math.floor(curBar / 4));
+      else if (mode === '16BAR') renderScoreLanes(Math.floor(curBar / 16));
+      else renderScoreLanes(0);
+    }
+
+    function syncHeaderOffset() {
+      const hd = document.querySelector('header'), mn = document.querySelector('main');
+      if (hd && mn) mn.style.paddingTop = `${hd.offsetHeight}px`;
+    }
+
+    function initApp() {
+      document.getElementById('playBtn')?.addEventListener('click', startPlayback);
+      document.getElementById('stopBtn')?.addEventListener('click', stopPlayback);
+
+      const toggleRec = () => isRecording ? stopDawRecording() : startDawRecording(false);
+      document.getElementById('recLiveBtn')?.addEventListener('click', toggleRec);
+      document.getElementById('printFullBtn')?.addEventListener('click', () => startDawRecording(true));
+
+      document.getElementById('loopBtn')?.addEventListener('click', (e) => {
+        const btn = e.currentTarget;
+        loopEnabled = !loopEnabled;
+        btn.textContent = `Loop: ${loopEnabled ? 'On' : 'Off'}`;
+        btn.setAttribute('aria-pressed', String(loopEnabled));
+        btn.classList.toggle('border-gold-500/50', loopEnabled);
+        btn.classList.toggle('bg-gold-500/15', loopEnabled);
+        btn.classList.toggle('text-gold-400', loopEnabled);
+        btn.classList.toggle('border-plum-900', !loopEnabled);
+        btn.classList.toggle('bg-midnight-900', !loopEnabled);
+        btn.classList.toggle('text-plum-300', !loopEnabled);
+      });
+
+      document.querySelectorAll('.rec-mode-btn').forEach(btn => btn.addEventListener('click', () => setRecordingMode(btn.dataset.recMode)));
+      document.getElementById('downloadAllWavBtn')?.addEventListener('click', () => {
+        renderedTakes.forEach((take, idx) => setTimeout(() => {
+          const a = document.createElement('a');
+          a.href = take.url;
+          a.download = take.filename;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        }, idx * 180));
+      });
+
+      document.getElementById('refreshDevicesBtn')?.addEventListener('click', refreshAudioOutputs);
+      document.getElementById('audioOutputSelect')?.addEventListener('change', async (e) => {
+        initAudioEngine();
+        if (ac && typeof ac.setSinkId === 'function') {
+          try { await ac.setSinkId(e.target.value); updateSinkChannelInfo(); } catch (err) {}
+        }
+      });
+
+      document.querySelectorAll('.sec-pill').forEach(pill => pill.addEventListener('click', () => seekToBar(parseInt(pill.dataset.jump, 10))));
+
+      document.getElementById('view4Btn')?.addEventListener('click', () => setScoreViewMode('4BAR'));
+      document.getElementById('view16Btn')?.addEventListener('click', () => setScoreViewMode('16BAR'));
+      document.getElementById('view96Btn')?.addEventListener('click', () => setScoreViewMode('96BAR'));
+
+      document.getElementById('scopeWaveBtn')?.addEventListener('click', () => {
+        scopeMode = 'WAVE';
+        document.getElementById('scopeWaveBtn').setAttribute('aria-pressed', 'true');
+        document.getElementById('scopeFreqBtn').setAttribute('aria-pressed', 'false');
+        document.getElementById('scopeWaveBtn').className = 'px-2.5 py-1 rounded-sm border border-gold-400 bg-gold-500/20 text-gold-400 font-bold uppercase cursor-pointer';
+        document.getElementById('scopeFreqBtn').className = 'px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-300 hover:text-white uppercase cursor-pointer';
+      });
+
+      document.getElementById('scopeFreqBtn')?.addEventListener('click', () => {
+        scopeMode = 'FREQ';
+        document.getElementById('scopeFreqBtn').setAttribute('aria-pressed', 'true');
+        document.getElementById('scopeWaveBtn').setAttribute('aria-pressed', 'false');
+        document.getElementById('scopeFreqBtn').className = 'px-2.5 py-1 rounded-sm border border-gold-400 bg-gold-500/20 text-gold-400 font-bold uppercase cursor-pointer';
+        document.getElementById('scopeWaveBtn').className = 'px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-300 hover:text-white uppercase cursor-pointer';
+      });
+
+      const cutSlider = document.getElementById('korgCutoffSlider');
+      const peakSlider = document.getElementById('korgPeakSlider');
+
+      cutSlider?.addEventListener('input', (e) => {
+        korgCutoffOffset = parseFloat(e.target.value);
+        applyKorgVcfOverride();
+      });
+
+      peakSlider?.addEventListener('input', (e) => {
+        korgPeakSetting = parseFloat(e.target.value);
+        applyKorgVcfOverride();
+      });
+
+      document.getElementById('korgVcfResetBtn')?.addEventListener('click', () => {
+        korgCutoffOffset = 0.0;
+        korgPeakSetting = 5.0;
+        if (cutSlider) cutSlider.value = '0';
+        if (peakSlider) peakSlider.value = '5.0';
+        applyKorgVcfOverride();
+      });
+
+      document.querySelectorAll('.sq-step-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          sq10UserLocked = true;
+          sq10ResetSteps = parseInt(btn.dataset.sqSteps, 10) || 5;
+          document.querySelectorAll('.sq-step-btn').forEach(b => {
+            const active = parseInt(b.dataset.sqSteps, 10) === sq10ResetSteps;
+            b.setAttribute('aria-pressed', String(active));
+            b.className = active
+              ? 'sq-step-btn px-2 py-0.5 rounded-sm bg-gold-500/20 text-gold-400 font-bold cursor-pointer transition-colors'
+              : 'sq-step-btn px-2 py-0.5 rounded-sm text-plum-300 hover:text-white cursor-pointer transition-colors';
+          });
+          buildScoreEvents();
+          renderScoreLanes(displayedSystem);
+          const cueText = document.getElementById('protocolCueText');
+          if (cueText) {
+            cueText.textContent = `BOOK II // P-07 PATCHED: SQ-10 TRIG OUT ${sq10ResetSteps} -> RESET IN locked across all 96 bars (cycles every ${sq10ResetSteps} steps).`;
+          }
+        });
+      });
+
+      document.getElementById('masterGainSlider')?.addEventListener('input', (e) => {
+        masterGainValue = parseFloat(e.target.value);
+        document.getElementById('masterGainVal').textContent = `${Math.round(masterGainValue * 100)}%`;
+        if (masterOut && ac) masterOut.gain.setTargetAtTime(masterGainValue, ac.currentTime, 0.02);
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.code !== 'Space' || e.ctrlKey || e.metaKey || e.altKey) return;
+        const t = e.target;
+        if (t && (['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'A'].includes(t.tagName) || t.isContentEditable)) return;
+        e.preventDefault();
+        if (!e.repeat) startPlayback();
+      });
+
+      syncHeaderOffset();
+      if ('ResizeObserver' in window) new ResizeObserver(syncHeaderOffset).observe(document.querySelector('header'));
+      else window.addEventListener('resize', syncHeaderOffset);
+
+      buildScoreEvents();
+      buildBarMatrix();
+      buildVoiceLedGrid();
+      buildPartitureShell();
+      renderDawTrackGrid();
+      refreshAudioOutputs();
+      applyKorgVcfOverride();
+      renderScoreLanes(0);
+      updatePositionUI(0);
+      rafId = requestAnimationFrame(renderLoop);
+    }
+
+    if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', initApp);
+    else initApp();
+  </script>
+</body>
+</html>
