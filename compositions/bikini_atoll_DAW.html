@@ -1,0 +1,2338 @@
+<!DOCTYPE html>
+<html lang="en-GB" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interactive browser DAW showcase of Bikini Atoll // Atomic Age Theremin &amp; Exotica Lounge, a 96-bar, 116 BPM asymmetric composition for Korg MS-10, SQ-10, VC-10 &amp; Space Theremin by Voltage &amp; Wave.">
+  <meta name="theme-color" content="#040a09">
+  <title>BIKINI ATOLL // ATOMIC AGE THEREMIN &amp; EXOTICA LOUNGE // VOLTAGE &amp; WAVE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    if (window.tailwind) {
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+            gridTemplateColumns: { '16': 'repeat(16, minmax(0, 1fr))' },
+            colors: {
+              gold: { 300: '#fde047', 400: '#facc15', 500: '#eab308', 600: '#ca8a04' },
+              plum: { 200: '#ccfbf1', 300: '#5eead4', 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488', 700: '#0f766e', 900: '#115e59', 950: '#134e4a' },
+              midnight: { 850: '#0d1b1a', 900: '#071211', 950: '#040a09' }
+            }
+          }
+        }
+      };
+    }
+  </script>
+  <style>
+    body { background-color: #040a09; color: #ecfdf5; overflow-x: hidden; }
+    .scanlines::before {
+      content: " "; display: block; position: fixed; inset: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.20) 50%),
+                  linear-gradient(90deg, rgba(45, 212, 191, 0.04), rgba(250, 204, 21, 0.015), rgba(244, 63, 94, 0.03));
+      z-index: 50; background-size: 100% 2px, 3px 100%; pointer-events: none; opacity: 0.38;
+    }
+    .bg-synth-grid {
+      background-image: linear-gradient(to right, rgba(45, 212, 191, 0.06) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(250, 204, 21, 0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .glow-text { text-shadow: 0 0 14px rgba(45, 212, 191, 0.78); }
+    input[type="range"].vw-slider { -webkit-appearance: none; appearance: none; background: #134e4a; height: 4px; border-radius: 2px; outline: none; }
+    input[type="range"].vw-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 12px; height: 16px; background: #2dd4bf; border: 1px solid #040a09; border-radius: 2px; cursor: pointer; box-shadow: 0 0 8px rgba(45, 212, 191, 0.7); }
+    input[type="range"].vw-slider::-moz-range-thumb { width: 12px; height: 16px; background: #2dd4bf; border: 1px solid #040a09; border-radius: 2px; cursor: pointer; }
+    .score-note { transition: transform 0.05s ease, filter 0.05s ease, box-shadow 0.05s ease; }
+    .score-note.active { filter: brightness(1.32); transform: scaleY(1.06); box-shadow: 0 0 12px var(--note-glow, rgba(45, 212, 191, 0.85)); z-index: 15; }
+    input[type="range"].vw-slider:focus-visible { outline: 2px solid #2dd4bf; outline-offset: 5px; }
+    button:focus-visible, a:focus-visible, select:focus-visible { outline: 2px solid #2dd4bf; outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after { animation: none !important; transition: none !important; }
+    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #040a09; }
+    ::-webkit-scrollbar-thumb { background: #115e59; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #2dd4bf; }
+  </style>
+</head>
+<body class="antialiased relative selection:bg-plum-400 selection:text-midnight-950 flex flex-col min-h-screen">
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <!-- Fixed Telemetry & Transport Header -->
+  <header class="fixed w-full z-40 top-0 bg-midnight-950/95 backdrop-blur-md border-b border-midnight-900">
+    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-wrap justify-between items-center py-2.5 gap-3">
+        <div class="flex items-center gap-3">
+          <a href="https://voltageandwave.co.uk/compositions/" aria-label="Voltage &amp; Wave compositions" class="flex items-center gap-3 group">
+            <!-- Voltage & Wave Pulse Logo -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" aria-hidden="true" class="text-plum-400 w-6 h-6 shrink-0 group-hover:text-gold-400 transition-colors">
+              <path d="M2 12h4v-7h6v14h6v-7h4"/>
+            </svg>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-mono font-bold text-white tracking-widest text-sm sm:text-base">VOLTAGE &amp; WAVE</span>
+                <span class="hidden sm:inline-block font-mono text-[10px] text-plum-300 border border-plum-500/40 bg-plum-500/10 px-2 py-0.5 uppercase tracking-widest">Bikini Atoll (03:18)</span>
+              </div>
+              <p class="font-mono text-[10px] text-gold-400 uppercase tracking-widest">ATOMIC AGE THEREMIN &amp; EXOTICA LOUNGE // MS-10 · SQ-10 · VC-10 // 116 BPM // 96 BARS</p>
+            </div>
+          </a>
+        </div>
+
+        <!-- Telemetry HUD -->
+        <div class="flex items-center gap-2 sm:gap-4 bg-midnight-900/90 border border-midnight-850 px-3 py-1.5 rounded-sm font-mono">
+          <div class="text-center pr-2 sm:pr-4 border-r border-midnight-850">
+            <div class="text-[9px] text-plum-400 uppercase tracking-widest">Bar</div>
+            <div id="hudBar" class="text-base sm:text-xl font-bold text-plum-300 glow-text leading-none mt-0.5">01<span class="text-plum-700 text-xs">/96</span></div>
+          </div>
+          <div class="text-center pr-2 sm:pr-4 border-r border-midnight-850">
+            <div class="text-[9px] text-plum-400 uppercase tracking-widest">Beat</div>
+            <div id="hudBeat" class="text-base sm:text-xl font-bold text-white leading-none mt-0.5">1.1</div>
+          </div>
+          <div class="text-center pr-2 sm:pr-4 border-r border-midnight-850">
+            <div class="text-[9px] text-plum-400 uppercase tracking-widest">Scene</div>
+            <div id="hudSection" class="text-xs sm:text-sm font-bold text-gold-400 leading-none mt-1">I. CORAL TIDE</div>
+          </div>
+          <div class="text-center pr-2 sm:pr-4 border-r border-midnight-850">
+            <div class="text-[9px] text-plum-400 uppercase tracking-widest">Chord</div>
+            <div id="hudChord" class="text-base sm:text-xl font-bold text-plum-300 leading-none mt-0.5">Fmaj7#11</div>
+          </div>
+          <div class="text-center hidden md:block">
+            <div class="text-[9px] text-plum-400 uppercase tracking-widest">SQ-10 Trig</div>
+            <div class="flex items-center justify-center mt-1.5">
+              <span id="sqTrigLed" class="w-2.5 h-2.5 rounded-full bg-plum-500/30 border border-plum-500/60 transition-all duration-75" title="SQ-10 Polymetric Reset Pulse"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transport Controls -->
+        <div class="flex flex-wrap items-center gap-2 font-mono text-xs">
+          <button id="playBtn" class="inline-flex items-center gap-1.5 bg-plum-400 hover:bg-plum-300 text-midnight-950 px-4 py-2 font-bold uppercase tracking-wider rounded-sm transition-all shadow-[0_0_15px_rgba(45,212,191,0.38)] cursor-pointer">
+            <span id="playIcon" aria-hidden="true">▶</span> <span id="playLabel">Play</span>
+          </button>
+          <button id="stopBtn" class="inline-flex items-center gap-1.5 bg-midnight-900 hover:bg-midnight-850 border border-plum-900 text-plum-300 px-3 py-2 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none" disabled>
+            <span aria-hidden="true">■</span> Stop
+          </button>
+          <button id="loopBtn" type="button" aria-pressed="true" title="Toggle 96-Bar Suite Loop" class="hidden sm:inline-block px-2.5 py-2 border border-plum-500/50 bg-plum-500/15 text-plum-300 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">
+            Loop: On
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="top" class="pt-28 sm:pt-20 pb-12 flex-1 relative z-10">
+    <div class="fixed inset-0 bg-synth-grid pointer-events-none [mask-image:linear-gradient(to_bottom,white,transparent)] -z-10" aria-hidden="true"></div>
+    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-6 mt-4">
+
+      <!-- Arrangement & Protocol Matrix Section -->
+      <section class="bg-midnight-900/90 border border-midnight-850 rounded-sm p-4 sm:p-5 shadow-2xl">
+        <div class="mb-4 px-3 py-2 rounded-sm bg-midnight-950 border border-plum-500/35 flex items-start sm:items-center justify-between gap-2.5 font-mono text-[11px] text-plum-200">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2.5">
+            <span class="text-gold-400 font-bold uppercase shrink-0">[1958 Atomic Age Exotica &amp; Modular Ritual — 03:18]</span>
+            <span>Asymmetric 6-scene suite (10 + 14 + 18 + 16 + 14 + 24 bars) pairing a shamelessly swooping Dual-Heterodyne Atomic Age Theremin with Korg MS-10 chromatic bass, 5/7/11-step SQ-10 kalimba polyrhythms, and cheeky staccato VC-10 formant horn/bird-call responses.</span>
+          </div>
+          <span class="hidden xl:inline-block text-gold-400 font-bold shrink-0">96 BARS · 03:18.6</span>
+        </div>
+
+        <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-3 mb-4 pb-3 border-b border-midnight-850">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-plum-400 animate-pulse"></span>
+              <h1 class="font-mono text-xs sm:text-sm font-bold text-white uppercase tracking-widest">Bikini Atoll // Atomic Age Theremin &amp; Exotica Lounge</h1>
+            </div>
+            <div id="protocolCueBanner" class="mt-2.5 flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] bg-midnight-950 border border-midnight-850 text-plum-200 px-3 py-1.5 rounded-sm">
+              <div class="flex flex-col gap-0.5 min-w-0 flex-1">
+                <div>
+                  <span class="text-gold-400 font-bold">MANUAL CUE:</span>
+                  <span id="protocolCueText" aria-live="polite">Click any scene pill, protocol card, or bar cell below to audition the shamelessly expressive Atomic Age Theremin, 5/7/11-step SQ-10 kalimba, and cheeky VC-10 rhythmic horn stabs.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-1.5 font-mono text-[10px] shrink-0" id="sectionNav">
+            <button data-jump="0"  class="sec-pill px-2 py-1 rounded-sm border border-plum-400 bg-plum-500/20 text-plum-300 font-bold uppercase tracking-wider cursor-pointer transition-colors">I. Coral Tide (1–10)</button>
+            <button data-jump="10" class="sec-pill px-2 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-300 hover:border-plum-400/50 hover:text-white uppercase tracking-wider cursor-pointer transition-colors">II. Sunken Pagoda (11–24)</button>
+            <button data-jump="24" class="sec-pill px-2 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-300 hover:border-plum-400/50 hover:text-white uppercase tracking-wider cursor-pointer transition-colors">III. Velvet Beguine (25–42)</button>
+            <button data-jump="42" class="sec-pill px-2 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-300 hover:border-plum-400/50 hover:text-white uppercase tracking-wider cursor-pointer transition-colors">IV. Volcanic Ritual (43–58)</button>
+            <button data-jump="58" class="sec-pill px-2 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-300 hover:border-plum-400/50 hover:text-white uppercase tracking-wider cursor-pointer transition-colors">V. Monsoon Silence (59–72)</button>
+            <button data-jump="72" class="sec-pill px-2 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-300 hover:border-plum-400/50 hover:text-white uppercase tracking-wider cursor-pointer transition-colors">VI. Bikini Carnival (73–96)</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-4 font-mono text-[10px]">
+          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="0" data-proto-note="Atomic Age Exotica Theremin (Bars 01–24 — Scenes I &amp; II): Pure tube-warmed sine oscillator with wide 6.4 Hz hand-vibrato LFO, long pitch-aerial portamento scoops, octave-and-a-half swoops, and jungle bird-call trills." class="text-left bg-midnight-950 border border-midnight-850 hover:border-gold-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-gold-400 font-bold block">HETERODYNE // ATOMIC THEREMIN</span>
+            <span class="text-plum-200">Aerial Glides, Vibrato &amp; Bird Calls</span>
+          </button>
+          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="0" data-proto-note="Book I P-01 &amp; P-05 (Bars 01–10 — Scene I: Coral Tide, 10 Bars): Polychromatic Fmaj7#11 -&gt; Db7#11 -&gt; G13 -&gt; E7#9 sub-octave bassline, tuned wooden log-drum clave, and Bar 10 sudden vacuum drop." class="text-left bg-midnight-950 border border-midnight-850 hover:border-cyan-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-cyan-400 font-bold block">BOOK I // P-01 &amp; P-05</span>
+            <span class="text-plum-200">Chromatic Bass &amp; Log-Drum Clave</span>
+          </button>
+          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="24" data-proto-note="Book II P-07 (Bars 25–42 &amp; 73–96 — SQ-10 Polymetric Kalimba): TRIG OUT -&gt; RESET IN shifts across 5-step, 7-step, and 11-step cycles against 3-bar velvet Beguine (Dmaj9 -&gt; Bb7#11 -&gt; Em11) and Afro-Cuban clave grooves." class="text-left bg-midnight-950 border border-midnight-850 hover:border-emerald-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-emerald-400 font-bold block">BOOK II // P-07</span>
+            <span class="text-plum-200">5/7/11-Step Kalimba Polymeter</span>
+          </button>
+          <button type="button" onclick="jumpToProtocolCue(this)" data-proto-bar="24" data-proto-note="Book III V-03 &amp; V-05 (Scenes III–VI): VC-10 20-Band Filter Bank re-imagined as a cheeky rhythmic horn/scatting section—staccato 'BA-DUP / WAH-OO / BI-BOP!' formant chords &amp; pink-noise monsoon surf." class="text-left bg-midnight-950 border border-midnight-850 hover:border-rose-400/70 px-2.5 py-1.5 rounded-sm transition-colors cursor-pointer">
+            <span class="text-rose-400 font-bold block">BOOK III // V-03 &amp; V-05</span>
+            <span class="text-plum-200">Cheeky VC-10 Formant Horn Stabs</span>
+          </button>
+        </div>
+
+        <!-- 96-Bar Arrangement Matrix (6 rows of 16 bars on desktop) -->
+        <div id="barMatrix" class="grid grid-cols-6 sm:grid-cols-8 lg:grid-cols-16 gap-1"></div>
+      </section>
+
+      <!-- Partiture / Score Lanes Section -->
+      <section class="bg-midnight-900/90 border border-midnight-850 rounded-sm shadow-2xl overflow-hidden">
+        <div class="bg-midnight-950 border-b border-midnight-850 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <h2 class="font-mono text-xs font-bold text-plum-400 uppercase tracking-widest">Partiture / Score Lanes</h2>
+            <span id="systemBadge" class="font-mono text-[11px] bg-midnight-900 border border-plum-900 text-plum-200 px-2.5 py-0.5 rounded-sm">SYSTEM 01 // BARS 01–04 (I. CORAL TIDE)</span>
+          </div>
+          <div class="flex items-center gap-2 font-mono text-[11px]">
+            <button id="view4Btn" type="button" aria-pressed="true" class="px-2.5 py-1 rounded-sm border border-plum-400 bg-plum-500/15 text-plum-300 font-bold uppercase cursor-pointer">4-Bar System</button>
+            <button id="view16Btn" type="button" aria-pressed="false" class="px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-900 text-plum-300 hover:text-white uppercase cursor-pointer">16-Bar Window</button>
+            <button id="view96Btn" type="button" aria-pressed="false" class="px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-900 text-plum-300 hover:text-white uppercase cursor-pointer">96-Bar Score</button>
+          </div>
+        </div>
+        <div id="partitureBody" class="divide-y divide-midnight-850/90"></div>
+      </section>
+
+      <!-- Oscilloscope & Korg MS-10 / SQ-10 Hardware Panel -->
+      <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <div class="lg:col-span-7 bg-midnight-900/90 border border-midnight-850 rounded-sm p-4 flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-plum-400 animate-pulse"></span>
+              <h2 class="font-mono text-xs font-bold text-white uppercase tracking-widest">Oscilloscope Monitor</h2>
+            </div>
+            <div class="flex gap-1.5 font-mono text-[10px]">
+              <button id="scopeWaveBtn" type="button" aria-pressed="true" class="px-2.5 py-1 rounded-sm border border-plum-400 bg-plum-500/20 text-plum-300 font-bold uppercase cursor-pointer">Wave</button>
+              <button id="scopeFreqBtn" type="button" aria-pressed="false" class="px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-300 hover:text-white uppercase cursor-pointer">Freq</button>
+            </div>
+          </div>
+          <div class="relative flex-1 min-h-[160px] bg-midnight-950 border border-midnight-850 rounded-sm overflow-hidden">
+            <canvas id="scopeCanvas" role="img" aria-label="Oscilloscope showing the live output of each voice" class="absolute inset-0 w-full h-full block"></canvas>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 bg-midnight-900/90 border border-midnight-850 rounded-sm p-4 flex flex-col justify-between gap-3.5">
+          <div>
+            <div class="flex items-center justify-between mb-2.5">
+              <h2 class="font-mono text-xs font-bold text-white uppercase tracking-widest">Active Channels</h2>
+              <span id="elapsedClock" class="font-mono text-xs text-gold-400 font-bold">00:00.0 / 03:18.6</span>
+            </div>
+            <div id="voiceLedGrid" class="grid grid-cols-3 sm:grid-cols-4 gap-1.5 font-mono text-[10px]"></div>
+          </div>
+
+          <!-- Authentic MS-10 Korg35 VCF & SQ-10 Reset Patch Panel -->
+          <div class="bg-midnight-950 border border-midnight-850 p-3 rounded-sm flex flex-col gap-2.5">
+            <div class="flex items-center justify-between font-mono text-[10px]">
+              <span class="text-gold-400 font-bold uppercase tracking-wider">MS-10 Korg35 VCF &amp; Lagoon Sheen</span>
+              <div class="flex items-center gap-2">
+                <span id="korgVcfReadout" class="text-plum-300 font-bold">AUTO // PEAK 3.9</span>
+                <button type="button" id="korgVcfResetBtn" class="px-1.5 py-0.5 rounded-sm bg-midnight-900 border border-plum-900 text-plum-300 hover:text-white text-[9px] uppercase cursor-pointer">Reset</button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 font-mono text-[9px]">
+              <div class="flex flex-col gap-1">
+                <div class="flex justify-between text-plum-200">
+                  <span>CUTOFF OFFSET</span>
+                  <span id="korgCutoffVal" class="text-gold-400 font-bold">0%</span>
+                </div>
+                <input id="korgCutoffSlider" type="range" min="-0.85" max="1.0" step="0.01" value="0" class="vw-slider w-full" aria-label="MS-10 Korg35 Cutoff Offset">
+              </div>
+              <div class="flex flex-col gap-1">
+                <div class="flex justify-between text-plum-200">
+                  <span>PEAK (RESONANCE)</span>
+                  <span id="korgPeakVal" class="text-gold-400 font-bold">3.9</span>
+                </div>
+                <input id="korgPeakSlider" type="range" min="1.0" max="9.6" step="0.1" value="3.9" class="vw-slider w-full" aria-label="MS-10 Korg35 Peak Resonance">
+              </div>
+            </div>
+
+            <!-- SQ-10 TRIG OUT -> RESET IN Step Length Selector -->
+            <div class="pt-1.5 border-t border-midnight-850 flex flex-wrap items-center justify-between gap-1.5 font-mono text-[9px]">
+              <span class="text-plum-300 uppercase">SQ-10 RESET IN:</span>
+              <div class="inline-flex rounded-sm border border-plum-900 bg-midnight-900 p-0.5" role="group" aria-label="SQ-10 Reset Step Length">
+                <button type="button" data-sq-steps="5" aria-pressed="true" class="sq-step-btn px-2 py-0.5 rounded-sm bg-plum-500/25 text-plum-300 font-bold cursor-pointer transition-colors">5-Step</button>
+                <button type="button" data-sq-steps="7" aria-pressed="false" class="sq-step-btn px-2 py-0.5 rounded-sm text-plum-400 hover:text-white cursor-pointer transition-colors">7-Step</button>
+                <button type="button" data-sq-steps="11" aria-pressed="false" class="sq-step-btn px-2 py-0.5 rounded-sm text-plum-400 hover:text-white cursor-pointer transition-colors">11-Step</button>
+                <button type="button" data-sq-steps="8" aria-pressed="false" class="sq-step-btn px-2 py-0.5 rounded-sm text-plum-400 hover:text-white cursor-pointer transition-colors">8-Step</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-midnight-950 border border-midnight-850 p-3 rounded-sm flex items-center justify-between gap-4">
+            <label for="masterGainSlider" class="font-mono text-xs text-plum-300 uppercase tracking-wider shrink-0">Master Out</label>
+            <input id="masterGainSlider" type="range" min="0" max="1.4" step="0.01" value="0.92" class="vw-slider w-full">
+            <span id="masterGainVal" class="font-mono text-xs text-gold-400 font-bold w-10 text-right">92%</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stem Exporter & Virtual Router Section -->
+      <section id="dawRecorderPanel" class="bg-midnight-900/90 border border-midnight-850 rounded-sm p-4 sm:p-5 shadow-2xl">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-4 mb-4 border-b border-midnight-850">
+          <div>
+            <div class="flex items-center gap-2">
+              <span id="recHeaderLed" class="w-2 h-2 rounded-full bg-plum-700"></span>
+              <h2 class="font-mono text-xs sm:text-sm font-bold text-white uppercase tracking-widest">Stem Exporter &amp; Virtual Router</h2>
+              <span id="recSampleRateBadge" class="font-mono text-[10px] bg-midnight-950 border border-plum-700 text-gold-400 px-2 py-0.5 rounded-sm">24-BIT PCM WAV</span>
+            </div>
+            <p class="text-xs text-plum-300 mt-1">Capture sample-aligned 24-bit WAV stems generated natively by the Web Audio API engine.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 font-mono text-xs shrink-0">
+            <div class="inline-flex rounded-sm border border-plum-900 bg-midnight-950 p-0.5" role="group" aria-label="Recording mode">
+              <button type="button" data-rec-mode="ALL" aria-pressed="true" class="rec-mode-btn disabled:opacity-40 disabled:pointer-events-none px-2.5 py-1 rounded-sm bg-plum-500/25 text-plum-300 font-bold uppercase cursor-pointer transition-colors">Master + Stems</button>
+              <button type="button" data-rec-mode="STEMS" aria-pressed="false" class="rec-mode-btn disabled:opacity-40 disabled:pointer-events-none px-2.5 py-1 rounded-sm text-plum-400 hover:text-white uppercase cursor-pointer transition-colors">Stems Only</button>
+            </div>
+            <button type="button" id="recLiveBtn" class="inline-flex items-center gap-1.5 bg-red-600 hover:bg-red-500 text-white px-3.5 py-1.5 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer shadow-[0_0_12px_rgba(220,38,38,0.35)]">
+              <span id="recLiveIcon" aria-hidden="true">●</span> <span id="recLiveLabel">Rec Live</span>
+            </button>
+            <button type="button" id="printFullBtn" class="inline-flex items-center gap-1.5 bg-midnight-950 hover:bg-midnight-900 border border-gold-500/50 text-gold-400 px-3 py-1.5 font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer">⚡ Print 96-Bar Song</button>
+          </div>
+        </div>
+        <div id="dawTrackGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 mb-4 font-mono"></div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 pt-3 border-t border-midnight-850/80">
+          <div class="lg:col-span-5 bg-midnight-950 border border-midnight-850 p-3 rounded-sm flex flex-col justify-between gap-2.5 font-mono">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[11px] font-bold text-white uppercase tracking-wider">Audio Interface Routing</span>
+              <span id="sinkChannelInfo" class="text-[10px] text-plum-300">2-Ch Stereo Out</span>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-2">
+              <select id="audioOutputSelect" aria-label="Audio Output Device" class="flex-1 bg-midnight-900 border border-plum-900 text-plum-200 text-[11px] px-2.5 py-1.5 rounded-sm outline-none focus:border-plum-400">
+                <option value="">System Default Audio Output</option>
+              </select>
+              <button type="button" id="refreshDevicesBtn" class="px-2.5 py-1.5 bg-midnight-900 hover:bg-midnight-850 border border-plum-700 text-plum-200 text-[10px] font-bold uppercase rounded-sm cursor-pointer">Scan Outs</button>
+            </div>
+          </div>
+          <div class="lg:col-span-7 bg-midnight-950 border border-midnight-850 p-3 rounded-sm flex flex-col justify-between gap-2 font-mono">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] font-bold text-white uppercase tracking-wider">Exported 24-Bit Stems</span>
+                <span id="recTimerLabel" class="text-[11px] text-plum-400">00:00.0</span>
+              </div>
+              <button type="button" id="downloadAllWavBtn" disabled class="px-3 py-1 rounded-sm bg-plum-500/20 border border-plum-500/50 text-plum-200 disabled:opacity-30 disabled:pointer-events-none hover:bg-plum-500/30 text-[10px] font-bold uppercase tracking-wider cursor-pointer transition-colors">↓ Download All</button>
+            </div>
+            <div id="wavExportList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 min-h-[54px] items-center">
+              <p class="col-span-full text-[11px] text-plum-400">Arm tracks above and press <span class="text-red-400 font-bold">Rec Live</span> or <span class="text-gold-400 font-bold">Print 96-Bar Song</span>.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="py-6 text-center border-t border-midnight-850 bg-midnight-950 relative z-20">
+    <p class="font-mono text-xs text-plum-400 uppercase tracking-widest">VOLTAGE &amp; WAVE // BIKINI ATOLL // ATOMIC AGE THEREMIN &amp; EXOTICA LOUNGE</p>
+  </footer>
+
+  <script>
+    // =========================================================================
+    // 1. MUSICAL & KORG HARDWARE CONSTANTS (116 BPM, ASYMMETRIC 96-BAR SUITE)
+    // =========================================================================
+    function midiToFreq(m, cents = 0) {
+      return 440 * Math.pow(2, ((m - 69) + cents / 100) / 12);
+    }
+    const mapFc = v => 40 * Math.pow(2, v * 0.9);
+    const tm    = v => v <= 0 ? 0.003 : 0.003 * Math.pow(10, 0.36 * v);
+    const dm    = v => Math.max(0.06, tm(v));
+
+    let ac = null;
+    let masterGainValue = 0.92;
+    let korgCutoffOffset = 0.0; // -0.85 to +1.0 manual Korg35 cutoff offset
+    let korgPeakSetting = 3.9;  // Lush, resonant Exotica Korg35 default (3.9)
+    let sq10ResetSteps = 5;     // Book II P-07 default: 5-step polymeter (auto-shifts per scene unless locked)
+    let sq10UserLocked = false;
+
+    function clampFreq(hz) {
+      return Math.max(20, Math.min(ac ? ac.sampleRate * 0.45 : 20000, hz));
+    }
+
+    const BPM = 116; // Hypnotic, swaying atomic-age exotica tempo
+    const BEAT_SEC = 60 / BPM;
+    const BAR_SEC = 4 * BEAT_SEC;
+    const TOTAL_BARS = 96; // 96 bars @ 116 BPM = 198.62 seconds (03:18.6)
+    const LOOP_SEC = TOTAL_BARS * BAR_SEC;
+
+    function formatClock(sec) {
+      const tenths = Math.floor(Math.max(0, sec) * 10 + 1e-6);
+      const mins = Math.floor(tenths / 600);
+      const rem = ((tenths % 600) / 10).toFixed(1).padStart(4, '0');
+      return `${String(mins).padStart(2, '0')}:${rem}`;
+    }
+
+    // Asymmetric 6-Scene Architecture (10 + 14 + 18 + 16 + 14 + 24 = 96 Bars)
+    const SECTIONS = [
+      { id: 'CORAL_TIDE',      label: 'I. CORAL TIDE',       short: 'CORAL',   startBar: 0,  endBar: 9,  desc: '10 Bars // Atomic Age Theremin aerial glides, polychromatic Lydian-dominant bass, log-drum clave & Bar 10 drop' },
+      { id: 'SUNKEN_PAGODA',   label: 'II. SUNKEN PAGODA',   short: 'PAGODA',  startBar: 10, endBar: 23, desc: '14 Bars // Through-composed Atomic Age Theremin solo with bird-call trills & 5-step SQ-10 kalimba polyrhythm' },
+      { id: 'VELVET_BEGUINE',  label: 'III. VELVET BEGUINE', short: 'BEGUINE', startBar: 24, endBar: 41, desc: '18 Bars // 3-bar lounge cycles (Dmaj9 -> Bb7#11 -> Em11) & cheeky staccato VC-10 formant horn responses' },
+      { id: 'VOLCANIC_RITUAL', label: 'IV. VOLCANIC RITUAL', short: 'RITUAL',  startBar: 42, endBar: 57, desc: '16 Bars // Crooked 7-step whole-tone kalimba, Afro-Cuban 3-2 clave & high-register theremin swoops' },
+      { id: 'MONSOON_SILENCE', label: 'V. MONSOON SILENCE',  short: 'MONSOON', startBar: 58, endBar: 71, desc: '14 Bars // Cheeky scatting VC-10 horn stabs, pink-noise surf & stop-time tropical silences' },
+      { id: 'BIKINI_CARNIVAL', label: 'VI. BIKINI CARNIVAL', short: 'BIKINI',  startBar: 72, endBar: 95, desc: '24 Bars // Grand atomic-age exotica finale uniting 11-step kalimba, chromatic bass, VC-10 horns & theremin' }
+    ];
+
+    // Polychromatic Lydian-Dominant & Whole-Tone Exotica Bank (Scenes I, II, VI): Fmaj7#11 -> Db7#11 -> G13 -> E7#9
+    const CHORDS_EXOTICA = [
+      { name: 'Fmaj7#11',   rootMidi: 41, chord: [64, 67, 69, 71] }, // F2 (41), E4-G4-A4-B4
+      { name: 'Db7#11',     rootMidi: 37, chord: [61, 65, 67, 71] }, // Db2 (37), Db4-F4-G4-B4
+      { name: 'G13',        rootMidi: 43, chord: [59, 64, 65, 69] }, // G2 (43), B3-E4-F4-A4
+      { name: 'E7#9',       rootMidi: 40, chord: [62, 67, 68, 71] }  // E2 (40), D4-G4-G#4-B4
+    ];
+
+    // Asymmetric 3-Bar Velvet Lounge Cycle (Scene III — Dmaj9 -> Bb7#11 -> Em11)
+    const CHORDS_LOUNGE_3BAR = [
+      { name: 'Dmaj9',      rootMidi: 38, chord: [61, 64, 66, 69] }, // D2 (38), C#4-E4-F#4-A4
+      { name: 'Bb7#11',     rootMidi: 34, chord: [62, 64, 68, 70] }, // Bb1 (34), D4-E4-Ab4-Bb4
+      { name: 'Em11',       rootMidi: 40, chord: [62, 66, 67, 71] }  // E2 (40), D4-F#4-G4-B4
+    ];
+
+    // Volcanic Whole-Tone / Augmented Ritual Bank (Scenes IV & V): Cmaj7#5 -> Abmaj7#11 -> F#7#9 -> B13sus4
+    const CHORDS_VOLCANIC = [
+      { name: 'Cmaj7#5',    rootMidi: 36, chord: [60, 64, 68, 71] }, // C2 (36), C4-E4-G#4-B4
+      { name: 'Abmaj7#11',  rootMidi: 44, chord: [60, 63, 68, 74] }, // Ab2 (44), C4-Eb4-Ab4-D5
+      { name: 'F#7#9',      rootMidi: 42, chord: [61, 64, 69, 73] }, // F#2 (42), C#4-E4-A4-C#5
+      { name: 'B13sus4',    rootMidi: 35, chord: [61, 64, 68, 73] }  // B1 (35), C#4-E4-G#4-C#5
+    ];
+
+    // Korg VC-10 20-Band Analog Filter Bank Center Frequencies (125 Hz – 8 kHz)
+    const VC10_BAND_FREQS = [
+      125, 160, 200, 250, 315, 400, 500, 630, 800, 1000,
+      1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 7100, 8000
+    ];
+
+    // Cheeky 1950s Lounge Horn / Scatting Formant Syllables ("BA - DUP / WAH - OO / BI - BOP!")
+    const VC10_HORN_SYLLABLES = {
+      BA:  { name: 'BA',  f1: 740, f2: 1260, f3: 2480 },
+      DUP: { name: 'DUP', f1: 420, f2: 960,  f3: 2340 },
+      WAH: { name: 'WAH', f1: 780, f2: 1180, f3: 2520 },
+      OO:  { name: 'OO',  f1: 310, f2: 840,  f3: 2260 },
+      BI:  { name: 'BI',  f1: 300, f2: 2140, f3: 2780 },
+      BOP: { name: 'BOP', f1: 580, f2: 980,  f3: 2380 }
+    };
+
+    function getSectionForBar(barIdx) {
+      return SECTIONS.find(s => barIdx >= s.startBar && barIdx <= s.endBar) || SECTIONS[0];
+    }
+
+    function getChordForBar(barIdx) {
+      const sec = getSectionForBar(barIdx);
+      const localBar = barIdx - sec.startBar;
+      if (sec.id === 'VELVET_BEGUINE') {
+        return CHORDS_LOUNGE_3BAR[localBar % 3];
+      }
+      if (sec.id === 'VOLCANIC_RITUAL' || sec.id === 'MONSOON_SILENCE') {
+        return CHORDS_VOLCANIC[localBar % 4];
+      }
+      return CHORDS_EXOTICA[localBar % 4];
+    }
+
+    // =========================================================================
+    // 2. ATOMIC AGE THEREMIN + KORG MS-10, SQ-10 & VC-10 PATCH DATA
+    // =========================================================================
+    const PATCH_DATA = {
+      kick:     { name: "P-04 TomDrum",  rgb: "244, 63, 94",  s: [32,'t',0,2,0,null,0,0,4.5,7.4,0,0,null,null,0,0,1.1,0,0.85] },
+      snare:    { name: "P-05 LogClave", rgb: "250, 204, 21", s: [0,'n',0,null,0,8.2,0,0,7.5,4.2,0,6.0,'s',0,0,0,0.62,0,0.28] },
+      hat:      { name: "P-04 Maraca",   rgb: "52, 211, 153", s: [0,'n',0,null,0,0,0,0,9.2,1.6,0,1.0,'s',0,0,0,0.24,0,0.09] },
+      bass:     { name: "P-01 SubBass",  rgb: "34, 211, 238", s: [16,'s',0,null,0,null,0,0,4.5,3.9,0,6.0,null,null,0,0,1.15,1.2,0.16] },
+      theremin: { name: "Atomic Theremin",rgb: "251, 146, 60",s: [4,'s',0,null,0,null,0,0,7.8,2.0,0,0,null,null,0,0.22,2.4,6.4,0.48] },
+      arp:      { name: "P-07 Kalimba",  rgb: "45, 212, 191", s: [8,'s',0,null,0,null,0,0,6.4,4.4,0,0,null,null,0,0.01,1.15,0.2,0.20] },
+      vcHorn:   { name: "V-03 ScatHorn", rgb: "232, 121, 249",s: [8,'s',0,null,0,null,0,0,6.8,3.6,0,0,null,null,0,0.06,1.4,3.8,0.26] },
+      surf:     { name: "V-05 Monsoon",  rgb: "125, 211, 252",s: [0,'p',0,null,0,6.0,0,0,7.2,2.0,0,0,'p',0,0,0.65,2.6,4.0,0.85] }
+    };
+
+    const BASE_VOLUMES = {
+      kick: 1.18, snare: 0.68, hat: 0.40,
+      bass: 1.24, theremin: 0.98,
+      arp: 0.72,
+      vcHorn: 0.86, surf: 0.46
+    };
+
+    const SCORE_PARTS = [
+      { id: 'part1', num: 'TRK 01', title: 'THEREMIN & CHROMATIC BASS', spec: 'ATOMIC AGE THEREMIN + BOOK I P-01 SUB-OCTAVE',            color: '#fb923c', rgb: '251, 146, 60',  voices: ['bass', 'theremin'], gain: 1.0, muted: false, solo: false },
+      { id: 'part2', num: 'TRK 02', title: 'MS-10 LOG-DRUM & BEGUINE',  spec: 'BOOK I P-04 & P-05 // TUNED TOM-KICK + 3-2 CLAVE WOODBLOCK', color: '#facc15', rgb: '250, 204, 21',  voices: ['kick', 'snare', 'hat'], gain: 1.0, muted: false, solo: false },
+      { id: 'part3', num: 'TRK 03', title: 'SQ-10 POLYMETRIC KALIMBA',  spec: 'BOOK II P-07 // 5/7/11-STEP RESET IN + DOTTED-8TH ECHO',      color: '#2dd4bf', rgb: '45, 212, 191',  voices: ['arp'], gain: 1.0, muted: false, solo: false },
+      { id: 'part5', num: 'TRK 04', title: 'VC-10 SCAT HORNS & MONSOON',spec: 'BOOK III V-03 & V-05 // CHEEKY HORN CHORDS + PINK SURF',      color: '#e879f9', rgb: '232, 121, 249', voices: ['vcHorn', 'surf'], gain: 1.0, muted: false, solo: false }
+    ];
+
+    const DAW_TRACK_DEFS = [
+      { id: 'master', num: 'MST', name: 'Master_Mix',             fileSlug: '00_Master_Mix',             channels: 2, color: '#2dd4bf', armed: true },
+      { id: 'part1',  num: 'T01', name: 'Theremin_Chromatic_Bass',fileSlug: '01_Theremin_Chromatic_Bass',channels: 1, color: '#fb923c', armed: true },
+      { id: 'part2',  num: 'T02', name: 'MS10_LogDrum_Beguine',   fileSlug: '02_MS10_LogDrum_Beguine',   channels: 1, color: '#facc15', armed: true },
+      { id: 'part3',  num: 'T03', name: 'SQ10_Poly_Kalimba',      fileSlug: '03_SQ10_Poly_Kalimba',      channels: 1, color: '#2dd4bf', armed: true },
+      { id: 'part5',  num: 'T04', name: 'VC10_ScatHorns_Monsoon', fileSlug: '04_VC10_ScatHorns_Monsoon', channels: 1, color: '#e879f9', armed: true }
+    ];
+
+    // =========================================================================
+    // 3. ATOMIC AGE THEREMIN + KORG MS-10, SQ-10 & VC-10 CIRCUIT EMULATION
+    // =========================================================================
+    let masterOut = null, masterBus = null, masterAnalyser = null;
+    let partBuses = {}, partAnalysers = {}, tracks = {};
+    let nW = null, nP = null, arpDelay = null, arpDelayGain = null, thereminReverbDelay = null;
+    let scopeMode = 'WAVE';
+    let recMode = 'ALL', isRecording = false, autoStopAtLoopEnd = false, recStartTime = 0;
+    let recNode = null, recBuffers = {}, recPeaks = {}, renderedTakes = [];
+
+    function initAudioEngine() {
+      if (ac) return;
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      ac = new AudioCtx();
+
+      const comp = ac.createDynamicsCompressor();
+      comp.threshold.value = -11.0;
+      comp.ratio.value = 3.2;
+      comp.attack.value = 0.008;
+      comp.release.value = 0.18;
+
+      masterOut = ac.createGain();
+      masterOut.gain.value = masterGainValue;
+      masterBus = ac.createGain();
+      masterBus.gain.value = 1.0;
+
+      masterAnalyser = ac.createAnalyser();
+      masterAnalyser.fftSize = 1024;
+      masterAnalyser.smoothingTimeConstant = 0.76;
+
+      // Dotted-eighth tape delay on TRK 03 (SQ-10 Polymetric Kalimba)
+      arpDelay = ac.createDelay(1.0);
+      arpDelay.delayTime.value = BEAT_SEC * 0.75;
+      const arpDelayFilter = ac.createBiquadFilter();
+      arpDelayFilter.type = 'lowpass';
+      arpDelayFilter.frequency.value = 2100;
+      const arpFeedback = ac.createGain();
+      arpFeedback.gain.value = 0.32;
+      arpDelayGain = ac.createGain();
+      arpDelayGain.gain.value = 0.36;
+      arpDelay.connect(arpDelayFilter);
+      arpDelayFilter.connect(arpFeedback);
+      arpFeedback.connect(arpDelay);
+      arpDelayFilter.connect(arpDelayGain);
+      arpDelayGain.connect(comp);
+
+      // Lush 1950s Atomic Age Lounge Echo on Theremin & VC-10 Scat Horns
+      thereminReverbDelay = ac.createDelay(1.0);
+      thereminReverbDelay.delayTime.value = BEAT_SEC * 0.5;
+      const thFilter = ac.createBiquadFilter();
+      thFilter.type = 'lowpass';
+      thFilter.frequency.value = 2600;
+      const thFb = ac.createGain();
+      thFb.gain.value = 0.34;
+      const thSend = ac.createGain();
+      thSend.gain.value = 0.30;
+      thereminReverbDelay.connect(thFilter);
+      thFilter.connect(thFb);
+      thFb.connect(thereminReverbDelay);
+      thFilter.connect(thSend);
+      thSend.connect(comp);
+
+      SCORE_PARTS.forEach(part => {
+        const bus = ac.createGain();
+        bus.gain.value = 1.0;
+        bus.connect(comp);
+        if (part.id === 'part3') bus.connect(arpDelay);
+        if (part.id === 'part5') bus.connect(thereminReverbDelay);
+        partBuses[part.id] = bus;
+
+        const an = ac.createAnalyser();
+        an.fftSize = 1024;
+        an.smoothingTimeConstant = 0.76;
+        bus.connect(an);
+        partAnalysers[part.id] = an;
+      });
+
+      comp.connect(masterOut);
+      masterOut.connect(masterBus);
+      masterBus.connect(masterAnalyser);
+      masterBus.connect(ac.destination);
+      ac.cp = comp;
+
+      const L = ac.sampleRate * 3;
+      nW = ac.createBuffer(1, L, ac.sampleRate);
+      nP = ac.createBuffer(1, L, ac.sampleRate);
+      const w = nW.getChannelData(0), p = nP.getChannelData(0);
+      let a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0;
+      for (let i = 0; i < L; i++) {
+        const x = Math.random() * 2 - 1;
+        w[i] = x;
+        a = 0.99886 * a + x * 0.0555179;
+        b = 0.99332 * b + x * 0.0750759;
+        c = 0.96900 * c + x * 0.1538520;
+        d = 0.86650 * d + x * 0.3104856;
+        e = 0.55000 * e + x * 0.5329522;
+        f = -0.7616 * f - x * 0.0168980;
+        p[i] = (a + b + c + d + e + f + g + x * 0.5362) * 0.12;
+        g = x * 0.115926;
+      }
+
+      Object.keys(PATCH_DATA).forEach(id => { tracks[id] = buildVoice(id, PATCH_DATA[id]); });
+      applyMixerGains();
+      applyKorgVcfOverride();
+
+      const srBadge = document.getElementById('recSampleRateBadge');
+      if (srBadge) srBadge.textContent = `${(ac.sampleRate / 1000).toFixed(1)} kHz // 24-BIT WAV`;
+      updateSinkChannelInfo();
+      setupDawCaptureTap();
+    }
+
+    function makeKorg35SaturationCurve(drive = 2.4) {
+      const n = 1024, curve = new Float32Array(n);
+      const norm = Math.tanh(drive);
+      for (let i = 0; i < n; i++) {
+        const x = (i / 512) - 1;
+        curve[i] = Math.tanh(x * drive + 0.06 * x * x) / norm;
+      }
+      return curve;
+    }
+
+    function makeAtomicThereminTubeCurve() {
+      const n = 1024, curve = new Float32Array(n);
+      for (let i = 0; i < n; i++) {
+        const x = (i / 512) - 1;
+        curve[i] = Math.tanh(x * 1.65 + 0.18 * x * x) / Math.tanh(1.83);
+      }
+      return curve;
+    }
+
+    function buildVoice(id, pData) {
+      const s = pData.s, v = { all: [], P: pData }, N = (f, ...a) => ac[f](...a);
+      const src = (t, f) => { const o = N('createOscillator'); o.type = t; o.frequency.value = f; o.start(); v.all.push(o); return o; };
+      const G = (g = 1) => { const n = N('createGain'); n.gain.value = g; return n; };
+      const cs = () => { const o = N('createConstantSource'); o.offset.value = 0; o.start(); v.all.push(o); return o; };
+      const nz = b => { const o = N('createBufferSource'); o.buffer = b; o.loop = true; o.start(); v.all.push(o); return o; };
+
+      v.eg = cs();
+      v.vcf = N('createBiquadFilter');
+      v.vcf.type = 'lowpass';
+      const pre = G(0.54);
+      const vca = G(0);
+
+      if (id === 'surf') {
+        const pinkGain = G(0.85);
+        nz(nP).connect(pinkGain);
+        pinkGain.connect(pre);
+        v.bp = N('createBiquadFilter');
+        v.bp.type = 'bandpass';
+        v.bp.frequency.value = 720;
+        v.bp.Q.value = 1.6;
+        pre.connect(v.bp);
+        v.bp.connect(vca);
+      } else if (id === 'snare') {
+        const wn = G(0.24);
+        nz(nW).connect(wn);
+        wn.connect(pre);
+        v.osc = src('triangle', 680);
+        v.osc2 = src('sine', 1020);
+        const claveGain = G(0.42);
+        const overtoneGain = G(0.22);
+        v.osc.connect(claveGain); claveGain.connect(pre);
+        v.osc2.connect(overtoneGain); overtoneGain.connect(pre);
+        pre.connect(v.vcf);
+        v.vcf.connect(vca);
+      } else if (s[1] === 'n') {
+        const wn = G(0.24);
+        nz(nW).connect(wn);
+        const hatHpf = N('createBiquadFilter');
+        hatHpf.type = 'highpass';
+        hatHpf.frequency.value = 5000;
+        wn.connect(hatHpf);
+        hatHpf.connect(pre);
+        pre.connect(v.vcf);
+        v.vcf.connect(vca);
+      } else if (id === 'bass') {
+        v.osc = src('sawtooth', 110);
+        v.osc2 = src('triangle', 55);
+        const sawGain = G(0.56);
+        const subGain = G(0.64);
+        v.osc.connect(sawGain); sawGain.connect(pre);
+        v.osc2.connect(subGain); subGain.connect(pre);
+        pre.connect(v.vcf);
+
+        const sat = N('createWaveShaper');
+        sat.curve = makeKorg35SaturationCurve(2.3);
+        sat.oversample = '2x';
+        const lowShelf = N('createBiquadFilter');
+        lowShelf.type = 'lowshelf';
+        lowShelf.frequency.value = 110;
+        lowShelf.gain.value = 4.2;
+
+        v.vcf.connect(sat);
+        sat.connect(lowShelf);
+        lowShelf.connect(vca);
+      } else if (id === 'theremin') {
+        v.osc = src('sine', 440);
+        v.osc2 = src('sine', 220);
+        const primarySine = G(0.88);
+        const subChest = G(0.16);
+        v.osc.connect(primarySine); primarySine.connect(pre);
+        v.osc2.connect(subChest); subChest.connect(pre);
+
+        v.vibOsc = src('sine', 6.4);
+        v.vibGain = G(0);
+        v.vibOsc.connect(v.vibGain);
+        v.vibGain.connect(v.osc.frequency);
+        v.vibGain.connect(v.osc2.frequency);
+
+        const tube = N('createWaveShaper');
+        tube.curve = makeAtomicThereminTubeCurve();
+        tube.oversample = '2x';
+
+        const thLowpass = N('createBiquadFilter');
+        thLowpass.type = 'lowpass';
+        thLowpass.frequency.value = 3200;
+        thLowpass.Q.value = 1.4;
+
+        pre.connect(tube);
+        tube.connect(thLowpass);
+        thLowpass.connect(vca);
+        vca.connect(thereminReverbDelay);
+      } else if (id === 'arp') {
+        v.osc = src('sawtooth', 440);
+        v.osc2 = src('triangle', 880);
+        const sawBlend = G(0.56);
+        const triBlend = G(0.44);
+        v.osc.connect(sawBlend); sawBlend.connect(pre);
+        v.osc2.connect(triBlend); triBlend.connect(pre);
+
+        const arpHpf = N('createBiquadFilter');
+        arpHpf.type = 'highpass';
+        arpHpf.frequency.value = 260;
+        pre.connect(arpHpf);
+        arpHpf.connect(v.vcf);
+        v.vcf.connect(vca);
+      } else if (id === 'vcHorn') {
+        v.osc = src('sawtooth', 220);
+        v.osc2 = src('square', 277.18);
+        v.osc3 = src('sawtooth', 329.63);
+        const g1 = G(0.44);
+        const g2 = G(0.32);
+        const g3 = G(0.36);
+        v.osc.connect(g1); g1.connect(pre);
+        v.osc2.connect(g2); g2.connect(pre);
+        v.osc3.connect(g3); g3.connect(pre);
+
+        const hornDrive = N('createWaveShaper');
+        hornDrive.curve = makeKorg35SaturationCurve(2.2);
+        pre.connect(hornDrive);
+
+        v.vcBands = [];
+        VC10_BAND_FREQS.forEach(centerHz => {
+          const bp = N('createBiquadFilter');
+          bp.type = 'bandpass';
+          bp.frequency.value = centerHz;
+          bp.Q.value = 8.0;
+
+          const bandVca = G(0.14);
+          hornDrive.connect(bp);
+          bp.connect(bandVca);
+          bandVca.connect(vca);
+          v.vcBands.push({ hz: centerHz, bp, gain: bandVca });
+        });
+      } else {
+        v.osc = src('triangle', 200);
+        v.osc.connect(pre);
+        pre.connect(v.vcf);
+        v.vcf.connect(vca);
+      }
+
+      const vsum = G(0.5), clip = N('createWaveShaper');
+      clip.curve = new Float32Array([0, 0, 2]);
+      vsum.connect(clip);
+      clip.connect(vca.gain);
+      const ge = G(0.92);
+      v.eg.connect(ge);
+      ge.connect(vsum);
+
+      v.out = G(BASE_VOLUMES[id]);
+      vca.connect(v.out);
+      const ownerPart = SCORE_PARTS.find(p => p.voices.includes(id));
+      if (ownerPart && partBuses[ownerPart.id]) v.out.connect(partBuses[ownerPart.id]);
+      else v.out.connect(ac.cp);
+
+      v.an = ac.createAnalyser();
+      v.an.fftSize = 2048;
+      v.an.smoothingTimeConstant = 0.76;
+      v.out.connect(v.an);
+
+      const t = ac.currentTime;
+      v.vcf.frequency.setTargetAtTime(clampFreq(mapFc(s[8])), t, 0.02);
+      v.vcf.Q.setTargetAtTime(s[9] * 1.45, t, 0.02);
+      return v;
+    }
+
+    const hold = (o, t) => {
+      try { if (o.cancelAndHoldAtTime) { o.cancelAndHoldAtTime(t); return; } } catch (e) {}
+      o.cancelScheduledValues(t);
+    };
+
+    function schedOn(v, at, vel = 1.0, cleanMonoBreath = false, customAttack = null) {
+      const s = v.P.s, o = v.eg.offset;
+      const a = customAttack !== null ? customAttack : tm(s[15]);
+      const h = tm(s[14]);
+      const peak = Math.max(0.12, Math.min(1.0, vel));
+      hold(o, at);
+      if (cleanMonoBreath) {
+        o.setTargetAtTime(0, at, 0.0014);
+        o.setValueAtTime(0, at + 0.004);
+        o.linearRampToValueAtTime(peak, at + 0.004 + a);
+      } else {
+        o.setValueAtTime(0, at);
+        o.linearRampToValueAtTime(peak, at + a);
+      }
+      const startHold = at + (cleanMonoBreath ? 0.004 : 0) + a + (s[14] ? h : 0);
+      o.setValueAtTime(peak, startHold);
+      o.setTargetAtTime((s[17] / 10) * peak, startHold, dm(s[16]) / 3);
+    }
+
+    function schedOff(v, at, customRelease = null) {
+      const o = v.eg.offset;
+      hold(o, at);
+      const rel = customRelease !== null ? customRelease : Math.max(0.005, Math.min(0.45, dm(v.P.s[18]) / 3));
+      o.setTargetAtTime(0, at, rel);
+    }
+
+    function triggerVc10HornSyllable(v, syllable, at) {
+      if (!v || !v.vcBands) return;
+      v.vcBands.forEach(band => {
+        const d1 = Math.log2(band.hz / syllable.f1);
+        const d2 = Math.log2(band.hz / syllable.f2);
+        const d3 = Math.log2(band.hz / syllable.f3);
+
+        const g1 = Math.exp(-(d1 * d1) / 0.15) * 1.18;
+        const g2 = Math.exp(-(d2 * d2) / 0.13) * 0.96;
+        const g3 = Math.exp(-(d3 * d3) / 0.18) * 0.58;
+        const targetGain = Math.min(1.30, 0.04 + g1 + g2 + g3);
+
+        hold(band.gain.gain, at);
+        band.gain.gain.setTargetAtTime(targetGain, at, 0.014);
+      });
+    }
+
+    function computeKorg35Cutoff(baseHz) {
+      const mult = Math.pow(4.2, korgCutoffOffset);
+      return clampFreq(baseHz * mult);
+    }
+
+    function applyKorgVcfOverride() {
+      const readout = document.getElementById('korgVcfReadout');
+      const cutValEl = document.getElementById('korgCutoffVal');
+      const peakValEl = document.getElementById('korgPeakVal');
+
+      if (cutValEl) cutValEl.textContent = `${korgCutoffOffset >= 0 ? '+' : ''}${Math.round(korgCutoffOffset * 100)}%`;
+      if (peakValEl) peakValEl.textContent = korgPeakSetting.toFixed(1);
+      if (readout) {
+        const modeTxt = Math.abs(korgCutoffOffset) < 0.02 ? 'AUTO' : `${korgCutoffOffset > 0 ? '+' : ''}${Math.round(korgCutoffOffset * 100)}%`;
+        readout.textContent = `${modeTxt} // PEAK ${korgPeakSetting.toFixed(1)}`;
+      }
+
+      if (!ac) return;
+      const now = ac.currentTime;
+      ['bass', 'arp'].forEach(vid => {
+        const trk = tracks[vid];
+        if (trk && trk.vcf) {
+          const scale = vid === 'bass' ? 1.05 : 1.25;
+          trk.vcf.Q.setTargetAtTime(korgPeakSetting * scale, now, 0.02);
+        }
+      });
+    }
+
+    function applyMixerGains() {
+      if (!ac) return;
+      const anySolo = SCORE_PARTS.some(p => p.solo);
+      SCORE_PARTS.forEach(part => {
+        const active = anySolo ? part.solo : !part.muted;
+        const mult = active ? part.gain : 0;
+        part.voices.forEach(vid => {
+          if (tracks[vid] && tracks[vid].out) tracks[vid].out.gain.setTargetAtTime(BASE_VOLUMES[vid] * mult, ac.currentTime, 0.02);
+        });
+      });
+    }
+
+    // =========================================================================
+    // 4. 96-BAR ATOMIC AGE THEREMIN & CHEEKY VC-10 HORN EXOTICA SCORE (116 BPM)
+    // =========================================================================
+    const BAR_EVENTS = [];
+
+    function buildScoreEvents() {
+      BAR_EVENTS.length = 0;
+
+      for (let b = 0; b < TOTAL_BARS; b++) {
+        const sec = getSectionForBar(b);
+        const chord = getChordForBar(b);
+        const localBar = b - sec.startBar;
+        const isAnswerBar = (localBar % 2 === 1);
+        const isLastBarOfScene = (b === sec.endBar);
+        const isVacuumBar = (b === 9 || b === 31 || b === 49 || b === 63 || b === 83);
+        const events = [];
+
+        const defaultSceneSteps = sec.id === 'VOLCANIC_RITUAL' ? 7 : (sec.id === 'BIKINI_CARNIVAL' ? 11 : 5);
+        const effectiveSqSteps = sq10UserLocked ? sq10ResetSteps : defaultSceneSteps;
+
+        // ---------------------------------------------------------------------
+        // TRK 02: MS-10 LOG-DRUM & BEGUINE PERCUSSION (Book I P-04 & P-05)
+        // ---------------------------------------------------------------------
+        if (isVacuumBar) {
+          events.push({ type: 'kick', partId: 'part2', voiceId: 'kick',  rawBeatOff: 0.00, durSec: 0.16, vel: 0.96, label: 'STOP TOM' });
+          events.push({ type: 'hit',  partId: 'part2', voiceId: 'snare', rawBeatOff: 0.00, durSec: 0.14, vel: 0.90, label: 'STOP CLV' });
+          if (b === 9 || b === 83) {
+            events.push({ type: 'hit', partId: 'part2', voiceId: 'snare', rawBeatOff: 3.75, durSec: 0.09, vel: 0.86, label: 'SNAP CLV' });
+          }
+        } else if (sec.id === 'MONSOON_SILENCE') {
+          [0, 2.5].forEach(off => {
+            if (b === 71 && off > 0) return;
+            events.push({ type: 'kick', partId: 'part2', voiceId: 'kick', rawBeatOff: off, durSec: 0.16, vel: 0.88, label: 'MONS TOM' });
+          });
+          [0.0, 0.75, 1.5, 2.5, 3.0].forEach(off => {
+            if (b === 71) return;
+            events.push({ type: 'hit', partId: 'part2', voiceId: 'snare', rawBeatOff: off, durSec: 0.08, vel: 0.84, label: '3-2 CLV' });
+          });
+          if (b === 71) {
+            [2.0, 2.5, 3.0, 3.25, 3.5, 3.75].forEach((off, idx) => {
+              events.push({ type: 'hit', partId: 'part2', voiceId: 'snare', rawBeatOff: off, durSec: 0.09, vel: 0.66 + idx * 0.06, label: 'ROLL CLV' });
+            });
+          }
+          for (let h = 0; h < 16; h++) {
+            if (h % 4 !== 2) continue;
+            events.push({ type: 'hit', partId: 'part2', voiceId: 'hat', rawBeatOff: h * 0.25, durSec: 0.11, vel: 0.74, label: 'OPN MRC' });
+          }
+        } else if (b === 95) {
+          events.push({ type: 'kick', partId: 'part2', voiceId: 'kick',  rawBeatOff: 0.0, durSec: 0.18, vel: 1.0,  label: 'END TOM' });
+          events.push({ type: 'hit',  partId: 'part2', voiceId: 'snare', rawBeatOff: 1.0, durSec: 0.16, vel: 0.92, label: 'END CLV' });
+        } else if (sec.id === 'VELVET_BEGUINE') {
+          [0, 1.5, 2.0, 3.5].forEach(off => {
+            events.push({ type: 'kick', partId: 'part2', voiceId: 'kick', rawBeatOff: off, durSec: 0.15, vel: 0.94, label: 'BEG TOM' });
+          });
+          [1.0, 2.5, 3.0].forEach(off => {
+            events.push({ type: 'hit', partId: 'part2', voiceId: 'snare', rawBeatOff: off, durSec: 0.10, vel: 0.86, label: 'P-05 CLV' });
+          });
+          for (let h = 0; h < 16; h++) {
+            const offbeat = (h % 4 === 2);
+            events.push({
+              type: 'hit', partId: 'part2', voiceId: 'hat', rawBeatOff: h * 0.25,
+              durSec: offbeat ? 0.11 : 0.032,
+              vel: offbeat ? 0.88 : 0.34,
+              label: offbeat ? 'OPN MRC' : 'P-04 MRC'
+            });
+          }
+        } else {
+          [0, 1, 2, 3].forEach(off => {
+            events.push({ type: 'kick', partId: 'part2', voiceId: 'kick', rawBeatOff: off, durSec: 0.14, vel: 1.0, label: 'P-04 TOM' });
+          });
+          [1, 3].forEach(off => {
+            events.push({ type: 'hit', partId: 'part2', voiceId: 'snare', rawBeatOff: off, durSec: 0.12, vel: 0.88, label: 'P-05 CLV' });
+          });
+          events.push({ type: 'hit', partId: 'part2', voiceId: 'snare', rawBeatOff: 2.75, durSec: 0.07, vel: 0.64, label: '3-2 CLV' });
+          if (isLastBarOfScene || localBar % 4 === 3) {
+            events.push({ type: 'hit', partId: 'part2', voiceId: 'snare', rawBeatOff: 3.50, durSec: 0.10, vel: 0.76, label: 'TICK CLV' });
+            events.push({ type: 'hit', partId: 'part2', voiceId: 'snare', rawBeatOff: 3.75, durSec: 0.10, vel: 0.88, label: 'TOCK CLV' });
+          }
+          for (let h = 0; h < 16; h++) {
+            const offbeat = (h % 4 === 2);
+            events.push({
+              type: 'hit', partId: 'part2', voiceId: 'hat', rawBeatOff: h * 0.25,
+              durSec: offbeat ? 0.11 : 0.032,
+              vel: offbeat ? 0.90 : 0.32,
+              label: offbeat ? 'OPN MRC' : 'P-04 MRC'
+            });
+          }
+        }
+
+        // ---------------------------------------------------------------------
+        // TRK 01A: MS-10 EXOTICA SUB-OCTAVE BASS (Book I P-01)
+        // ---------------------------------------------------------------------
+        const r = chord.rootMidi;
+        if (b === 95) {
+          events.push({
+            type: 'note', partId: 'part1', voiceId: 'bass', rawBeatOff: 0.00, durBeats: 3.60,
+            midi: 41, cutoffHz: 300, envPeakHz: 680, glideSec: 0.02, vel: 0.96, customRelease: 0.45, label: 'P-01 END'
+          });
+        } else if (isVacuumBar) {
+          events.push({
+            type: 'note', partId: 'part1', voiceId: 'bass', rawBeatOff: 0.00, durBeats: 0.40,
+            midi: r, cutoffHz: 240, envPeakHz: 620, glideSec: 0, vel: 1.0, cleanMonoBreath: true, label: 'P-01 STOP'
+          });
+          events.push({
+            type: 'note', partId: 'part1', voiceId: 'bass', rawBeatOff: 2.25, durBeats: 0.30,
+            midi: r + 6, cutoffHz: 310, envPeakHz: 780, glideSec: 0.02, vel: 0.92, cleanMonoBreath: true, label: 'P-01 #4'
+          });
+          events.push({
+            type: 'note', partId: 'part1', voiceId: 'bass', rawBeatOff: 3.00, durBeats: 0.30,
+            midi: r + 10, cutoffHz: 340, envPeakHz: 840, glideSec: 0.02, vel: 0.94, cleanMonoBreath: true, label: 'P-01 b7'
+          });
+          events.push({
+            type: 'note', partId: 'part1', voiceId: 'bass', rawBeatOff: 3.50, durBeats: 0.38,
+            midi: r + 12, cutoffHz: 380, envPeakHz: 920, glideSec: 0.025, vel: 0.96, cleanMonoBreath: true, label: 'P-01 OCT'
+          });
+        } else if (sec.id === 'VELVET_BEGUINE' || sec.id === 'MONSOON_SILENCE') {
+          const beguineBass = isAnswerBar
+            ? [
+                { off: 0.00, midi: r,      dur: 0.65, vel: 1.00, cut: 220, envPeak: 540, glide: 0 },
+                { off: 1.50, midi: r + 7,  dur: 0.35, vel: 0.88, cut: 260, envPeak: 640, glide: 0.015 },
+                { off: 2.00, midi: r + 12, dur: 0.55, vel: 0.94, cut: 290, envPeak: 720, glide: 0.015 },
+                { off: 3.00, midi: r + 6,  dur: 0.35, vel: 0.86, cut: 250, envPeak: 610, glide: 0.015 },
+                { off: 3.50, midi: r + 7,  dur: 0.35, vel: 0.90, cut: 270, envPeak: 660, glide: 0.015 }
+              ]
+            : [
+                { off: 0.00, midi: r,      dur: 0.65, vel: 1.00, cut: 220, envPeak: 540, glide: 0 },
+                { off: 1.50, midi: r + 7,  dur: 0.35, vel: 0.88, cut: 260, envPeak: 640, glide: 0.015 },
+                { off: 2.00, midi: r + 12, dur: 0.65, vel: 0.94, cut: 290, envPeak: 720, glide: 0.015 },
+                { off: 3.50, midi: r + 10, dur: 0.35, vel: 0.88, cut: 270, envPeak: 660, glide: 0.015 }
+              ];
+          beguineBass.forEach(n => {
+            events.push({
+              type: 'note', partId: 'part1', voiceId: 'bass', rawBeatOff: n.off, durBeats: n.dur,
+              midi: n.midi, cutoffHz: n.cut, envPeakHz: n.envPeak, glideSec: n.glide,
+              vel: n.vel, cleanMonoBreath: true, label: 'P-01 BEG'
+            });
+          });
+        } else {
+          const afroBass = isAnswerBar
+            ? [
+                { off: 0.00, midi: r,      dur: 0.24, vel: 1.00, cut: 240, envPeak: 640, glide: 0 },
+                { off: 0.75, midi: r + 12, dur: 0.20, vel: 0.88, cut: 320, envPeak: 820, glide: 0.014 },
+                { off: 1.50, midi: r + 7,  dur: 0.22, vel: 0.90, cut: 280, envPeak: 740, glide: 0.014 },
+                { off: 2.00, midi: r,      dur: 0.24, vel: 0.98, cut: 240, envPeak: 640, glide: 0 },
+                { off: 2.75, midi: r + 6,  dur: 0.20, vel: 0.86, cut: 290, envPeak: 760, glide: 0.014 },
+                { off: 3.25, midi: r + 10, dur: 0.20, vel: 0.90, cut: 310, envPeak: 800, glide: 0.014 },
+                { off: 3.50, midi: r + 12, dur: 0.22, vel: 0.94, cut: 340, envPeak: 880, glide: 0.014 }
+              ]
+            : [
+                { off: 0.00, midi: r,      dur: 0.24, vel: 1.00, cut: 240, envPeak: 640, glide: 0 },
+                { off: 0.75, midi: r + 12, dur: 0.20, vel: 0.88, cut: 320, envPeak: 820, glide: 0.014 },
+                { off: 1.50, midi: r + 10, dur: 0.22, vel: 0.90, cut: 300, envPeak: 780, glide: 0.014 },
+                { off: 2.00, midi: r,      dur: 0.24, vel: 0.98, cut: 240, envPeak: 640, glide: 0 },
+                { off: 2.50, midi: r + 7,  dur: 0.22, vel: 0.88, cut: 280, envPeak: 740, glide: 0.014 },
+                { off: 3.00, midi: r + 4,  dur: 0.20, vel: 0.86, cut: 260, envPeak: 700, glide: 0.014 },
+                { off: 3.50, midi: r + 12, dur: 0.22, vel: 0.94, cut: 330, envPeak: 860, glide: 0.014 }
+              ];
+          afroBass.forEach(n => {
+            events.push({
+              type: 'note', partId: 'part1', voiceId: 'bass', rawBeatOff: n.off, durBeats: n.dur,
+              midi: n.midi, cutoffHz: n.cut, envPeakHz: n.envPeak, glideSec: n.glide,
+              vel: n.vel, cleanMonoBreath: true, label: 'P-01 BAS'
+            });
+          });
+        }
+
+        // ---------------------------------------------------------------------
+        // TRK 01B: ATOMIC AGE EXOTICA THEREMIN (Pitch-Aerial Glides & Bird Calls)
+        // ---------------------------------------------------------------------
+        if (sec.id === 'CORAL_TIDE') {
+          if (localBar === 0) {
+            events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 1.35, midi: 76, scoopFromMidi: 69, glideSec: 0.065, vibDepthHz: 18, vel: 0.92, label: 'THM E5' });
+            events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 1.50, durBeats: 0.90, midi: 83, scoopFromMidi: 76, glideSec: 0.055, vibDepthHz: 20, vel: 0.95, label: 'THM B5' });
+            events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 2.75, durBeats: 1.15, midi: 81, scoopFromMidi: 83, glideSec: 0.045, vibDepthHz: 22, vel: 0.92, label: 'THM A5' });
+          } else if (localBar === 1) {
+            events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 1.45, midi: 79, scoopFromMidi: 81, glideSec: 0.055, vibDepthHz: 18, vel: 0.92, label: 'THM G5' });
+            events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 1.75, durBeats: 0.85, midi: 77, scoopFromMidi: 79, glideSec: 0.040, vibDepthHz: 16, vel: 0.88, label: 'THM F5' });
+            events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 2.75, durBeats: 1.15, midi: 73, scoopFromMidi: 77, glideSec: 0.075, vibDepthHz: 20, vel: 0.92, label: 'THM Db5' });
+          } else if (localBar === 4 || localBar === 5) {
+            if (localBar === 4) {
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.50, durBeats: 0.38, midi: 76, scoopFromMidi: 64, glideSec: 0.045, vibDepthHz: 10, vel: 0.90, label: 'THM BIRD' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 1.00, durBeats: 0.38, midi: 83, scoopFromMidi: 76, glideSec: 0.035, vibDepthHz: 12, vel: 0.94, label: 'THM BIRD' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 1.50, durBeats: 1.25, midi: 88, scoopFromMidi: 83, glideSec: 0.070, vibDepthHz: 26, vel: 0.98, label: 'THM E6!' });
+            } else {
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 0.90, midi: 85, scoopFromMidi: 88, glideSec: 0.050, vibDepthHz: 20, vel: 0.92, label: 'THM C#6' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 1.25, durBeats: 1.95, midi: 79, scoopFromMidi: 85, glideSec: 0.095, vibDepthHz: 24, vel: 0.95, label: 'THM G5' });
+            }
+          } else if (localBar === 8) {
+            events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 1.75, midi: 83, scoopFromMidi: 71, glideSec: 0.080, vibDepthHz: 22, vel: 0.94, label: 'THM B5' });
+            events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 2.00, durBeats: 1.85, midi: 91, scoopFromMidi: 83, glideSec: 0.110, vibDepthHz: 28, vel: 0.98, label: 'THM G6!' });
+          } else if (localBar === 9) {
+            events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.50, durBeats: 1.85, midi: 64, scoopFromMidi: 91, glideSec: 0.165, vibDepthHz: 18, vel: 0.95, label: 'THM DIVE' });
+          }
+        } else if (sec.id === 'SUNKEN_PAGODA') {
+          const pIdx = localBar % 14;
+          if (pIdx === 0 || pIdx === 1) {
+            if (pIdx === 0) {
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.25, durBeats: 0.75, midi: 76, scoopFromMidi: 69, glideSec: 0.055, vibDepthHz: 16, vel: 0.90, label: 'THM E5' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 1.25, durBeats: 0.75, midi: 83, scoopFromMidi: 76, glideSec: 0.060, vibDepthHz: 18, vel: 0.94, label: 'THM B5' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 2.25, durBeats: 1.45, midi: 86, scoopFromMidi: 83, glideSec: 0.075, vibDepthHz: 24, vel: 0.96, label: 'THM D6' });
+            } else {
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 0.90, midi: 85, scoopFromMidi: 86, glideSec: 0.045, vibDepthHz: 20, vel: 0.92, label: 'THM Db6' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 1.25, durBeats: 0.90, midi: 79, scoopFromMidi: 85, glideSec: 0.065, vibDepthHz: 18, vel: 0.90, label: 'THM G5' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 2.50, durBeats: 1.35, midi: 77, scoopFromMidi: 79, glideSec: 0.060, vibDepthHz: 22, vel: 0.92, label: 'THM F5' });
+            }
+          } else if (pIdx === 3 || pIdx === 4) {
+            if (pIdx === 3) {
+              [0.00, 0.75, 1.50, 2.25, 3.00].forEach((off, k) => {
+                const notes = [83, 80, 76, 83, 88];
+                const prevs = [76, 83, 80, 76, 83];
+                events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: off, durBeats: 0.50, midi: notes[k], scoopFromMidi: prevs[k], glideSec: 0.032, vibDepthHz: 12, vel: 0.92, label: 'THM SWOOP' });
+              });
+            } else {
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 1.90, midi: 88, scoopFromMidi: 83, glideSec: 0.075, vibDepthHz: 26, vel: 0.96, label: 'THM E6' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 2.25, durBeats: 1.55, midi: 76, scoopFromMidi: 88, glideSec: 0.115, vibDepthHz: 20, vel: 0.92, label: 'THM GLIDE' });
+            }
+          } else if (pIdx >= 7 && pIdx <= 10) {
+            if (pIdx === 7) {
+              [0.00, 0.375, 0.75, 1.125].forEach((off, k) => {
+                events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: off, durBeats: 0.25, midi: k % 2 === 0 ? 86 : 83, scoopFromMidi: k % 2 === 0 ? 83 : 86, glideSec: 0.015, vibDepthHz: 6, vel: 0.90, label: 'THM TRILL' });
+              });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 1.75, durBeats: 2.00, midi: 91, scoopFromMidi: 79, glideSec: 0.095, vibDepthHz: 28, vel: 0.98, label: 'THM G6!' });
+            } else if (pIdx === 8) {
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.50, durBeats: 0.90, midi: 88, scoopFromMidi: 91, glideSec: 0.055, vibDepthHz: 20, vel: 0.92, label: 'THM E6' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 1.75, durBeats: 0.90, midi: 82, scoopFromMidi: 88, glideSec: 0.065, vibDepthHz: 18, vel: 0.90, label: 'THM Bb5' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 3.00, durBeats: 0.90, midi: 76, scoopFromMidi: 82, glideSec: 0.065, vibDepthHz: 18, vel: 0.90, label: 'THM E5' });
+            } else if (pIdx === 10) {
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 2.60, midi: 81, cents: -22, scoopFromMidi: 74, glideSec: 0.085, vibDepthHz: 24, vel: 0.95, label: 'THM BEND' });
+            }
+          } else if (pIdx === 12 || pIdx === 13) {
+            if (pIdx === 12) {
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 1.80, midi: 76, scoopFromMidi: 64, glideSec: 0.080, vibDepthHz: 18, vel: 0.92, label: 'THM E5' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 2.00, durBeats: 1.80, midi: 83, scoopFromMidi: 76, glideSec: 0.080, vibDepthHz: 22, vel: 0.95, label: 'THM B5' });
+            } else {
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 3.50, midi: 85, scoopFromMidi: 83, glideSec: 0.110, vibDepthHz: 28, vel: 0.98, label: 'THM C#6' });
+            }
+          }
+        } else if (sec.id === 'VELVET_BEGUINE') {
+          const triBar = localBar % 3;
+          if (!isVacuumBar) {
+            if (triBar === 0) {
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 1.35, midi: 78, scoopFromMidi: 73, glideSec: 0.060, vibDepthHz: 18, vel: 0.92, label: 'THM F#5' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 1.50, durBeats: 0.95, midi: 81, scoopFromMidi: 78, glideSec: 0.045, vibDepthHz: 18, vel: 0.90, label: 'THM A5' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 2.50, durBeats: 1.25, midi: 85, scoopFromMidi: 81, glideSec: 0.060, vibDepthHz: 22, vel: 0.94, label: 'THM C#6' });
+            } else if (triBar === 1) {
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 1.45, midi: 80, scoopFromMidi: 85, glideSec: 0.065, vibDepthHz: 20, vel: 0.92, label: 'THM Ab5' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 1.75, durBeats: 1.15, midi: 76, scoopFromMidi: 80, glideSec: 0.055, vibDepthHz: 18, vel: 0.90, label: 'THM E5' });
+            } else {
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 2.00, durBeats: 1.75, midi: 83, scoopFromMidi: 74, glideSec: 0.085, vibDepthHz: 24, vel: 0.95, label: 'THM B5' });
+            }
+          }
+        } else if (sec.id === 'VOLCANIC_RITUAL' || sec.id === 'BIKINI_CARNIVAL') {
+          if (b === 95) {
+            events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 3.50, midi: 88, scoopFromMidi: 76, glideSec: 0.11, vibDepthHz: 30, vel: 0.98, label: 'THM FINALE' });
+          } else if (isVacuumBar) {
+            events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.50, durBeats: 2.75, midi: 91, scoopFromMidi: 64, glideSec: 0.15, vibDepthHz: 28, vel: 0.98, label: 'THM G6!' });
+          } else {
+            const mod4 = localBar % 4;
+            if (mod4 === 0) {
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 0.70, midi: 76, scoopFromMidi: 71, glideSec: 0.045, vibDepthHz: 14, vel: 0.92, label: 'THM E5' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.75, durBeats: 0.70, midi: 80, scoopFromMidi: 76, glideSec: 0.045, vibDepthHz: 16, vel: 0.94, label: 'THM G#5' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 1.50, durBeats: 1.15, midi: 83, scoopFromMidi: 80, glideSec: 0.055, vibDepthHz: 20, vel: 0.95, label: 'THM B5' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 2.75, durBeats: 1.00, midi: 88, scoopFromMidi: 83, glideSec: 0.065, vibDepthHz: 26, vel: 0.98, label: 'THM E6' });
+            } else if (mod4 === 1) {
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.25, durBeats: 0.90, midi: 86, scoopFromMidi: 88, glideSec: 0.050, vibDepthHz: 20, vel: 0.92, label: 'THM D6' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 1.50, durBeats: 0.90, midi: 80, scoopFromMidi: 86, glideSec: 0.065, vibDepthHz: 18, vel: 0.90, label: 'THM Ab5' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 2.50, durBeats: 1.25, midi: 75, scoopFromMidi: 80, glideSec: 0.065, vibDepthHz: 22, vel: 0.92, label: 'THM Eb5' });
+            } else if (mod4 === 2) {
+              [0.00, 0.50, 1.00, 1.50].forEach((off, k) => {
+                const arps = [76, 81, 85, 88];
+                const prevs = [71, 76, 81, 85];
+                events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: off, durBeats: 0.40, midi: arps[k], scoopFromMidi: prevs[k], glideSec: 0.030, vibDepthHz: 10, vel: 0.92, label: 'THM ARC' });
+              });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 2.25, durBeats: 1.50, midi: 81, scoopFromMidi: 88, glideSec: 0.085, vibDepthHz: 24, vel: 0.95, label: 'THM A5' });
+            } else {
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 0.00, durBeats: 1.65, midi: 85, scoopFromMidi: 73, glideSec: 0.075, vibDepthHz: 22, vel: 0.94, label: 'THM C#6' });
+              events.push({ type: 'theremin', partId: 'part1', voiceId: 'theremin', rawBeatOff: 2.00, durBeats: 1.75, midi: 79, scoopFromMidi: 85, glideSec: 0.095, vibDepthHz: 24, vel: 0.94, label: 'THM G5' });
+            }
+          }
+        }
+
+        // ---------------------------------------------------------------------
+        // TRK 03: SQ-10 POLYMETRIC KALIMBA (Book II P-07: 5 / 7 / 11-Step Reset)
+        // ---------------------------------------------------------------------
+        if (b >= 4 && b < 95 && !isVacuumBar) {
+          const kalimbaNotes = [
+            chord.chord[0] + 12,
+            chord.chord[1] + 12,
+            chord.chord[2] + 12,
+            chord.chord[3] + 12,
+            chord.rootMidi + 24,
+            chord.chord[3] + 12,
+            chord.chord[1] + 24,
+            chord.chord[2] + 24
+          ];
+          const numSteps = sec.id === 'MONSOON_SILENCE' ? 8 : 16;
+          const stride = sec.id === 'MONSOON_SILENCE' ? 0.5 : 0.25;
+          const filterCut = (sec.id === 'VELVET_BEGUINE' || sec.id === 'MONSOON_SILENCE')
+            ? 1750
+            : (2000 + 1800 * ((b % 8) / 8));
+
+          for (let s = 0; s < numSteps; s++) {
+            const globalStep = (b * numSteps) + s;
+            const sqStep = globalStep % effectiveSqSteps;
+            const midi = kalimbaNotes[sqStep % kalimbaNotes.length];
+            events.push({
+              type: 'note', partId: 'part3', voiceId: 'arp', rawBeatOff: s * stride, durBeats: 0.14,
+              midi, cutoffHz: filterCut, envPeakHz: filterCut * 1.4,
+              vel: (sec.id === 'VELVET_BEGUINE') ? 0.72 : 0.82,
+              label: `P-07 K${sqStep + 1}`
+            });
+          }
+        }
+
+        // ---------------------------------------------------------------------
+        // TRK 04 (part5): CHEEKY VC-10 SCAT HORNS & MONSOON SURF (V-03 & V-05)
+        // ---------------------------------------------------------------------
+        if (sec.id === 'MONSOON_SILENCE' || isVacuumBar) {
+          if (isVacuumBar) {
+            events.push({
+              type: 'surf', partId: 'part5', voiceId: 'surf', rawBeatOff: 0.25, durBeats: 3.40,
+              sweepHz: 1450, vel: 0.84, label: 'V-05 SURGE'
+            });
+          } else if (!isAnswerBar) {
+            events.push({
+              type: 'surf', partId: 'part5', voiceId: 'surf', rawBeatOff: 0.00, durBeats: 7.40,
+              sweepHz: 980, vel: 0.76, label: 'V-05 SURF'
+            });
+          }
+        }
+
+        if (!isVacuumBar && b < 95) {
+          if (sec.id === 'VELVET_BEGUINE') {
+            if (localBar % 3 === 2) {
+              events.push({ type: 'vcHorn', partId: 'part5', voiceId: 'vcHorn', rawBeatOff: 0.00, durBeats: 0.28, chordMidis: [62, 66, 71], syllable: VC10_HORN_SYLLABLES.BA,  vel: 0.90, label: 'V-03 BA!' });
+              events.push({ type: 'vcHorn', partId: 'part5', voiceId: 'vcHorn', rawBeatOff: 0.50, durBeats: 0.36, chordMidis: [64, 67, 74], syllable: VC10_HORN_SYLLABLES.DUP, vel: 0.94, label: 'V-03 DUP!' });
+              events.push({ type: 'vcHorn', partId: 'part5', voiceId: 'vcHorn', rawBeatOff: 1.25, durBeats: 0.45, chordMidis: [66, 71, 76], syllable: VC10_HORN_SYLLABLES.WAH, vel: 0.96, label: 'V-03 WAH!' });
+            }
+          } else if (sec.id === 'MONSOON_SILENCE') {
+            if (isAnswerBar) {
+              events.push({ type: 'vcHorn', partId: 'part5', voiceId: 'vcHorn', rawBeatOff: 0.75, durBeats: 0.26, chordMidis: [60, 64, 68], syllable: VC10_HORN_SYLLABLES.BI,  vel: 0.88, label: 'V-03 BI!' });
+              events.push({ type: 'vcHorn', partId: 'part5', voiceId: 'vcHorn', rawBeatOff: 1.25, durBeats: 0.34, chordMidis: [63, 68, 74], syllable: VC10_HORN_SYLLABLES.BOP, vel: 0.92, label: 'V-03 BOP!' });
+              events.push({ type: 'vcHorn', partId: 'part5', voiceId: 'vcHorn', rawBeatOff: 2.50, durBeats: 0.48, chordMidis: [64, 69, 73], syllable: VC10_HORN_SYLLABLES.OO,  vel: 0.90, label: 'V-03 OO!' });
+            }
+          } else if (sec.id === 'BIKINI_CARNIVAL') {
+            if (localBar % 2 === 1) {
+              events.push({ type: 'vcHorn', partId: 'part5', voiceId: 'vcHorn', rawBeatOff: 1.75, durBeats: 0.26, chordMidis: [chord.chord[0], chord.chord[1], chord.chord[3]], syllable: VC10_HORN_SYLLABLES.BA,  vel: 0.88, label: 'V-03 BA!' });
+              events.push({ type: 'vcHorn', partId: 'part5', voiceId: 'vcHorn', rawBeatOff: 2.25, durBeats: 0.32, chordMidis: [chord.chord[1], chord.chord[2], chord.chord[3] + 2], syllable: VC10_HORN_SYLLABLES.DUP, vel: 0.92, label: 'V-03 DUP!' });
+              events.push({ type: 'vcHorn', partId: 'part5', voiceId: 'vcHorn', rawBeatOff: 3.50, durBeats: 0.36, chordMidis: [chord.chord[0] + 12, chord.chord[2] + 12, chord.chord[3] + 12], syllable: VC10_HORN_SYLLABLES.WAH, vel: 0.95, label: 'V-03 WAH!' });
+            }
+          }
+        } else if (b === 95) {
+          events.push({ type: 'vcHorn', partId: 'part5', voiceId: 'vcHorn', rawBeatOff: 0.00, durBeats: 2.80, chordMidis: [64, 69, 76], syllable: VC10_HORN_SYLLABLES.WAH, vel: 0.96, label: 'V-03 END!' });
+        }
+
+        events.forEach((ev, i) => {
+          ev.domKey = `bar${b}_ev${i}`;
+        });
+        BAR_EVENTS.push(events);
+      }
+    }
+
+    // =========================================================================
+    // 5. LOOKAHEAD SCHEDULER & KORG HARDWARE DISPATCHER
+    // =========================================================================
+    let isPlaying = false, loopEnabled = true, viewMode = '4BAR', displayedSystem = 0;
+    let anchorAudioTime = 0, anchorSongTime = 0, nextBarIndex = 0;
+    let schedulerTimer = null, rafId = null, visualQueue = [], endTimer = null;
+    function clearEndTimer() { if (endTimer) { clearTimeout(endTimer); endTimer = null; } }
+
+    function scheduleWindow() {
+      if (!isPlaying || !ac) return;
+      const now = ac.currentTime;
+      const currentSongTime = anchorSongTime + (now - anchorAudioTime);
+      const horizon = currentSongTime + 0.25;
+
+      while (nextBarIndex * BAR_SEC < horizon) {
+        const atPassBoundary = nextBarIndex >= TOTAL_BARS && nextBarIndex % TOTAL_BARS === 0;
+        if (atPassBoundary && (!loopEnabled || autoStopAtLoopEnd)) {
+          if (!endTimer) {
+            const stopDelay = Math.max(0, (nextBarIndex * BAR_SEC - currentSongTime) * 1000);
+            endTimer = setTimeout(() => {
+              endTimer = null;
+              if (!isPlaying || (loopEnabled && !autoStopAtLoopEnd)) return;
+              const autoP = autoStopAtLoopEnd;
+              autoStopAtLoopEnd = false;
+              if (autoP && isRecording) stopDawRecording();
+              stopPlayback();
+            }, stopDelay);
+          }
+          break;
+        }
+
+        const barIdx = nextBarIndex % TOTAL_BARS;
+        const barStartSongTime = nextBarIndex * BAR_SEC;
+        const events = BAR_EVENTS[barIdx];
+
+        for (let i = 0; i < events.length; i++) {
+          const ev = events[i];
+          const evSongTime = barStartSongTime + ev.rawBeatOff * BEAT_SEC;
+          if (evSongTime >= anchorSongTime - 1e-6) {
+            triggerAudioEvent(ev, Math.max(now, anchorAudioTime + (evSongTime - anchorSongTime)));
+          }
+        }
+        nextBarIndex++;
+      }
+    }
+
+    function triggerAudioEvent(ev, at) {
+      const v = tracks[ev.voiceId];
+      if (!v) return;
+      const durSec = ev.durSec || (ev.durBeats * BEAT_SEC);
+      const vel = ev.vel !== undefined ? ev.vel : 1.0;
+
+      if (ev.type === 'note') {
+        const scaleMult = (v.P.s[0] === 32 ? 0.25 : (v.P.s[0] === 16 ? 0.5 : 1));
+        const freq = midiToFreq(ev.midi, ev.cents || 0) * scaleMult;
+        if (v.osc) {
+          v.osc.frequency.cancelScheduledValues(at);
+          if (ev.glideSec && ev.glideSec > 0) v.osc.frequency.setTargetAtTime(freq, at, ev.glideSec);
+          else v.osc.frequency.setValueAtTime(freq, at);
+        }
+        if (v.osc2) {
+          v.osc2.frequency.cancelScheduledValues(at);
+          if (ev.voiceId === 'bass') {
+            if (ev.glideSec && ev.glideSec > 0) v.osc2.frequency.setTargetAtTime(freq * 0.5, at, ev.glideSec);
+            else v.osc2.frequency.setValueAtTime(freq * 0.5, at);
+          } else if (ev.voiceId === 'arp') {
+            if (ev.glideSec && ev.glideSec > 0) v.osc2.frequency.setTargetAtTime(freq * 2.0, at, ev.glideSec);
+            else v.osc2.frequency.setValueAtTime(freq * 2.0, at);
+          }
+        }
+        if (ev.cutoffHz && v.vcf) {
+          v.vcf.frequency.cancelScheduledValues(at);
+          if (ev.envPeakHz) {
+            v.vcf.frequency.setValueAtTime(computeKorg35Cutoff(ev.envPeakHz), at);
+            v.vcf.frequency.exponentialRampToValueAtTime(computeKorg35Cutoff(ev.cutoffHz), at + Math.min(0.11, durSec * 0.85));
+          } else {
+            v.vcf.frequency.setTargetAtTime(computeKorg35Cutoff(ev.cutoffHz), at, 0.015);
+          }
+        }
+        schedOn(v, at, vel, Boolean(ev.cleanMonoBreath), ev.customAttack !== undefined ? ev.customAttack : null);
+        schedOff(v, at + durSec, ev.customRelease !== undefined ? ev.customRelease : null);
+      } else if (ev.type === 'theremin') {
+        const targetFreq = midiToFreq(ev.midi, ev.cents || 0);
+        const glide = ev.glideSec || 0.065;
+        if (v.osc) {
+          v.osc.frequency.cancelScheduledValues(at);
+          if (ev.scoopFromMidi) {
+            v.osc.frequency.setValueAtTime(midiToFreq(ev.scoopFromMidi, 0), at);
+          }
+          v.osc.frequency.setTargetAtTime(targetFreq, at, glide);
+        }
+        if (v.osc2) {
+          v.osc2.frequency.cancelScheduledValues(at);
+          if (ev.scoopFromMidi) {
+            v.osc2.frequency.setValueAtTime(midiToFreq(ev.scoopFromMidi, 0) * 0.5, at);
+          }
+          v.osc2.frequency.setTargetAtTime(targetFreq * 0.5, at, glide);
+        }
+        if (v.vibGain) {
+          const depth = ev.vibDepthHz || 18;
+          hold(v.vibGain.gain, at);
+          v.vibGain.gain.setValueAtTime(1.2, at);
+          v.vibGain.gain.setTargetAtTime(depth, at + Math.min(0.14, durSec * 0.28), 0.075);
+        }
+        schedOn(v, at, vel, false, 0.045);
+        schedOff(v, at + durSec, 0.16);
+      } else if (ev.type === 'vcHorn') {
+        const chord = ev.chordMidis || [60, 64, 67];
+        const f1 = midiToFreq(chord[0], 0) * 0.5;
+        const f2 = midiToFreq(chord[1], 0) * 0.5;
+        const f3 = midiToFreq(chord[2], 0) * 0.5;
+        if (v.osc)  { v.osc.frequency.cancelScheduledValues(at);  v.osc.frequency.setValueAtTime(f1, at); }
+        if (v.osc2) { v.osc2.frequency.cancelScheduledValues(at); v.osc2.frequency.setValueAtTime(f2, at); }
+        if (v.osc3) { v.osc3.frequency.cancelScheduledValues(at); v.osc3.frequency.setValueAtTime(f3, at); }
+        if (ev.syllable) triggerVc10HornSyllable(v, ev.syllable, at);
+        schedOn(v, at, vel, false, 0.018);
+        schedOff(v, at + durSec, 0.09);
+      } else if (ev.type === 'surf') {
+        if (v.bp) {
+          v.bp.frequency.cancelScheduledValues(at);
+          v.bp.frequency.setValueAtTime(computeKorg35Cutoff(360), at);
+          v.bp.frequency.exponentialRampToValueAtTime(computeKorg35Cutoff(ev.sweepHz || 980), at + durSec * 0.55);
+          v.bp.frequency.exponentialRampToValueAtTime(computeKorg35Cutoff(320), at + durSec);
+        }
+        schedOn(v, at, vel, false, 0.45);
+        schedOff(v, at + durSec, 0.45);
+      } else if (ev.type === 'kick') {
+        if (v.osc) {
+          v.osc.frequency.cancelScheduledValues(at);
+          v.osc.frequency.setValueAtTime(132, at);
+          v.osc.frequency.exponentialRampToValueAtTime(45, at + 0.05);
+        }
+        schedOn(v, at, vel);
+        schedOff(v, at + durSec);
+      } else if (ev.type === 'hit') {
+        schedOn(v, at, vel);
+        schedOff(v, at + durSec);
+      }
+
+      if (!document.hidden) visualQueue.push({
+        time: at,
+        offTime: at + durSec,
+        partId: ev.partId,
+        voiceId: ev.voiceId,
+        label: ev.label,
+        domKey: ev.domKey
+      });
+    }
+
+    function silenceAllVoices() {
+      if (!ac) return;
+      const now = ac.currentTime;
+      Object.values(tracks).forEach(v => {
+        if (v && v.eg) {
+          v.eg.offset.cancelScheduledValues(now);
+          v.eg.offset.setValueAtTime(0, now);
+        }
+      });
+      visualQueue = [];
+      const trigLed = document.getElementById('sqTrigLed');
+      if (trigLed) { trigLed.style.opacity = ''; trigLed.style.backgroundColor = ''; trigLed.style.boxShadow = ''; }
+      document.querySelectorAll('.score-note.active').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('[data-voice-led]').forEach(el => {
+        el.style.opacity = '0.25';
+        el.style.boxShadow = 'none';
+      });
+    }
+
+    function startPlayback() {
+      initAudioEngine();
+      if (ac.state === 'suspended') ac.resume();
+      if (isPlaying) {
+        const elapsed = Math.max(0, ac.currentTime - anchorAudioTime);
+        anchorSongTime = (anchorSongTime + elapsed) % LOOP_SEC;
+        isPlaying = false;
+        clearInterval(schedulerTimer);
+        clearEndTimer();
+        silenceAllVoices();
+        updateTransportUI();
+        return;
+      }
+      isPlaying = true;
+      anchorAudioTime = ac.currentTime + 0.03;
+      nextBarIndex = Math.floor(anchorSongTime / BAR_SEC);
+      clearInterval(schedulerTimer);
+      clearEndTimer();
+      scheduleWindow();
+      schedulerTimer = setInterval(scheduleWindow, 25);
+      updateTransportUI();
+      if (!rafId) rafId = requestAnimationFrame(renderLoop);
+    }
+
+    function stopPlayback() {
+      isPlaying = false;
+      autoStopAtLoopEnd = false;
+      clearInterval(schedulerTimer);
+      clearEndTimer();
+      anchorSongTime = 0;
+      nextBarIndex = 0;
+      silenceAllVoices();
+      if (isRecording) stopDawRecording();
+      updateTransportUI();
+      updatePositionUI(0);
+    }
+
+    function seekToBar(barIdx) {
+      const clamped = Math.max(0, Math.min(TOTAL_BARS - 1, barIdx));
+      anchorSongTime = clamped * BAR_SEC;
+      nextBarIndex = clamped;
+      clearEndTimer();
+      if (isPlaying && ac) {
+        silenceAllVoices();
+        anchorAudioTime = ac.currentTime + 0.02;
+        scheduleWindow();
+      } else {
+        updatePositionUI(anchorSongTime);
+        updateTransportUI();
+      }
+    }
+    window.seekToBar = seekToBar;
+
+    // =========================================================================
+    // 6. UI BUILDERS & LIVE RENDERING
+    // =========================================================================
+    function buildVoiceLedGrid() {
+      const grid = document.getElementById('voiceLedGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      Object.entries(PATCH_DATA).forEach(([id, data]) => {
+        const item = document.createElement('div');
+        item.className = 'bg-midnight-950 border border-midnight-850 px-2 py-1.5 rounded-sm flex items-center gap-2';
+        item.innerHTML = `<span data-voice-led="${id}" class="w-2 h-2 rounded-full shrink-0 transition-opacity" style="background: rgb(${data.rgb}); opacity: 0.25;"></span><span class="text-plum-200 truncate">${data.name}</span>`;
+        grid.appendChild(item);
+      });
+    }
+
+    function buildBarMatrix() {
+      const matrix = document.getElementById('barMatrix');
+      if (!matrix) return;
+      matrix.innerHTML = '';
+      for (let b = 0; b < TOTAL_BARS; b++) {
+        const sec = getSectionForBar(b), chord = getChordForBar(b);
+        const cell = document.createElement('button');
+        cell.id = `barCell_${b}`;
+        cell.dataset.bar = b;
+        cell.title = `Bar ${String(b + 1).padStart(2, '0')} (${sec.label} · ${chord.name})`;
+        cell.className = 'relative text-left bg-midnight-950 border border-midnight-850 hover:border-plum-400/70 px-1.5 py-1 rounded-sm transition-all overflow-hidden cursor-pointer group';
+        cell.innerHTML = `
+          <div id="barFill_${b}" class="absolute inset-y-0 left-0 bg-plum-500/20 pointer-events-none" style="width: 0%"></div>
+          <div class="relative z-10 flex items-center justify-between font-mono text-[9px] leading-tight">
+            <span class="text-plum-400 group-hover:text-plum-200 font-bold">${String(b + 1).padStart(2, '0')}</span>
+            <span class="text-[8px] text-plum-300 truncate ml-1">${sec.short}</span>
+          </div>
+          <div class="relative z-10 font-mono text-[10px] font-bold text-plum-200 truncate leading-tight mt-0.5">${chord.name}</div>`;
+        cell.addEventListener('click', () => seekToBar(b));
+        matrix.appendChild(cell);
+      }
+    }
+
+    function buildPartitureShell() {
+      const container = document.getElementById('partitureBody');
+      if (!container) return;
+      container.innerHTML = '';
+      SCORE_PARTS.forEach(part => {
+        const row = document.createElement('div');
+        row.id = `partRow_${part.id}`;
+        row.className = 'grid grid-cols-1 lg:grid-cols-12 bg-midnight-900/60 hover:bg-midnight-900/90 transition-all';
+        row.innerHTML = `
+          <div class="lg:col-span-3 p-3 sm:px-4 sm:py-2.5 border-b lg:border-b-0 lg:border-r border-midnight-850 flex flex-col justify-between gap-1.5 bg-midnight-950/60">
+            <div class="flex items-start justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2 font-mono text-[10px] tracking-widest">
+                  <span class="font-bold shrink-0" style="color: ${part.color}">${part.num}</span>
+                  <span class="text-plum-600 shrink-0">//</span>
+                  <span id="partStatus_${part.id}" class="text-plum-300 font-bold truncate">READY</span>
+                </div>
+                <h3 class="font-mono text-sm font-bold text-white tracking-wide mt-0.5 truncate">${part.title}</h3>
+                <p class="font-mono text-[10px] text-plum-300 truncate">${part.spec}</p>
+              </div>
+              <div class="flex items-center gap-1 font-mono text-[10px] shrink-0">
+                <button type="button" data-mute="${part.id}" aria-pressed="false" aria-label="Mute ${part.title}" class="w-6 h-6 rounded-sm border border-midnight-850 bg-midnight-900 text-plum-300 hover:text-white font-bold cursor-pointer transition-colors" title="Mute Part">M</button>
+                <button type="button" data-solo="${part.id}" aria-pressed="false" aria-label="Solo ${part.title}" class="w-6 h-6 rounded-sm border border-midnight-850 bg-midnight-900 text-plum-300 hover:text-white font-bold cursor-pointer transition-colors" title="Solo Part">S</button>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 pt-0.5">
+              <span class="font-mono text-[9px] text-plum-400 uppercase">LVL</span>
+              <input type="range" data-gain="${part.id}" aria-label="${part.title} level" min="0" max="1.5" step="0.01" value="1" class="vw-slider w-full">
+            </div>
+          </div>
+          <div class="lg:col-span-9 relative overflow-x-auto overflow-y-hidden bg-midnight-950/30">
+            <div id="lane_${part.id}" class="relative h-24 min-w-[600px] select-none"></div>
+          </div>`;
+        container.appendChild(row);
+      });
+
+      container.querySelectorAll('[data-mute]').forEach(b => b.addEventListener('click', () => {
+        const p = SCORE_PARTS.find(x => x.id === b.dataset.mute);
+        p.muted = !p.muted;
+        b.classList.toggle('bg-red-600', p.muted);
+        b.classList.toggle('text-white', p.muted);
+        b.classList.toggle('text-plum-300', !p.muted);
+        b.classList.toggle('bg-midnight-900', !p.muted);
+        b.setAttribute('aria-pressed', String(p.muted));
+        applyMixerGains();
+      }));
+
+      container.querySelectorAll('[data-solo]').forEach(b => b.addEventListener('click', () => {
+        const p = SCORE_PARTS.find(x => x.id === b.dataset.solo);
+        p.solo = !p.solo;
+        b.classList.toggle('bg-plum-400', p.solo);
+        b.classList.toggle('text-midnight-950', p.solo);
+        b.classList.toggle('text-plum-300', !p.solo);
+        b.classList.toggle('bg-midnight-900', !p.solo);
+        b.setAttribute('aria-pressed', String(p.solo));
+        applyMixerGains();
+      }));
+
+      container.querySelectorAll('[data-gain]').forEach(s => s.addEventListener('input', () => {
+        const p = SCORE_PARTS.find(x => x.id === s.dataset.gain);
+        p.gain = parseFloat(s.value);
+        applyMixerGains();
+      }));
+    }
+
+    function renderScoreLanes(systemIdx) {
+      displayedSystem = systemIdx;
+      const barsPerView = viewMode === '4BAR' ? 4 : (viewMode === '16BAR' ? 16 : TOTAL_BARS);
+      const startBar = viewMode === '96BAR' ? 0 : systemIdx * barsPerView;
+      const numBars = barsPerView;
+      const sec = getSectionForBar(startBar);
+      const sysBadge = document.getElementById('systemBadge');
+      if (sysBadge) {
+        if (viewMode === '4BAR') {
+          sysBadge.textContent = `SYSTEM ${String(systemIdx + 1).padStart(2, '0')} // BARS ${String(startBar + 1).padStart(2, '0')}–${String(startBar + 4).padStart(2, '0')} (${sec.label})`;
+        } else if (viewMode === '16BAR') {
+          sysBadge.textContent = `WINDOW ${systemIdx + 1} // BARS ${String(startBar + 1).padStart(2, '0')}–${String(startBar + 16).padStart(2, '0')} (${sec.label})`;
+        } else {
+          sysBadge.textContent = `FULL SCORE // BARS 01–96 (ALL 6 ASYMMETRIC SCENES · 03:18)`;
+        }
+      }
+
+      SCORE_PARTS.forEach(part => {
+        const lane = document.getElementById(`lane_${part.id}`);
+        if (!lane) return;
+        lane.style.width = viewMode === '96BAR' ? '6400px' : (viewMode === '16BAR' ? '1400px' : '100%');
+        let html = '';
+
+        for (let i = 0; i < numBars; i++) {
+          const b = startBar + i, leftPct = (i / numBars) * 100, widthPct = (1 / numBars) * 100, chord = getChordForBar(b);
+          html += `<div onclick="seekToBar(${b})" class="absolute inset-y-0 border-r border-midnight-850 hover:bg-plum-500/5 cursor-pointer transition-colors" style="left:${leftPct}%; width:${widthPct}%;">
+            <div class="flex items-center justify-between px-1.5 pt-1 font-mono text-[10px]">
+              <span class="text-plum-400 font-bold">${viewMode === '4BAR' ? 'BAR ' : ''}${String(b + 1).padStart(2, '0')}</span>
+              <span class="text-gold-400/85 font-bold">${chord.name}</span>
+            </div>
+            <div class="absolute inset-x-0 top-6 bottom-2 flex flex-col justify-between opacity-15 pointer-events-none">
+              <div class="border-t border-plum-400"></div>
+              <div class="border-t border-plum-400"></div>
+              <div class="border-t border-plum-400"></div>
+              <div class="border-t border-plum-400"></div>
+              <div class="border-t border-plum-400"></div>
+            </div>
+            <div class="absolute inset-y-6 left-1/4 border-l border-dashed border-midnight-850/70 pointer-events-none"></div>
+            <div class="absolute inset-y-6 left-2/4 border-l border-dashed border-midnight-850/70 pointer-events-none"></div>
+            <div class="absolute inset-y-6 left-3/4 border-l border-dashed border-midnight-850/70 pointer-events-none"></div>
+          </div>`;
+        }
+
+        for (let i = 0; i < numBars; i++) {
+          const b = startBar + i, barLeftPct = (i / numBars) * 100, barWidthPct = (1 / numBars) * 100;
+          const evs = BAR_EVENTS[b].filter(e => e.partId === part.id && e.domKey);
+          if (evs.length === 0) {
+            html += `<div class="absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center pointer-events-none px-2" style="left:${barLeftPct}%; width:${barWidthPct}%;"><span class="font-mono text-[9px] text-plum-600 tracking-widest uppercase">REST</span></div>`;
+            continue;
+          }
+          evs.forEach(ev => {
+            const evLeftPct = barLeftPct + (ev.rawBeatOff / 4) * barWidthPct;
+            const durBeats = ev.durBeats || (ev.durSec ? ev.durSec / BEAT_SEC : 0.25);
+            const evWidthPct = Math.max(0.18, (durBeats / 4) * barWidthPct * 0.94);
+
+            let topPct = 34, heightPct = 52;
+            if (part.id === 'part1') {
+              if (ev.voiceId === 'theremin') {
+                const norm = Math.max(0, Math.min(1, (ev.midi - 64) / 28));
+                topPct = Math.round(48 - norm * 26);
+                heightPct = 18;
+              } else {
+                const norm = Math.max(0, Math.min(1, (ev.midi - 34) / 24));
+                topPct = Math.round(74 - norm * 22);
+                heightPct = 18;
+              }
+            } else if (part.id === 'part3') {
+              const norm = Math.max(0, Math.min(1, (ev.midi - 68) / 30));
+              topPct = Math.round(70 - norm * 42);
+              heightPct = 21;
+            } else if (part.id === 'part2') {
+              topPct = ev.voiceId === 'kick' ? 68 : (ev.voiceId === 'snare' ? 48 : 28);
+              heightPct = 20;
+            } else if (part.id === 'part5') {
+              if (ev.type === 'surf') {
+                topPct = 60;
+                heightPct = 24;
+              } else {
+                topPct = 28;
+                heightPct = 24;
+              }
+            }
+
+            html += `<div id="note_${ev.domKey}" style="left:${evLeftPct}%; width:${evWidthPct}%; top:${topPct}%; height:${heightPct}%; background: rgba(${part.rgb}, 0.26); border-color: rgba(${part.rgb}, 0.88); --note-glow: rgba(${part.rgb}, 0.9);" class="score-note absolute border rounded-[2px] pointer-events-none"></div>`;
+          });
+        }
+
+        html += `<div id="playhead_${part.id}" class="absolute inset-y-0 w-0.5 bg-plum-300 shadow-[0_0_12px_#2dd4bf] z-20 pointer-events-none" style="left: 0%;"><div class="w-2 h-2 -ml-[3px] bg-plum-300 rotate-45"></div></div>`;
+        lane.innerHTML = html;
+      });
+    }
+
+    let lastBarShown = -1, lastBeatTxt = '', lastClockTxt = '';
+    function updatePositionUI(songTime) {
+      const posInLoop = ((songTime % LOOP_SEC) + LOOP_SEC) % LOOP_SEC;
+      const barIdx = Math.min(TOTAL_BARS - 1, Math.floor(posInLoop / BAR_SEC));
+      const barProgress = (posInLoop - barIdx * BAR_SEC) / BAR_SEC;
+      const beatFloat = barProgress * 4;
+      const beatNum = Math.floor(beatFloat) + 1;
+      const subNum = Math.floor((beatFloat % 1) * 4) + 1;
+      const sec = getSectionForBar(barIdx);
+      const chord = getChordForBar(barIdx);
+
+      const barChanged = barIdx !== lastBarShown;
+      if (barChanged) {
+        document.getElementById('hudBar').innerHTML = `${String(barIdx + 1).padStart(2, '0')}<span class="text-plum-700 text-xs">/96</span>`;
+        document.getElementById('hudSection').textContent = sec.label;
+        document.getElementById('hudChord').textContent = chord.name;
+        lastBarShown = barIdx;
+      }
+      const beatTxt = `${beatNum}.${subNum}`;
+      if (beatTxt !== lastBeatTxt) { document.getElementById('hudBeat').textContent = beatTxt; lastBeatTxt = beatTxt; }
+      const clockTxt = `${formatClock(posInLoop)} / ${formatClock(LOOP_SEC)}`;
+      if (clockTxt !== lastClockTxt) { document.getElementById('elapsedClock').textContent = clockTxt; lastClockTxt = clockTxt; }
+
+      const sqLed = document.getElementById('sqTrigLed');
+      if (sqLed && isPlaying) {
+        const defaultSceneSteps = sec.id === 'VOLCANIC_RITUAL' ? 7 : (sec.id === 'BIKINI_CARNIVAL' ? 11 : 5);
+        const activeSteps = sq10UserLocked ? sq10ResetSteps : defaultSceneSteps;
+        const globalStep = (barIdx * 16) + Math.floor(barProgress * 16);
+        const isResetStep = (globalStep % activeSteps) === 0;
+        const trigPrimary = '#2dd4bf';
+        const trigAlert = '#facc15';
+        sqLed.style.opacity = (subNum % 2 === 1) ? '1' : '0.35';
+        sqLed.style.backgroundColor = isResetStep ? trigAlert : trigPrimary;
+        sqLed.style.boxShadow = isResetStep ? `0 0 10px ${trigAlert}` : `0 0 8px ${trigPrimary}`;
+      }
+
+      if (barChanged) document.querySelectorAll('.sec-pill').forEach(pill => {
+        const start = parseInt(pill.dataset.jump, 10);
+        const pillSec = getSectionForBar(start);
+        const isCurrent = barIdx >= pillSec.startBar && barIdx <= pillSec.endBar;
+        pill.className = `sec-pill px-2 py-1 rounded-sm border uppercase tracking-wider cursor-pointer transition-colors ${
+          isCurrent
+            ? 'border-plum-400 bg-plum-500/20 text-plum-300 font-bold'
+            : 'border-plum-900 bg-midnight-950 text-plum-300 hover:border-plum-400/50 hover:text-white'
+        }`;
+      });
+
+      for (let b = barChanged ? 0 : barIdx; b < (barChanged ? TOTAL_BARS : barIdx + 1); b++) {
+        const cell = document.getElementById(`barCell_${b}`), fill = document.getElementById(`barFill_${b}`);
+        if (!cell || !fill) continue;
+        if (b < barIdx) {
+          cell.classList.remove('border-plum-400', 'ring-1', 'ring-plum-400/50');
+          cell.classList.add('border-midnight-850');
+          fill.style.width = '100%';
+        } else if (b === barIdx) {
+          cell.classList.add('border-plum-400', 'ring-1', 'ring-plum-400/50');
+          cell.classList.remove('border-midnight-850');
+          fill.style.width = `${(barProgress * 100).toFixed(1)}%`;
+        } else {
+          cell.classList.remove('border-plum-400', 'ring-1', 'ring-plum-400/50');
+          cell.classList.add('border-midnight-850');
+          fill.style.width = '0%';
+        }
+      }
+
+      if (viewMode === '4BAR') {
+        const targetSystem = Math.floor(barIdx / 4);
+        if (targetSystem !== displayedSystem) renderScoreLanes(targetSystem);
+        const playheadPct = (((barIdx % 4) + barProgress) / 4) * 100;
+        SCORE_PARTS.forEach(part => {
+          const ph = document.getElementById(`playhead_${part.id}`);
+          if (ph) ph.style.left = `${playheadPct.toFixed(2)}%`;
+        });
+      } else if (viewMode === '16BAR') {
+        const targetSystem = Math.floor(barIdx / 16);
+        if (targetSystem !== displayedSystem) renderScoreLanes(targetSystem);
+        const playheadPct = (((barIdx % 16) + barProgress) / 16) * 100;
+        SCORE_PARTS.forEach(part => {
+          const ph = document.getElementById(`playhead_${part.id}`);
+          if (ph) ph.style.left = `${playheadPct.toFixed(2)}%`;
+        });
+      } else {
+        const playheadPct = ((barIdx + barProgress) / TOTAL_BARS) * 100;
+        SCORE_PARTS.forEach(part => {
+          const ph = document.getElementById(`playhead_${part.id}`);
+          if (ph) ph.style.left = `${playheadPct.toFixed(2)}%`;
+        });
+      }
+    }
+
+    function drawScope() {
+      const scopeCanvas = document.getElementById('scopeCanvas');
+      if (!scopeCanvas) return;
+      const scopeCtx = scopeCanvas.getContext('2d');
+      if (!scopeCtx) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      const w = Math.round(scopeCanvas.clientWidth * dpr);
+      const h = Math.round(scopeCanvas.clientHeight * dpr);
+      if (w === 0 || h === 0) return;
+      if (scopeCanvas.width !== w || scopeCanvas.height !== h) {
+        scopeCanvas.width = w;
+        scopeCanvas.height = h;
+      }
+
+      scopeCtx.globalCompositeOperation = 'source-over';
+      scopeCtx.fillStyle = '#040a09';
+      scopeCtx.fillRect(0, 0, w, h);
+
+      scopeCtx.strokeStyle = 'rgba(45, 212, 191, 0.12)';
+      scopeCtx.lineWidth = 1;
+      scopeCtx.beginPath();
+      for (let i = 1; i < 4; i++) {
+        scopeCtx.moveTo(0, (h * i) / 4);
+        scopeCtx.lineTo(w, (h * i) / 4);
+        scopeCtx.moveTo((w * i) / 4, 0);
+        scopeCtx.lineTo((w * i) / 4, h);
+      }
+      scopeCtx.stroke();
+
+      scopeCtx.strokeStyle = 'rgba(250, 204, 21, 0.22)';
+      scopeCtx.beginPath();
+      scopeCtx.moveTo(0, h / 2);
+      scopeCtx.lineTo(w, h / 2);
+      scopeCtx.stroke();
+
+      if (!isPlaying || !ac) return;
+
+      scopeCtx.globalCompositeOperation = 'screen';
+      scopeCtx.lineWidth = 2 * dpr;
+
+      Object.keys(tracks).forEach(id => {
+        const track = tracks[id];
+        if (!track || !track.an) return;
+        scopeCtx.strokeStyle = `rgba(${PATCH_DATA[id].rgb}, 0.92)`;
+        scopeCtx.fillStyle = `rgba(${PATCH_DATA[id].rgb}, 0.72)`;
+
+        if (scopeMode === 'FREQ') {
+          const bins = track.binBuf || (track.binBuf = new Uint8Array(track.an.frequencyBinCount));
+          track.an.getByteFrequencyData(bins);
+          let active = false;
+          for (let j = 0; j < 50; j += 5) if (bins[j] > 5) { active = true; break; }
+          if (!active) return;
+          const count = 96;
+          for (let i = 0; i < count; i++) {
+            const k = Math.floor(Math.pow(bins.length * 0.55, i / count));
+            const val = bins[k] / 255;
+            if (val > 0.01) scopeCtx.fillRect((i * w) / count + 1, h - val * h, w / count - 2, val * h);
+          }
+        } else {
+          const buf = track.timeBuf || (track.timeBuf = new Float32Array(track.an.fftSize));
+          track.an.getFloatTimeDomainData(buf);
+          let active = false;
+          for (let j = 0; j < 256; j += 8) if (Math.abs(buf[j]) > 0.01) { active = true; break; }
+          if (!active) return;
+          let offset = 0;
+          for (let i = 1; i < buf.length / 2; i++) if (buf[i - 1] < 0 && buf[i] >= 0) { offset = i; break; }
+          scopeCtx.beginPath();
+          for (let i = 0; i < 1024; i++) {
+            const x = (i * w) / 1024;
+            const y = h / 2 - buf[offset + i] * h * 0.85;
+            i === 0 ? scopeCtx.moveTo(x, y) : scopeCtx.lineTo(x, y);
+          }
+          scopeCtx.stroke();
+        }
+      });
+    }
+
+    // =========================================================================
+    // 7. 24-BIT PCM WAV MULTI-STEM EXPORTER & VIRTUAL ROUTER
+    // =========================================================================
+    function setupDawCaptureTap() {
+      if (!ac || recNode) return;
+      const merger = ac.createChannelMerger(8);
+      const splitter = ac.createChannelSplitter(2);
+      masterBus.connect(splitter);
+      splitter.connect(merger, 0, 0);
+      splitter.connect(merger, 1, 1);
+      SCORE_PARTS.forEach((part, idx) => {
+        if (partBuses[part.id]) partBuses[part.id].connect(merger, 0, idx + 2);
+      });
+
+      recNode = ac.createScriptProcessor(4096, 8, 8);
+      const silentSink = ac.createGain();
+      silentSink.gain.value = 0;
+
+      recNode.onaudioprocess = (e) => {
+        if (!isRecording) return;
+        const inBuf = e.inputBuffer, len = inBuf.length;
+        const mL = inBuf.getChannelData(0), mR = inBuf.getChannelData(1);
+        if (isTrackArmed('master')) {
+          recBuffers.masterL.push(new Float32Array(mL));
+          recBuffers.masterR.push(new Float32Array(mR));
+          for (let i = 0; i < len; i += 4) {
+            const abs = Math.max(Math.abs(mL[i]), Math.abs(mR[i]));
+            if (abs > recPeaks.master) recPeaks.master = abs;
+          }
+        }
+        SCORE_PARTS.forEach((part, idx) => {
+          if (!isTrackArmed(part.id)) return;
+          const chData = inBuf.getChannelData(idx + 2);
+          recBuffers[part.id].push(new Float32Array(chData));
+          for (let i = 0; i < len; i += 4) {
+            const abs = Math.abs(chData[i]);
+            if (abs > recPeaks[part.id]) recPeaks[part.id] = abs;
+          }
+        });
+      };
+
+      merger.connect(recNode);
+      recNode.connect(silentSink);
+      silentSink.connect(ac.destination);
+    }
+
+    function isTrackArmed(trackId) {
+      const def = DAW_TRACK_DEFS.find(t => t.id === trackId);
+      return def ? def.armed : false;
+    }
+
+    function setRecordingMode(mode) {
+      if (isRecording) return;
+      recMode = mode;
+      DAW_TRACK_DEFS.forEach(t => {
+        if (mode === 'ALL') t.armed = true;
+        else if (mode === 'STEMS') t.armed = (t.id !== 'master');
+      });
+      document.querySelectorAll('.rec-mode-btn').forEach(btn => {
+        const active = btn.dataset.recMode === mode;
+        btn.setAttribute('aria-pressed', String(active));
+        btn.classList.toggle('bg-plum-500/25', active);
+        btn.classList.toggle('text-plum-300', active);
+        btn.classList.toggle('font-bold', active);
+        btn.classList.toggle('text-plum-400', !active);
+      });
+      renderDawTrackGrid();
+    }
+
+    function startDawRecording(autoFullSong = false) {
+      initAudioEngine();
+      if (ac.state === 'suspended') ac.resume();
+      if (!DAW_TRACK_DEFS.some(t => t.armed)) setRecordingMode('ALL');
+
+      renderedTakes.forEach(t => URL.revokeObjectURL(t.url));
+      renderedTakes = [];
+      recBuffers = { masterL: [], masterR: [] };
+      recPeaks = { master: 0 };
+      SCORE_PARTS.forEach(p => { recBuffers[p.id] = []; recPeaks[p.id] = 0; });
+
+      isRecording = true;
+      recStartTime = ac.currentTime;
+      updateRecTransportUI(true);
+
+      const exportList = document.getElementById('wavExportList');
+      if (exportList) {
+        exportList.innerHTML = `<p class="col-span-full text-[11px] text-red-400 font-bold animate-pulse">● RECORDING ARMED TRACKS IN 24-BIT PCM WAV...</p>`;
+      }
+      document.getElementById('downloadAllWavBtn').disabled = true;
+
+      if (autoFullSong) {
+        autoStopAtLoopEnd = true;
+        if (isPlaying) seekToBar(0);
+        else { anchorSongTime = 0; nextBarIndex = 0; startPlayback(); }
+      } else if (!isPlaying) {
+        startPlayback();
+      }
+    }
+
+    function stopDawRecording() {
+      if (!isRecording) return;
+      isRecording = false;
+      autoStopAtLoopEnd = false;
+      updateRecTransportUI(false);
+
+      const sr = ac ? ac.sampleRate : 48000;
+      renderedTakes = [];
+      const take = (def, chans, samples) => {
+        const wavBlob = encodeWav24(chans, sr);
+        const pk = recPeaks[def.id];
+        renderedTakes.push({
+          id: def.id,
+          label: `${def.num}: ${def.name}`,
+          filename: `Bikini_Atoll_Exotica_${def.fileSlug}_116BPM_24bit.wav`,
+          url: URL.createObjectURL(wavBlob),
+          durationSec: samples / sr,
+          peakDb: pk > 0 ? (20 * Math.log10(pk)).toFixed(1) : '-inf',
+          channels: chans.length,
+          color: def.color
+        });
+      };
+
+      DAW_TRACK_DEFS.forEach(def => {
+        if (!def.armed) return;
+        if (def.id === 'master') {
+          if (recBuffers.masterL.length === 0) return;
+          const left = mergeFloatChunks(recBuffers.masterL), right = mergeFloatChunks(recBuffers.masterR);
+          take(def, [left, right], left.length);
+        } else {
+          const chunks = recBuffers[def.id];
+          if (!chunks || chunks.length === 0) return;
+          const mono = mergeFloatChunks(chunks);
+          take(def, [mono], mono.length);
+        }
+      });
+      renderExportedTakes();
+    }
+
+    function mergeFloatChunks(chunks) {
+      let totalLen = 0;
+      for (let i = 0; i < chunks.length; i++) totalLen += chunks[i].length;
+      const result = new Float32Array(totalLen);
+      let offset = 0;
+      for (let i = 0; i < chunks.length; i++) {
+        result.set(chunks[i], offset);
+        offset += chunks[i].length;
+      }
+      return result;
+    }
+
+    function encodeWav24(channelBuffers, sampleRate) {
+      const numChannels = channelBuffers.length;
+      const numSamples = channelBuffers[0].length;
+      const blockAlign = numChannels * 3;
+      const dataSize = numSamples * blockAlign;
+      const buffer = new ArrayBuffer(44 + dataSize);
+      const view = new DataView(buffer);
+      const writeStr = (off, str) => { for (let i = 0; i < str.length; i++) view.setUint8(off + i, str.charCodeAt(i)); };
+
+      writeStr(0, 'RIFF');
+      view.setUint32(4, 36 + dataSize, true);
+      writeStr(8, 'WAVE');
+      writeStr(12, 'fmt ');
+      view.setUint32(16, 16, true);
+      view.setUint16(20, 1, true);
+      view.setUint16(22, numChannels, true);
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, sampleRate * blockAlign, true);
+      view.setUint16(32, blockAlign, true);
+      view.setUint16(34, 24, true);
+      writeStr(36, 'data');
+      view.setUint32(40, dataSize, true);
+
+      let offset = 44;
+      for (let i = 0; i < numSamples; i++) {
+        for (let ch = 0; ch < numChannels; ch++) {
+          let s = channelBuffers[ch][i];
+          if (s > 1) s = 1; else if (s < -1) s = -1;
+          let val = s < 0 ? Math.round(s * 0x800000) : Math.round(s * 0x7fffff);
+          if (val > 0x7fffff) val = 0x7fffff;
+          if (val < -0x800000) val = -0x800000;
+          if (val < 0) val += 0x1000000;
+          view.setUint8(offset, val & 0xff);
+          view.setUint8(offset + 1, (val >> 8) & 0xff);
+          view.setUint8(offset + 2, (val >> 16) & 0xff);
+          offset += 3;
+        }
+      }
+      return new Blob([buffer], { type: 'audio/wav' });
+    }
+
+    function renderDawTrackGrid() {
+      const grid = document.getElementById('dawTrackGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      DAW_TRACK_DEFS.forEach(def => {
+        const card = document.createElement('div');
+        card.className = `bg-midnight-950 border ${def.armed ? 'border-red-500/60' : 'border-midnight-850'} p-2.5 rounded-sm flex flex-col justify-between gap-2 transition-colors`;
+        card.innerHTML = `
+          <div class="flex items-center justify-between gap-1">
+            <span class="text-[10px] font-bold" style="color:${def.color}">${def.num}</span>
+            <button type="button" data-arm-track="${def.id}" aria-pressed="${def.armed}" aria-label="Arm ${def.name} for recording" ${isRecording ? 'disabled' : ''} class="disabled:opacity-60 disabled:cursor-not-allowed px-1.5 py-0.5 rounded-sm text-[9px] font-bold uppercase cursor-pointer transition-colors ${def.armed ? 'bg-red-600 text-white' : 'bg-midnight-900 border border-plum-700 text-plum-400 hover:text-plum-200'}">${def.armed ? '● ARM' : 'OFF'}</button>
+          </div>
+          <div>
+            <div class="text-[11px] font-bold text-plum-200 truncate">${def.name}</div>
+            <div class="text-[9px] text-plum-400">${def.channels === 2 ? 'Stereo 24-bit' : 'Mono 24-bit'}</div>
+          </div>
+          <div>
+            <div class="w-full h-1.5 bg-midnight-900 rounded-sm overflow-hidden">
+              <div id="dawMeter_${def.id}" class="h-full transition-all duration-75" style="width:0%; background:${def.color}"></div>
+            </div>
+            <div class="flex justify-between text-[9px] text-plum-400 mt-1">
+              <span>PEAK</span>
+              <span id="dawDb_${def.id}">-∞ dB</span>
+            </div>
+          </div>`;
+        grid.appendChild(card);
+      });
+
+      grid.querySelectorAll('[data-arm-track]').forEach(btn => btn.addEventListener('click', () => {
+        const def = DAW_TRACK_DEFS.find(t => t.id === btn.dataset.armTrack);
+        if (def && !isRecording) { def.armed = !def.armed; renderDawTrackGrid(); }
+      }));
+    }
+
+    function renderExportedTakes() {
+      const list = document.getElementById('wavExportList'), dlAllBtn = document.getElementById('downloadAllWavBtn');
+      if (!list) return;
+      if (renderedTakes.length === 0) {
+        list.innerHTML = `<p class="col-span-full text-[11px] text-plum-400">No armed audio captured. Arm at least one track and press Rec Live.</p>`;
+        if (dlAllBtn) dlAllBtn.disabled = true;
+        return;
+      }
+      if (dlAllBtn) dlAllBtn.disabled = false;
+      list.innerHTML = renderedTakes.map(t => `
+        <a href="${t.url}" download="${t.filename}" class="flex items-center justify-between gap-2 bg-midnight-900 hover:bg-midnight-850 border border-plum-700 hover:border-plum-400/60 px-2.5 py-1.5 rounded-sm transition-colors group">
+          <div class="min-w-0">
+            <div class="text-[10px] font-bold truncate" style="color:${t.color}">${t.label}</div>
+            <div class="text-[9px] text-plum-300">${t.durationSec.toFixed(1)}s · ${t.peakDb} dBFS</div>
+          </div>
+          <span class="text-[10px] font-bold text-gold-400 group-hover:text-gold-300 shrink-0">↓ WAV</span>
+        </a>`).join('');
+    }
+
+    function updateRecTransportUI(active) {
+      renderDawTrackGrid();
+      document.querySelectorAll('.rec-mode-btn').forEach(b => { b.disabled = active; });
+      const liveBtn = document.getElementById('recLiveBtn'), liveLabel = document.getElementById('recLiveLabel'), led = document.getElementById('recHeaderLed');
+      if (active) {
+        if (liveBtn) { liveBtn.classList.replace('bg-red-600', 'bg-plum-400'); liveBtn.classList.replace('text-white', 'text-midnight-950'); }
+        if (liveLabel) liveLabel.textContent = 'Stop & Render';
+        if (led) led.className = 'w-2 h-2 rounded-full bg-red-500 animate-ping';
+      } else {
+        if (liveBtn) { liveBtn.classList.replace('bg-plum-400', 'bg-red-600'); liveBtn.classList.replace('text-midnight-950', 'text-white'); }
+        if (liveLabel) liveLabel.textContent = 'Rec Live';
+        if (led) led.className = 'w-2 h-2 rounded-full bg-plum-700';
+      }
+    }
+
+    function updateDawMeters() {
+      if (!ac) return;
+      if (isRecording) {
+        const elapsed = Math.max(0, ac.currentTime - recStartTime);
+        const timerEl = document.getElementById('recTimerLabel');
+        if (timerEl) timerEl.textContent = `REC ${formatClock(elapsed)}`;
+      }
+      const measurePeak = (analyser) => {
+        if (!analyser || !isPlaying) return 0;
+        const buf = analyser._buf || (analyser._buf = new Float32Array(analyser.fftSize));
+        analyser.getFloatTimeDomainData(buf);
+        let peak = 0;
+        for (let i = 0; i < buf.length; i += 8) {
+          const a = Math.abs(buf[i]);
+          if (a > peak) peak = a;
+        }
+        return peak;
+      };
+      DAW_TRACK_DEFS.forEach(def => {
+        const an = def.id === 'master' ? masterAnalyser : partAnalysers[def.id];
+        const peak = measurePeak(an);
+        const meterEl = document.getElementById(`dawMeter_${def.id}`);
+        const dbEl = document.getElementById(`dawDb_${def.id}`);
+        if (meterEl) meterEl.style.width = `${Math.min(100, Math.round(peak * 115))}%`;
+        if (dbEl) dbEl.textContent = peak > 0.0005 ? `${(20 * Math.log10(peak)).toFixed(1)} dB` : '-∞ dB';
+      });
+    }
+
+    async function refreshAudioOutputs() {
+      const sel = document.getElementById('audioOutputSelect');
+      if (!sel || !navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const outs = devices.filter(d => d.kind === 'audiooutput');
+        const prev = sel.value;
+        sel.innerHTML = '<option value="">System Default Audio Output</option>';
+        outs.forEach((dev, idx) => {
+          const opt = document.createElement('option');
+          opt.value = dev.deviceId;
+          opt.textContent = dev.label || `Audio Output ${idx + 1}`;
+          sel.appendChild(opt);
+        });
+        if (prev) sel.value = prev;
+      } catch (err) {}
+    }
+
+    function updateSinkChannelInfo() {
+      const info = document.getElementById('sinkChannelInfo');
+      if (!info || !ac) return;
+      info.textContent = `${ac.destination.maxChannelCount || 2}-Ch Interface Available`;
+    }
+
+    function renderLoop() {
+      if (isPlaying && ac) {
+        const now = ac.currentTime;
+        const songTime = anchorSongTime + (now - anchorAudioTime);
+        updatePositionUI(songTime);
+
+        for (let i = visualQueue.length - 1; i >= 0; i--) {
+          const ev = visualQueue[i];
+          if (now >= ev.time && now <= ev.offTime) {
+            if (ev.domKey) {
+              const el = document.getElementById(`note_${ev.domKey}`);
+              if (el) el.classList.add('active');
+            }
+            const statusEl = document.getElementById(`partStatus_${ev.partId}`);
+            if (statusEl) statusEl.textContent = ev.label;
+            const led = document.querySelector(`[data-voice-led="${ev.voiceId}"]`);
+            if (led) {
+              led.style.opacity = '1';
+              led.style.boxShadow = `0 0 8px rgb(${PATCH_DATA[ev.voiceId].rgb})`;
+            }
+          } else if (now > ev.offTime) {
+            if (ev.domKey) {
+              const el = document.getElementById(`note_${ev.domKey}`);
+              if (el) el.classList.remove('active');
+            }
+            const led = document.querySelector(`[data-voice-led="${ev.voiceId}"]`);
+            if (led) {
+              led.style.opacity = '0.25';
+              led.style.boxShadow = 'none';
+            }
+            visualQueue.splice(i, 1);
+          }
+        }
+      }
+      drawScope();
+      updateDawMeters();
+      rafId = requestAnimationFrame(renderLoop);
+    }
+
+    function updateTransportUI() {
+      const playBtn = document.getElementById('playBtn'), playIcon = document.getElementById('playIcon'), playLabel = document.getElementById('playLabel'), stopBtn = document.getElementById('stopBtn');
+      if (isPlaying) {
+        playIcon.textContent = '⏸';
+        playLabel.textContent = 'Pause';
+        playBtn.classList.replace('bg-plum-400', 'bg-plum-300');
+      } else {
+        playIcon.textContent = '▶';
+        playLabel.textContent = anchorSongTime > 0 ? 'Resume' : 'Play';
+        playBtn.classList.replace('bg-plum-300', 'bg-plum-400');
+      }
+      if (stopBtn) stopBtn.disabled = !isPlaying && anchorSongTime === 0;
+    }
+
+    function jumpToProtocolCue(el) {
+      const cueNote = el.dataset.protoNote || '';
+      const cueText = document.getElementById('protocolCueText');
+      if (cueText && cueNote) cueText.textContent = cueNote;
+      if (el.dataset.protoBar !== undefined) {
+        seekToBar(parseInt(el.dataset.protoBar, 10) || 0);
+        if (!isPlaying) startPlayback();
+      }
+    }
+    window.jumpToProtocolCue = jumpToProtocolCue;
+
+    // =========================================================================
+    // 8. BOOTSTRAP & EVENT LISTENERS
+    // =========================================================================
+    function setScoreViewMode(mode) {
+      viewMode = mode;
+      const activeCls = 'px-2.5 py-1 rounded-sm border border-plum-400 bg-plum-500/15 text-plum-300 font-bold uppercase cursor-pointer';
+      const inactiveCls = 'px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-900 text-plum-300 hover:text-white uppercase cursor-pointer';
+      document.getElementById('view4Btn').className = mode === '4BAR' ? activeCls : inactiveCls;
+      document.getElementById('view16Btn').className = mode === '16BAR' ? activeCls : inactiveCls;
+      document.getElementById('view96Btn').className = mode === '96BAR' ? activeCls : inactiveCls;
+      ['4BAR', '16BAR', '96BAR'].forEach(m => document.getElementById(`view${m.replace('BAR', '')}Btn`).setAttribute('aria-pressed', String(m === mode)));
+
+      const curSong = anchorSongTime + (isPlaying && ac ? ac.currentTime - anchorAudioTime : 0);
+      const curBar = Math.floor((((curSong % LOOP_SEC) + LOOP_SEC) % LOOP_SEC) / BAR_SEC);
+      if (mode === '4BAR') renderScoreLanes(Math.floor(curBar / 4));
+      else if (mode === '16BAR') renderScoreLanes(Math.floor(curBar / 16));
+      else renderScoreLanes(0);
+    }
+
+    function syncHeaderOffset() {
+      const hd = document.querySelector('header'), mn = document.querySelector('main');
+      if (hd && mn) mn.style.paddingTop = `${hd.offsetHeight}px`;
+    }
+
+    function initApp() {
+      document.getElementById('playBtn')?.addEventListener('click', startPlayback);
+      document.getElementById('stopBtn')?.addEventListener('click', stopPlayback);
+
+      const toggleRec = () => isRecording ? stopDawRecording() : startDawRecording(false);
+      document.getElementById('recLiveBtn')?.addEventListener('click', toggleRec);
+      document.getElementById('printFullBtn')?.addEventListener('click', () => startDawRecording(true));
+
+      document.getElementById('loopBtn')?.addEventListener('click', (e) => {
+        const btn = e.currentTarget;
+        loopEnabled = !loopEnabled;
+        btn.textContent = `Loop: ${loopEnabled ? 'On' : 'Off'}`;
+        btn.setAttribute('aria-pressed', String(loopEnabled));
+        btn.classList.toggle('border-plum-500/50', loopEnabled);
+        btn.classList.toggle('bg-plum-500/15', loopEnabled);
+        btn.classList.toggle('text-plum-300', loopEnabled);
+        btn.classList.toggle('border-plum-900', !loopEnabled);
+        btn.classList.toggle('bg-midnight-900', !loopEnabled);
+      });
+
+      document.querySelectorAll('.rec-mode-btn').forEach(btn => btn.addEventListener('click', () => setRecordingMode(btn.dataset.recMode)));
+      document.getElementById('downloadAllWavBtn')?.addEventListener('click', () => {
+        renderedTakes.forEach((take, idx) => setTimeout(() => {
+          const a = document.createElement('a');
+          a.href = take.url;
+          a.download = take.filename;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        }, idx * 180));
+      });
+
+      document.getElementById('refreshDevicesBtn')?.addEventListener('click', refreshAudioOutputs);
+      document.getElementById('audioOutputSelect')?.addEventListener('change', async (e) => {
+        initAudioEngine();
+        if (ac && typeof ac.setSinkId === 'function') {
+          try { await ac.setSinkId(e.target.value); updateSinkChannelInfo(); } catch (err) {}
+        }
+      });
+
+      document.querySelectorAll('.sec-pill').forEach(pill => pill.addEventListener('click', () => seekToBar(parseInt(pill.dataset.jump, 10))));
+
+      document.getElementById('view4Btn')?.addEventListener('click', () => setScoreViewMode('4BAR'));
+      document.getElementById('view16Btn')?.addEventListener('click', () => setScoreViewMode('16BAR'));
+      document.getElementById('view96Btn')?.addEventListener('click', () => setScoreViewMode('96BAR'));
+
+      document.getElementById('scopeWaveBtn')?.addEventListener('click', () => {
+        scopeMode = 'WAVE';
+        document.getElementById('scopeWaveBtn').setAttribute('aria-pressed', 'true');
+        document.getElementById('scopeFreqBtn').setAttribute('aria-pressed', 'false');
+        document.getElementById('scopeWaveBtn').className = 'px-2.5 py-1 rounded-sm border border-plum-400 bg-plum-500/20 text-plum-300 font-bold uppercase cursor-pointer';
+        document.getElementById('scopeFreqBtn').className = 'px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-300 hover:text-white uppercase cursor-pointer';
+      });
+
+      document.getElementById('scopeFreqBtn')?.addEventListener('click', () => {
+        scopeMode = 'FREQ';
+        document.getElementById('scopeFreqBtn').setAttribute('aria-pressed', 'true');
+        document.getElementById('scopeWaveBtn').setAttribute('aria-pressed', 'false');
+        document.getElementById('scopeFreqBtn').className = 'px-2.5 py-1 rounded-sm border border-plum-400 bg-plum-500/20 text-plum-300 font-bold uppercase cursor-pointer';
+        document.getElementById('scopeWaveBtn').className = 'px-2.5 py-1 rounded-sm border border-plum-900 bg-midnight-950 text-plum-300 hover:text-white uppercase cursor-pointer';
+      });
+
+      const cutSlider = document.getElementById('korgCutoffSlider');
+      const peakSlider = document.getElementById('korgPeakSlider');
+
+      cutSlider?.addEventListener('input', (e) => {
+        korgCutoffOffset = parseFloat(e.target.value);
+        applyKorgVcfOverride();
+      });
+
+      peakSlider?.addEventListener('input', (e) => {
+        korgPeakSetting = parseFloat(e.target.value);
+        applyKorgVcfOverride();
+      });
+
+      document.getElementById('korgVcfResetBtn')?.addEventListener('click', () => {
+        korgCutoffOffset = 0.0;
+        korgPeakSetting = 3.9;
+        if (cutSlider) cutSlider.value = '0';
+        if (peakSlider) peakSlider.value = '3.9';
+        applyKorgVcfOverride();
+      });
+
+      document.querySelectorAll('.sq-step-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          sq10UserLocked = true;
+          sq10ResetSteps = parseInt(btn.dataset.sqSteps, 10) || 5;
+          document.querySelectorAll('.sq-step-btn').forEach(b => {
+            const active = parseInt(b.dataset.sqSteps, 10) === sq10ResetSteps;
+            b.setAttribute('aria-pressed', String(active));
+            b.className = active
+              ? 'sq-step-btn px-2 py-0.5 rounded-sm bg-plum-500/25 text-plum-300 font-bold cursor-pointer transition-colors'
+              : 'sq-step-btn px-2 py-0.5 rounded-sm text-plum-400 hover:text-white cursor-pointer transition-colors';
+          });
+          buildScoreEvents();
+          renderScoreLanes(displayedSystem);
+          const cueText = document.getElementById('protocolCueText');
+          if (cueText) {
+            cueText.textContent = `BOOK II // P-07 PATCHED: SQ-10 TRIG OUT ${sq10ResetSteps} -> RESET IN locked across all 96 bars (cycles every ${sq10ResetSteps} steps).`;
+          }
+        });
+      });
+
+      document.getElementById('masterGainSlider')?.addEventListener('input', (e) => {
+        masterGainValue = parseFloat(e.target.value);
+        document.getElementById('masterGainVal').textContent = `${Math.round(masterGainValue * 100)}%`;
+        if (masterOut && ac) masterOut.gain.setTargetAtTime(masterGainValue, ac.currentTime, 0.02);
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.code !== 'Space' || e.ctrlKey || e.metaKey || e.altKey) return;
+        const t = e.target;
+        if (t && (['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'A'].includes(t.tagName) || t.isContentEditable)) return;
+        e.preventDefault();
+        if (!e.repeat) startPlayback();
+      });
+
+      syncHeaderOffset();
+      if ('ResizeObserver' in window) new ResizeObserver(syncHeaderOffset).observe(document.querySelector('header'));
+      else window.addEventListener('resize', syncHeaderOffset);
+
+      buildScoreEvents();
+      buildBarMatrix();
+      buildVoiceLedGrid();
+      buildPartitureShell();
+      renderDawTrackGrid();
+      refreshAudioOutputs();
+      applyKorgVcfOverride();
+      renderScoreLanes(0);
+      updatePositionUI(0);
+      rafId = requestAnimationFrame(renderLoop);
+    }
+
+    if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', initApp);
+    else initApp();
+  </script>
+</body>
+</html>
